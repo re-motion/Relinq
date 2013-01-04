@@ -62,7 +62,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Utilities
     public void CheckNotNullAndType_Succeed_Int ()
     {
       int result = ArgumentUtility.CheckNotNullAndType<int> ("arg", 1);
-      Assert.AreEqual (1, result);
+      Assert.That (result, Is.EqualTo (1));
     }
 
     [Test]
@@ -76,14 +76,14 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Utilities
     public void CheckNotNullAndType_Succeed_Int_NullableInt ()
     {
       int result = ArgumentUtility.CheckNotNullAndType<int> ("arg", (int?) 1);
-      Assert.AreEqual (1, result);
+      Assert.That (result, Is.EqualTo (1));
     }
 
     [Test]
     public void CheckNotNullAndType_Succeed_NullableInt ()
     {
       int? result = ArgumentUtility.CheckNotNullAndType<int?> ("arg", (int?) 1);
-      Assert.AreEqual (1, result);
+      Assert.That (result, Is.EqualTo (1));
     }
 
     [Test]
@@ -97,14 +97,14 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Utilities
     public void CheckNotNullAndType_Succeed_NullableInt_Int ()
     {
       int? result = ArgumentUtility.CheckNotNullAndType<int?> ("arg", 1);
-      Assert.AreEqual (1, result);
+      Assert.That (result, Is.EqualTo (1));
     }
 
     [Test]
     public void CheckNotNullAndType_Succeed_String ()
     {
       string result = ArgumentUtility.CheckNotNullAndType<string> ("arg", "test");
-      Assert.AreEqual ("test", result);
+      Assert.That (result, Is.EqualTo ("test"));
     }
 
     [Test]
@@ -118,7 +118,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Utilities
     public void CheckNotNullAndType_Succeed_Object_String ()
     {
       object result = ArgumentUtility.CheckNotNullAndType<object> ("arg", "test");
-      Assert.AreEqual ("test", result);
+      Assert.That (result, Is.EqualTo ("test"));
     }
 
     [Test]

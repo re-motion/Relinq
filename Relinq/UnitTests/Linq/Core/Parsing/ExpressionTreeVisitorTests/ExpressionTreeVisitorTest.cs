@@ -190,7 +190,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
     {
       var visitor = MockRepository.PartialMock<ExpressionTreeVisitor>();
       MockRepository.ReplayAll();
-      Assert.IsNull (visitor.VisitExpression (null));
+      Assert.That (visitor.VisitExpression (null), Is.Null);
     }
 
     [Test]
@@ -466,7 +466,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
       var visitorMock = MockRepository.StrictMock<ExpressionTreeVisitor>();
 
       MethodInfo methodToBeCalled = visitorMock.GetType().GetMethod (methodName, BindingFlags.NonPublic | BindingFlags.Instance);
-      Assert.IsNotNull (methodToBeCalled);
+      Assert.That (methodToBeCalled, Is.Not.Null);
 
       foreach (Expression expression in expressions)
       {
@@ -477,7 +477,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
         MockRepository.Replay (visitorMock);
 
         object result = visitorMock.VisitExpression (expression);
-        Assert.AreSame (expression, result);
+        Assert.That (result, Is.SameAs (expression));
         MockRepository.Verify (visitorMock);
       }
     }

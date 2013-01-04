@@ -58,8 +58,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     [Test]
     public void Initialization()
     {
-      Assert.AreSame (_executorMock, _queryProvider.Executor);
-      Assert.AreSame (_queryParserMock, _queryProvider.QueryParser);
+      Assert.That (_queryProvider.Executor, Is.SameAs (_executorMock));
+      Assert.That (_queryProvider.QueryParser, Is.SameAs (_queryParserMock));
     }
 
     [Test]
@@ -68,7 +68,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       Expression expression = ExpressionHelper.CreateExpression();
       IQueryable queryable = _queryProvider.CreateQuery (expression);
 
-      Assert.IsNotNull (queryable);
+      Assert.That (queryable, Is.Not.Null);
       Assert.IsInstanceOf (typeof (IQueryable<int>), queryable);
     }
 
@@ -89,7 +89,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       Expression expression = ExpressionHelper.CreateNewIntArrayExpression ();
       IQueryable<int> queryable = _queryProvider.CreateQuery<int> (expression);
 
-      Assert.IsNotNull (queryable);
+      Assert.That (queryable, Is.Not.Null);
     }
 
     [Test]

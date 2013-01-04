@@ -34,7 +34,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
       Expect.Call (VisitorMock.VisitExpression (expression.Conversion)).Return (expression.Conversion);
 
       BinaryExpression result = (BinaryExpression) InvokeAndCheckVisitExpression ("VisitBinaryExpression", expression);
-      Assert.AreSame (expression, result);
+      Assert.That (result, Is.SameAs (expression));
     }
 
     [Test]
@@ -47,10 +47,10 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
       Expect.Call (VisitorMock.VisitExpression (expression.Conversion)).Return (expression.Conversion);
 
       BinaryExpression result = (BinaryExpression) InvokeAndCheckVisitExpression ("VisitBinaryExpression", expression);
-      Assert.AreNotSame (expression, result);
-      Assert.AreEqual (ExpressionType.Subtract, result.NodeType);
-      Assert.AreSame (newOperand, result.Left);
-      Assert.AreSame (expression.Right, result.Right);
+      Assert.That (result, Is.Not.SameAs (expression));
+      Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Subtract));
+      Assert.That (result.Left, Is.SameAs (newOperand));
+      Assert.That (result.Right, Is.SameAs (expression.Right));
     }
 
     [Test]
@@ -63,10 +63,10 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
       Expect.Call (VisitorMock.VisitExpression (expression.Conversion)).Return (expression.Conversion);
 
       BinaryExpression result = (BinaryExpression) InvokeAndCheckVisitExpression ("VisitBinaryExpression", expression);
-      Assert.AreNotSame (expression, result);
-      Assert.AreEqual (ExpressionType.Subtract, result.NodeType);
-      Assert.AreSame (expression.Left, result.Left);
-      Assert.AreSame (newOperand, result.Right);
+      Assert.That (result, Is.Not.SameAs (expression));
+      Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Subtract));
+      Assert.That (result.Left, Is.SameAs (expression.Left));
+      Assert.That (result.Right, Is.SameAs (newOperand));
     }
 
     [Test]
@@ -130,7 +130,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
       Expect.Call (VisitorMock.VisitExpression (expression.Conversion)).Return (expression.Conversion);
 
       BinaryExpression result = (BinaryExpression) InvokeAndCheckVisitExpression ("VisitBinaryExpression", expression);
-      Assert.AreNotSame (expression, result);
+      Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.IsLiftedToNull, Is.True);
     }
 
@@ -150,7 +150,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
       Expect.Call (VisitorMock.VisitExpression (expression.Conversion)).Return (expression.Conversion);
 
       BinaryExpression result = (BinaryExpression) InvokeAndCheckVisitExpression ("VisitBinaryExpression", expression);
-      Assert.AreNotSame (expression, result);
+      Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.Method, Is.SameAs (method));
     }
   }
