@@ -15,6 +15,7 @@
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
 {
@@ -25,6 +26,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
     public TypeForNewExpression (int a)
     {
       C = a;
+    }
+
+    public TypeForNewExpression (Cook d)
+    {
+      D = d;
     }
 
     public TypeForNewExpression (int a, int b)
@@ -39,6 +45,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
       set { C = value; }
     }
     public int B { get; set; }
+
+    public Cook D { get; set; }
 
     public static int CompareString (string s1, string s2, bool textCompare)
     {

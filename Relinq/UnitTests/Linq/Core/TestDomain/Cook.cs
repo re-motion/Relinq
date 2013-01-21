@@ -44,6 +44,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
     public string SpecificInformation { get; set; }
     public Kitchen Kitchen { get; set; }
 
+    public Cook GetSubKitchenCook (Restaurant restaurant)
+    {
+      return restaurant.SubKitchen.Cook;
+    }
+
     [MethodCallExpressionTransformer (typeof (FullNameTransformer))]
     public virtual string GetFullName ()
     {
