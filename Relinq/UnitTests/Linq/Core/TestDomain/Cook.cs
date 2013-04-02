@@ -26,7 +26,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
 {
   public class Cook : ISpecificCook
   {
-    public MetaID MetaID { get; set; }
+    public MetaID KnifeID { get; set; }
+    public Knife Knife { get; set; }
+    public Knife KnifeWithOptimizedJoin { get; set; }
     public string FirstName { get; set; }
     public string Name { get; set; }
     public int ID { get; set; }

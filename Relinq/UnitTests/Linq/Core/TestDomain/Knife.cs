@@ -18,41 +18,9 @@ using System;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
 {
-  public struct MetaID : IEquatable<MetaID>
+  public class Knife
   {
-    public MetaID (int value, string classID)
-        : this()
-    {
-      Value = value;
-      ClassID = classID;
-    }
-
-    public int Value { get; set; }
-    public string ClassID { get; set; }
-
-    public override bool Equals (object obj)
-    {
-      return base.Equals (obj);
-    }
-
-    public override int GetHashCode ()
-    {
-      return base.GetHashCode ();
-    }
-
-    public bool Equals (MetaID other)
-    {
-      return Value == other.Value && string.Equals (ClassID, other.ClassID);
-    }
-
-    public static bool operator == (MetaID left, MetaID right)
-    {
-      return left.Equals (right);
-    }
-
-    public static bool operator != (MetaID left, MetaID right)
-    {
-      return !left.Equals (right);
-    }
+    public MetaID ID { get; set; }
+    public double Sharpness { get; set; }
   }
 }

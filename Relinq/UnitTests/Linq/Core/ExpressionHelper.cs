@@ -19,14 +19,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Linq.SqlBackend.SqlStatementModel.Resolved;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing.Structure;
-using Remotion.Linq.UnitTests.Linq.SqlBackend.SqlStatementModel;
 
 namespace Remotion.Linq.UnitTests.Linq.Core
 {
@@ -218,6 +216,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       return CreateCookQueryable (s_executor);
     }
 
+    public static IQueryable<Knife> CreateKnifeQueryable ()
+    {
+      return CreateKnifeQueryable (s_executor);
+    }
+
     public static IQueryable<Chef> CreateChefQueryable ()
     {
       return CreateChefQueryable (s_executor);
@@ -226,6 +229,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     public static IQueryable<Cook> CreateCookQueryable (IQueryExecutor executor)
     {
       return new TestQueryable<Cook> (QueryParser.CreateDefault (), executor);
+    }
+
+    public static IQueryable<Knife> CreateKnifeQueryable (IQueryExecutor executor)
+    {
+      return new TestQueryable<Knife> (QueryParser.CreateDefault (), executor);
     }
 
     public static IQueryable<Chef> CreateChefQueryable (IQueryExecutor executor)
