@@ -315,7 +315,7 @@
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlRowNumberExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlStatementBuilderTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Unresolved\JoinConditionExpressionTest.cs" />
-    <Compile Include="Linq\SqlBackend\SqlStatementModel\Unresolved\SqlBinaryOperatorExpressionTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlStatementModel\Unresolved\SqlInExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Unresolved\UnresolvedCollectionJoinInfoTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Unresolved\UnresolvedGroupReferenceTableInfoTest.cs" />
     <Compile Include="Linq\SqlBackend\UnmappedItemExceptionTest.cs" />
