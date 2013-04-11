@@ -15,6 +15,7 @@
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Reflection;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
@@ -51,6 +52,15 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
     public static int CompareString (string s1, string s2, bool textCompare)
     {
       return s1.CompareTo (s2);
+    }
+
+    // TODO 4878: Use this instead of typeof (TypeForNewExpression).GetConstructor.
+    public static ConstructorInfo GetConstructor (params Type[] parameterTypes)
+    {
+      var constructorInfo = typeof (TypeForNewExpression).GetConstructor (parameterTypes);
+      if (constructorInfo == null)
+        throw new ArgumentException ("Ctor not found.", "parameterTypes");
+      return constructorInfo;
     }
   }
 }

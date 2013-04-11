@@ -195,6 +195,7 @@
     <Compile Include="Linq\SqlBackend\BooleanUtilityTest.cs" />
     <Compile Include="Linq\SqlBackend\CustomCompositeExpression.cs" />
     <Compile Include="Linq\SqlBackend\ConversionUtilityTest.cs" />
+    <Compile Include="Linq\SqlBackend\MappingResolution\CompoundExpressionComparisonSplitterTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\GroupAggregateSimplifierTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\MappingResolutionContextTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\MemberAccessResolverTest.cs" />
