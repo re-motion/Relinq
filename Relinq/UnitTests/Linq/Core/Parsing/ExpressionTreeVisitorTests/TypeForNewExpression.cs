@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Reflection;
+using JetBrains.Annotations;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
@@ -40,6 +41,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
       B = b;
     }
 
+    public TypeForNewExpression (bool e)
+    {
+      E = e;
+    }
+
     public int A
     {
       get { return C; }
@@ -48,6 +54,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
     public int B { get; set; }
 
     public Cook D { get; set; }
+
+    public bool E { get; set; }
 
     public static int CompareString (string s1, string s2, bool textCompare)
     {
