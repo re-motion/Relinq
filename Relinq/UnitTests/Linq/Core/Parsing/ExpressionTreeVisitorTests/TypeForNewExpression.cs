@@ -25,6 +25,10 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
   {
     public int C;
 
+    public TypeForNewExpression ()
+    {
+    }
+
     public TypeForNewExpression (int a)
     {
       C = a;
