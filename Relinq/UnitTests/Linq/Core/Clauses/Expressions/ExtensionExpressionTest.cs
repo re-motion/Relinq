@@ -107,7 +107,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Reducible nodes must override the Reduce method.")]
+    [ExpectedException (typeof (ArgumentException))]
     public void Reduce_Reducible_ThrowsIfNotOverridden ()
     {
       var expression = new ReducibleExtensionExpressionNotOverridingReduce (typeof (int));
@@ -115,7 +115,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Reduce and check can only be called on reducible nodes.")]   
+    [ExpectedException (typeof (ArgumentException))]
     public void ReduceAndCheck_ThrowsIfNotReducible ()
     {
       _expression.ReduceAndCheck ();
@@ -133,7 +133,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Reduce cannot return null.")]
+    [ExpectedException (typeof (ArgumentException))]
     public void ReduceAndCheck_ThrowsIfReducesToNull ()
     {
       var expressionPartialMock = CreateReduciblePartialMock(typeof (int));
@@ -144,7 +144,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Reduce cannot return the original expression.")]
+    [ExpectedException (typeof (ArgumentException))]
     public void ReduceAndCheck_ThrowsIfReducesToSame ()
     {
       var expressionPartialMock = CreateReduciblePartialMock (typeof (int));
@@ -155,7 +155,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Reduce must produce an expression of a compatible type.")]
+    [ExpectedException (typeof (ArgumentException))]
     public void ReduceAndCheck_ThrowsIfReducesToDifferentType ()
     {
       var expressionOfDifferentType = Expression.Constant ("string");

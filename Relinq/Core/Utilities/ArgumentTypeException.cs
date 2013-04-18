@@ -16,7 +16,10 @@
 // 
 using System;
 using System.Runtime.Serialization;
+using System.Security;
 using JetBrains.Annotations;
+
+[assembly: SecurityRules(SecurityRuleSet.Level1)]
 
 namespace Remotion.Linq.Utilities
 {

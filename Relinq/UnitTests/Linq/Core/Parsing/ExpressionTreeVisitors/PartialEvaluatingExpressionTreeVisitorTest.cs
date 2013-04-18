@@ -206,7 +206,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
       Assert.That (exceptionExpression1.Exception, Is.InstanceOf<NullReferenceException>());
       var evaluatedExpression1 = exceptionExpression1.EvaluatedExpression;
 
-      Assert.That (evaluatedExpression1, Is.TypeOf<BinaryExpression> ());
+      Assert.That (evaluatedExpression1, Is.AssignableTo<BinaryExpression> ());
       Assert.That (((BinaryExpression) evaluatedExpression1).Left, Is.TypeOf<PartialEvaluationExceptionExpression>());
       Assert.That (((BinaryExpression) evaluatedExpression1).Right, Is.InstanceOf<ConstantExpression> ().With.Property ("Value").EqualTo (3));
 

@@ -131,9 +131,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
 
       var result = _transformer.Transform (expression);
 
-      Assert.That (result, Is.TypeOf (typeof (BinaryExpression)));
+      Assert.That (result, Is.AssignableTo (typeof (BinaryExpression)));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.GreaterThan));
-      Assert.That (((VBStringComparisonExpression) ((BinaryExpression) result).Left).Comparison, Is.TypeOf (typeof (MethodCallExpression)));
+      Assert.That (((VBStringComparisonExpression) ((BinaryExpression) result).Left).Comparison, Is.AssignableTo (typeof (MethodCallExpression)));
     }
 
     [Test]
@@ -146,9 +146,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
 
       var result = _transformer.Transform (expression);
 
-      Assert.That (result, Is.TypeOf (typeof (BinaryExpression)));
+      Assert.That (result, Is.AssignableTo (typeof (BinaryExpression)));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.GreaterThanOrEqual));
-      Assert.That (((VBStringComparisonExpression) ((BinaryExpression) result).Left).Comparison, Is.TypeOf (typeof (MethodCallExpression)));
+      Assert.That (((VBStringComparisonExpression) ((BinaryExpression) result).Left).Comparison, Is.AssignableTo (typeof (MethodCallExpression)));
     }
 
     [Test]
@@ -161,9 +161,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
 
       var result = _transformer.Transform (expression);
 
-      Assert.That (result, Is.TypeOf (typeof (BinaryExpression)));
+      Assert.That (result, Is.AssignableTo (typeof (BinaryExpression)));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.LessThan));
-      Assert.That (((VBStringComparisonExpression) ((BinaryExpression) result).Left).Comparison, Is.TypeOf (typeof (MethodCallExpression)));
+      Assert.That (((VBStringComparisonExpression) ((BinaryExpression) result).Left).Comparison, Is.AssignableTo (typeof (MethodCallExpression)));
     }
 
     [Test]
@@ -176,9 +176,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
 
       var result = _transformer.Transform (expression);
 
-      Assert.That (result, Is.TypeOf (typeof (BinaryExpression)));
+      Assert.That (result, Is.AssignableTo (typeof (BinaryExpression)));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.LessThanOrEqual));
-      Assert.That (((VBStringComparisonExpression) ((BinaryExpression) result).Left).Comparison, Is.TypeOf (typeof (MethodCallExpression)));
+      Assert.That (((VBStringComparisonExpression) ((BinaryExpression) result).Left).Comparison, Is.AssignableTo (typeof (MethodCallExpression)));
     }
 
     [Test]
