@@ -62,7 +62,6 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
       return s1.CompareTo (s2);
     }
 
-    // TODO 4878: Use this instead of typeof (TypeForNewExpression).GetConstructor.
     public static ConstructorInfo GetConstructor (params Type[] parameterTypes)
     {
       var constructorInfo = typeof (TypeForNewExpression).GetConstructor (parameterTypes);
