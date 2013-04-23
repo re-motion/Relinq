@@ -55,11 +55,18 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
       get { return C; }
       set { C = value; }
     }
+
     public int B { get; set; }
 
     public Cook D { get; set; }
 
     public bool E { get; set; }
+
+    public int get_
+    {
+      get { return C; }
+      set { C = value; }
+    }
 
     public static int CompareString (string s1, string s2, bool textCompare)
     {
