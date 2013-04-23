@@ -18,10 +18,9 @@ using System;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
 {
-  public struct MetaID : IEquatable<MetaID>
+  public class MetaID : IEquatable<MetaID>
   {
     public MetaID (int value, string classID)
-        : this()
     {
       Value = value;
       ClassID = classID;
