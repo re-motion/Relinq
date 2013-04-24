@@ -183,6 +183,7 @@
     <Compile Include="Linq\Core\Parsing\TestThrowingConstantExpressionTreeVisitor.cs" />
     <Compile Include="Linq\Core\Parsing\TupleExpressionBuilderTest.cs" />
     <Compile Include="Linq\Core\StubQueryExecutor.cs" />
+    <Compile Include="Linq\Core\TestDomain\Knife.cs" />
     <Compile Include="Linq\Core\TestDomain\ISpecificCook.cs" />
     <Compile Include="Linq\Core\TestDomain\MetaID.cs" />
     <Compile Include="Linq\Core\TestUtilities\NonTransformedTuple.cs" />
@@ -194,6 +195,8 @@
     <Compile Include="Linq\SqlBackend\BooleanUtilityTest.cs" />
     <Compile Include="Linq\SqlBackend\CustomCompositeExpression.cs" />
     <Compile Include="Linq\SqlBackend\ConversionUtilityTest.cs" />
+    <Compile Include="Linq\SqlBackend\MappingResolution\CompoundExpressionComparisonSplitterTest.cs" />
+    <Compile Include="Linq\SqlBackend\MappingResolution\EntityIdentityResolverTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\GroupAggregateSimplifierTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\MappingResolutionContextTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\MemberAccessResolverTest.cs" />
@@ -203,9 +206,9 @@
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextSelectionAdjusterTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SqlContextTableInfoVisitorTest.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolution\SubStatementReferenceResolverTest.cs" />
-    <Compile Include="Linq\SqlBackend\MappingResolution\TestableGroupAggregateSimplifier.cs" />
     <Compile Include="Linq\SqlBackend\MappingResolverStub_CreateDatabaseUtility.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\ConditionalExpressionSqlBackendIntegrationTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\CompoundMemberSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\MethodCalls\ConversionMethodCallExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\MethodCalls\DateTimeMethodCallExpressionSqlBackendIntegrationTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlGeneration\IntegrationTests\MethodCalls\TransformedMethodCallExpressionSqlBackendIntegrationTest.cs" />
@@ -312,7 +315,7 @@
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlRowNumberExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlStatementBuilderTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Unresolved\JoinConditionExpressionTest.cs" />
-    <Compile Include="Linq\SqlBackend\SqlStatementModel\Unresolved\SqlBinaryOperatorExpressionTest.cs" />
+    <Compile Include="Linq\SqlBackend\SqlStatementModel\SqlSpecificExpressions\SqlInExpressionTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Unresolved\UnresolvedCollectionJoinInfoTest.cs" />
     <Compile Include="Linq\SqlBackend\SqlStatementModel\Unresolved\UnresolvedGroupReferenceTableInfoTest.cs" />
     <Compile Include="Linq\SqlBackend\UnmappedItemExceptionTest.cs" />
