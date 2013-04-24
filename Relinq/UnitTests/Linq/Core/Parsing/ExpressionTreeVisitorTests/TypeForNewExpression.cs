@@ -15,6 +15,8 @@
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Reflection;
+using JetBrains.Annotations;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
@@ -22,6 +24,10 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
   internal class TypeForNewExpression
   {
     public int C;
+
+    public TypeForNewExpression ()
+    {
+    }
 
     public TypeForNewExpression (int a)
     {
@@ -39,18 +45,40 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
       B = b;
     }
 
+    public TypeForNewExpression (bool e)
+    {
+      E = e;
+    }
+
     public int A
     {
       get { return C; }
       set { C = value; }
     }
+
     public int B { get; set; }
 
     public Cook D { get; set; }
 
+    public bool E { get; set; }
+
+    public int get_
+    {
+      get { return C; }
+      set { C = value; }
+    }
+
     public static int CompareString (string s1, string s2, bool textCompare)
     {
       return s1.CompareTo (s2);
+    }
+
+    public static ConstructorInfo GetConstructor (params Type[] parameterTypes)
+    {
+      var constructorInfo = typeof (TypeForNewExpression).GetConstructor (parameterTypes);
+      if (constructorInfo == null)
+        throw new ArgumentException ("Ctor not found.", "parameterTypes");
+      return constructorInfo;
     }
   }
 }

@@ -321,7 +321,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitNewExpression_ChangedArguments_NoMembers ()
     {
-      NewExpression expression = Expression.New (typeof (TypeForNewExpression).GetConstructor(new[] { typeof(int) }), Expression.Constant (0));
+      NewExpression expression = Expression.New (TypeForNewExpression.GetConstructor (typeof(int)), Expression.Constant (0));
 
       var newArguments = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
       Expect.Call (VisitorMock.VisitAndConvert (expression.Arguments, "VisitNewExpression")).Return (newArguments);
@@ -335,7 +335,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
     public void VisitNewExpression_ChangedArguments_WithMembers ()
     {
       NewExpression expression = Expression.New (
-          typeof (TypeForNewExpression).GetConstructor(new[] { typeof(int) }),
+          TypeForNewExpression.GetConstructor (typeof(int)),
           new Expression[] { Expression.Constant (0) },
           typeof (TypeForNewExpression).GetProperty ("A"));
 
