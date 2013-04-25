@@ -28,4 +28,5 @@ using System.Security;
 [assembly: AssemblyDescription("Framework for working with linq queries.")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
-[assembly: AllowPartiallyTrustedCallers] // required for sandbox tests
+[assembly: AllowPartiallyTrustedCallers] // required for partial trust support
+[assembly: SecurityRules(SecurityRuleSet.Level1)]
