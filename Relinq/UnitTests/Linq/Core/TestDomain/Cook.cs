@@ -28,7 +28,6 @@ namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
   {
     public MetaID KnifeID { get; set; }
     public Knife Knife { get; set; }
-    public Knife KnifeWithOptimizedJoin { get; set; }
     public string FirstName { get; set; }
     public string Name { get; set; }
     public int ID { get; set; }
