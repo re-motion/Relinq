@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Linq.Expressions;
 
@@ -21,17 +22,23 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
 {
   public class SpecialExpressionNode : Expression
   {
-#if NET_4_0
-#pragma warning disable 0618
-#endif
+    private readonly ExpressionType _nodeType;
+    private readonly Type _type;
 
     public SpecialExpressionNode (ExpressionType nodeType, Type type)
-        : base (nodeType, type)
     {
+      _nodeType = nodeType;
+      _type = type;
     }
 
-#if NET_4_0
-#pragma warning restore 0618
-#endif
+    public override ExpressionType NodeType
+    {
+      get { return _nodeType; }
+    }
+
+    public override Type Type
+    {
+      get { return _type; }
+    }
   }
 }

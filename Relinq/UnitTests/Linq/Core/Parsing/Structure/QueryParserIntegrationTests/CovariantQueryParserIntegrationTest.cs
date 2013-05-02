@@ -15,8 +15,6 @@
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
 
-#if NET_4_0
-
 using System;
 using System.Linq;
 using NUnit.Framework;
@@ -97,4 +95,3 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
     }
   }
 }
-#endif

@@ -198,7 +198,6 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.TreeE
       Assert.That (result.IsEvaluatableExpression (expression), Is.False);
     }
 
-#if NET_4_0
     [Test]
     public void VisitDynamicExpression_WithParameterReference_NonEvaluable ()
     {
@@ -220,8 +219,6 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.TreeE
 
       Assert.That (result.IsEvaluatableExpression (body), Is.False);
     }
-
-#endif
 
     [Test]
     public void PartialEvaluationExceptionExpression_NotEvaluable_AndChildrenNeither ()

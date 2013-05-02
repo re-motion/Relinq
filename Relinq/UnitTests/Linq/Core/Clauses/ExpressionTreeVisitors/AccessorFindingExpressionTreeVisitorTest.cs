@@ -119,9 +119,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
       var inputParameter = Expression.Parameter (typeof (AnonymousType), "input");
       var expectedResult = Expression.Lambda (
 
-      Expression.MakeMemberAccess (inputParameter, _anonymousTypeAProperty), // .NET 4.0's Expression.New substitutes "get_a()" with "a"
-      inputParameter);  // input => input.get_a()
-      
+      Expression.MakeMemberAccess (inputParameter, _anonymousTypeAProperty), inputParameter);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
