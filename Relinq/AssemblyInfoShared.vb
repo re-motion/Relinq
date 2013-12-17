@@ -14,7 +14,7 @@ Imports System.Security
 <Assembly: AssemblyProduct("re-linq project (relinq.codeplex.com)")> 
 <Assembly: AssemblyCopyright("Copyright (c) rubicon IT GmbH, www.rubicon.eu - Licensed under GNU LGPL 2.1 (or later)")> 
 <Assembly: AssemblyTrademark("")> 
-<Assembly: AssemblyInformationalVersion("1.13.222.10000")> 
+<Assembly: AssemblyInformationalVersion("1.13.223.10000")> 
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -26,5 +26,5 @@ Imports System.Security
 ' You can specify all the values or you can default the Build and Revision Numbers 
 ' by using the '*' as shown below:
 
-<Assembly: AssemblyVersion("1.13.222.10000")> 
-<Assembly: AssemblyFileVersion("1.13.222.10000")> 
+<Assembly: AssemblyVersion("1.13.223.10000")> 
+<Assembly: AssemblyFileVersion("1.13.223.10000")> 
