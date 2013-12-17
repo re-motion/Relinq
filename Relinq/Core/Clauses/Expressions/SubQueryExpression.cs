@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
+using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Utilities;
 
@@ -24,13 +26,25 @@ namespace Remotion.Linq.Clauses.Expressions
   /// </summary>
   public class SubQueryExpression : Expression
   {
+    private readonly Type _type;
     public const ExpressionType ExpressionType = (ExpressionType) 100002;
-
+    
     public SubQueryExpression (QueryModel queryModel)
-        : base (ExpressionType, queryModel.GetOutputDataInfo().DataType)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
       QueryModel = queryModel;
+      _type = queryModel.GetOutputDataInfo().DataType;
+    }
+
+    public override ExpressionType NodeType
+    {
+      get { return ExpressionType; }
+    }
+
+    public override Type Type
+    {
+      get { return _type; }
     }
 
     public QueryModel QueryModel { get; private set; }

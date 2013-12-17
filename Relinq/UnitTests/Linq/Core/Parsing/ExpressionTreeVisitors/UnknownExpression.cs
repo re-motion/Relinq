@@ -21,20 +21,28 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
 {
   public class UnknownExpression : Expression
   {
+    private readonly Type _type;
+    private readonly ExpressionType _nodeType;
+
     public UnknownExpression (Type type)
       : this (type, (ExpressionType) (-1))
     {
     }
 
-#if NET_4_0
-#pragma warning disable 0618
-#endif
     public UnknownExpression (Type type, ExpressionType nodeType)
-      : base (nodeType, type)
     {
+      _type = type;
+      _nodeType = nodeType;
     }
-#if NET_4_0
-#pragma warning restore 0618
-#endif
+
+    public override ExpressionType NodeType
+    {
+      get { return _nodeType; }
+    }
+
+    public override Type Type
+    {
+      get { return _type; }
+    }
   }
 }

@@ -14,7 +14,7 @@
     <AssemblyName>Remotion.Linq.UnitTests</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -32,7 +32,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\remotion.snk</AssemblyOriginatorKeyFile>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -56,7 +56,7 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;DEBUG;NET_3_5</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
@@ -80,7 +80,7 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;NET_3_5</DefineConstants>
+    <DefineConstants>TRACE;</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
     <DebugSymbols>false</DebugSymbols>
@@ -100,6 +100,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -113,7 +114,7 @@
       <Name>System</Name>
     </Reference>
     <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+      <RequiredTargetFramework>4.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data">
       <Name>System.Data</Name>
@@ -588,10 +589,6 @@
     <Compile Include="Linq\Core\TestUtilities\Dev.cs" />
     <Compile Include="Linq\Core\TestUtilities\PrivateInvoke.cs" />
     <Compile Include="Linq\Core\TestUtilities\Serializer.cs" />
-    <Compile Include="Linq\Core\TestUtilities\Tuple.cs" />
-    <Compile Include="Linq\Core\TestUtilities\TupleAb.cs" />
-    <Compile Include="Linq\Core\TestUtilities\TupleAbc.cs" />
-    <Compile Include="Linq\Core\TestUtilities\TupleAbcd.cs" />
     <Compile Include="Linq\Core\Utilities\HashCodeUtilityTest.cs" />
     <Compile Include="Linq\Core\Utilities\SeparatedStringBuilderTest.cs" />
     <None Include="..\Relinq LGPL.licenseheader">
@@ -626,23 +623,6 @@
     <Content Include="Linq\Core\Parsing\ExpressionTrees\threeFromQuery.jpg" />
     <Content Include="Linq\Core\Parsing\ExpressionTrees\threeFromWhereQuery.jpg" />
     <Content Include="Linq\Core\Parsing\ExpressionTrees\whereFromWhereQuery.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Linq.Core.csproj">

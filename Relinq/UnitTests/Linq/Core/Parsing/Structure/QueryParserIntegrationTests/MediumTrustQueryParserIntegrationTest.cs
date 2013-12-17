@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq;
+using System.Security.Permissions;
 using NUnit.Framework;
 using Remotion.Linq.UnitTests.Sandboxing;
 
@@ -27,7 +28,10 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
     [Test]
     public void MediumTrust ()
     {
-      var mediumTrust = PermissionSets.GetMediumTrust (AppDomain.CurrentDomain.BaseDirectory, Environment.MachineName);
+      var mediumTrust = PermissionSets
+          .GetMediumTrust (AppDomain.CurrentDomain.BaseDirectory, Environment.MachineName)
+          .Concat (new[] { new ReflectionPermission (ReflectionPermissionFlag.MemberAccess) })
+          .ToArray();
 
       var types = (from t in typeof (MediumTrustQueryParserIntegrationTest).Assembly.GetTypes ()
                    where t.Namespace == typeof (MediumTrustQueryParserIntegrationTest).Namespace

@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
+using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Utilities;
 
@@ -30,14 +32,27 @@ namespace Remotion.Linq.Clauses.Expressions
   /// </remarks>
   public class QuerySourceReferenceExpression : Expression
   {
+    private readonly Type _type;
     public const ExpressionType ExpressionType = (ExpressionType) 100001;
 
     public QuerySourceReferenceExpression (IQuerySource querySource)
-        : base (ExpressionType, ArgumentUtility.CheckNotNull ("querySource", querySource).ItemType)
     {
+      ArgumentUtility.CheckNotNull ("querySource", querySource);
+
+      _type = querySource.ItemType;
       ReferencedQuerySource = querySource;
     }
 
+    public override ExpressionType NodeType
+    {
+      get { return ExpressionType; }
+    }
+
+    public override Type Type
+    {
+      get { return _type; }
+    }
+    
     /// <summary>
     /// Gets the query source referenced by this expression.
     /// </summary>

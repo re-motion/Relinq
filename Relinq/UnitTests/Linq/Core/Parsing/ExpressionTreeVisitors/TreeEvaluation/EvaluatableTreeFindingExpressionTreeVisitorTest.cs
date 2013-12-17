@@ -22,10 +22,7 @@ using NUnit.Framework;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
-
-#if NET_4_0
 using Microsoft.CSharp.RuntimeBinder;
-#endif
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.TreeEvaluation
 {
@@ -201,7 +198,6 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.TreeE
       Assert.That (result.IsEvaluatableExpression (expression), Is.False);
     }
 
-#if NET_4_0
     [Test]
     public void VisitDynamicExpression_WithParameterReference_NonEvaluable ()
     {
@@ -223,8 +219,6 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.TreeE
 
       Assert.That (result.IsEvaluatableExpression (body), Is.False);
     }
-
-#endif
 
     [Test]
     public void PartialEvaluationExceptionExpression_NotEvaluable_AndChildrenNeither ()

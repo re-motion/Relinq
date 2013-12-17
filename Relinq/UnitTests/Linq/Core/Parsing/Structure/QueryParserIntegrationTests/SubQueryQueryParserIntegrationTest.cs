@@ -109,7 +109,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       Assert.That (queryModel.ResultOperators[0], Is.TypeOf (typeof (AggregateFromSeedResultOperator)));
 
       var aggregatorFunc = ((AggregateFromSeedResultOperator) queryModel.ResultOperators[0]).Func;
-      Assert.That (aggregatorFunc.Body, Is.TypeOf (typeof (BinaryExpression)));
+      Assert.That (aggregatorFunc.Body, Is.AssignableTo (typeof (BinaryExpression)));
       Assert.That (((BinaryExpression) aggregatorFunc.Body).Left, Is.SameAs (aggregatorFunc.Parameters[0]));
       Assert.That (((BinaryExpression) aggregatorFunc.Body).Right, Is.TypeOf (typeof (SubQueryExpression)));
 

@@ -75,7 +75,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     [Test]
     [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = 
         "Expected a type implementing IEnumerable<T>, but found "
-        + "'System.Func`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]'.\r\n"
+        + "'System.Func`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]'.\r\n"
         + "Parameter name: expression")]
     public void CreateQuery_NonEnumerableExpression ()
     {

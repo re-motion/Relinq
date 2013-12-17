@@ -141,8 +141,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage =
         "The generic type definition 'System.Collections.Generic.IDictionary`2[TKey,TValue]' could not be closed over the type of the ResultItemType "
-        + "('System.String'). The type or method has 2 generic parameter(s), but 1 generic argument(s) were provided. A generic argument must be "
-        + "provided for each generic parameter.\r\nParameter name: dataType")]
+        + "('System.String'). The number of generic arguments provided doesn't equal the arity of the generic type definition.\r\n" 
+        + "Parameter name: instantiation\r\n"
+        + "Parameter name: dataType")]
     public void AdjustDataType_GenericTypeDefinition_WrongNumberOfArguments ()
     {
       _infoWithStringSequence.AdjustDataType (typeof (IDictionary<,>));

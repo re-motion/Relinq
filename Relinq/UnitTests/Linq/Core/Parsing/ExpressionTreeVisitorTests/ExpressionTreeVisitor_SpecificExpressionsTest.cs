@@ -155,6 +155,29 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
+    public void VisitConditionalExpression_WithType_AndChanges ()
+    {
+      var test = Expression.Constant (true);
+      var ifTrue = Expression.Constant (null, typeof (object));
+      var ifFalse = Expression.Constant ("false", typeof (string));
+      var expression = Expression.Condition (test, ifTrue, ifFalse, typeof (object));
+      
+      Expression newIfFalse = Expression.Constant ("FALSE", typeof (string));
+      VisitorMock.Expect (mock => mock.VisitExpression (expression.Test)).Return (expression.Test);
+      VisitorMock.Expect (mock => mock.VisitExpression (expression.IfTrue)).Return (expression.IfTrue);
+      VisitorMock.Expect (mock => mock.VisitExpression (expression.IfFalse)).Return (newIfFalse);
+
+      var result = (ConditionalExpression) InvokeAndCheckVisitExpression ("VisitConditionalExpression", expression);
+
+      Assert.That (result, Is.Not.SameAs (expression));
+      Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Conditional));
+      Assert.That (result.Type, Is.SameAs (typeof (object)));
+      Assert.That (result.Test, Is.SameAs (expression.Test));
+      Assert.That (result.IfTrue, Is.SameAs (ifTrue));
+      Assert.That (result.IfFalse, Is.SameAs (newIfFalse));
+    }
+
+    [Test]
     public void VisitParameterExpression ()
     {
       var expression = (ParameterExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Parameter);
@@ -405,7 +428,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.NewArrayBounds));
       Assert.That (result.Expressions, Is.EqualTo (newExpressions));
-      Assert.That (result.Type, Is.EqualTo (typeof (int).MakeArrayType (1)));
+      Assert.That (result.Type, Is.EqualTo (typeof (int).MakeArrayType()));
     }
 
     [Test]

@@ -67,10 +67,10 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
 
       // Expected: false && c.ID > Exception (nullValue.Length)
-      Assert.That (whereClause.Predicate, Is.TypeOf<BinaryExpression>().With.Property ("NodeType").EqualTo (ExpressionType.AndAlso));
+      Assert.That (whereClause.Predicate, Is.AssignableTo<BinaryExpression>().With.Property ("NodeType").EqualTo (ExpressionType.AndAlso));
       var outerBinary = ((BinaryExpression) whereClause.Predicate);
       CheckResolvedExpression<Cook, bool> (outerBinary.Left, queryModel.MainFromClause, c => false);
-      Assert.That (outerBinary.Right, Is.TypeOf<BinaryExpression> ().With.Property ("NodeType").EqualTo (ExpressionType.GreaterThan));
+      Assert.That (outerBinary.Right, Is.AssignableTo<BinaryExpression> ().With.Property ("NodeType").EqualTo (ExpressionType.GreaterThan));
       var innerBinary = (BinaryExpression) outerBinary.Right;
       CheckResolvedExpression<Cook, int> (innerBinary.Left, queryModel.MainFromClause, c => c.ID);
       Assert.That (
