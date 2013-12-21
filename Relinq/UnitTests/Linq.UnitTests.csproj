@@ -123,14 +123,14 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\SharedSource\ReSharperAnnotations\ImplicitUseKindFlags.cs">
-      <Link>SharedSource\ReSharperAnnotations\ImplicitUseKindFlags.cs</Link>
+    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\ImplicitUseKindFlags.cs">
+      <Link>SharedSource\ResharperAnnotations\ImplicitUseKindFlags.cs</Link>
     </Compile>
-    <Compile Include="..\..\SharedSource\ReSharperAnnotations\ImplicitUseTargetFlags.cs">
-      <Link>SharedSource\ReSharperAnnotations\ImplicitUseTargetFlags.cs</Link>
+    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\ImplicitUseTargetFlags.cs">
+      <Link>SharedSource\ResharperAnnotations\ImplicitUseTargetFlags.cs</Link>
     </Compile>
-    <Compile Include="..\..\SharedSource\ReSharperAnnotations\UsedImplicitlyAttribute.cs">
-      <Link>SharedSource\ReSharperAnnotations\UsedImplicitlyAttribute.cs</Link>
+    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\UsedImplicitlyAttribute.cs">
+      <Link>SharedSource\ResharperAnnotations\UsedImplicitlyAttribute.cs</Link>
     </Compile>
     <Compile Include="..\AssemblyInfoShared.cs">
       <Link>Properties\AssemblyInfoShared.cs</Link>
