@@ -14,7 +14,8 @@
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\remotion.snk</AssemblyOriginatorKeyFile>
-    <FileUpgradeFlags></FileUpgradeFlags>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <PublishUrl>publish\</PublishUrl>
@@ -43,7 +44,8 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Remotion.Linq.xml</DocumentationFile>
     <NoWarn>1591;419</NoWarn>
-    <WarningsAsErrors></WarningsAsErrors>
+    <WarningsAsErrors>
+    </WarningsAsErrors>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
@@ -56,7 +58,8 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Remotion.Linq.xml</DocumentationFile>
     <NoWarn>1591;419</NoWarn>
-    <WarningsAsErrors></WarningsAsErrors>
+    <WarningsAsErrors>
+    </WarningsAsErrors>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
@@ -67,6 +70,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\sharedsource\resharperannotations\AssertionConditionAttribute.cs">
+      <Link>SharedSource\ReSharperAnnotations\AssertionConditionAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sharedsource\resharperannotations\AssertionConditionType.cs">
+      <Link>SharedSource\ReSharperAnnotations\AssertionConditionType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sharedsource\resharperannotations\AssertionMethodAttribute.cs">
+      <Link>SharedSource\ReSharperAnnotations\AssertionMethodAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sharedsource\resharperannotations\InvokerParameterNameAttribute.cs">
+      <Link>SharedSource\ReSharperAnnotations\InvokerParameterNameAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sharedsource\resharperannotations\NoEnumerationAttribute.cs">
+      <Link>SharedSource\ReSharperAnnotations\NoEnumerationAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\AssemblyInfoShared.cs">
       <Link>Properties\AssemblyInfoShared.cs</Link>
     </Compile>
@@ -268,15 +286,6 @@
     <Compile Include="Utilities\ArgumentUtility.cs" />
     <Compile Include="Utilities\HashCodeUtility.cs" />
     <Compile Include="Utilities\RegistryBase.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\AssertionConditionAttribute.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\AssertionConditionType.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\AssertionMethodAttribute.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\ImplicitUseKindFlags.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\ImplicitUseTargetFlags.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\InvokerParameterNameAttribute.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\MeansImplicitUseAttribute.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\NoEnumerationAttribute.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\UsedImplicitlyAttribute.cs" />
     <Compile Include="Utilities\SeparatedStringBuilder.cs" />
     <None Include="Doc\include\GettingStartedWithRelinq.aml" />
   </ItemGroup>

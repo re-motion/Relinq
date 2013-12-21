@@ -123,20 +123,17 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\SharedSource\ReSharperAnnotations\ImplicitUseKindFlags.cs">
+      <Link>SharedSource\ReSharperAnnotations\ImplicitUseKindFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\ReSharperAnnotations\ImplicitUseTargetFlags.cs">
+      <Link>SharedSource\ReSharperAnnotations\ImplicitUseTargetFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\ReSharperAnnotations\UsedImplicitlyAttribute.cs">
+      <Link>SharedSource\ReSharperAnnotations\UsedImplicitlyAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\AssemblyInfoShared.cs">
       <Link>Properties\AssemblyInfoShared.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Utilities\ReSharperAnnotations\ImplicitUseKindFlags.cs">
-      <Link>ReSharperAnnotations\ImplicitUseKindFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Utilities\ReSharperAnnotations\ImplicitUseTargetFlags.cs">
-      <Link>ReSharperAnnotations\ImplicitUseTargetFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Utilities\ReSharperAnnotations\MeansImplicitUseAttribute.cs">
-      <Link>ReSharperAnnotations\MeansImplicitUseAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Utilities\ReSharperAnnotations\UsedImplicitlyAttribute.cs">
-      <Link>ReSharperAnnotations\UsedImplicitlyAttribute.cs</Link>
     </Compile>
     <Compile Include="LinqToSqlAdapter\MetaDataMemberComparerTest.cs" />
     <Compile Include="LinqToSqlAdapter\QueryExecutorTest.cs" />
