@@ -606,7 +606,6 @@
     <Compile Include="Linq\Core\TestUtilities\PrivateInvoke.cs" />
     <Compile Include="Linq\Core\TestUtilities\Serializer.cs" />
     <Compile Include="Linq\Core\Utilities\HashCodeUtilityTest.cs" />
-    <Compile Include="Linq\Core\Utilities\SeparatedStringBuilderTest.cs" />
     <None Include="..\Relinq LGPL.licenseheader">
       <Link>Relinq LGPL.licenseheader</Link>
     </None>
