@@ -22,7 +22,6 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.Parsing.Structure;
-using Remotion.Linq.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Linq.Core
@@ -82,7 +81,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
+        "Parameter 'expression' is a 'System.Int32[]', which cannot be assigned to type 'System.Collections.Generic.IEnumerable`1[System.String]'."
+        + "\r\nParameter name: expression")]
     public void ConstructorThrowsTypeException ()
     {
       new TestQueryable<string> (_providerMock, _intArrayExpression);

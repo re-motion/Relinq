@@ -18,7 +18,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Parsing.Structure;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq
 {
@@ -59,16 +59,17 @@ namespace Remotion.Linq
       {
         var message = string.Format (
             "Expected the generic type definition of an implementation of IQueryable<T>, but was '{0}'.",
-            queryableType.FullName);
-        throw new ArgumentTypeException (message, "queryableType", typeof (IQueryable<>), queryableType);
+            queryableType);
+        throw new ArgumentException (message, "queryableType");
       }
       var genericArgumentCount = queryableType.GetGenericArguments().Length;
       if (genericArgumentCount != 1)
       {
         var message = string.Format (
-            "Expected the generic type definition of an implementation of IQueryable<T> with exactly one type argument, but found {0} arguments.",
-            genericArgumentCount);
-        throw new ArgumentTypeException (message, "queryableType", typeof (IQueryable<>), queryableType);
+            "Expected the generic type definition of an implementation of IQueryable<T> with exactly one type argument, but found {0} arguments on '{1}.",
+            genericArgumentCount,
+            queryableType);
+        throw new ArgumentException (message, "queryableType");
       }
     }
 

@@ -20,7 +20,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Collections;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation
 {

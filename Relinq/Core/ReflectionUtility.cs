@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq
 {
@@ -54,8 +54,8 @@ namespace Remotion.Linq
       Type itemType = TryGetItemTypeOfIEnumerable (enumerableType);
       if (itemType == null)
       {
-        var message = string.Format ("Expected a type implementing IEnumerable<T>, but found '{0}'.", enumerableType.FullName);
-        throw new ArgumentTypeException (message, argumentName, typeof (IEnumerable<>), enumerableType);
+        var message = string.Format ("Expected a type implementing IEnumerable<T>, but found '{0}'.", enumerableType);
+        throw new ArgumentException (message, argumentName);
       }
 
       return itemType;

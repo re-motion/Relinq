@@ -17,7 +17,6 @@
 using System;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.StreamedData;
-using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
 {
@@ -60,15 +59,16 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), 
-        ExpectedMessage = "Cannot retrieve the current value as type 'System.String' because it is of type 'System.Int32'.")]
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = 
+        "Cannot retrieve the current value as type 'System.String' because it is of type 'System.Int32'.")]
     public void GetCurrentSingleValue_InvalidType ()
     {
       _dataWithIntValue.GetTypedValue<string> ();
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
+        "Parameter 'value' has type 'System.Int32' when type 'System.String' was expected.\r\nParameter name: value")]
     public void Initialization_CurrentValue_WrongItemExpression ()
     {
       new StreamedValue (0, new StreamedScalarValueInfo (typeof (string)));

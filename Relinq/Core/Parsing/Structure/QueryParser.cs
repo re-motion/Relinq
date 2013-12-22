@@ -19,7 +19,7 @@ using System.Linq.Expressions;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure
 {

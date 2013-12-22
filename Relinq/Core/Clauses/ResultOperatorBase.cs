@@ -21,7 +21,7 @@ using System.Reflection;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses
 {
@@ -195,16 +195,16 @@ namespace Remotion.Linq.Clauses
       }
     }
 
-    protected void CheckSequenceItemType (StreamedSequenceInfo sequenceInfo, Type expectedItemType)
+    protected void CheckSequenceItemType (StreamedSequenceInfo inputInfo, Type expectedItemType)
     {
-      if (!expectedItemType.IsAssignableFrom (sequenceInfo.ResultItemType))
+      if (!expectedItemType.IsAssignableFrom (inputInfo.ResultItemType))
       {
         var message = string.Format (
             "The input sequence must have items of type '{0}', but it has items of type '{1}'.",
             expectedItemType,
-            sequenceInfo.ResultItemType);
+            inputInfo.ResultItemType);
 
-        throw new ArgumentTypeException (message, "inputInfo", typeof (IEnumerable<>).MakeGenericType (expectedItemType), sequenceInfo.ResultItemType);
+        throw new ArgumentException (message, "inputInfo");
       }
     }
   }

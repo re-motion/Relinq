@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Remotion.Linq.Clauses;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq
 {
@@ -79,7 +79,7 @@ namespace Remotion.Linq
       var message = string.Format (
           "Cannot add clause of type '{0}' to a query model. Only instances of IBodyClause, MainFromClause, or ISelectGroupClause are supported.",
           clause.GetType());
-      throw new ArgumentTypeException (message, "clause", null, clause.GetType());
+      throw new ArgumentException (message, "clause");
     }
 
     public void AddResultOperator (ResultOperatorBase resultOperator)

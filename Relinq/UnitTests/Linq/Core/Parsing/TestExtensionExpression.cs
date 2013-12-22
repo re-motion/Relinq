@@ -19,7 +19,7 @@ using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
 {
@@ -30,7 +30,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
     public TestExtensionExpression (Expression expression)
         : base(expression.Type)
     {
-      ArgumentUtility.CheckNotNull ("constantExpression", expression);
+      ArgumentUtility.CheckNotNull ("expression", expression);
 
       _expression = expression;
     }

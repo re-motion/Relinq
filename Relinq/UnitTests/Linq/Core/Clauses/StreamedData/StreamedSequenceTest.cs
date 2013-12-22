@@ -18,7 +18,6 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.StreamedData;
-using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
 {
@@ -46,8 +45,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = 
-        "Argument sequence has type System.String[] when type System.Int32[] was expected.\r\nParameter name: sequence")]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
+        "Parameter 'sequence' has type 'System.String[]' when type 'System.Int32[]' was expected.\r\nParameter name: sequence")]
     public void Initialization_CurrentSequence_WrongItemExpression ()
     {
       new StreamedSequence (new[] { "1", "2", "3" }, new StreamedSequenceInfo (typeof (int[]), _stringExpression));

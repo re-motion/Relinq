@@ -21,7 +21,6 @@ using JetBrains.Annotations;
 using NUnit.Framework;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
-using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
 {
@@ -54,11 +53,11 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
     public void Initialization_InvalidType ()
     {
       Assert.That (
-          () => new MethodCallExpressionTransformerAttribute (typeof (string)), 
-          Throws.TypeOf<ArgumentTypeException>().With.Message.EqualTo (
-              "Argument transformerType is a System.String, which cannot be assigned to type "
-              + "Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.IExpressionTransformer`1[System.Linq.Expressions.MethodCallExpression].\r\n"
-              + "Parameter name: transformerType"));
+          () => new MethodCallExpressionTransformerAttribute (typeof (string)),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "Parameter 'transformerType' is a 'System.String', which cannot be assigned to type "
+              + "'Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.IExpressionTransformer`1[System.Linq.Expressions.MethodCallExpression]'."
+              + "\r\nParameter name: transformerType"));
     }
 
     [Test]

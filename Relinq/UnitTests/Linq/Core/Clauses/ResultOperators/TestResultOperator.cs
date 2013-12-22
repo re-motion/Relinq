@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.StreamedData;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
 {

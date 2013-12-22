@@ -22,9 +22,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.UnitTests.Linq.Core.TestQueryGenerators;
-using Remotion.Linq;
 using Remotion.Linq.Parsing.Structure;
-using Remotion.Linq.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Linq.Core
@@ -73,10 +71,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = 
-        "Expected a type implementing IEnumerable<T>, but found "
-        + "'System.Func`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]'.\r\n"
-        + "Parameter name: expression")]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
+        "Expected a type implementing IEnumerable<T>, but found 'System.Func`1[System.Int32]'.\r\nParameter name: expression")]
     public void CreateQuery_NonEnumerableExpression ()
     {
       Expression expression = ExpressionHelper.CreateLambdaExpression ();

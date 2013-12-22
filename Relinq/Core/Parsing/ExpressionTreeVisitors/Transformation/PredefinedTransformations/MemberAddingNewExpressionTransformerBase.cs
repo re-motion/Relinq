@@ -18,7 +18,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
 {

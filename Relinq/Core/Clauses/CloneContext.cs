@@ -15,7 +15,7 @@
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses
 {

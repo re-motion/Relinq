@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Parsing;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
 {
@@ -64,11 +64,9 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
 
       if (inputParameter.Type != fullExpression.Type)
       {
-        throw new ArgumentTypeException (
-            "The inputParameter's type must match the fullExpression's type.",
-            "inputParameter",
-            fullExpression.Type,
-            inputParameter.Type);
+        throw new ArgumentException (
+            string.Format ("The inputParameter's type '{0}' must match the fullExpression's type '{1}'.", fullExpression.Type, inputParameter.Type),
+            "inputParameter");
       }
 
       var visitor = new AccessorFindingExpressionTreeVisitor (searchedExpression, inputParameter);

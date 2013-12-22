@@ -19,10 +19,8 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
-using Remotion.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
@@ -53,7 +51,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
+        "Expected a type implementing IEnumerable<T>, but found 'Remotion.Linq.UnitTests.Linq.Core.TestDomain.Cook'.\r\nParameter name: value")]
     public void Intialize_WithNonEnumerableType_Throws ()
     {
       new GroupJoinClause ("x", typeof (Cook), _joinClause);

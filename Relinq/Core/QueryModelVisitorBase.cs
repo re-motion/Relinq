@@ -16,7 +16,7 @@
 // 
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Collections;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq
 {

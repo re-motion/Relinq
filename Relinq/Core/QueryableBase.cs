@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Parsing.Structure;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq
 {
@@ -78,9 +78,7 @@ namespace Remotion.Linq
     {
       ArgumentUtility.CheckNotNull ("provider", provider);
       ArgumentUtility.CheckNotNull ("expression", expression);
-
-      if (!typeof (IEnumerable<T>).IsAssignableFrom (expression.Type))
-        throw new ArgumentTypeException ("expression", typeof (IEnumerable<T>), expression.Type);
+      ArgumentUtility.CheckTypeIsAssignableFrom ("expression", expression.Type, typeof (IEnumerable<T>));
 
       _queryProvider = provider;
       Expression = expression;

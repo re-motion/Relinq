@@ -24,7 +24,7 @@ using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure
 {
@@ -227,9 +227,10 @@ namespace Remotion.Linq.Parsing.Structure
 
       try
       {
+        //TODO RM-5940: Add Assertions
         return new MainSourceExpressionNode (associatedIdentifier, preprocessedExpression);
       }
-      catch (ArgumentTypeException ex)
+      catch (ArgumentException ex)
       {
         var message = String.Format (
             "Cannot parse expression '{0}' as it has an unsupported type. Only query sources (that is, expressions that implement IEnumerable) "

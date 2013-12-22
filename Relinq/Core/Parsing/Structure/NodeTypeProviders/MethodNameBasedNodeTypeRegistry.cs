@@ -21,7 +21,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Collections;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
 {
