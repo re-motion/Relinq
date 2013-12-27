@@ -19,7 +19,7 @@ using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 using System.Linq;
 
 namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations

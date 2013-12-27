@@ -21,7 +21,6 @@ using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
-using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
 {
@@ -76,7 +75,10 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
+        "Parameter 'inputInfo' has type 'Remotion.Linq.Clauses.StreamedData.StreamedScalarValueInfo' "
+        + "when type 'Remotion.Linq.Clauses.StreamedData.StreamedSequenceInfo' was expected."
+        + "\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInput ()
     {
       var input = new StreamedScalarValueInfo (typeof (Cook));

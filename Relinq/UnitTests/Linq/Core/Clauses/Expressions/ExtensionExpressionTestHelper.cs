@@ -91,7 +91,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions
           Is.Empty, 
           "'{0}' declares the same node type as {1}.", 
           expressionType.Name, 
-          SeparatedStringBuilder.Build (", ", matches.Select (field => string.Format ("{0} ({1})", field.Field.DeclaringType.Name, field.Field.Name))));
+          string.Join (", ", matches.Select (field => string.Format ("{0} ({1})", field.Field.DeclaringType.Name, field.Field.Name))));
     }
   }
 }

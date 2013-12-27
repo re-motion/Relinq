@@ -20,7 +20,7 @@ using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
 {

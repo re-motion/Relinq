@@ -19,7 +19,6 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel.TestDomain;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
 {
@@ -59,7 +58,10 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
+        "Parameter 'nodeType' is a 'Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel.MethodCallExpressionNodeFactoryTest', "
+        + "which cannot be assigned to type 'Remotion.Linq.Parsing.Structure.IntermediateModel.IExpressionNode'."
+        + "\r\nParameter name: nodeType")]
     public void CreateExpressionNode_InvalidType ()
     {
       MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (MethodCallExpressionNodeFactoryTest), _parseInfo, new object[0]);

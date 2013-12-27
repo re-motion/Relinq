@@ -16,9 +16,7 @@
 // 
 using System;
 using NUnit.Framework;
-using Remotion.Linq;
 using Remotion.Linq.Clauses;
-using Remotion.Linq.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Linq.Core
@@ -87,10 +85,15 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
     public void AddClause_InvalidClause ()
     {
-      _builder.AddClause (MockRepository.GenerateMock<IClause>());
+      var value = MockRepository.GenerateMock<IClause>();
+      Assert.That (
+          () => _builder.AddClause (value),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "Cannot add clause of type '" + value.GetType().Name
+              + "' to a query model. Only instances of IBodyClause, MainFromClause, or ISelectGroupClause are supported."
+              + "\r\nParameter name: clause"));
     }
 
     [Test]

@@ -21,7 +21,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Collections;
 using System.Linq;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.StreamedData
 {
@@ -42,7 +42,7 @@ namespace Remotion.Linq.Clauses.StreamedData
       if (!ResultItemType.IsAssignableFrom (itemExpression.Type))
       {
         var message = string.Format ("ItemExpression is of type '{0}', but should be '{1}' (or derived from it).", itemExpression.Type, ResultItemType);
-        throw new ArgumentTypeException (message, "itemExpression", ResultItemType, itemExpression.Type);
+        throw new ArgumentException (message, "itemExpression");
       }
 
       DataType = dataType;
@@ -102,9 +102,10 @@ namespace Remotion.Linq.Clauses.StreamedData
 
       try
       {
+        //TODO: RM-5940: Add Assertions
         return new StreamedSequenceInfo (dataType, ItemExpression);
       }
-      catch (ArgumentTypeException)
+      catch (ArgumentException)
       {
         var message = string.Format (
               "'{0}' cannot be used as the data type for a sequence with an ItemExpression of type '{1}'.",

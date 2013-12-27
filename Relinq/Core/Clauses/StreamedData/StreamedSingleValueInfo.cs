@@ -17,7 +17,7 @@
 using System;
 using System.Reflection;
 using Remotion.Linq.Clauses.ResultOperators;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.StreamedData
 {

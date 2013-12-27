@@ -17,7 +17,7 @@
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 
 namespace Remotion.Linq.UnitTests.Linq.Core.TestUtilities

@@ -18,6 +18,7 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Collections;
 using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses
 {
@@ -104,7 +105,7 @@ namespace Remotion.Linq.Clauses
 
     public override string ToString ()
     {
-      var result = "orderby " + SeparatedStringBuilder.Build (", ", Orderings);
+      var result = "orderby " + string.Join (", ", Orderings);
 
       return result;
     }

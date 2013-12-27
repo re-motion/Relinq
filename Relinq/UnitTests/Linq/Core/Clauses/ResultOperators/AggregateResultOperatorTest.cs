@@ -25,7 +25,6 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors;
-using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
 {
@@ -67,7 +66,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage =
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
         "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<T,T>', but it is "
         + "'System.Reflection.MemberFilter'.\r\nParameter name: value")]
     public void Func_NonGeneric ()
@@ -82,7 +81,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage =
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
         "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<T,T>', but it is "
         + "'System.Func`1[System.Boolean]'.\r\nParameter name: value")]
     public void Func_Generic_WrongDefinition ()
@@ -93,7 +92,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage =
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
         "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<T,T>', but it is "
         + "'System.Func`2[System.Int32,System.Boolean]'.\r\nParameter name: value")]
     public void Func_Generic_WrongReturnType ()
@@ -129,7 +128,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
+    [ExpectedException (typeof (ArgumentException))]
     public void GetOutputDataInfo_InvalidInput ()
     {
       var input = new StreamedScalarValueInfo (typeof (Cook));
@@ -137,7 +136,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = "The input sequence must have items of type 'System.Int32', but it has "
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The input sequence must have items of type 'System.Int32', but it has "
         + "items of type 'Remotion.Linq.UnitTests.Linq.Core.TestDomain.Cook'.\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInput_DoesntMatchItem ()
     {

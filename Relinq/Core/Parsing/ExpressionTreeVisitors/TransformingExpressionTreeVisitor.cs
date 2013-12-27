@@ -17,7 +17,7 @@
 using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
 {

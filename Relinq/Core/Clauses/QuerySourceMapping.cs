@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses
 {

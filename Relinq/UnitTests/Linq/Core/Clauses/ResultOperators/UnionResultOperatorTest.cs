@@ -24,7 +24,6 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
-using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
 {
@@ -116,7 +115,10 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException))]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
+        "Parameter 'inputInfo' has type 'Remotion.Linq.Clauses.StreamedData.StreamedScalarValueInfo' "
+        + "when type 'Remotion.Linq.Clauses.StreamedData.StreamedSequenceInfo' was expected."
+        + "\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInputType ()
     {
       var input = new StreamedScalarValueInfo (typeof (int));
@@ -124,7 +126,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = 
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
         "The input sequence must have items of type 'System.Int32', but it has items of type 'System.String'.\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInputItemType ()
     {

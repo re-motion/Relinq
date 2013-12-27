@@ -17,7 +17,7 @@
 
 using System;
 using System.Linq.Expressions;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.Expressions
 {

@@ -21,7 +21,7 @@ using System.Linq.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure
 {

@@ -123,20 +123,38 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\AssertionConditionAttribute.cs">
+      <Link>SharedSource\ResharperAnnotations\AssertionConditionAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\AssertionConditionType.cs">
+      <Link>SharedSource\ResharperAnnotations\AssertionConditionType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\AssertionMethodAttribute.cs">
+      <Link>SharedSource\ResharperAnnotations\AssertionMethodAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\ImplicitUseKindFlags.cs">
+      <Link>SharedSource\ResharperAnnotations\ImplicitUseKindFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\ImplicitUseTargetFlags.cs">
+      <Link>SharedSource\ResharperAnnotations\ImplicitUseTargetFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\InvokerParameterNameAttribute.cs">
+      <Link>SharedSource\ResharperAnnotations\InvokerParameterNameAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\NoEnumerationAttribute.cs">
+      <Link>SharedSource\ResharperAnnotations\NoEnumerationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\UsedImplicitlyAttribute.cs">
+      <Link>SharedSource\ResharperAnnotations\UsedImplicitlyAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\Utilities\ArgumentUtility.cs">
+      <Link>SharedSource\Utilities\ArgumentUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\Utilities\NullableTypeUtility.cs">
+      <Link>SharedSource\Utilities\NullableTypeUtility.cs</Link>
+    </Compile>
     <Compile Include="..\AssemblyInfoShared.cs">
       <Link>Properties\AssemblyInfoShared.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Utilities\ReSharperAnnotations\ImplicitUseKindFlags.cs">
-      <Link>ReSharperAnnotations\ImplicitUseKindFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Utilities\ReSharperAnnotations\ImplicitUseTargetFlags.cs">
-      <Link>ReSharperAnnotations\ImplicitUseTargetFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Utilities\ReSharperAnnotations\MeansImplicitUseAttribute.cs">
-      <Link>ReSharperAnnotations\MeansImplicitUseAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Utilities\ReSharperAnnotations\UsedImplicitlyAttribute.cs">
-      <Link>ReSharperAnnotations\UsedImplicitlyAttribute.cs</Link>
     </Compile>
     <Compile Include="LinqToSqlAdapter\MetaDataMemberComparerTest.cs" />
     <Compile Include="LinqToSqlAdapter\QueryExecutorTest.cs" />
@@ -188,7 +206,6 @@
     <Compile Include="Linq\Core\TestDomain\ISpecificCook.cs" />
     <Compile Include="Linq\Core\TestDomain\MetaID.cs" />
     <Compile Include="Linq\Core\TestUtilities\NonTransformedTuple.cs" />
-    <Compile Include="Linq\Core\Utilities\ArgumentTypeExceptionTest.cs" />
     <Compile Include="Linq\Core\Utilities\ITestRegistry.cs" />
     <Compile Include="Linq\Core\Utilities\RegistryBaseTest.cs" />
     <Compile Include="Linq\Core\Utilities\TestRegistry.cs" />
@@ -585,12 +602,9 @@
     <Compile Include="Sandboxing\TestFixtureResult.cs" />
     <Compile Include="Sandboxing\TestResult.cs" />
     <Compile Include="UniqueIdentifierGeneratorTest.cs" />
-    <Compile Include="Linq\Core\Utilities\ArgumentUtilityTest.cs" />
     <Compile Include="Linq\Core\TestUtilities\Dev.cs" />
     <Compile Include="Linq\Core\TestUtilities\PrivateInvoke.cs" />
     <Compile Include="Linq\Core\TestUtilities\Serializer.cs" />
-    <Compile Include="Linq\Core\Utilities\HashCodeUtilityTest.cs" />
-    <Compile Include="Linq\Core\Utilities\SeparatedStringBuilderTest.cs" />
     <None Include="..\Relinq LGPL.licenseheader">
       <Link>Relinq LGPL.licenseheader</Link>
     </None>

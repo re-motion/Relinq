@@ -22,7 +22,6 @@ using NUnit.Framework;
 using Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
-using Remotion.Linq.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
@@ -49,7 +48,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage =
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
         "Expected a type implementing IEnumerable<T>, but found 'System.Int32'.\r\nParameter name: dataType")]
     public void Initialization_DataTypeIsnotAssignableFromIEnumerable ()
     {
@@ -57,7 +56,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentTypeException), ExpectedMessage = 
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
         "ItemExpression is of type 'System.String', but should be 'System.Int32' (or derived from it).\r\nParameter name: itemExpression")]
     public void Initialization_CurrentSequence_WrongItemExpression ()
     {

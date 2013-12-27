@@ -14,7 +14,8 @@
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\remotion.snk</AssemblyOriginatorKeyFile>
-    <FileUpgradeFlags></FileUpgradeFlags>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <PublishUrl>publish\</PublishUrl>
@@ -43,7 +44,8 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Remotion.Linq.xml</DocumentationFile>
     <NoWarn>1591;419</NoWarn>
-    <WarningsAsErrors></WarningsAsErrors>
+    <WarningsAsErrors>
+    </WarningsAsErrors>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
@@ -56,7 +58,8 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Remotion.Linq.xml</DocumentationFile>
     <NoWarn>1591;419</NoWarn>
-    <WarningsAsErrors></WarningsAsErrors>
+    <WarningsAsErrors>
+    </WarningsAsErrors>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
@@ -67,6 +70,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\AssertionConditionAttribute.cs">
+      <Link>SharedSource\ResharperAnnotations\AssertionConditionAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\AssertionConditionType.cs">
+      <Link>SharedSource\ResharperAnnotations\AssertionConditionType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\AssertionMethodAttribute.cs">
+      <Link>SharedSource\ResharperAnnotations\AssertionMethodAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\InvokerParameterNameAttribute.cs">
+      <Link>SharedSource\ResharperAnnotations\InvokerParameterNameAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\NoEnumerationAttribute.cs">
+      <Link>SharedSource\ResharperAnnotations\NoEnumerationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\ReSharperAnnotations\StringFormatMethodAttribute.cs">
+      <Link>SharedSource\ResharperAnnotations\StringFormatMethodAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\Utilities\ArgumentUtility.cs">
+      <Link>SharedSource\Utilities\ArgumentUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\Utilities\Assertion.cs">
+      <Link>SharedSource\Utilities\Assertion.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\Utilities\NullableTypeUtility.cs">
+      <Link>SharedSource\Utilities\NullableTypeUtility.cs</Link>
+    </Compile>
     <Compile Include="..\AssemblyInfoShared.cs">
       <Link>Properties\AssemblyInfoShared.cs</Link>
     </Compile>
@@ -263,26 +293,13 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\PartialEvaluatingExpressionTreeVisitor.cs" />
     <Compile Include="Clauses\WhereClause.cs" />
     <Compile Include="UnmappedItemException.cs" />
-    <Compile Include="Utilities\ArgumentEmptyException.cs" />
-    <Compile Include="Utilities\ArgumentTypeException.cs" />
-    <Compile Include="Utilities\ArgumentUtility.cs" />
-    <Compile Include="Utilities\HashCodeUtility.cs" />
     <Compile Include="Utilities\RegistryBase.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\AssertionConditionAttribute.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\AssertionConditionType.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\AssertionMethodAttribute.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\ImplicitUseKindFlags.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\ImplicitUseTargetFlags.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\InvokerParameterNameAttribute.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\MeansImplicitUseAttribute.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\NoEnumerationAttribute.cs" />
-    <Compile Include="Utilities\ReSharperAnnotations\UsedImplicitlyAttribute.cs" />
-    <Compile Include="Utilities\SeparatedStringBuilder.cs" />
     <None Include="Doc\include\GettingStartedWithRelinq.aml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Doc\include\Remotion.Linq.NamespaceDoc.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Utilities
 {

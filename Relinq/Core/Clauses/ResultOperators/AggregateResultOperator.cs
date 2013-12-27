@@ -21,7 +21,7 @@ using System.Linq;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses.StreamedData;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
 {
@@ -72,7 +72,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
           var message = string.Format (
               "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<T,T>', but it is '{0}'.", 
               value.Type);
-          throw new ArgumentTypeException (message, "value", typeof (Func<,>), value.Type);
+          throw new ArgumentException (message, "value");
         }
 
         _func = value; 

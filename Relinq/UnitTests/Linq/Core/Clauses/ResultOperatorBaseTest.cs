@@ -20,7 +20,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
-using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
@@ -135,7 +135,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
 
       Assert.That (
           () => _resultOperator.CheckSequenceItemType (sequenceInfo, expectedItemType), 
-          Throws.TypeOf<ArgumentTypeException>().With.Message.EqualTo (
+          Throws.ArgumentException.With.Message.EqualTo (
               "The input sequence must have items of type 'System.String', but it has items of type 'System.Object'.\r\nParameter name: inputInfo"));
     }
 
@@ -147,7 +147,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
 
       Assert.That (
           () => _resultOperator.CheckSequenceItemType (sequenceInfo, expectedItemType),
-          Throws.TypeOf<ArgumentTypeException> ().With.Message.EqualTo (
+          Throws.ArgumentException.With.Message.EqualTo (
               "The input sequence must have items of type 'System.Int32', but it has items of type 'System.String'.\r\nParameter name: inputInfo"));
     }
   }
