@@ -85,8 +85,14 @@
     <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\NoEnumerationAttribute.cs">
       <Link>SharedSource\ResharperAnnotations\NoEnumerationAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\..\SharedSource\Core\ReSharperAnnotations\StringFormatMethodAttribute.cs">
+      <Link>SharedSource\ResharperAnnotations\StringFormatMethodAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\SharedSource\Core\Utilities\ArgumentUtility.cs">
       <Link>SharedSource\Utilities\ArgumentUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedSource\Core\Utilities\Assertion.cs">
+      <Link>SharedSource\Utilities\Assertion.cs</Link>
     </Compile>
     <Compile Include="..\..\SharedSource\Core\Utilities\NullableTypeUtility.cs">
       <Link>SharedSource\Utilities\NullableTypeUtility.cs</Link>

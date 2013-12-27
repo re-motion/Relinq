@@ -227,7 +227,10 @@ namespace Remotion.Linq.Parsing.Structure
 
       try
       {
-        //TODO RM-5940: Add Assertions
+        // Assertions to ensure the argument exception can only happen because of an unsupported type in expression.
+        Assertion.IsNotNull (expression);
+        Assertion.IsFalse (string.IsNullOrEmpty (associatedIdentifier));
+
         return new MainSourceExpressionNode (associatedIdentifier, preprocessedExpression);
       }
       catch (ArgumentException ex)
