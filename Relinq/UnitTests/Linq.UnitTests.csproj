@@ -141,6 +141,9 @@
     <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\InvokerParameterNameAttribute.cs">
       <Link>SharedSource\ResharperAnnotations\InvokerParameterNameAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\..\SharedSource\Core\ReSharperAnnotations\MeansImplicitUseAttribute.cs">
+      <Link>SharedSource\ResharperAnnotations\MeansImplicitUseAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\NoEnumerationAttribute.cs">
       <Link>SharedSource\ResharperAnnotations\NoEnumerationAttribute.cs</Link>
     </Compile>
