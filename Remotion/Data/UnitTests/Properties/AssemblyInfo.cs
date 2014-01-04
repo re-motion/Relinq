@@ -24,7 +24,6 @@ using System.Reflection;
 //
 
 [assembly: AssemblyTitle("Unit Tests for Remotion DomainObjects Library")]
-[assembly: AssemblyDescription("Unit Tests for Remotion DomainObjects Library")]
 [assembly: AssemblyCulture("")]		
 [assembly: CLSCompliant(true)]
 
