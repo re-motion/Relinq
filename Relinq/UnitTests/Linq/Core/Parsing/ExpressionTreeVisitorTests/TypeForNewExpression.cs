@@ -16,7 +16,6 @@
 // 
 using System;
 using System.Reflection;
-using JetBrains.Annotations;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests

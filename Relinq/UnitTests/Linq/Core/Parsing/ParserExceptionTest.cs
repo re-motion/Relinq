@@ -16,8 +16,8 @@
 // 
 using System;
 using NUnit.Framework;
-using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Remotion.Linq.Parsing;
+using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
 {

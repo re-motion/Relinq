@@ -16,10 +16,10 @@
 // 
 using System;
 using NUnit.Framework;
-using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
-using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Collections;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 

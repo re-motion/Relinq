@@ -18,9 +18,9 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
-using Remotion.Linq.Clauses.Expressions;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions
 {

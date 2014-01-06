@@ -15,6 +15,7 @@
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
 
+using System;
 using System.Linq.Expressions;
 
 namespace Remotion.Linq.Clauses.Expressions

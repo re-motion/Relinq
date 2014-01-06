@@ -17,7 +17,6 @@
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using System.Security;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing

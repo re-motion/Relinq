@@ -17,7 +17,6 @@
 using System;
 using System.Linq;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
-using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.TestQueryGenerators
 {

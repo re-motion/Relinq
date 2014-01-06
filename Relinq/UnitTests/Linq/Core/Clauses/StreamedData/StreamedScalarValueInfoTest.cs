@@ -16,7 +16,6 @@
 // 
 using System;
 using NUnit.Framework;
-using Remotion.Linq;
 using Remotion.Linq.Clauses.StreamedData;
 using Rhino.Mocks;
 
