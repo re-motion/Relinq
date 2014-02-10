@@ -1,0 +1,2 @@
+Please see our Codeplex Wiki on contributing:
+https://relinq.codeplex.com/wikipage?title=Contributing%20to%20re-linq
