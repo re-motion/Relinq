@@ -275,7 +275,7 @@
     <Compile Include="Clauses\WhereClauseTest.cs" />
     <Compile Include="Collections\ChangeResistantObservableCollectionEnumeratorTest.cs" />
     <Compile Include="Collections\MultiDictionaryTest.cs" />
-    <Compile Include="Collections\ObservableCollectionTest.cs" />
+    <Compile Include="Collections\ObservableCollectionExtensionsTest.cs" />
     <Compile Include="DefaultQueryProviderTest.cs" />
     <Compile Include="EagerFetching\FetchFilteringQueryModelVisitorTest.cs" />
     <Compile Include="EagerFetching\FetchManyRequestTest.cs" />
