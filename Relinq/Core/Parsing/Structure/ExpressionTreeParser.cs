@@ -33,7 +33,7 @@ namespace Remotion.Linq.Parsing.Structure
   /// Parses an expression tree into a chain of <see cref="IExpressionNode"/> objects after executing a sequence of 
   /// <see cref="IExpressionTreeProcessor"/> objects.
   /// </summary>
-  public class ExpressionTreeParser
+  public sealed class ExpressionTreeParser
   {
     private static readonly MethodInfo s_getArrayLengthMethod = typeof (Array).GetMethod ("get_Length");
 

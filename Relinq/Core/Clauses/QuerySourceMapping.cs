@@ -27,7 +27,7 @@ namespace Remotion.Linq.Clauses
   /// in order to be able to correctly update references to old clauses to point to the new clauses. Via 
   /// <see cref="ReferenceReplacingExpressionTreeVisitor"/> and <see cref="CloningExpressionTreeVisitor"/>, it can also be used manually.
   /// </summary>
-  public class QuerySourceMapping
+  public sealed class QuerySourceMapping
   {
     private readonly Dictionary<IQuerySource, Expression> _lookup = new Dictionary<IQuerySource, Expression> ();
 

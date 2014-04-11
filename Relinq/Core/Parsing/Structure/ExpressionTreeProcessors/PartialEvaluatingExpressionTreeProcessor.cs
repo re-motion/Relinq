@@ -29,7 +29,7 @@ namespace Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors
   /// The <see cref="PartialEvaluatingExpressionTreeProcessor"/> uses the <see cref="PartialEvaluatingExpressionTreeVisitor"/> for partial evaluation.
   /// It performs two visiting runs over the <see cref="Expression"/> tree.
   /// </remarks>
-  public class PartialEvaluatingExpressionTreeProcessor : IExpressionTreeProcessor
+  public sealed class PartialEvaluatingExpressionTreeProcessor : IExpressionTreeProcessor
   {
     public Expression Process (Expression expressionTree)
     {

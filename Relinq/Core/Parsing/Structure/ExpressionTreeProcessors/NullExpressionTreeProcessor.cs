@@ -25,7 +25,7 @@ namespace Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors
   /// Implements the <see cref="IExpressionTreeProcessor"/> interface by doing nothing in the <see cref="Process"/> method. This is an
   /// implementation of the Null Object Pattern.
   /// </summary>
-  public class NullExpressionTreeProcessor : IExpressionTreeProcessor
+  public sealed class NullExpressionTreeProcessor : IExpressionTreeProcessor
   {
     public Expression Process (Expression expressionTree)
     {

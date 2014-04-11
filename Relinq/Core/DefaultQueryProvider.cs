@@ -28,7 +28,7 @@ namespace Remotion.Linq
   /// an instance of type <see cref="QueryModel"/>, which is then passed to an implementation of <see cref="IQueryExecutor"/> to obtain the
   /// result set.
   /// </summary>
-  public class DefaultQueryProvider : QueryProviderBase
+  public sealed class DefaultQueryProvider : QueryProviderBase
   {
     private readonly Type _queryableType;
 

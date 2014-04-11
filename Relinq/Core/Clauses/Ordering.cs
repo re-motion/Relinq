@@ -79,7 +79,7 @@ namespace Remotion.Linq.Clauses
     /// </summary>
     /// <param name="cloneContext">The clones of all query source clauses are registered with this <see cref="CloneContext"/>.</param>
     /// <returns>A clone of this item.</returns>
-    virtual public Ordering Clone (CloneContext cloneContext)
+    public virtual Ordering Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 

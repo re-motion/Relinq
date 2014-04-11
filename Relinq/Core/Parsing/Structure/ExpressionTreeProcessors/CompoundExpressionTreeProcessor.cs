@@ -28,7 +28,7 @@ namespace Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors
   /// The <see cref="Process"/> method calls each inner instance in the order defined by the <see cref="InnerProcessors"/> property. This is an
   /// implementation of the Composite Pattern.
   /// </summary>
-  public class CompoundExpressionTreeProcessor : IExpressionTreeProcessor
+  public sealed class CompoundExpressionTreeProcessor : IExpressionTreeProcessor
   {
     private readonly List<IExpressionTreeProcessor> _innerProcessors;
 

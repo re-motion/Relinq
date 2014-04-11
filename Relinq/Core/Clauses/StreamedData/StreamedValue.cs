@@ -24,7 +24,7 @@ namespace Remotion.Linq.Clauses.StreamedData
   /// <see cref="ResultOperatorBase.ExecuteInMemory"/>.  The data is a single, non-sequence value and can only be consumed by result operators 
   /// working with single values.
   /// </summary>
-  public class StreamedValue : IStreamedData
+  public sealed class StreamedValue : IStreamedData
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="StreamedValue"/> class, setting the <see cref="Value"/> and <see cref="DataInfo"/> properties.

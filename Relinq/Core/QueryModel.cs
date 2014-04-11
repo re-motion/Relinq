@@ -38,7 +38,7 @@ namespace Remotion.Linq
   /// <see cref="SelectClause"/>. The simplest way to process all the clauses belonging to a <see cref="QueryModel"/> is by implementing
   /// <see cref="IQueryModelVisitor"/> (or deriving from <see cref="QueryModelVisitorBase"/>) and calling <see cref="Accept"/>.
   /// </remarks>
-  public class QueryModel
+  public sealed class QueryModel
   {
     private readonly UniqueIdentifierGenerator _uniqueIdentifierGenerator;
 

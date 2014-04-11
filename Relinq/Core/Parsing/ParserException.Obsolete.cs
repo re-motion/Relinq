@@ -21,5 +21,9 @@ namespace Remotion.Linq.Parsing
   [Obsolete ("Infrastructure uses NotSupportedException instead. (Version 1.15.12.0)", true)]
   public abstract class ParserException : Exception
   {
+    private ParserException ()
+    {
+      
+    }
   }
 }

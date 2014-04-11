@@ -27,7 +27,7 @@ namespace Remotion.Linq
   /// create the <see cref="QueryModel"/> rather than the two-step approach (first <see cref="SelectClause"/> and <see cref="MainFromClause"/>,
   /// then the <see cref="IBodyClause"/>s) required by <see cref="QueryModel"/>'s constructor.
   /// </summary>
-  public class QueryModelBuilder
+  public sealed class QueryModelBuilder
   {
     private readonly List<ResultOperatorBase> _resultOperators = new List<ResultOperatorBase>();
     private readonly List<IBodyClause> _bodyClauses = new List<IBodyClause>();

@@ -31,7 +31,7 @@ namespace Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors
   /// The <see cref="TransformingExpressionTreeProcessor"/> uses the <see cref="TransformingExpressionTreeVisitor"/> to apply the transformations.
   /// It performs a single visiting run over the <see cref="Expression"/> tree.
   /// </remarks>
-  public class TransformingExpressionTreeProcessor : IExpressionTreeProcessor
+  public sealed class TransformingExpressionTreeProcessor : IExpressionTreeProcessor
   {
     private readonly IExpressionTranformationProvider _provider;
 

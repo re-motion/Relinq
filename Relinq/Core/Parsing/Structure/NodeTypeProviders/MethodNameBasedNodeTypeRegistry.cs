@@ -31,7 +31,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
   /// This is used by <see cref="ExpressionTreeParser"/> when a <see cref="MethodCallExpression"/> is encountered to instantiate the right 
   /// <see cref="IExpressionNode"/> for the given method.
   /// </summary>
-  public class MethodNameBasedNodeTypeRegistry : INodeTypeProvider
+  public sealed class MethodNameBasedNodeTypeRegistry : INodeTypeProvider
   {
     /// <summary>
     /// Creates a <see cref="MethodNameBasedNodeTypeRegistry"/> and automatically registers all types implementing <see cref="IExpressionNode"/> 

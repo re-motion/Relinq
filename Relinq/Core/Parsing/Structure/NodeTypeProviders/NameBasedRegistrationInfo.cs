@@ -23,7 +23,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
   /// <summary>
   /// Defines a name and a filter predicate used when determining the matching expression node type by <see cref="MethodNameBasedNodeTypeRegistry"/>.
   /// </summary>
-  public class NameBasedRegistrationInfo
+  public sealed class NameBasedRegistrationInfo
   {
     private readonly string _name;
     private readonly Func<MethodInfo, bool> _filter;

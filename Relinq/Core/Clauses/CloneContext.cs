@@ -24,7 +24,7 @@ namespace Remotion.Linq.Clauses
   /// <summary>
   /// Aggregates all objects needed in the process of cloning a <see cref="QueryModel"/> and its clauses.
   /// </summary>
-  public class CloneContext
+  public sealed class CloneContext
   {
     public CloneContext (QuerySourceMapping querySourceMapping)
     {

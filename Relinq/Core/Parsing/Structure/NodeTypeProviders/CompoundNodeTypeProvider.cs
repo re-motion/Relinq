@@ -27,7 +27,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
   /// The <see cref="IsRegistered"/> and <see cref="GetNodeType"/> methods delegate to these inner instances. This is an
   /// implementation of the Composite Pattern.
   /// </summary>
-  public class CompoundNodeTypeProvider : INodeTypeProvider
+  public sealed class CompoundNodeTypeProvider : INodeTypeProvider
   {
     private readonly List<INodeTypeProvider> _innerProviders;
 

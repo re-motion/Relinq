@@ -26,7 +26,7 @@ namespace Remotion.Linq.Clauses.StreamedData
   /// Holds the data needed to represent the output or input of a part of a query in memory. This is mainly used for 
   /// <see cref="ResultOperatorBase.ExecuteInMemory"/>.  The data consists of a sequence of items.
   /// </summary>
-  public class StreamedSequence : IStreamedData
+  public sealed class StreamedSequence : IStreamedData
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="StreamedSequence"/> class, setting the <see cref="Sequence"/> and 

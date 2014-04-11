@@ -31,7 +31,7 @@ namespace Remotion.Linq.Parsing.Structure
   /// <see cref="MainSourceExpressionNode.CreateMainFromClause"/> and <see cref="IExpressionNode.Apply"/> in order to instantiate all the 
   /// <see cref="IClause"/>s. With those, a <see cref="QueryModel"/> is created and returned.
   /// </summary>
-  public class QueryParser : IQueryParser
+  public sealed class QueryParser : IQueryParser
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="QueryParser"/> class, using default parameters for parsing. 

@@ -29,7 +29,7 @@ namespace Remotion.Linq.Parsing.Structure
   /// Parses a <see cref="MethodCallExpression"/> and creates an <see cref="IExpressionNode"/> from it. This is used by 
   /// <see cref="ExpressionTreeParser"/> for parsing whole expression trees.
   /// </summary>
-  public class MethodCallExpressionParser
+  public sealed class MethodCallExpressionParser
   {
     private readonly INodeTypeProvider _nodeTypeProvider;
 

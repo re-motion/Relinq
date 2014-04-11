@@ -34,7 +34,7 @@ namespace Remotion.Linq.Parsing
   /// (eg., a select projection), especially if each sub-expression needs to be explicitly accessed at a later point of time (eg., to retrieve the 
   /// items from a statement surrounding a sub-statement yielding the tuple in its select projection).
   /// </summary>
-  public class TupleExpressionBuilder
+  public static class TupleExpressionBuilder
   {
     public static Expression AggregateExpressionsIntoTuple (IEnumerable<Expression> expressions)
     {
