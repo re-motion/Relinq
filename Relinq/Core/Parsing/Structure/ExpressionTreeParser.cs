@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
@@ -143,7 +144,10 @@ namespace Remotion.Linq.Parsing.Structure
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
 
       if (expressionTree.Type == typeof (void))
-        throw new NotSupportedException (string.Format ("Expressions of type void ('{0}') are not supported.", expressionTree));
+      {
+        throw new NotSupportedException (
+            string.Format ("Expressions of type void ('{0}') are not supported.", FormattingExpressionTreeVisitor.Format (expressionTree)));
+      }
 
       var processedExpressionTree = _processor.Process (expressionTree);
       return ParseNode (processedExpressionTree, null);
@@ -238,7 +242,7 @@ namespace Remotion.Linq.Parsing.Structure
         var message = string.Format (
             "Cannot parse expression '{0}' as it has an unsupported type. Only query sources (that is, expressions that implement IEnumerable) "
             + "and query operators can be parsed.",
-            preprocessedExpression);
+            FormattingExpressionTreeVisitor.Format (preprocessedExpression));
         throw new NotSupportedException (message, ex);
       }
     }

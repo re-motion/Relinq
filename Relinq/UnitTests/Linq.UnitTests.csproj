@@ -321,7 +321,6 @@
     <Compile Include="Parsing\ExpressionTreeVisitorTests\ExpressionTreeVisitorTestBase.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitorTests\SimpleClass.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitorTests\SpecialExpressionNode.cs" />
-    <Compile Include="Parsing\ParserExceptionTest.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeParserTest.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\AverageExpressionNodeTest.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\CastExpressionNodeTest.cs" />
