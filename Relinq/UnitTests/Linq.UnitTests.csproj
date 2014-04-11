@@ -159,15 +159,6 @@
     <Compile Include="..\AssemblyInfoShared.cs">
       <Link>Properties\AssemblyInfoShared.cs</Link>
     </Compile>
-    <Compile Include="LinqToSqlAdapter\MetaDataMemberComparerTest.cs" />
-    <Compile Include="LinqToSqlAdapter\QueryExecutorTest.cs" />
-    <Compile Include="LinqToSqlAdapter\QueryResultRetrieverTest.cs" />
-    <Compile Include="LinqToSqlAdapter\RowWrapperTest.cs" />
-    <Compile Include="LinqToSqlAdapter\ScalarRowWrapperTest.cs" />
-    <Compile Include="LinqToSqlAdapter\TestDomain\ContactWithInheritanceHierarchy.cs" />
-    <Compile Include="LinqToSqlAdapter\TestDomain\DataContextTestClass.cs" />
-    <Compile Include="LinqToSqlAdapter\TestDomain\PersonTestClass.cs" />
-    <Compile Include="LinqToSqlAdapter\MappingResolverTest.cs" />
     <Compile Include="Linq\Core\Clauses\Expressions\SubQueryExpressionTest.cs" />
     <Compile Include="Linq\Core\Clauses\Expressions\VBStringComparisonExpressionTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\MultiReplacingExpressionTreeVisitorTest.cs" />
