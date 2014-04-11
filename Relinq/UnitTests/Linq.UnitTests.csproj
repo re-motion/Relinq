@@ -405,11 +405,11 @@
     <Compile Include="TestQueryGenerators\WhereTestQueryGenerator.cs" />
     <Compile Include="Transformations\SubQueryFromClauseFlattenerTest.cs" />
     <Compile Include="UniqueIdentifierGeneratorTest.cs" />
-    <None Include="..\Relinq LGPL.licenseheader">
-      <Link>Relinq LGPL.licenseheader</Link>
-    </None>
     <None Include="..\..\remotion.snk">
       <Link>remotion.snk</Link>
+    </None>
+    <None Include="..\Relinq Apache-2.0.licenseheader">
+      <Link>Relinq Apache-2.0.licenseheader</Link>
     </None>
     <None Include="Parsing\ExpressionTrees\ExpressionTree_Grammar.docx" />
   </ItemGroup>

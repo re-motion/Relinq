@@ -280,8 +280,8 @@
     <Compile Include="Parsing\Structure\QueryParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Clauses\MainFromClause.cs" />
-    <None Include="..\Relinq LGPL.licenseheader">
-      <Link>Relinq LGPL.licenseheader</Link>
+    <None Include="..\Relinq Apache-2.0.licenseheader">
+      <Link>Relinq Apache-2.0.licenseheader</Link>
     </None>
     <None Include="..\..\remotion.snk">
       <Link>remotion.snk</Link>

@@ -1,0 +1,10 @@
+**
+**  NOTICE file corresponding to the section 4 (4) of the Apache License, 
+**  Version 2.0.
+**
+
+re-linq - part of the re-motion Framework
+www.re-motion.org
+Copyright (c) rubicon IT GmbH, www.rubicon.eu
+
+This software does not include external libraries
