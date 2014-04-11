@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
 

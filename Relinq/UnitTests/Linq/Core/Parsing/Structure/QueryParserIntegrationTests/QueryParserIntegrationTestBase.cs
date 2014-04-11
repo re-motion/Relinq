@@ -35,9 +35,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
     [SetUp]
     public void SetUp ()
     {
-      QuerySource = ExpressionHelper.CreateCookQueryable ();
-      IndustrialSectorQuerySource = ExpressionHelper.CreateRestaurantQueryable();
-      DetailQuerySource = ExpressionHelper.CreateKitchenQueryable ();
+      QuerySource = ExpressionHelper.CreateQueryable<Cook> ();
+      IndustrialSectorQuerySource = ExpressionHelper.CreateQueryable<Restaurant>();
+      DetailQuerySource = ExpressionHelper.CreateQueryable<Kitchen> ();
       QueryParser = QueryParser.CreateDefault();
     }
 

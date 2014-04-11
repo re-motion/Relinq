@@ -19,6 +19,8 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Rhino.Mocks;
 
 
@@ -76,7 +78,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
     public void Accept()
     {
       var repository = new MockRepository();
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook> ();
       var visitorMock = repository.StrictMock<IQueryModelVisitor>();
 
       visitorMock.VisitOrderByClause(_orderByClause, queryModel, 1);

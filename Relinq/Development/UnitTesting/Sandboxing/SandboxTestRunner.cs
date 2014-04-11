@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ using Remotion.Utilities;
 // Note: This file is originally defined in Remotion.Development.UnitTesting.Sandboxing. It is duplicated by Remotion.Linq.UnitTests.Sandboxing.
 // Note: Changes made to this file must be synchronized with all copies.
 
-namespace Remotion.Linq.UnitTests.Sandboxing
+namespace Remotion.Linq.Development.UnitTesting.Sandboxing
 {
   /// <summary>
   /// <see cref="SandboxTestRunner"/> executes unit tests for the given types.

@@ -74,7 +74,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
     [Test]
     public void TrivialExpression_WithEqualsTrue_ButNotReferenceEquals ()
     {
-      var searchedExpression1 = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Cook());
+      var searchedExpression1 = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause<Cook>());
       var searchedExpression2 = new QuerySourceReferenceExpression (searchedExpression1.ReferencedQuerySource);
 
       var inputParameter = Expression.Parameter (typeof (Cook), "input");

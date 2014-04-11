@@ -19,13 +19,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain
 {
   public class QueryableFakeWithCount<T> : IQueryable<T>, IQueryProvider
   {
-    public IQueryable<Cook> Field = ExpressionHelper.CreateCookQueryable ();
+    public IQueryable<Cook> Field = ExpressionHelper.CreateQueryable<Cook> ();
 
     public QueryableFakeWithCount ()
     {

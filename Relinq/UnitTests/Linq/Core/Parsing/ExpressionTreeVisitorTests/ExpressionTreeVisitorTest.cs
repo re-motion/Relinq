@@ -25,6 +25,7 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 
@@ -85,7 +86,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
       var querySourceReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
       Assert.That (ExpressionTreeVisitor.IsSupportedStandardExpression (querySourceReferenceExpression), Is.False);
 
-      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook());
+      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook>());
       Assert.That (ExpressionTreeVisitor.IsSupportedStandardExpression (subQueryExpression), Is.False);
     }
 
@@ -95,7 +96,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
       var querySourceReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
       Assert.That (ExpressionTreeVisitor.IsRelinqExpression (querySourceReferenceExpression), Is.True);
 
-      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook ());
+      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
       Assert.That (ExpressionTreeVisitor.IsRelinqExpression (subQueryExpression), Is.True);
 
       var standardExpression = Expression.Constant (0);
@@ -123,7 +124,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
       var querySourceReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
       Assert.That (ExpressionTreeVisitor.IsExtensionExpression (querySourceReferenceExpression), Is.False);
 
-      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook ());
+      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
       Assert.That (ExpressionTreeVisitor.IsExtensionExpression (subQueryExpression), Is.False);
     }
 
@@ -142,7 +143,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
       var querySourceReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
       Assert.That (ExpressionTreeVisitor.IsUnknownNonExtensionExpression (querySourceReferenceExpression), Is.False);
 
-      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook ());
+      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
       Assert.That (ExpressionTreeVisitor.IsUnknownNonExtensionExpression (subQueryExpression), Is.False);
     }
 
@@ -316,7 +317,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitExpression_SubQuery ()
     {
-      QueryModel queryModel = ExpressionHelper.CreateQueryModel_Cook();
+      QueryModel queryModel = ExpressionHelper.CreateQueryModel<Cook>();
       CheckDelegation ("VisitSubQueryExpression", new SubQueryExpression (queryModel));
     }
 

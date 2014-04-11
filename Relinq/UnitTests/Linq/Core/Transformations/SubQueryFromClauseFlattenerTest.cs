@@ -49,10 +49,10 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Transformations
     [SetUp]
     public void SetUp ()
     {
-      _detailSource = ExpressionHelper.CreateKitchenQueryable();
-      _sectorSource = ExpressionHelper.CreateRestaurantQueryable();
+      _detailSource = ExpressionHelper.CreateQueryable<Kitchen>();
+      _sectorSource = ExpressionHelper.CreateQueryable<Restaurant>();
 
-      var query = from s1 in ExpressionHelper.CreateCookQueryable()
+      var query = from s1 in ExpressionHelper.CreateQueryable<Cook>()
                   from sd in
                       (from sector in _sectorSource
                        where sector.ID > 10
@@ -139,7 +139,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Transformations
         + "contains result operators.")]
     public void VisitAdditionalFromClause_ThrowsOnResultOperator ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook> ();
       queryModel.ResultOperators.Add (new DistinctResultOperator ());
       var clause = new AdditionalFromClause ("x", typeof (Cook), new SubQueryExpression (queryModel));
       _visitor.VisitAdditionalFromClause (clause, _queryModel, 0);
@@ -151,7 +151,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Transformations
         + "contains an OrderByClause.")]
     public void VisitAdditionalFromClause_ThrowsOnOrderBy ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook> ();
       var orderByClause = new OrderByClause ();
       orderByClause.Orderings.Add (new Ordering (Expression.Constant (0), OrderingDirection.Asc));
       queryModel.BodyClauses.Add (orderByClause);
@@ -167,7 +167,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Transformations
                              select sd.Cook;
       var parsedMainFromSubQuery = ExpressionHelper.ParseQuery (mainFromSubQuery);
 
-      var query = from s in ExpressionHelper.CreateCookQueryable()
+      var query = from s in ExpressionHelper.CreateQueryable<Cook>()
                   select s.FirstName;
       var parsedQuery = ExpressionHelper.ParseQuery (query);
       parsedQuery.MainFromClause.FromExpression = new SubQueryExpression (parsedMainFromSubQuery);
@@ -184,7 +184,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Transformations
     [Test]
     public void IntegrationTest_TransformedQueryModel ()
     {
-      var query = from s1 in ExpressionHelper.CreateCookQueryable ()
+      var query = from s1 in ExpressionHelper.CreateQueryable<Cook> ()
                   from sd in
                     (from sector in _sectorSource
                      where sector.ID > 10

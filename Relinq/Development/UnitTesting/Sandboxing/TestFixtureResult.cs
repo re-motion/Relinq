@@ -14,25 +14,30 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
-using NUnit.Framework;
-using Remotion.Development.UnitTesting;
-using Remotion.Linq.Parsing;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
+// Note: This file is originally defined in Remotion.Development.UnitTesting.Sandboxing. It is duplicated by Remotion.Linq.UnitTests.Sandboxing.
+// Note: Changes made to this file must be synchronized with all copies.
+
+namespace Remotion.Linq.Development.UnitTesting.Sandboxing
 {
-  [TestFixture]
-  public class ParserExceptionTest
+  /// <summary>
+  /// <see cref="TestFixtureResult"/> holds the type of the test class and the result of the test methods.
+  /// </summary>
+  [Serializable]
+  public struct TestFixtureResult
   {
-    [Test]
-    public void Serialization ()
-    {
-      var exception = new ParserException ("test", "expr", new Exception ("test2"));
+    public readonly Type Type;
+    public readonly TestResult[] TestResults;
 
-      var deserializedException = Serializer.SerializeAndDeserialize (exception);
-      Assert.That (deserializedException.Message, Is.EqualTo (exception.Message));
-      Assert.That (deserializedException.ParsedExpression, Is.EqualTo (exception.ParsedExpression));
-      Assert.That (deserializedException.InnerException.Message, Is.EqualTo (exception.InnerException.Message));
+    public TestFixtureResult (Type type, TestResult[] testResults)
+    {
+      if (type == null)
+        throw new ArgumentNullException ("type"); // avoid ArgumentUtility, it doesn't support partial trust ATM
+
+      Type = type;
+      TestResults = testResults;
     }
   }
 }

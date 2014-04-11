@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +25,8 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing.Structure;
-using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
-namespace Remotion.Linq.UnitTests.Linq.Core
+namespace Remotion.Linq.Development.UnitTesting
 {
   public static class ExpressionHelper
   {
@@ -76,23 +76,23 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       return Expression.Parameter (typeof (int), identifier);
     }
 
-    public static JoinClause CreateJoinClause ()
+    public static JoinClause CreateJoinClause<T> ()
     {
       Expression innerSequence = CreateExpression ();
       Expression outerKeySelector = CreateExpression ();
       Expression innerKeySelector = CreateExpression ();
 
-      return new JoinClause ("x", typeof(Cook), innerSequence, outerKeySelector, innerKeySelector);
+      return new JoinClause ("x", typeof(T), innerSequence, outerKeySelector, innerKeySelector);
     }
 
-    public static GroupJoinClause CreateGroupJoinClause ()
+    public static GroupJoinClause CreateGroupJoinClause<T> ()
     {
-      return CreateGroupJoinClause (CreateJoinClause ());
+      return CreateGroupJoinClause<T> (CreateJoinClause<T> ());
     }
 
-    public static GroupJoinClause CreateGroupJoinClause (JoinClause joinClause)
+    public static GroupJoinClause CreateGroupJoinClause<T> (JoinClause joinClause)
     {
-      return new GroupJoinClause ("xs", typeof (IEnumerable<Cook>), joinClause);
+      return new GroupJoinClause ("xs", typeof (IEnumerable<T>), joinClause);
     }
 
     public static QueryModel CreateQueryModel (MainFromClause mainFromClause)
@@ -101,9 +101,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       return new QueryModel (mainFromClause, selectClause);
     }
 
-    public static QueryModel CreateQueryModel_Cook ()
+    public static QueryModel CreateQueryModel<T> ()
     {
-      return CreateQueryModel (CreateMainFromClause_Int("s", typeof (Cook), CreateCookQueryable()));
+      return CreateQueryModel (CreateMainFromClause_Int("s", typeof (T), CreateQueryable<T>()));
     }
 
     public static QueryModel CreateQueryModel_Int ()
@@ -117,25 +117,25 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       return CreateMainFromClause_Int("main", typeof (int), querySource);
     }
 
-    public static MainFromClause CreateMainFromClause_Cook ()
+    public static MainFromClause CreateMainFromClause<T> ()
     {
-      return CreateMainFromClause_Int ("s", typeof (Cook), CreateCookQueryable());
+      return CreateMainFromClause_Int ("s", typeof (T), CreateQueryable<T>());
     }
 
-    public static MainFromClause CreateMainFromClause_Bool ()
-    {
-      return CreateMainFromClause_Int ("s", typeof (bool), CreateCookQueryable ());
-    }
+    //public static MainFromClause CreateMainFromClause_Bool ()
+    //{
+    //  return CreateMainFromClause_Int ("s", typeof (bool), CreateCookQueryable ());
+    //}
 
-    public static MainFromClause CreateMainFromClause_Kitchen ()
-    {
-      return CreateMainFromClause_Int ("sd", typeof (Kitchen), CreateKitchenQueryable ());
-    }
+    //public static MainFromClause CreateMainFromClause_Kitchen ()
+    //{
+    //  return CreateMainFromClause_Int ("sd", typeof (Kitchen), CreateKitchenQueryable ());
+    //}
 
-    public static MainFromClause CreateMainFromClause_Detail_Detail ()
-    {
-      return CreateMainFromClause_Int ("sdd", typeof (Company), CreateCompanyQueryable());
-    }
+    //public static MainFromClause CreateMainFromClause_Detail_Detail ()
+    //{
+    //  return CreateMainFromClause_Int ("sdd", typeof (Company), CreateCompanyQueryable());
+    //}
 
     public static AdditionalFromClause CreateAdditionalFromClause ()
     {
@@ -184,15 +184,15 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       return new SelectClause (new QuerySourceReferenceExpression (referencedClause));
     }
 
-    public static MethodCallExpression CreateMethodCallExpression (IQueryable<Cook> query)
+    public static MethodCallExpression CreateMethodCallExpression<T> (IQueryable<T> query)
     {
       var methodInfo = ReflectionUtility.GetMethod (() => query.Count ());
       return Expression.Call (methodInfo, query.Expression);
     }
 
-    public static MethodCallExpression CreateMethodCallExpression ()
+    public static MethodCallExpression CreateMethodCallExpression<T> ()
     {
-      return CreateMethodCallExpression (CreateCookQueryable ());
+      return CreateMethodCallExpression (CreateQueryable<T> ());
     }
 
     public static WhereClause CreateWhereClause ()
@@ -211,65 +211,65 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       return new TestQueryable<int> (QueryParser.CreateDefault(), s_executor);
     }
 
-    public static IQueryable<Cook> CreateCookQueryable()
+    public static IQueryable<T> CreateQueryable<T>()
     {
-      return CreateCookQueryable (s_executor);
+      return CreateQueryable<T> (s_executor);
     }
 
-    public static IQueryable<Knife> CreateKnifeQueryable ()
-    {
-      return CreateKnifeQueryable (s_executor);
-    }
+    //public static IQueryable<Knife> CreateKnifeQueryable ()
+    //{
+    //  return CreateKnifeQueryable (s_executor);
+    //}
 
-    public static IQueryable<Chef> CreateChefQueryable ()
-    {
-      return CreateChefQueryable (s_executor);
-    }
+    //public static IQueryable<Chef> CreateChefQueryable ()
+    //{
+    //  return CreateChefQueryable (s_executor);
+    //}
         
-    public static IQueryable<Cook> CreateCookQueryable (IQueryExecutor executor)
+    public static IQueryable<T> CreateQueryable<T> (IQueryExecutor executor)
     {
-      return new TestQueryable<Cook> (QueryParser.CreateDefault (), executor);
+      return new TestQueryable<T> (QueryParser.CreateDefault (), executor);
     }
 
-    public static IQueryable<Knife> CreateKnifeQueryable (IQueryExecutor executor)
-    {
-      return new TestQueryable<Knife> (QueryParser.CreateDefault (), executor);
-    }
+    //public static IQueryable<Knife> CreateKnifeQueryable (IQueryExecutor executor)
+    //{
+    //  return new TestQueryable<Knife> (QueryParser.CreateDefault (), executor);
+    //}
 
-    public static IQueryable<Chef> CreateChefQueryable (IQueryExecutor executor)
-    {
-      return new TestQueryable<Chef> (QueryParser.CreateDefault (), executor);
-    }
+    //public static IQueryable<Chef> CreateChefQueryable (IQueryExecutor executor)
+    //{
+    //  return new TestQueryable<Chef> (QueryParser.CreateDefault (), executor);
+    //}
 
-    public static IQueryable<Kitchen> CreateKitchenQueryable()
-    {
-      return CreateKitchenQueryable (s_executor);
-    }
+    //public static IQueryable<Kitchen> CreateKitchenQueryable()
+    //{
+    //  return CreateKitchenQueryable (s_executor);
+    //}
 
-    public static IQueryable<Kitchen> CreateKitchenQueryable (IQueryExecutor executor)
-    {
-      return new TestQueryable<Kitchen> (QueryParser.CreateDefault (), executor);
-    }
+    //public static IQueryable<Kitchen> CreateKitchenQueryable (IQueryExecutor executor)
+    //{
+    //  return new TestQueryable<Kitchen> (QueryParser.CreateDefault (), executor);
+    //}
 
-    public static IQueryable<Company> CreateCompanyQueryable ()
-    {
-      return CreateCompanyQueryable (s_executor);
-    }
+    //public static IQueryable<Company> CreateCompanyQueryable ()
+    //{
+    //  return CreateCompanyQueryable (s_executor);
+    //}
 
-    public static IQueryable<Company> CreateCompanyQueryable (IQueryExecutor executor)
-    {
-      return new TestQueryable<Company> (QueryParser.CreateDefault (), executor);
-    }
+    //public static IQueryable<Company> CreateCompanyQueryable (IQueryExecutor executor)
+    //{
+    //  return new TestQueryable<Company> (QueryParser.CreateDefault (), executor);
+    //}
 
-    public static  IQueryable<Restaurant> CreateRestaurantQueryable ()
-    {
-      return CreateRestaurantQueryable (s_executor);
-    }
+    //public static  IQueryable<Restaurant> CreateRestaurantQueryable ()
+    //{
+    //  return CreateRestaurantQueryable (s_executor);
+    //}
 
-    public static IQueryable<Restaurant> CreateRestaurantQueryable( IQueryExecutor executor)
-    {
-      return new TestQueryable<Restaurant> (QueryParser.CreateDefault (), executor);
-    }
+    //public static IQueryable<Restaurant> CreateRestaurantQueryable( IQueryExecutor executor)
+    //{
+    //  return new TestQueryable<Restaurant> (QueryParser.CreateDefault (), executor);
+    //}
 
     public static IQueryExecutor CreateExecutor()
     {

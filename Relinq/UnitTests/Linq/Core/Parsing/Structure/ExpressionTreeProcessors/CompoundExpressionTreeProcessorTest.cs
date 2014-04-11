@@ -17,6 +17,7 @@
 
 using System;
 using NUnit.Framework;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Rhino.Mocks;

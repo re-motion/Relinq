@@ -26,6 +26,7 @@ using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
 {
@@ -196,7 +197,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void CreateQueryModel_SubQueries_AreResolved ()
     {
       var expression = ExpressionHelper.MakeExpression (
-           () => ExpressionHelper.CreateCookQueryable ().Where (i => (from x in ExpressionHelper.CreateCookQueryable () select i).Count () > 0));
+           () => ExpressionHelper.CreateQueryable<Cook> ().Where (i => (from x in ExpressionHelper.CreateQueryable<Cook> () select i).Count () > 0));
 
       var result = _queryParser.GetParsedQuery (expression);
       var whereClause = (WhereClause) result.BodyClauses[0];

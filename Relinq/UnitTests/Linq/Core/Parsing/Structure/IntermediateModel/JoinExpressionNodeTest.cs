@@ -21,6 +21,7 @@ using NUnit.Framework;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
 {
@@ -45,7 +46,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
       _resultSelector = ExpressionHelper.CreateLambdaExpression<string, string, string> ((o, i) => o.ToString () + i.ToString ());
 
       _node = new JoinExpressionNode (CreateParseInfo (SourceNode, "join"), _innerSequence, _outerKeySelector, _innerKeySelector, _resultSelector);
-      _joinClause = ExpressionHelper.CreateJoinClause ();
+      _joinClause = ExpressionHelper.CreateJoinClause<Cook> ();
     }
 
     [Test]

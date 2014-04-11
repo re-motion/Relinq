@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
@@ -35,7 +36,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
       var resultSelector = Expression.Lambda (Expression.Constant (null), p1, p2);
       var collectionSelector = Expression.Lambda (Expression.Constant (null), p1);
 
-      var parseInfo = new MethodCallExpressionParseInfo ("trans", source, ExpressionHelper.CreateMethodCallExpression ());
+      var parseInfo = new MethodCallExpressionParseInfo ("trans", source, ExpressionHelper.CreateMethodCallExpression<Cook> ());
       return new SelectManyExpressionNode (parseInfo, collectionSelector, resultSelector);
     }
 
@@ -46,7 +47,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
     //  var resultSelector = Expression.Lambda (Expression.Constant (null), p1, p2);
     //  var collectionSelector = Expression.Lambda (Expression.Constant (null), p1);
 
-    //  var parseInfo = new MethodCallExpressionParseInfo ("trans", source, ExpressionHelper.CreateMethodCallExpression ());
+    //  var parseInfo = new MethodCallExpressionParseInfo ("trans", source, ExpressionHelper.CreateMethodCallExpression<Cook> ());
     //  return new SelectManyExpressionNode (parseInfo, collectionSelector, resultSelector);
     //}
   }

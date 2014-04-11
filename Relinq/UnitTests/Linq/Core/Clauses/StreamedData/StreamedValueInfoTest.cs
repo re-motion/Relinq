@@ -18,6 +18,7 @@ using System;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData

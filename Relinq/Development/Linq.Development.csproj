@@ -48,6 +48,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\AssertionConditionAttribute.cs">
@@ -75,7 +76,22 @@
       <Link>Properties\AssemblyInfoShared.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTesting\ExpressionHelper.cs" />
     <Compile Include="UnitTesting\ExpressionTreeComparer.cs" />
+    <Compile Include="UnitTesting\Sandboxing\PermissionSets.cs" />
+    <Compile Include="UnitTesting\Sandboxing\Sandbox.cs" />
+    <Compile Include="UnitTesting\Sandboxing\SandboxTestRunner.cs" />
+    <Compile Include="UnitTesting\Sandboxing\TestFailedException.cs" />
+    <Compile Include="UnitTesting\Sandboxing\TestFixtureResult.cs" />
+    <Compile Include="UnitTesting\Sandboxing\TestResult.cs" />
+    <Compile Include="UnitTesting\StubQueryExecutor.cs" />
+    <Compile Include="UnitTesting\TestableExpressionTreeVisitor.cs" />
+    <Compile Include="UnitTesting\TestExtensionExpression.cs" />
+    <Compile Include="UnitTesting\TestQueryable.cs" />
+    <Compile Include="UnitTesting\TestQueryModelVisitor.cs" />
+    <Compile Include="UnitTesting\TestQueryProvider.cs" />
+    <Compile Include="UnitTesting\TestStreamedValueInfo.cs" />
+    <Compile Include="UnitTesting\TypeForNewExpression.cs" />
     <None Include="..\Relinq LGPL.licenseheader">
       <Link>Relinq LGPL.licenseheader</Link>
     </None>

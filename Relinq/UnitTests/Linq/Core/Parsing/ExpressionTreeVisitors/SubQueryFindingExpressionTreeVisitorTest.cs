@@ -19,7 +19,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
+using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
@@ -28,7 +30,6 @@ using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.UnitTests.Linq.Core.TestQueryGenerators;
-using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
 {
@@ -65,7 +66,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     [Test]
     public void TreeWithSubquery ()
     {
-      Expression subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateCookQueryable()).Expression;
+      Expression subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQueryable<Cook>()).Expression;
       Expression surroundingExpression = Expression.Lambda (subQuery);
 
       Expression newExpression = SubQueryFindingExpressionTreeVisitor.Process (surroundingExpression, _methodInfoBasedNodeTypeRegistry);
@@ -85,9 +86,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     [Test]
     public void VisitorUsesNodeTypeRegistry_ToParseAndAnalyzeSubQueries ()
     {
-      Expression subQuery = ExpressionHelper.MakeExpression (() => CustomSelect (ExpressionHelper.CreateCookQueryable(), s => s));
+      Expression subQuery = ExpressionHelper.MakeExpression (() => CustomSelect (ExpressionHelper.CreateQueryable<Cook>(), s => s));
       Expression surroundingExpression = Expression.Lambda (subQuery);
-      // evaluate the ExpressionHelper.CreateCookQueryable () method
+      // evaluate the ExpressionHelper.CreateQueryable<Cook> () method
       var inputExpression = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (surroundingExpression);
 
       var emptyNodeTypeRegistry = new MethodInfoBasedNodeTypeRegistry();
@@ -122,9 +123,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     [Test]
     public void VisitExtensionExpression_ChildrenAreEvaluated ()
     {
-      var subQuery = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateCookQueryable () select s).Any());
+      var subQuery = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateQueryable<Cook> () select s).Any());
       var extensionExpression = new VBStringComparisonExpression (subQuery, true);
-      // evaluate the ExpressionHelper.CreateCookQueryable () method
+      // evaluate the ExpressionHelper.CreateQueryable<Cook> () method
       var inputExpression = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (extensionExpression);
 
       var result = SubQueryFindingExpressionTreeVisitor.Process (inputExpression, _methodInfoBasedNodeTypeRegistry);

@@ -22,6 +22,7 @@ using NUnit.Framework;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
 {
@@ -45,7 +46,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
 
       _node = new GroupJoinExpressionNode (
           CreateParseInfo (SourceNode, "groupJoin"), _innerSequence, _outerKeySelector, _innerKeySelector, _resultSelector);
-      _groupJoinClause = ExpressionHelper.CreateGroupJoinClause();
+      _groupJoinClause = ExpressionHelper.CreateGroupJoinClause<Cook>();
     }
 
     [Test]

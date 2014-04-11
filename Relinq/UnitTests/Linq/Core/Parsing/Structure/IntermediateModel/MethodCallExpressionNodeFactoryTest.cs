@@ -17,8 +17,10 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
 {
@@ -32,7 +34,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
     public void SetUp ()
     {
       _source = ExpressionNodeObjectMother.CreateMainSource();
-      _parseInfo = new MethodCallExpressionParseInfo ("foo", _source, ExpressionHelper.CreateMethodCallExpression());
+      _parseInfo = new MethodCallExpressionParseInfo ("foo", _source, ExpressionHelper.CreateMethodCallExpression<Cook>());
     }
 
     [Test]

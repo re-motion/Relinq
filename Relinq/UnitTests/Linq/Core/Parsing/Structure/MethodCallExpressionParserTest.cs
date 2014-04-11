@@ -109,7 +109,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void Parse_WithConstantExpression ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (
-          q => q.Join (ExpressionHelper.CreateCookQueryable(), i => i, s => s.ID, (i, s) => i));
+          q => q.Join (ExpressionHelper.CreateQueryable<Cook>(), i => i, s => s.ID, (i, s) => i));
 
       var result = ParseMethodCallExpression (methodCallExpression);
 
@@ -138,7 +138,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void Parse_WithNonEvaluatedParameter ()
     {
-      var innerSequence = ExpressionHelper.CreateCookQueryable ();
+      var innerSequence = ExpressionHelper.CreateQueryable<Cook> ();
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (
           q => q.Join (innerSequence, i => i, s => s.ID, (i, s) => i));
 

@@ -19,7 +19,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Linq.Parsing.Structure;
@@ -28,7 +30,6 @@ using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
-using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
@@ -89,7 +90,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void ParseTree_Expression ()
     {
-      var expression = Expression.MakeMemberAccess (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Cook ()), typeof (Cook).GetProperty ("Assistants"));
+      var expression = Expression.MakeMemberAccess (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause<Cook> ()), typeof (Cook).GetProperty ("Assistants"));
 
       var result = _expressionTreeParser.ParseTree (expression);
 
@@ -151,7 +152,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void ParseTree_MethodCallExpression ()
     {
-      var querySource = ExpressionHelper.CreateCookQueryable();
+      var querySource = ExpressionHelper.CreateQueryable<Cook>();
       Expression<Func<Cook, int>> selector = s => s.ID;
       var expression = ExpressionHelper.MakeExpression (() => querySource.Select (selector));
 
@@ -168,7 +169,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void ParseTree_MethodCallExpression_GetsGeneratedIdentifier ()
     {
-      var querySource = ExpressionHelper.CreateCookQueryable ();
+      var querySource = ExpressionHelper.CreateQueryable<Cook> ();
       Expression<Func<Cook, int>> selector = s => s.ID;
       var expression = ExpressionHelper.MakeExpression (() => querySource.Select (selector));
 
@@ -180,7 +181,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void ParseTree_MethodCallExpression_PropagatesNameToSourceNode ()
     {
-      var querySource = ExpressionHelper.CreateCookQueryable ();
+      var querySource = ExpressionHelper.CreateQueryable<Cook> ();
       var expression = ExpressionHelper.MakeExpression (() => querySource.Select (s => s.ID)); // "s" gets propagated to MainSourceExpressionNode
 
       var result = _expressionTreeParser.ParseTree (expression);
@@ -193,7 +194,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void ParseTree_MethodCallExpression_PropagatesNameToSourceNode_EmptyNameIsReplacedByGenerated ()
     {
-      var querySource = ExpressionHelper.CreateCookQueryable ();
+      var querySource = ExpressionHelper.CreateQueryable<Cook> ();
       var parameterWithEmptyName = Expression.Parameter (typeof (Cook), "");
       var expression = Expression.Call (
           typeof (Enumerable),
@@ -254,7 +255,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
     [Test]
     public void ParseTree_ComplexMethodCallExpression ()
     {
-      var querySource = ExpressionHelper.CreateCookQueryable();
+      var querySource = ExpressionHelper.CreateQueryable<Cook>();
       Expression<Func<Cook, int>> selector = s => s.ID;
       Expression<Func<Cook, bool>> predicate = s => s.IsStarredCook;
       var expression = ExpressionHelper.MakeExpression (() => querySource.Where (predicate).Select (selector));
@@ -379,7 +380,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure
     public void InferAssociatedIdentifierForSource_WithUnary_AfterConstant ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (
-                                                            () => _intSource.Join (ExpressionHelper.CreateCookQueryable(), i => i, s => s.ID, (i, s) => i));
+                                                            () => _intSource.Join (ExpressionHelper.CreateQueryable<Cook>(), i => i, s => s.ID, (i, s) => i));
 
       var identifier = (string) PrivateInvoke.InvokeNonPublicMethod (_expressionTreeParser, "InferAssociatedIdentifierForSource", methodCallExpression);
       Assert.That (identifier, Is.EqualTo ("i"));

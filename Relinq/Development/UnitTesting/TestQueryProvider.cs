@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Parsing.Structure;
-using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.TestQueryGenerators
+namespace Remotion.Linq.Development.UnitTesting
 {
   public class TestQueryProvider : QueryProviderBase
   {

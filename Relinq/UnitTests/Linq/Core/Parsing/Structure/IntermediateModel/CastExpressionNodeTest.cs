@@ -40,7 +40,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
       base.SetUp ();
 
       _cookSource = new MainSourceExpressionNode ("s", Expression.Constant (new[] { new Cook () }));
-      _cookClause = ExpressionHelper.CreateMainFromClause_Cook ();
+      _cookClause = ExpressionHelper.CreateMainFromClause<Cook> ();
       ClauseGenerationContext.AddContextInfo (_cookSource, _cookClause);
 
       _castToChefMethod = ReflectionUtility.GetMethod (() => ((IQueryable<Cook[]>)null).Cast<Chef>());

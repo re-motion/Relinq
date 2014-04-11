@@ -1,4 +1,4 @@
-// This file is part of the re-linq project (relinq.codeplex.com)
+﻿// This file is part of the re-linq project (relinq.codeplex.com)
 // Copyright (c) rubicon IT GmbH, www.rubicon.eu
 // 
 // re-linq is free software; you can redistribute it and/or modify it under 
@@ -14,33 +14,27 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
-using System.Linq;
-using System.Linq.Expressions;
-using Remotion.Linq.Parsing.Structure;
+using System.Collections.Generic;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.TestDomain
+namespace Remotion.Linq.Development.UnitTesting
 {
-  public class TestQueryable<T> : QueryableBase<T>
+  public class StubQueryExecutor : IQueryExecutor
   {
-    public TestQueryable (IQueryProvider provider, Expression expression)
-        : base (provider, expression)
+    public T ExecuteScalar<T> (QueryModel queryModel)
     {
+      throw new NotImplementedException ("ExecuteScalar<" + typeof (T).Name + "> (" + queryModel + ")");
     }
 
-    public TestQueryable (IQueryParser queryParser, IQueryExecutor executor)
-        : base (queryParser, executor)
+    public T ExecuteSingle<T> (QueryModel queryModel, bool returnDefaultWhenEmpty)
     {
+      throw new NotImplementedException ("ExecuteSingle<" + typeof (T).Name + "> (" + queryModel + ", " + returnDefaultWhenEmpty + ")");
     }
 
-    public TestQueryable (IQueryProvider provider)
-        : base (provider)
+    public IEnumerable<T> ExecuteCollection<T> (QueryModel queryModel)
     {
-    }
-
-    public override string ToString ()
-    {
-      return "TestQueryable<" + typeof (T).Name + ">()";
+      throw new NotImplementedException ("ExecuteCollection<" + typeof (T).Name + "> (" + queryModel + ")");
     }
   }
 }

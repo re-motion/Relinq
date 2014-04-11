@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel

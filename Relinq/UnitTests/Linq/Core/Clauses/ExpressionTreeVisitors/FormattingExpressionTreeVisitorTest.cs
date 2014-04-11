@@ -20,8 +20,10 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
 {
@@ -39,7 +41,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
     [Test]
     public void QuerySourceReferenceExpression ()
     {
-      var referencedClause = ExpressionHelper.CreateMainFromClause_Int ("i", typeof (int), ExpressionHelper.CreateCookQueryable());
+      var referencedClause = ExpressionHelper.CreateMainFromClause_Int ("i", typeof (int), ExpressionHelper.CreateQueryable<Cook>());
       
       var expression = Expression.MakeBinary (ExpressionType.GreaterThan, new QuerySourceReferenceExpression (referencedClause), Expression.Constant (2));
       var formattedExpression = FormattingExpressionTreeVisitor.Format (expression);
@@ -49,7 +51,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
     [Test]
     public void SubQueryExpression ()
     {
-      var queryExpression = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateCookQueryable () select s).Count());
+      var queryExpression = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateQueryable<Cook> () select s).Count());
       var subQueryModel = ExpressionHelper.ParseQuery (queryExpression);
 
       var expression = Expression.MakeBinary (ExpressionType.GreaterThan, new SubQueryExpression (subQueryModel), Expression.Constant (2));

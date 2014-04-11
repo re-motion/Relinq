@@ -18,8 +18,10 @@ using System;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
 using NUnit.Framework;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
 {
@@ -43,7 +45,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
     [Test]
     public void Transform_NoAttribute ()
     {
-      var expression = ExpressionHelper.CreateMethodCallExpression();
+      var expression = ExpressionHelper.CreateMethodCallExpression<Cook>();
 
       var result = _transformer.Transform (expression);
 

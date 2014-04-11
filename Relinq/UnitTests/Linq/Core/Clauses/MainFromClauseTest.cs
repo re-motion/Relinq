@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Rhino.Mocks;
 
@@ -41,7 +42,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
     [Test]
     public void Initialize ()
     {
-      IQueryable querySource = ExpressionHelper.CreateCookQueryable ();
+      IQueryable querySource = ExpressionHelper.CreateQueryable<Cook> ();
 
       ConstantExpression constantExpression = Expression.Constant (querySource);
       var fromClause = new MainFromClause ("s", typeof (Cook), constantExpression);
@@ -54,7 +55,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
     [Test]
     public void Initialize_WithNonConstantExpression ()
     {
-      IQueryable querySource = ExpressionHelper.CreateCookQueryable ();
+      IQueryable querySource = ExpressionHelper.CreateQueryable<Cook> ();
       var anonymous = new {source = querySource};
       MemberExpression sourceExpression = Expression.MakeMemberAccess (Expression.Constant (anonymous), anonymous.GetType().GetProperty ("source"));
 
@@ -67,7 +68,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
     {
       var repository = new MockRepository ();
       var visitorMock = repository.StrictMock<IQueryModelVisitor> ();
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook> ();
 
       visitorMock.VisitMainFromClause (_mainFromClause, queryModel);
 

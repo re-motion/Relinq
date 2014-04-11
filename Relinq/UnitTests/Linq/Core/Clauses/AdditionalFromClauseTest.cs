@@ -18,6 +18,7 @@ using System;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Rhino.Mocks;
 
@@ -56,7 +57,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
     [Test]
     public void Accept ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook> ();
       var visitorMock = MockRepository.GenerateMock<IQueryModelVisitor> ();
       _additionalFromClause.Accept (visitorMock, queryModel, 1);
       visitorMock.AssertWasCalled (mock => mock.VisitAdditionalFromClause (_additionalFromClause, queryModel, 1));

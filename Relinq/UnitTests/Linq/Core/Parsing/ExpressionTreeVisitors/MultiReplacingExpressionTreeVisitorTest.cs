@@ -80,7 +80,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     [Test]
     public void ReplacesTreePart_InSubQueries ()
     {
-      var replacedNode = ExpressionHelper.CreateCookQueryable ().Expression;
+      var replacedNode = ExpressionHelper.CreateQueryable<Cook> ().Expression;
       var replacementNode = Expression.Constant (null, typeof (Cook[]));
       var mapping = new Dictionary<Expression, Expression> { { replacedNode, replacementNode } };
 

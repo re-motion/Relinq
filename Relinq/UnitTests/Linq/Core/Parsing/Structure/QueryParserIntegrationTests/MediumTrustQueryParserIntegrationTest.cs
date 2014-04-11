@@ -18,7 +18,7 @@ using System;
 using System.Linq;
 using System.Security.Permissions;
 using NUnit.Framework;
-using Remotion.Linq.UnitTests.Sandboxing;
+using Remotion.Linq.Development.UnitTesting.Sandboxing;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegrationTests
 {

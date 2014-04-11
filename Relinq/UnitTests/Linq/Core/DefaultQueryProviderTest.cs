@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Rhino.Mocks;
@@ -49,7 +50,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage =
         "Expected the generic type definition of an implementation of IQueryable<T>, "
-        + "but was 'Remotion.Linq.UnitTests.Linq.Core.TestDomain.TestQueryable`1[System.Int32]'."
+        + "but was 'Remotion.Linq.Development.UnitTesting.TestQueryable`1[System.Int32]'."
         + "\r\nParameter name: queryableType")]
     public void Initialization_NonGenericTypeDefinition ()
     {

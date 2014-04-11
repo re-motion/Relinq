@@ -27,6 +27,7 @@ using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
 {
@@ -312,8 +313,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     [Test]
     public void IntegrationTest_WithExpressionNodes ()
     {
-      var query = from a in ExpressionHelper.CreateCookQueryable ()
-                  from b in ExpressionHelper.CreateCookQueryable()
+      var query = from a in ExpressionHelper.CreateQueryable<Cook> ()
+                  from b in ExpressionHelper.CreateQueryable<Cook>()
                   where a.ID > 5
                   select a.ID;
 

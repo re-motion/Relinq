@@ -19,6 +19,8 @@ using NUnit.Framework;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
 {
@@ -42,7 +44,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
     [Test]
     public void Replaces_SubQueryExpressions ()
     {
-      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook ());
+      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
       var result = CloningExpressionTreeVisitor.AdjustExpressionAfterCloning (expression, _querySourceMapping);
 
       Assert.That (((SubQueryExpression) result).QueryModel, Is.Not.SameAs (expression.QueryModel));
@@ -51,7 +53,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
     [Test]
     public void Replaces_SubQueryExpressions_WithCorrectCloneContext ()
     {
-      var subQueryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      var subQueryModel = ExpressionHelper.CreateQueryModel<Cook> ();
       var referencedClause = ExpressionHelper.CreateMainFromClause_Int ();
       subQueryModel.SelectClause.Selector = new QuerySourceReferenceExpression (referencedClause);
       var expression = new SubQueryExpression (subQueryModel);

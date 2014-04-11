@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Rhino.Mocks;
 
@@ -35,8 +36,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
     [SetUp]
     public void SetUp ()
     {
-      _joinClause = ExpressionHelper.CreateJoinClause ();
-      _groupJoinClause = ExpressionHelper.CreateGroupJoinClause (_joinClause);
+      _joinClause = ExpressionHelper.CreateJoinClause<Cook> ();
+      _groupJoinClause = ExpressionHelper.CreateGroupJoinClause<Cook> (_joinClause);
       _cloneContext = new CloneContext (new QuerySourceMapping ());
     }
 
@@ -62,7 +63,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
     public void Accept ()
     {
       var repository = new MockRepository ();
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook> ();
       var visitorMock = repository.StrictMock<IQueryModelVisitor> ();
 
       visitorMock.VisitGroupJoinClause (_groupJoinClause, queryModel, 1);

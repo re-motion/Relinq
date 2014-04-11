@@ -97,7 +97,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     [Test]
     public void EvaluateLambdaWithSubQuery  ()
     {
-      var subQuery = new SubQueryExpression(ExpressionHelper.CreateQueryModel_Cook());
+      var subQuery = new SubQueryExpression(ExpressionHelper.CreateQueryModel<Cook>());
       LambdaExpression lambdaExpression = Expression.Lambda (subQuery);
 
       Expression result = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (lambdaExpression);
@@ -111,8 +111,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
       var i = 1;
 // ReSharper restore ConvertToConstant.Local
 
-      var source1 = ExpressionHelper.CreateCookQueryable ();
-      var source2 = ExpressionHelper.CreateCookQueryable ();
+      var source1 = ExpressionHelper.CreateQueryable<Cook> ();
+      var source2 = ExpressionHelper.CreateQueryable<Cook> ();
       var query = from s1 in source1
                   from s2 in source2
                   where 2 > i + 5
@@ -136,7 +136,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     [Test]
     public void EvaluateWholeQueryTree_ThatDoesNotUseItsParameters ()
     {
-      var source = ExpressionHelper.CreateCookQueryable ();
+      var source = ExpressionHelper.CreateQueryable<Cook> ();
       var query = from s1 in source
                   where false
                   select 0 + int.Parse ("0");
@@ -156,7 +156,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     [Test]
     public void EvaluateWholeQueryTree_WhoseLambdasAreInMemberExpressions_InsteadOfUnaryExpressions ()
     {
-      var source = ExpressionHelper.CreateCookQueryable ();
+      var source = ExpressionHelper.CreateQueryable<Cook> ();
 
       Expression<Func<Cook, bool>> predicate = s1 => false;
       var queryExpression = ExpressionHelper.MakeExpression (() => source.Where (predicate));
@@ -175,7 +175,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     [Test]
     public void EvaluateWholeQueryTree_WithoutLambdas ()
     {
-      var source = ExpressionHelper.CreateCookQueryable ();
+      var source = ExpressionHelper.CreateQueryable<Cook> ();
 
       var queryExpression = ExpressionHelper.MakeExpression (() => source.Count ());
 
@@ -272,7 +272,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     [Test]
     public void EvalueQueryableConstant_Inlined ()
     {
-      var query = ExpressionHelper.CreateCookQueryable ();
+      var query = ExpressionHelper.CreateQueryable<Cook> ();
       var expression = Expression.Constant (query);
 
       var result = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (expression);
@@ -283,7 +283,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     [Test]
     public void EvaluateQueryableConstant_InlinedPart_IsPartiallyEvaluated ()
     {
-      var querySource = ExpressionHelper.CreateCookQueryable ();
+      var querySource = ExpressionHelper.CreateQueryable<Cook> ();
       var query = querySource.Where (c => "1" == 1.ToString ());
       var expression = Expression.Constant (query);
 
@@ -296,7 +296,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
     [Test]
     public void EvaluateQueryableConstant_InClosureMember ()
     {
-      var innerQuery = from c in ExpressionHelper.CreateCookQueryable() where c != null select c;
+      var innerQuery = from c in ExpressionHelper.CreateQueryable<Cook>() where c != null select c;
       var outerExpression = ExpressionHelper.MakeExpression (() => innerQuery);
       Assert.That (outerExpression.NodeType, Is.EqualTo (ExpressionType.MemberAccess));
 

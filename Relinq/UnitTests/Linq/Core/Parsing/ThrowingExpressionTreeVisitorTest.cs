@@ -17,10 +17,12 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests;
-using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
@@ -203,7 +205,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitSubQueryExpression: ", MatchType = MessageMatch.Contains)]
     public void VisitSubQueryExpression ()
     {
-      _visitor.VisitExpression (new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook ()));
+      _visitor.VisitExpression (new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ()));
     }
 
     [Test]

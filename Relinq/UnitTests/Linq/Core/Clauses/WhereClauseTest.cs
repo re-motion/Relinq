@@ -18,6 +18,8 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
+using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
@@ -53,7 +55,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses
     [Test]
     public void Accept()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook> ();
       var repository = new MockRepository ();
       var visitorMock = repository.StrictMock<IQueryModelVisitor> ();
 

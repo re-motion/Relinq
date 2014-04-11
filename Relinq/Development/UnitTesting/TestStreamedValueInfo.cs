@@ -1,4 +1,4 @@
-﻿// This file is part of the re-linq project (relinq.codeplex.com)
+// This file is part of the re-linq project (relinq.codeplex.com)
 // Copyright (c) rubicon IT GmbH, www.rubicon.eu
 // 
 // re-linq is free software; you can redistribute it and/or modify it under 
@@ -14,26 +14,29 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
-using System.Collections.Generic;
+using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Utilities;
 
-namespace Remotion.Linq.UnitTests.Linq.Core
+namespace Remotion.Linq.Development.UnitTesting
 {
-  public class StubQueryExecutor : IQueryExecutor
+  public class TestStreamedValueInfo : StreamedValueInfo
   {
-    public T ExecuteScalar<T> (QueryModel queryModel)
+    public TestStreamedValueInfo (Type dataType)
+        : base (dataType)
     {
-      throw new NotImplementedException ("ExecuteScalar<" + typeof (T).Name + "> (" + queryModel + ")");
     }
 
-    public T ExecuteSingle<T> (QueryModel queryModel, bool returnDefaultWhenEmpty)
+    public override IStreamedData ExecuteQueryModel (QueryModel queryModel, IQueryExecutor executor)
     {
-      throw new NotImplementedException ("ExecuteSingle<" + typeof (T).Name + "> (" + queryModel + ", " + returnDefaultWhenEmpty + ")");
+      throw new NotImplementedException();
     }
 
-    public IEnumerable<T> ExecuteCollection<T> (QueryModel queryModel)
+    protected override StreamedValueInfo CloneWithNewDataType (Type dataType)
     {
-      throw new NotImplementedException ("ExecuteCollection<" + typeof (T).Name + "> (" + queryModel + ")");
+      ArgumentUtility.CheckNotNull ("dataType", dataType);
+      return new TestStreamedValueInfo (dataType);
     }
   }
 }

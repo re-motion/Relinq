@@ -21,7 +21,9 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
@@ -200,7 +202,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     [Test]
     public void ExecuteQueryModel ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook();
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook>();
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor>();
       executorMock.Expect (mock => mock.ExecuteCollection<string> (queryModel)).Return (new[] { "a", "b", "c" });
@@ -220,7 +222,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Test")]
     public void ExecuteQueryModel_WithException ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook();
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook>();
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor>();
       executorMock.Expect (mock => mock.ExecuteCollection<string> (queryModel)).Throw (new InvalidOperationException ("Test"));

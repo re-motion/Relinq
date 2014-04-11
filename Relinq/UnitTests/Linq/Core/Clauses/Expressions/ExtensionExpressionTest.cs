@@ -18,11 +18,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing;
 using Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions.TestDomain;
-using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions

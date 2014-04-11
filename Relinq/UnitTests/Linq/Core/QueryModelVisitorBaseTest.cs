@@ -16,10 +16,11 @@
 // 
 using System;
 using NUnit.Framework;
+using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Collections;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
-using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 
@@ -57,9 +58,9 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       _resultOperatorMock1 = _mockRepository.StrictMock<ResultOperatorBase> ();
       _resultOperatorMock2 = _mockRepository.StrictMock<ResultOperatorBase> ();
 
-      _queryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      _queryModel = ExpressionHelper.CreateQueryModel<Cook> ();
       _orderByClause = ExpressionHelper.CreateOrderByClause ();
-      _groupJoinClause = ExpressionHelper.CreateGroupJoinClause ();
+      _groupJoinClause = ExpressionHelper.CreateGroupJoinClause<Cook> ();
     }
 
     [Test]

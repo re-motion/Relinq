@@ -17,6 +17,7 @@
 using System;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Rhino.Mocks;
 
@@ -51,7 +52,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     [Test]
     public void ExecuteQueryModel_WithDefaultWhenEmpty ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook> ();
       var student1 = new Cook();
       
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
@@ -69,7 +70,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     [Test]
     public void ExecuteQueryModel_NoDefaultWhenEmpty ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook> ();
       var student1 = new Cook ();
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
@@ -106,7 +107,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Test")]
     public void ExecuteQueryModel_WithException ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook> ();
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor> ();
       executorMock.Expect (mock => mock.ExecuteSingle<Cook> (queryModel, true)).Throw (new InvalidOperationException ("Test"));

@@ -19,6 +19,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
@@ -37,7 +38,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions
     [Test]
     public void Initialization ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook();
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook>();
       var expression = new SubQueryExpression (queryModel);
       Assert.That (expression.Type, Is.SameAs (typeof(IQueryable<Cook>)));
       Assert.That (expression.QueryModel, Is.SameAs (queryModel));

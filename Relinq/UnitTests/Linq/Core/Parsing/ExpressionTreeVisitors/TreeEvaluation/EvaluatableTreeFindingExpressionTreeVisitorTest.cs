@@ -21,8 +21,10 @@ using System.Linq.Expressions;
 using Microsoft.CSharp.RuntimeBinder;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.TreeEvaluation
 {
@@ -87,7 +89,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.TreeE
     [Test]
     public void VisitUnknownExpression_NotEvaluatable ()
     {
-      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook());
+      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook>());
       var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
@@ -122,7 +124,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.TreeE
     [Test]
     public void MethodCall_WithIQueryableObject_IsNotEvaluatable ()
     {
-      var source = ExpressionHelper.CreateCookQueryable ();
+      var source = ExpressionHelper.CreateQueryable<Cook> ();
       var expression = ExpressionHelper.MakeExpression (() => source.ToString());
 
       var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);
@@ -132,7 +134,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.TreeE
     [Test]
     public void MethodCall_WithIQueryableParameter_IsNotEvaluatable ()
     {
-      var source = ExpressionHelper.CreateCookQueryable ();
+      var source = ExpressionHelper.CreateQueryable<Cook> ();
       var expression = ExpressionHelper.MakeExpression (() => source.Count ());
 
       var evaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expression);

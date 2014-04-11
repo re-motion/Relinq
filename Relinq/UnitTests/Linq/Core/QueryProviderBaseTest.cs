@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Remotion.Linq.UnitTests.Linq.Core.TestQueryGenerators;
@@ -50,7 +51,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
       _queryProvider = new TestQueryProvider (_queryParserMock, _executorMock);
     
       _queryableWithDefaultParser = new TestQueryable<Cook> (QueryParser.CreateDefault(), _executorMock);
-      _fakeQueryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      _fakeQueryModel = ExpressionHelper.CreateQueryModel<Cook> ();
     }
 
     [Test]
@@ -91,7 +92,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     [Test]
     public void GenerateQueryModel ()
     {
-      Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateCookQueryable ());
+      Expression expression = SelectTestQueryGenerator.CreateSimpleQuery_SelectExpression (ExpressionHelper.CreateQueryable<Cook> ());
 
       _queryParserMock
           .Expect (mock => mock.GetParsedQuery (expression))

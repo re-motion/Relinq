@@ -23,6 +23,7 @@ using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 using Rhino.Mocks;
 
@@ -174,7 +175,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     [Test]
     public void Clone_ReturnsNewQueryModel ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook();
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook>();
       var clone = queryModel.Clone();
 
       Assert.That (clone, Is.Not.Null);
@@ -184,7 +185,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     [Test]
     public void Clone_Keeps_ResultTypeOverride ()
     {
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook> ();
       queryModel.ResultTypeOverride = typeof (List<Cook>);
       var clone = queryModel.Clone ();
 
@@ -373,7 +374,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     [Test]
     public void GetNewName_AlreadyExists_MainFromClause ()
     {
-      var mainFromClause = new MainFromClause ("test0", typeof (Cook), ExpressionHelper.CreateCookQueryable().Expression);
+      var mainFromClause = new MainFromClause ("test0", typeof (Cook), ExpressionHelper.CreateQueryable<Cook>().Expression);
       var queryModel = ExpressionHelper.CreateQueryModel (mainFromClause);
       var identifier = queryModel.GetNewName ("test");
       Assert.That (identifier, Is.EqualTo ("test1"));
@@ -382,8 +383,8 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     [Test]
     public void GetNewName_AlreadyExists_ChangedMainFromClause ()
     {
-      var mainFromClause = new MainFromClause ("test0", typeof (Cook), ExpressionHelper.CreateCookQueryable().Expression);
-      var queryModel = ExpressionHelper.CreateQueryModel_Cook();
+      var mainFromClause = new MainFromClause ("test0", typeof (Cook), ExpressionHelper.CreateQueryable<Cook>().Expression);
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook>();
       queryModel.MainFromClause = mainFromClause;
       var identifier = queryModel.GetNewName ("test");
       Assert.That (identifier, Is.EqualTo ("test1"));

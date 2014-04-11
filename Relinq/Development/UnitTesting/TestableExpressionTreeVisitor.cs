@@ -14,28 +14,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
-using Remotion.Linq.Clauses.StreamedData;
-using Remotion.Utilities;
+using Remotion.Linq.Parsing;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.StreamedData
+namespace Remotion.Linq.Development.UnitTesting
 {
-  public class TestStreamedValueInfo : StreamedValueInfo
+  public class TestableExpressionTreeVisitor : ExpressionTreeVisitor
   {
-    public TestStreamedValueInfo (Type dataType)
-        : base (dataType)
-    {
-    }
-
-    public override IStreamedData ExecuteQueryModel (QueryModel queryModel, IQueryExecutor executor)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override StreamedValueInfo CloneWithNewDataType (Type dataType)
-    {
-      ArgumentUtility.CheckNotNull ("dataType", dataType);
-      return new TestStreamedValueInfo (dataType);
-    }
   }
 }

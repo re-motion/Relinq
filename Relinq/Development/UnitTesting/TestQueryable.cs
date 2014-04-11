@@ -14,29 +14,34 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
+using System.Linq;
+using System.Linq.Expressions;
+using Remotion.Linq.Parsing.Structure;
 
-// Note: This file is originally defined in Remotion.Development.UnitTesting.Sandboxing. It is duplicated by Remotion.Linq.UnitTests.Sandboxing.
-// Note: Changes made to this file must be synchronized with all copies.
-
-namespace Remotion.Linq.UnitTests.Sandboxing
+namespace Remotion.Linq.Development.UnitTesting
 {
-  /// <summary>
-  /// <see cref="TestFixtureResult"/> holds the type of the test class and the result of the test methods.
-  /// </summary>
-  [Serializable]
-  public struct TestFixtureResult
+  public class TestQueryable<T> : QueryableBase<T>
   {
-    public readonly Type Type;
-    public readonly TestResult[] TestResults;
-
-    public TestFixtureResult (Type type, TestResult[] testResults)
+    public TestQueryable (IQueryProvider provider, Expression expression)
+        : base (provider, expression)
     {
-      if (type == null)
-        throw new ArgumentNullException ("type"); // avoid ArgumentUtility, it doesn't support partial trust ATM
+    }
 
-      Type = type;
-      TestResults = testResults;
+    public TestQueryable (IQueryParser queryParser, IQueryExecutor executor)
+        : base (queryParser, executor)
+    {
+    }
+
+    public TestQueryable (IQueryProvider provider)
+        : base (provider)
+    {
+    }
+
+    public override string ToString ()
+    {
+      return "TestQueryable<" + typeof (T).Name + ">()";
     }
   }
 }

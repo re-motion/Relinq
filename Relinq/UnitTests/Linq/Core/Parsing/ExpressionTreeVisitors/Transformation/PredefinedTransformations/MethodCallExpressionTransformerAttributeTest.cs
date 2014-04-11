@@ -19,8 +19,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
 using NUnit.Framework;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
 {
@@ -63,7 +65,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
     [Test]
     public void GetExpressionTransformer ()
     {
-      var expressionTransformer = _attribute.GetExpressionTransformer (ExpressionHelper.CreateMethodCallExpression());
+      var expressionTransformer = _attribute.GetExpressionTransformer (ExpressionHelper.CreateMethodCallExpression<Cook>());
 
       Assert.That (expressionTransformer, Is.TypeOf<FakeTransformer>());
     }
@@ -73,7 +75,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
     {
       var attribute = new MethodCallExpressionTransformerAttribute (typeof (FakeTransformerWithoutDefaultCtor));
       Assert.That (
-          () => attribute.GetExpressionTransformer (ExpressionHelper.CreateMethodCallExpression()),
+          () => attribute.GetExpressionTransformer (ExpressionHelper.CreateMethodCallExpression<Cook>()),
           Throws.InvalidOperationException.With.Message.EqualTo (
               "The method call transformer "
               + "'Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations.MethodCallExpressionTransformerAttributeTest+FakeTransformerWithoutDefaultCtor' "

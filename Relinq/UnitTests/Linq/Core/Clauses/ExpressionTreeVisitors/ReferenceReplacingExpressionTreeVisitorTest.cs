@@ -23,6 +23,7 @@ using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing;
 using Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
 {
@@ -64,7 +65,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
     [Test]
     public void VisitSubQuery_ExpressionUnchanged ()
     {
-      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook ());
+      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
       var result = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, false);
 
       Assert.That (((SubQueryExpression) result).QueryModel, Is.SameAs (expression.QueryModel));
@@ -73,7 +74,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
     [Test]
     public void Replaces_SubQueryExpressions_WithCorrectCloneContext ()
     {
-      var subQueryModel = ExpressionHelper.CreateQueryModel_Cook ();
+      var subQueryModel = ExpressionHelper.CreateQueryModel<Cook> ();
       var referencedClause = ExpressionHelper.CreateMainFromClause_Int ();
       subQueryModel.SelectClause.Selector = new QuerySourceReferenceExpression (referencedClause);
       var expression = new SubQueryExpression (subQueryModel);
@@ -90,7 +91,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
     [ExpectedException (typeof (InvalidOperationException))]
     public void VisitSubQuery_PassesFlagToInner_Throw ()
     {
-      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook ());
+      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
       expression.QueryModel.SelectClause.Selector = new QuerySourceReferenceExpression (expression.QueryModel.MainFromClause);
       ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
     }
@@ -99,7 +100,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ExpressionTreeVisitors
     [Test]
     public void VisitSubQuery_PassesFlagToInner_Ignore ()
     {
-      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel_Cook ());
+      var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
       expression.QueryModel.SelectClause.Selector = new QuerySourceReferenceExpression (expression.QueryModel.MainFromClause);
       ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, false);
     }

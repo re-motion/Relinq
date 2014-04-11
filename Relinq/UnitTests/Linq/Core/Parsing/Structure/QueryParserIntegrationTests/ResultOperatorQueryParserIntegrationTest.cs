@@ -67,7 +67,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
     [Test]
     public void WhereClauseFollowingResultOperator ()
     {
-      var query = (from s in ExpressionHelper.CreateCookQueryable ()
+      var query = (from s in ExpressionHelper.CreateQueryable<Cook> ()
                    select s).Distinct ().Where (x => x.ID > 0);
       
       var expression = query.Expression;
@@ -93,7 +93,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
     [Test]
     public void PredicateFollowingResultOperator ()
     {
-      var expression = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateCookQueryable ()
+      var expression = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateQueryable<Cook> ()
                                                                select s).Distinct ().Count(x => x.ID > 0));
 
       var queryModel = QueryParser.GetParsedQuery (expression);
@@ -287,7 +287,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
     [Test]
     public void Skip ()
     {
-      var query = (from s in ExpressionHelper.CreateCookQueryable() 
+      var query = (from s in ExpressionHelper.CreateQueryable<Cook>() 
                    select s.ID).Skip (1);
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
@@ -304,7 +304,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
     [Test]
     public void Reverse ()
     {
-      var query = (from s in ExpressionHelper.CreateCookQueryable ()
+      var query = (from s in ExpressionHelper.CreateQueryable<Cook> ()
                    select s).Reverse ();
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
@@ -463,7 +463,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
     public void DefaultIfEmpty ()
     {
       var student = new Cook ();
-      var query = (from s in ExpressionHelper.CreateCookQueryable ()
+      var query = (from s in ExpressionHelper.CreateQueryable<Cook> ()
                    select s).DefaultIfEmpty (student);
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
@@ -477,7 +477,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegra
     [Test]
     public void Cast ()
     {
-      var query = (from s in ExpressionHelper.CreateCookQueryable()
+      var query = (from s in ExpressionHelper.CreateQueryable<Cook>()
                    select s.ID).Cast<double>();
       
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
