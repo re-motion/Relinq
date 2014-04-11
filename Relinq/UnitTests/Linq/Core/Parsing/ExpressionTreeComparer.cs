@@ -36,10 +36,10 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
       comparer.CheckAreEqualNodes (expectedTree, actualTree);
     }
 
-    private readonly object _expectedInitial;
-    private readonly object _actualInitial;
+    private readonly string _expectedInitial;
+    private readonly string _actualInitial;
 
-    public ExpressionTreeComparer (object expectedInitial, object actualInitial)
+    private ExpressionTreeComparer (string expectedInitial, string actualInitial)
     {
       ArgumentUtility.CheckNotNull ("expectedInitial", expectedInitial);
       ArgumentUtility.CheckNotNull ("actualInitial", actualInitial);
@@ -48,7 +48,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
       _actualInitial = actualInitial;
     }
 
-    public void CheckAreEqualNodes (Expression expected, Expression actual)
+    private void CheckAreEqualNodes (Expression expected, Expression actual)
     {
       if (expected == null)
         Assert.IsNull (actual, GetMessage (null, actual, "Null nodes"));
@@ -61,7 +61,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
       }
     }
 
-    public void CheckAreEqualObjects (object expected, object actual)
+    private void CheckAreEqualObjects (object expected, object actual)
     {
       Assert.AreEqual (expected.GetType(), actual.GetType(), GetMessage (expected, actual, "GetType()"));
 
