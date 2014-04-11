@@ -23,6 +23,7 @@ using NUnit.Framework;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.Development.UnitTesting.Clauses.StreamedData;
 using Remotion.Linq.UnitTests.Clauses.ResultOperators;
 using Remotion.Linq.UnitTests.TestDomain;
 using Rhino.Mocks;

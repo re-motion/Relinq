@@ -85,13 +85,12 @@
     <Compile Include="UnitTesting\Sandboxing\TestFixtureResult.cs" />
     <Compile Include="UnitTesting\Sandboxing\TestResult.cs" />
     <Compile Include="UnitTesting\StubQueryExecutor.cs" />
-    <Compile Include="UnitTesting\TestableExpressionTreeVisitor.cs" />
-    <Compile Include="UnitTesting\TestExtensionExpression.cs" />
+    <Compile Include="UnitTesting\Parsing\TestableExpressionTreeVisitor.cs" />
+    <Compile Include="UnitTesting\Clauses\Expressions\TestExtensionExpression.cs" />
     <Compile Include="UnitTesting\TestQueryable.cs" />
     <Compile Include="UnitTesting\TestQueryModelVisitor.cs" />
     <Compile Include="UnitTesting\TestQueryProvider.cs" />
-    <Compile Include="UnitTesting\TestStreamedValueInfo.cs" />
-    <Compile Include="UnitTesting\TypeForNewExpression.cs" />
+    <Compile Include="UnitTesting\Clauses\StreamedData\TestStreamedValueInfo.cs" />
     <None Include="..\Relinq LGPL.licenseheader">
       <Link>Relinq LGPL.licenseheader</Link>
     </None>

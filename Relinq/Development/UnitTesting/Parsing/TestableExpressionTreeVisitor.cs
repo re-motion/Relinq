@@ -16,27 +16,11 @@
 // 
 
 using System;
-using Remotion.Linq.Clauses.StreamedData;
-using Remotion.Utilities;
+using Remotion.Linq.Parsing;
 
-namespace Remotion.Linq.Development.UnitTesting
+namespace Remotion.Linq.Development.UnitTesting.Parsing
 {
-  public class TestStreamedValueInfo : StreamedValueInfo
+  public class TestableExpressionTreeVisitor : ExpressionTreeVisitor
   {
-    public TestStreamedValueInfo (Type dataType)
-        : base (dataType)
-    {
-    }
-
-    public override IStreamedData ExecuteQueryModel (QueryModel queryModel, IQueryExecutor executor)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override StreamedValueInfo CloneWithNewDataType (Type dataType)
-    {
-      ArgumentUtility.CheckNotNull ("dataType", dataType);
-      return new TestStreamedValueInfo (dataType);
-    }
   }
 }
