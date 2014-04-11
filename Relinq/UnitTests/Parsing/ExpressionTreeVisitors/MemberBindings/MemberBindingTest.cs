@@ -14,11 +14,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using NUnit.Framework;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.MemberBindings;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.MemberBindings
+namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.MemberBindings
 {
   [TestFixture]
   public class MemberBindingTest : MemberBindingTestBase

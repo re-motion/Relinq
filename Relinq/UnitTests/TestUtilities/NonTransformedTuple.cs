@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.TestUtilities
+namespace Remotion.Linq.UnitTests.TestUtilities
 {
   // Like Tuple, but not handled by TupleNewExpressionTransformer.
   // (Makes it easier to write unit tests with expected expressions.)

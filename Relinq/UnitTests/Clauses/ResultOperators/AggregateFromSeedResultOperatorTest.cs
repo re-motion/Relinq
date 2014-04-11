@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Collections;
 using System.Linq.Expressions;
@@ -25,9 +26,9 @@ using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors;
-using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
+namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
 {
   [TestFixture]
   public class AggregateFromSeedResultOperatorTest

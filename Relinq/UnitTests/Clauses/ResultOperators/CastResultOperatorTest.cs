@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Collections;
 using System.Linq;
@@ -22,9 +23,9 @@ using NUnit.Framework;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
-using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
+namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
 {
   [TestFixture]
   public class CastResultOperatorTest
@@ -94,7 +95,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
     [Test]
     public new void ToString ()
     {
-      Assert.That (_resultOperator.ToString (), Is.EqualTo ("Cast<Remotion.Linq.UnitTests.Linq.Core.TestDomain.Chef>()"));
+      Assert.That (_resultOperator.ToString (), Is.EqualTo ("Cast<Remotion.Linq.UnitTests.TestDomain.Chef>()"));
     }
   }
 }

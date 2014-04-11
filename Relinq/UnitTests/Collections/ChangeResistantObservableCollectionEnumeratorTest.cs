@@ -14,12 +14,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using NUnit.Framework;
 using Remotion.Development.UnitTesting;
 using Remotion.Linq.Collections;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Collections
+namespace Remotion.Linq.UnitTests.Collections
 {
   [TestFixture]
   public class ChangeResistantObservableCollectionEnumeratorTest

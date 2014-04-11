@@ -14,14 +14,15 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Development.UnitTesting;
-using Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions.TestDomain;
+using Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain;
 using Rhino.Mocks;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions
+namespace Remotion.Linq.UnitTests.Clauses.Expressions
 {
   [TestFixture]
   public class ExtensionExpressionIntegrationTest

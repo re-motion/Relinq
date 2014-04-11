@@ -17,7 +17,7 @@
 
 using System;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Utilities
+namespace Remotion.Linq.UnitTests.Utilities
 {
   public interface ITestRegistry
   {

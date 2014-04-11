@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,9 +28,10 @@ using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
-using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.Parsing;
+using Remotion.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors
+namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
 {
   [TestFixture]
   public class TransparentIdentifierRemovingExpressionTreeVisitorTest

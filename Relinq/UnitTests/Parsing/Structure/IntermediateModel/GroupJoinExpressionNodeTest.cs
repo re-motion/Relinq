@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +23,9 @@ using NUnit.Framework;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
+namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
   public class GroupJoinExpressionNodeTest : ExpressionNodeTestBase

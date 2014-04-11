@@ -17,7 +17,7 @@
 
 using System;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain
+namespace Remotion.Linq.UnitTests.Parsing.Structure.TestDomain
 {
   public class GenericClass<T>
   {

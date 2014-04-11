@@ -14,12 +14,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions.TestDomain
+namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
 {
   public class ReducibleExtensionExpressionNotOverridingReduce : ExtensionExpression
   {

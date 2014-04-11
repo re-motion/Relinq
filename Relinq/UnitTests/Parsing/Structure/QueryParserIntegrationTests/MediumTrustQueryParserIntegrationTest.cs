@@ -14,13 +14,14 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Linq;
 using System.Security.Permissions;
 using NUnit.Framework;
 using Remotion.Linq.Development.UnitTesting.Sandboxing;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegrationTests
+namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
 {
   [TestFixture]
   public class MediumTrustQueryParserIntegrationTest

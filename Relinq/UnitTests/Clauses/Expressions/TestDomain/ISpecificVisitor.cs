@@ -18,7 +18,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions.TestDomain
+namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
 {
   public interface ISpecificVisitor
   {

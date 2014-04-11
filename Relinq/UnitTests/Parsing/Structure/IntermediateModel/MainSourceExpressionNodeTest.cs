@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -21,7 +22,7 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
+namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
   public class MainSourceExpressionNodeTest : ExpressionNodeTestBase

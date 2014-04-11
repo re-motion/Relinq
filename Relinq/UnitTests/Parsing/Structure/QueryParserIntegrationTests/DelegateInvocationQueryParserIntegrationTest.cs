@@ -14,22 +14,23 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Parsing;
-using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.QueryParserIntegrationTests
+namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
 {
   [TestFixture]
   public class DelegateInvocationQueryParserIntegrationTest : QueryParserIntegrationTestBase
   {
     [Test]
     [ExpectedException (typeof (ParserException), ExpectedMessage = 
-        "Could not parse expression 'c.Assistants.Select(value(System.Func`2[Remotion.Linq.UnitTests.Linq.Core.TestDomain.Cook,System.String]))': "
+        "Could not parse expression 'c.Assistants.Select(value(System.Func`2[Remotion.Linq.UnitTests.TestDomain.Cook,System.String]))': "
         + "Object of type 'System.Linq.Expressions.ConstantExpression' cannot be converted to type 'System.Linq.Expressions.LambdaExpression'. "
         + "If you tried to pass a delegate instead of a LambdaExpression, this is not supported because delegates are not parsable expressions.")]
     public void DelegateAsSelector ()

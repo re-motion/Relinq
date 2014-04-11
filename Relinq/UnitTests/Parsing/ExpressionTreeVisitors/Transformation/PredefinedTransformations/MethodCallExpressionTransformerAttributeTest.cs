@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -22,9 +23,9 @@ using NUnit.Framework;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
-using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
+namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
 {
   [TestFixture]
   public class MethodCallExpressionTransformerAttributeTest
@@ -78,7 +79,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Trans
           () => attribute.GetExpressionTransformer (ExpressionHelper.CreateMethodCallExpression<Cook>()),
           Throws.InvalidOperationException.With.Message.EqualTo (
               "The method call transformer "
-              + "'Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations.MethodCallExpressionTransformerAttributeTest+FakeTransformerWithoutDefaultCtor' "
+              + "'Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations.MethodCallExpressionTransformerAttributeTest+FakeTransformerWithoutDefaultCtor' "
               + "has no public default constructor and therefore cannot be used with the MethodCallExpressionTransformerAttribute."));
     }
 

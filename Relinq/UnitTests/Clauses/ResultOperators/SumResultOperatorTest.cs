@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -21,7 +22,7 @@ using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
+namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
 {
   [TestFixture]
   public class SumResultOperatorTest

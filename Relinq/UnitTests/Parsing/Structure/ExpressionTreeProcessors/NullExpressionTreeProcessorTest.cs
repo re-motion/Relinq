@@ -20,7 +20,7 @@ using NUnit.Framework;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.ExpressionTreeProcessors
+namespace Remotion.Linq.UnitTests.Parsing.Structure.ExpressionTreeProcessors
 {
   [TestFixture]
   public class NullExpressionTreeProcessorTest

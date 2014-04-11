@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,10 +24,11 @@ using NUnit.Framework;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
-using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.TestDomain;
-using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.Parsing;
+using Remotion.Linq.UnitTests.Parsing.Structure.TestDomain;
+using Remotion.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.TreeEvaluation
+namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.TreeEvaluation
 {
   [TestFixture]
   public class EvaluatableTreeFindingExpressionTreeVisitorTest

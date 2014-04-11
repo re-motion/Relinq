@@ -14,15 +14,16 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Linq.Expressions;
 using Microsoft.VisualBasic.CompilerServices;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
-using Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitorTests;
+using Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
+namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
 {
   [TestFixture]
   public class VBCompareStringExpressionTransformerTest

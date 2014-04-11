@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Collections;
 using System.Linq.Expressions;
@@ -23,9 +24,9 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Development.UnitTesting;
-using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
+namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
 {
   [TestFixture]
   public class ContainsResultOperatorTest
@@ -85,7 +86,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
 
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "The items of the input sequence of type 'Remotion.Linq.UnitTests.Linq.Core.TestDomain.Cook' are not compatible with the item expression "
+        "The items of the input sequence of type 'Remotion.Linq.UnitTests.TestDomain.Cook' are not compatible with the item expression "
         + "of type 'System.Int32'.\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInput_DoesntMatchItem ()
     {

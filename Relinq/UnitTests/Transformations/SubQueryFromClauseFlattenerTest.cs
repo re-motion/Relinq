@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,10 +25,10 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Transformations;
-using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
-using Remotion.Linq.UnitTests.Linq.Core.TestUtilities;
+using Remotion.Linq.UnitTests.TestDomain;
+using Remotion.Linq.UnitTests.TestUtilities;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Transformations
+namespace Remotion.Linq.UnitTests.Transformations
 {
   [TestFixture]
   public class SubQueryFromClauseFlattenerTest

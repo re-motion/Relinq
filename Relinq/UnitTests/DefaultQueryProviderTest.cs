@@ -21,10 +21,10 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure;
-using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.TestDomain;
 using Rhino.Mocks;
 
-namespace Remotion.Linq.UnitTests.Linq.Core
+namespace Remotion.Linq.UnitTests
 {
   [TestFixture]
   public class DefaultQueryProviderTest
@@ -60,7 +60,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage =
         "Expected the generic type definition of an implementation of IQueryable<T> with exactly one type argument, "
-        + "but found 2 arguments on 'Remotion.Linq.UnitTests.Linq.Core.TestDomain.QueryableWithTooManyArguments`2[T1,T2]."
+        + "but found 2 arguments on 'Remotion.Linq.UnitTests.TestDomain.QueryableWithTooManyArguments`2[T1,T2]."
         + "\r\nParameter name: queryableType")]
     public void Initialization_TooManyGenericArguments ()
     {

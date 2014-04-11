@@ -22,7 +22,7 @@ using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Rhino.Mocks;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.ExpressionTreeProcessors
+namespace Remotion.Linq.UnitTests.Parsing.Structure.ExpressionTreeProcessors
 {
   [TestFixture]
   public class CompoundExpressionTreeProcessorTest

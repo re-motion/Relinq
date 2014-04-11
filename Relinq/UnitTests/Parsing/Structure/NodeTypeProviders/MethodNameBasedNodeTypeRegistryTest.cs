@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -21,7 +22,7 @@ using Remotion.Linq.Clauses;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.NodeTypeProviders
+namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders
 {
   [TestFixture]
   public class MethodNameBasedNodeTypeRegistryTest

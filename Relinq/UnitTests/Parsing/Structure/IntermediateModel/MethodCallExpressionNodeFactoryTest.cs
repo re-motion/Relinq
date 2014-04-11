@@ -14,15 +14,17 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel.TestDomain;
-using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.Linq.Core.Parsing;
+using Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel.TestDomain;
+using Remotion.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
+namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
 {
   [TestFixture]
   public class MethodCallExpressionNodeFactoryTest
@@ -61,7 +63,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
 
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "Parameter 'nodeType' is a 'Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel.MethodCallExpressionNodeFactoryTest', "
+        "Parameter 'nodeType' is a 'Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel.MethodCallExpressionNodeFactoryTest', "
         + "which cannot be assigned to type 'Remotion.Linq.Parsing.Structure.IntermediateModel.IExpressionNode'."
         + "\r\nParameter name: nodeType")]
     public void CreateExpressionNode_InvalidType ()
@@ -70,7 +72,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Expression node type 'Remotion.Linq.UnitTests.Linq.Core.Parsing.Structure."
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Expression node type 'Remotion.Linq.UnitTests.Parsing.Structure."
         + "IntermediateModel.TestDomain.ExpressionNodeWithTooManyCtors' contains too many constructors. It must only contain a single constructor, allowing null "
         + "to be passed for any optional arguments.\r\nParameter name: nodeType")]
     public void CreateExpressionNode_MoreThanOneCtor ()

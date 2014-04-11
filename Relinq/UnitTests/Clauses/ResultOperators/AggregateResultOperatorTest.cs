@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Collections;
 using System.Linq.Expressions;
@@ -25,9 +26,9 @@ using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors;
-using Remotion.Linq.UnitTests.Linq.Core.TestDomain;
+using Remotion.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
+namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
 {
   [TestFixture]
   public class AggregateResultOperatorTest
@@ -138,7 +139,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.ResultOperators
 
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The input sequence must have items of type 'System.Int32', but it has "
-        + "items of type 'Remotion.Linq.UnitTests.Linq.Core.TestDomain.Cook'.\r\nParameter name: inputInfo")]
+        + "items of type 'Remotion.Linq.UnitTests.TestDomain.Cook'.\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInput_DoesntMatchItem ()
     {
       var input = new StreamedSequenceInfo (typeof (Cook[]), Expression.Constant (new Cook ()));
