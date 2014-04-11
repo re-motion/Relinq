@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing;
@@ -201,9 +202,9 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Could not parse expression 'q.First()': This overload of the method 'System.Linq.Queryable.First' " 
-        + "is currently not supported.")]
-    public void Parse_UnknownMethod ()
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage =
+        "Could not parse expression 'q.First()': This overload of the method 'System.Linq.Queryable.First' is currently not supported.")]
+    public void Parse_UnknownMethod_ThrowsNotSupportedException ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, int> (q => q.First());
 
@@ -211,28 +212,63 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Could not parse expression 'q.Select((i, j) => i)': This overload of the method 'System.Linq.Queryable.Select' "
-        + "is currently not supported.")]
-    public void Parse_UnknownOverload ()
+    public void Parse_UnknownMethod_ExceptionCanBeSerialized ()
     {
-      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select ((i, j) => i));
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, int> (q => q.First());
+
+      var exception = Assert.Throws<NotSupportedException> (() => ParseMethodCallExpression (methodCallExpression));
+      var deserialized = Serializer.SerializeAndDeserialize (exception);
+      Assert.That (deserialized.Message, Is.EqualTo (exception.Message));
+    }
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage =
+        "Could not parse expression 'q.Select((i, j) => i)': This overload of the method 'System.Linq.Queryable.Select' is currently not supported.")]
+    public void Parse_UnknownOverload_ThrowsNotSupportedException ()
+    {
+      var methodCallExpression =
+          (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select ((i, j) => i));
 
       ParseMethodCallExpression (methodCallExpression);
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage =
-        "Could not parse expression 'q.Select(value(System.Func`2[System.Int32,System.Int32]))': Object of type "
-        + "'System.Linq.Expressions.ConstantExpression' cannot be converted to type 'System.Linq.Expressions.LambdaExpression'. If you tried to pass "
-        + "a delegate instead of a LambdaExpression, this is not supported because delegates are not parsable expressions.")]
-    public void Parse_InvalidParameters ()
+    public void Parse_UnknownOverload_ExceptionCanBeSerialized ()
+    {
+      var methodCallExpression =
+          (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select ((i, j) => i));
+
+      var exception = Assert.Throws<NotSupportedException> (() => ParseMethodCallExpression (methodCallExpression));
+      var deserialized = Serializer.SerializeAndDeserialize (exception);
+      Assert.That (deserialized.Message, Is.EqualTo (exception.Message));
+    }
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage =
+        "Could not parse expression 'q.Select(value(System.Func`2[System.Int32,System.Int32]))': "
+        + "Object of type 'System.Linq.Expressions.ConstantExpression' cannot be converted to type 'System.Linq.Expressions.LambdaExpression'. "
+        + "If you tried to pass a delegate instead of a LambdaExpression, this is not supported because delegates are not parsable expressions.")]
+    public void Parse_InvalidParameters_ThrowsNotSupportedException ()
     {
       Func<int, int> func = i => i;
-      var methodCallExpression = (MethodCallExpression) 
+      var methodCallExpression = (MethodCallExpression)
           PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (
               ExpressionHelper.MakeExpression<IQueryable<int>, IEnumerable<int>> (q => q.Select (func)));
 
       ParseMethodCallExpression (methodCallExpression);
+    }
+
+    [Test]
+    public void Parse_InvalidParameters_ExceptionCanBeSerialized ()
+    {
+      Func<int, int> func = i => i;
+      var methodCallExpression = (MethodCallExpression)
+          PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (
+              ExpressionHelper.MakeExpression<IQueryable<int>, IEnumerable<int>> (q => q.Select (func)));
+
+      var exception = Assert.Throws<NotSupportedException> (() => ParseMethodCallExpression (methodCallExpression));
+      var deserialized = Serializer.SerializeAndDeserialize (exception);
+      Assert.That (deserialized.Message, Is.EqualTo (exception.Message));
     }
 
     private IExpressionNode ParseMethodCallExpression (MethodCallExpression methodCallExpression)

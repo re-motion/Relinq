@@ -21,7 +21,6 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Development.UnitTesting;
-using Remotion.Linq.Parsing;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Rhino.Mocks;
 
@@ -103,14 +102,16 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException))]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = 
+        "ThenByDescending expressions must follow OrderBy, OrderByDescending, ThenBy, or ThenByDescending expressions.")]
     public void Apply_NoPreviousClause ()
     {
       _node.Apply (QueryModel, ClauseGenerationContext);
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException))]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = 
+        "ThenByDescending expressions must follow OrderBy, OrderByDescending, ThenBy, or ThenByDescending expressions.")]
     public void Apply_InvalidPreviousClause ()
     {
       QueryModel.BodyClauses.Add (new WhereClause (ExpressionHelper.CreateExpression ()));

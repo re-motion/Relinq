@@ -42,10 +42,13 @@ namespace Remotion.Linq.Parsing.Structure
     public IExpressionNode Parse (
         string associatedIdentifier, IExpressionNode source, IEnumerable<Expression> arguments, MethodCallExpression expressionToParse)
     {
+      ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier);
+      ArgumentUtility.CheckNotNull ("source", source);
       ArgumentUtility.CheckNotNull ("expressionToParse", expressionToParse);
+      ArgumentUtility.CheckNotNull ("arguments", arguments);
 
       Type nodeType = GetNodeType (expressionToParse);
-      var additionalConstructorParameters = arguments.Select (expr => ProcessArgumentExpression (expr)).ToArray();
+      var additionalConstructorParameters = arguments.Select (ProcessArgumentExpression).ToArray();
 
       var parseInfo = new MethodCallExpressionParseInfo (associatedIdentifier, source, expressionToParse);
       return CreateExpressionNode (nodeType, parseInfo, additionalConstructorParameters);
@@ -56,12 +59,11 @@ namespace Remotion.Linq.Parsing.Structure
       var nodeType = _nodeTypeProvider.GetNodeType (expressionToParse.Method);
       if (nodeType == null)
       {
-        string message = string.Format (
-            "Could not parse expression '{0}': This overload of the method '{1}.{2}' is currently not supported.",
-            FormattingExpressionTreeVisitor.Format (expressionToParse),
+        throw CreateParsingErrorException (
+            expressionToParse,
+            "This overload of the method '{0}.{1}' is currently not supported.",
             expressionToParse.Method.DeclaringType.FullName,
             expressionToParse.Method.Name);
-        throw new ParserException (message);
       }
       return nodeType;
     }
@@ -93,10 +95,7 @@ namespace Remotion.Linq.Parsing.Structure
         return expression;
     }
 
-    private IExpressionNode CreateExpressionNode (
-        Type nodeType,
-        MethodCallExpressionParseInfo parseInfo,
-        object[] additionalConstructorParameters)
+    private IExpressionNode CreateExpressionNode (Type nodeType, MethodCallExpressionParseInfo parseInfo, object[] additionalConstructorParameters)
     {
       try
       {
@@ -104,12 +103,15 @@ namespace Remotion.Linq.Parsing.Structure
       }
       catch (ExpressionNodeInstantiationException ex)
       {
-        string message = string.Format (
-            "Could not parse expression '{0}': {1}",
-            FormattingExpressionTreeVisitor.Format (parseInfo.ParsedExpression),
-            ex.Message);
-        throw new ParserException (message);
+        throw CreateParsingErrorException (parseInfo.ParsedExpression, "{0}", ex.Message);
       }
+    }
+
+    private NotSupportedException CreateParsingErrorException ( MethodCallExpression expression, string message, params object[] args)
+    {
+      return new NotSupportedException (
+          string.Format ("Could not parse expression '{0}': ", FormattingExpressionTreeVisitor.Format (expression))
+          + string.Format (message, args));
     }
   }
 }

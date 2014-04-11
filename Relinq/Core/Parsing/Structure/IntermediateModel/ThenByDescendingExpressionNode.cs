@@ -75,7 +75,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
       var orderByClause = GetOrderByClause (queryModel);
       if (orderByClause == null)
-        throw new ParserException ("ThenByDescending expressions must follow OrderBy, OrderByDescending, ThenBy, or ThenByDescending expressions.");
+        throw new NotSupportedException ("ThenByDescending expressions must follow OrderBy, OrderByDescending, ThenBy, or ThenByDescending expressions.");
 
       orderByClause.Orderings.Add (new Ordering (GetResolvedKeySelector (clauseGenerationContext), OrderingDirection.Desc));
       return queryModel;

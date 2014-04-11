@@ -20,7 +20,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
-using Remotion.Linq.Parsing;
 using Remotion.Linq.UnitTests.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
@@ -29,7 +28,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
   public class DelegateInvocationQueryParserIntegrationTest : QueryParserIntegrationTestBase
   {
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = 
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = 
         "Could not parse expression 'c.Assistants.Select(value(System.Func`2[Remotion.Linq.UnitTests.TestDomain.Cook,System.String]))': "
         + "Object of type 'System.Linq.Expressions.ConstantExpression' cannot be converted to type 'System.Linq.Expressions.LambdaExpression'. "
         + "If you tried to pass a delegate instead of a LambdaExpression, this is not supported because delegates are not parsable expressions.")]

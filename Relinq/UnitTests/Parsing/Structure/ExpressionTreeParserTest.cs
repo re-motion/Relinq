@@ -23,7 +23,6 @@ using NUnit.Framework;
 using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
-using Remotion.Linq.Parsing;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
@@ -143,8 +142,8 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Cannot parse expression '0' as it has an unsupported type. Only query sources "
-                                                                    + "(that is, expressions that implement IEnumerable) and query operators can be parsed.")]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Cannot parse expression '0' as it has an unsupported type. "
+        + "Only query sources (that is, expressions that implement IEnumerable) and query operators can be parsed.")]
     public void ParseTree_InvalidNonQueryOperatorExpression ()
     {
       _expressionTreeParser.ParseTree (Expression.Constant (0));
@@ -288,7 +287,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException), ExpectedMessage = "Expressions of type void ('WriteLine()') are not supported.")]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Expressions of type void ('WriteLine()') are not supported.")]
     public void ParseTree_VoidExpression ()
     {
       MethodCallExpression expression = Expression.Call (typeof (Console), "WriteLine", Type.EmptyTypes);
@@ -296,7 +295,8 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     }
 
     [Test]
-    [ExpectedException (typeof (ParserException))]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage =
+        "Could not parse expression 'System.Int32[].Sum()': This overload of the method 'System.Linq.Queryable.Sum' is currently not supported.")]
     public void ParseTree_InvalidMethodCall_UnknownMethod ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (() => _intSource.Sum());
