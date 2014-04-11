@@ -64,8 +64,8 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation
       return registry;
     }
 
-    private readonly MultiDictionary<ExpressionType, ExpressionTransformation> _transformations =
-        new MultiDictionary<ExpressionType, ExpressionTransformation>();
+    private readonly IDictionary<ExpressionType, ICollection<ExpressionTransformation>> _transformations =
+        new Dictionary<ExpressionType, ICollection<ExpressionTransformation>>();
 
     private readonly List<ExpressionTransformation> _genericTransformations = new List<ExpressionTransformation>();
 
@@ -77,14 +77,17 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation
 
     public ExpressionTransformation[] GetAllTransformations (ExpressionType expressionType)
     {
-      return _transformations[expressionType].ToArray();
+      ICollection<ExpressionTransformation> value;
+      if (_transformations.TryGetValue (expressionType, out value))
+        return value.ToArray();
+      return new ExpressionTransformation[0];
     }
 
     public IEnumerable<ExpressionTransformation> GetTransformations (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      IList<ExpressionTransformation> matchingTransformations;
+      ICollection<ExpressionTransformation> matchingTransformations;
       _transformations.TryGetValue (expression.NodeType, out matchingTransformations);
 
       if (matchingTransformations != null)

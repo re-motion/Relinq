@@ -63,8 +63,8 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       return registry;
     }
 
-    private readonly MultiDictionary<string, KeyValuePair<NameBasedRegistrationInfo, Type>> _registeredNamedTypes =
-        new MultiDictionary<string, KeyValuePair<NameBasedRegistrationInfo, Type>> ();
+    private readonly IDictionary<string, ICollection<KeyValuePair<NameBasedRegistrationInfo, Type>>> _registeredNamedTypes =
+        new Dictionary<string, ICollection<KeyValuePair<NameBasedRegistrationInfo, Type>>> ();
 
     /// <summary>
     /// Returns the count of the registered method names.
@@ -107,7 +107,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
     {
       ArgumentUtility.CheckNotNull ("method", method);
 
-      IList<KeyValuePair<NameBasedRegistrationInfo, Type>> result;
+      ICollection<KeyValuePair<NameBasedRegistrationInfo, Type>> result;
       if (!_registeredNamedTypes.TryGetValue (method.Name, out result))
         return null;
       
