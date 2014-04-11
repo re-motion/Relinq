@@ -21,8 +21,9 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
+using Remotion.Linq.Utilities;
 
-namespace Remotion.Linq.UnitTests
+namespace Remotion.Linq.UnitTests.Utilities
 {
   [TestFixture]
   public class ReflectionUtilityTest

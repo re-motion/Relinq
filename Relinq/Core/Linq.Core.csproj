@@ -271,7 +271,7 @@
     <Compile Include="Clauses\JoinClause.cs" />
     <Compile Include="Clauses\OrderByClause.cs" />
     <Compile Include="Clauses\Ordering.cs" />
-    <Compile Include="ReflectionUtility.cs" />
+    <Compile Include="Utilities\ReflectionUtility.cs" />
     <Compile Include="Parsing\ParserException.Obsolete.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\SubQueryFindingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\Structure\MethodCallExpressionParser.cs" />

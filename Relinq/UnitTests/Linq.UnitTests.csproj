@@ -116,11 +116,6 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>4.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data">
-      <Name>System.Data</Name>
-    </Reference>
-    <Reference Include="System.Data.Linq" />
-    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\AssertionConditionAttribute.cs">
@@ -213,10 +208,6 @@
     <Compile Include="TestDomain\ISpecificCook.cs" />
     <Compile Include="TestDomain\MetaID.cs" />
     <Compile Include="TestUtilities\NonTransformedTuple.cs" />
-    <Compile Include="Utilities\ITestRegistry.cs" />
-    <Compile Include="Utilities\RegistryBaseTest.cs" />
-    <Compile Include="Utilities\TestRegistry.cs" />
-    <Compile Include="Utilities\TestRegistryImplementation.cs" />
     <Compile Include="Clauses\AdditionalFromClauseTest.cs" />
     <Compile Include="Clauses\Expressions\ExtensionExpressionIntegrationTest.cs" />
     <Compile Include="Clauses\Expressions\ExtensionExpressionTest.cs" />
@@ -393,7 +384,7 @@
     <Compile Include="QueryModelTest.cs" />
     <Compile Include="QueryModelVisitorBaseTest.cs" />
     <Compile Include="QueryProviderBaseTest.cs" />
-    <Compile Include="ReflectionUtilityTest.cs" />
+    <Compile Include="Utilities\ReflectionUtilityTest.cs" />
     <Compile Include="Clauses\Expressions\ExtensionExpressionTestHelper.cs" />
     <Compile Include="TestDomain\Chef.cs" />
     <Compile Include="TestDomain\Restaurant.cs" />
@@ -455,14 +446,6 @@
     <ProjectReference Include="..\Development\Linq.Development.csproj">
       <Project>{31A1AE30-079F-489E-9757-4EFB4C457E43}</Project>
       <Name>Linq.Development</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LinqToSqlAdapter\Linq.LinqToSqlAdapter.csproj">
-      <Project>{6A28082C-F2B7-40A3-9E32-0AB28E7DA46E}</Project>
-      <Name>Linq.LinqToSqlAdapter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SqlBackend\Linq.SqlBackend.csproj">
-      <Project>{EBA04D26-8D5B-4EF5-9898-C2D90373149C}</Project>
-      <Name>Linq.SqlBackend</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
