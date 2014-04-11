@@ -16,6 +16,7 @@
 // 
 
 using System;
+using System.Collections.ObjectModel;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Collections;
 using Remotion.Utilities;

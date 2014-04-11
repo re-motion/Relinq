@@ -16,10 +16,10 @@
 // 
 
 using System;
+using System.Collections.ObjectModel;
 using NUnit.Framework;
 using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses;
-using Remotion.Linq.Collections;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.TestDomain;
 using Rhino.Mocks;

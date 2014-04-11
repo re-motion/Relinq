@@ -15,6 +15,8 @@
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses;
@@ -22,7 +24,6 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
-using Remotion.Linq.Collections;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Utilities;
 
@@ -64,12 +65,10 @@ namespace Remotion.Linq
       SelectClause = selectClause;
 
       BodyClauses = new ObservableCollection<IBodyClause>();
-      BodyClauses.ItemInserted += BodyClauses_Added;
-      BodyClauses.ItemSet += BodyClauses_Added;
+      BodyClauses.CollectionChanged += BodyClauses_CollectionChanged;
 
       ResultOperators = new ObservableCollection<ResultOperatorBase>();
-      ResultOperators.ItemInserted += ResultOperators_ItemAdded;
-      ResultOperators.ItemSet += ResultOperators_ItemAdded;
+      ResultOperators.CollectionChanged += ResultOperators_CollectionChanged;
     }
 
     public Type ResultTypeOverride { get; set; }
@@ -154,9 +153,10 @@ namespace Remotion.Linq
       return _uniqueIdentifierGenerator;
     }
 
-    private void ResultOperators_ItemAdded (object sender, ObservableCollectionChangedEventArgs<ResultOperatorBase> e)
+    private void ResultOperators_CollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
     {
-      ArgumentUtility.CheckNotNull ("e.Item", e.Item);
+      ArgumentUtility.CheckNotNull ("e", e);
+      ArgumentUtility.CheckItemsNotNullAndType ("e.NewItems", e.NewItems, typeof (ResultOperatorBase));
     }
 
     /// <summary>
@@ -264,13 +264,16 @@ namespace Remotion.Linq
       return _uniqueIdentifierGenerator.GetUniqueIdentifier (prefix);
     }
 
-    private void BodyClauses_Added (object sender, ObservableCollectionChangedEventArgs<IBodyClause> e)
+    private void BodyClauses_CollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
     {
-      ArgumentUtility.CheckNotNull ("e.Item", e.Item);
+      ArgumentUtility.CheckNotNull ("e", e);
+      ArgumentUtility.CheckItemsNotNullAndType ("e.NewItems", e.NewItems, typeof (IBodyClause));
 
-      var clauseAsFromClause = e.Item as FromClauseBase;
-      if (clauseAsFromClause != null)
-        _uniqueIdentifierGenerator.AddKnownIdentifier (clauseAsFromClause.ItemName);
+      if (e.NewItems != null)
+      {
+        foreach (var fromClause in e.NewItems.OfType<FromClauseBase>())
+          _uniqueIdentifierGenerator.AddKnownIdentifier (fromClause.ItemName);
+      }
     }
 
     /// <summary>

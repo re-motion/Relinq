@@ -15,8 +15,9 @@
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
 using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq.Expressions;
-using Remotion.Linq.Collections;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses
@@ -40,8 +41,7 @@ namespace Remotion.Linq.Clauses
     public OrderByClause ()
     {
       Orderings = new ObservableCollection<Ordering>();
-      Orderings.ItemInserted += Orderings_ItemAdded;
-      Orderings.ItemSet += Orderings_ItemAdded;
+      Orderings.CollectionChanged += Orderings_CollectionChanged;
     }
 
     /// <summary>
@@ -109,9 +109,10 @@ namespace Remotion.Linq.Clauses
       return result;
     }
 
-    private void Orderings_ItemAdded (object sender, ObservableCollectionChangedEventArgs<Ordering> e)
+    private void Orderings_CollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
     {
-      ArgumentUtility.CheckNotNull ("e.Item", e.Item);
+      ArgumentUtility.CheckNotNull ("e", e);
+      ArgumentUtility.CheckItemsNotNullAndType ("e.NewItems", e.NewItems, typeof (Ordering));
     }
   }
 }

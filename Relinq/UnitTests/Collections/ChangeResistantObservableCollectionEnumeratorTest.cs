@@ -16,6 +16,7 @@
 // 
 
 using System;
+using System.Collections.ObjectModel;
 using NUnit.Framework;
 using Remotion.Development.UnitTesting;
 using Remotion.Linq.Collections;
@@ -38,7 +39,7 @@ namespace Remotion.Linq.UnitTests.Collections
     [Test]
     public void Current_AfterMoveNext ()
     {
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Current, Is.EqualTo (0));
     }
 
@@ -53,7 +54,7 @@ namespace Remotion.Linq.UnitTests.Collections
     [ExpectedException (typeof (InvalidOperationException))]
     public void Current_AfterLastMoveNext ()
     {
-      while (_enumerator.MoveNext ())
+      while (_enumerator.MoveNext())
       {
       }
 
@@ -64,8 +65,8 @@ namespace Remotion.Linq.UnitTests.Collections
     [ExpectedException (typeof (InvalidOperationException))]
     public void Current_AfterReset ()
     {
-      _enumerator.MoveNext ();
-      _enumerator.Reset ();
+      _enumerator.MoveNext();
+      _enumerator.Reset();
       Dev.Null = _enumerator.Current;
     }
 
@@ -73,7 +74,7 @@ namespace Remotion.Linq.UnitTests.Collections
     [ExpectedException (typeof (ObjectDisposedException))]
     public void Current_AfterDispose ()
     {
-      _enumerator.Dispose ();
+      _enumerator.Dispose();
       Dev.Null = _enumerator.Current;
     }
 
@@ -81,55 +82,55 @@ namespace Remotion.Linq.UnitTests.Collections
     [ExpectedException (typeof (ObjectDisposedException))]
     public void Index_AfterDispose ()
     {
-      _enumerator.Dispose ();
+      _enumerator.Dispose();
       Dev.Null = _enumerator.Index;
     }
 
     [Test]
     public void MoveNext_IncrementsPosition ()
     {
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Current, Is.EqualTo (0));
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Current, Is.EqualTo (1));
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Current, Is.EqualTo (2));
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Current, Is.EqualTo (3));
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Current, Is.EqualTo (4));
     }
 
     [Test]
     public void MoveNext_ReturnValue ()
     {
-      Assert.That (_enumerator.MoveNext (), Is.True);
-      Assert.That (_enumerator.MoveNext (), Is.True);
-      Assert.That (_enumerator.MoveNext (), Is.True);
-      Assert.That (_enumerator.MoveNext (), Is.True);
-      Assert.That (_enumerator.MoveNext (), Is.True);
-      Assert.That (_enumerator.MoveNext (), Is.False);
-      Assert.That (_enumerator.MoveNext (), Is.False);
+      Assert.That (_enumerator.MoveNext(), Is.True);
+      Assert.That (_enumerator.MoveNext(), Is.True);
+      Assert.That (_enumerator.MoveNext(), Is.True);
+      Assert.That (_enumerator.MoveNext(), Is.True);
+      Assert.That (_enumerator.MoveNext(), Is.True);
+      Assert.That (_enumerator.MoveNext(), Is.False);
+      Assert.That (_enumerator.MoveNext(), Is.False);
     }
 
     [Test]
     [ExpectedException (typeof (ObjectDisposedException))]
     public void MoveNext_AfterDispose ()
     {
-      _enumerator.Dispose ();
+      _enumerator.Dispose();
       _enumerator.MoveNext();
     }
 
     [Test]
     public void Reset ()
     {
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Current, Is.EqualTo (0));
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Current, Is.EqualTo (1));
 
-      _enumerator.Reset ();
-      _enumerator.MoveNext ();
+      _enumerator.Reset();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Current, Is.EqualTo (0));
     }
 
@@ -137,14 +138,14 @@ namespace Remotion.Linq.UnitTests.Collections
     [ExpectedException (typeof (ObjectDisposedException))]
     public void Reset_AfterDispose ()
     {
-      _enumerator.Dispose ();
+      _enumerator.Dispose();
       _enumerator.Reset();
     }
 
     [Test]
     public void CollectionInsert_AfterCurrent_LeavesIndex ()
     {
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Index, Is.EqualTo (0));
 
       _collection.Insert (1, 100);
@@ -154,7 +155,7 @@ namespace Remotion.Linq.UnitTests.Collections
     [Test]
     public void CollectionInsert_AtCurrent_IncrementsIndex ()
     {
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Index, Is.EqualTo (0));
 
       _collection.Insert (0, 100);
@@ -164,8 +165,8 @@ namespace Remotion.Linq.UnitTests.Collections
     [Test]
     public void CollectionInsert_BeforeCurrent_IncrementsIndex ()
     {
-      _enumerator.MoveNext ();
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Index, Is.EqualTo (1));
 
       _collection.Insert (0, 100);
@@ -175,7 +176,7 @@ namespace Remotion.Linq.UnitTests.Collections
     [Test]
     public void CollectionRemove_AfterCurrent_LeavesIndex ()
     {
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Index, Is.EqualTo (0));
 
       _collection.RemoveAt (1);
@@ -185,7 +186,7 @@ namespace Remotion.Linq.UnitTests.Collections
     [Test]
     public void CollectionRemove_AtCurrent_DecrementsIndex ()
     {
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Index, Is.EqualTo (0));
 
       _collection.RemoveAt (0);
@@ -195,8 +196,8 @@ namespace Remotion.Linq.UnitTests.Collections
     [Test]
     public void CollectionRemove_BeforeCurrent_DecrementsIndex ()
     {
-      _enumerator.MoveNext ();
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Index, Is.EqualTo (1));
 
       _collection.RemoveAt (0);
@@ -204,143 +205,231 @@ namespace Remotion.Linq.UnitTests.Collections
     }
 
     [Test]
+    public void CollectionReplace_AfterCurrent_LeavesIndex ()
+    {
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
+      Assert.That (_enumerator.Index, Is.EqualTo (1));
+
+      _collection[2] = 100;
+      Assert.That (_enumerator.Index, Is.EqualTo (1));
+    }
+
+    [Test]
+    public void CollectioReplace_AtCurrent_LeavesIndex ()
+    {
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
+      Assert.That (_enumerator.Index, Is.EqualTo (1));
+
+      _collection[1] = 100;
+      Assert.That (_enumerator.Index, Is.EqualTo (1));
+    }
+
+    [Test]
+    public void CollectionReplace_BeforeCurrent_LeavesIndex ()
+    {
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
+      Assert.That (_enumerator.Index, Is.EqualTo (1));
+
+      _collection[0] = 100;
+      Assert.That (_enumerator.Index, Is.EqualTo (1));
+    }
+
+    [Test]
+    public void CollectionMove_AfterCurrentToBeforeCurrent_LeavesIndex ()
+    {
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
+      Assert.That (_enumerator.Index, Is.EqualTo (1));
+
+      _collection.Move (2, 0);
+      Assert.That (_enumerator.Index, Is.EqualTo (1));
+    }
+
+    [Test]
+    public void CollectionMove_AfterCurrentToCurrent_LeavesIndex ()
+    {
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
+      Assert.That (_enumerator.Index, Is.EqualTo (1));
+
+      _collection.Move (2, 1);
+      Assert.That (_enumerator.Index, Is.EqualTo (1));
+    }
+
+    [Test]
+    public void CollectionMove_BeforeCurrentToAfterCurrent_LeavesIndex ()
+    {
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
+      Assert.That (_enumerator.Index, Is.EqualTo (1));
+
+      _collection.Move (0, 2);
+      Assert.That (_enumerator.Index, Is.EqualTo (1));
+    }
+
+    [Test]
+    public void CollectionMove_BeforeCurrentToCurrent_LeavesIndex ()
+    {
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
+      Assert.That (_enumerator.Index, Is.EqualTo (1));
+
+      _collection.Move (0, 1);
+      Assert.That (_enumerator.Index, Is.EqualTo (1));
+    }
+
+    [Test]
+    public void CollectionClear_ResetsIndex ()
+    {
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
+      Assert.That (_enumerator.Index, Is.EqualTo (2));
+
+      _collection.Clear();
+      Assert.That (_enumerator.Index, Is.EqualTo (0));
+    }
+
+    [Test]
     public void Dispose_ClearsEventListeners ()
     {
-      _enumerator.Dispose ();
+      _enumerator.Dispose();
 
-      Assert.That (PrivateInvoke.GetNonPublicField (_collection, "ItemInserted"), Is.Null);
-      Assert.That (PrivateInvoke.GetNonPublicField (_collection, "ItemRemoved"), Is.Null);
+      Assert.That (PrivateInvoke.GetNonPublicField (_collection, "CollectionChanged"), Is.Null);
     }
 
     [Test]
     public void IntegrationTest_ValueInserted_AfterCurrent ()
     {
-      _enumerator.MoveNext ();
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Current, Is.EqualTo (1));
 
       _collection.Insert (2, 100);
 
       Assert.That (_enumerator.Current, Is.EqualTo (1));
-      Assert.That (_enumerator.MoveNext (), Is.True);
+      Assert.That (_enumerator.MoveNext(), Is.True);
       Assert.That (_enumerator.Current, Is.EqualTo (100));
-      Assert.That (_enumerator.MoveNext (), Is.True);
+      Assert.That (_enumerator.MoveNext(), Is.True);
       Assert.That (_enumerator.Current, Is.EqualTo (2));
     }
 
     [Test]
     public void IntegrationTest_ValueInserted_BeforeCurrent ()
     {
-      _enumerator.MoveNext ();
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Current, Is.EqualTo (1));
 
       _collection.Insert (0, 100);
 
       Assert.That (_enumerator.Current, Is.EqualTo (1));
-      Assert.That (_enumerator.MoveNext (), Is.True);
+      Assert.That (_enumerator.MoveNext(), Is.True);
       Assert.That (_enumerator.Current, Is.EqualTo (2));
 
-      _enumerator.Reset ();
-      Assert.That (_enumerator.MoveNext (), Is.True);
+      _enumerator.Reset();
+      Assert.That (_enumerator.MoveNext(), Is.True);
       Assert.That (_enumerator.Current, Is.EqualTo (100));
-      Assert.That (_enumerator.MoveNext (), Is.True);
+      Assert.That (_enumerator.MoveNext(), Is.True);
       Assert.That (_enumerator.Current, Is.EqualTo (0));
     }
 
     [Test]
     public void IntegrationTest_ValueInserted_AtCurrent ()
     {
-      _enumerator.MoveNext ();
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Current, Is.EqualTo (1));
 
       _collection.Insert (1, 100);
 
       Assert.That (_enumerator.Current, Is.EqualTo (1));
-      Assert.That (_enumerator.MoveNext (), Is.True);
+      Assert.That (_enumerator.MoveNext(), Is.True);
       Assert.That (_enumerator.Current, Is.EqualTo (2));
 
-      _enumerator.Reset ();
-      Assert.That (_enumerator.MoveNext (), Is.True);
+      _enumerator.Reset();
+      Assert.That (_enumerator.MoveNext(), Is.True);
       Assert.That (_enumerator.Current, Is.EqualTo (0));
-      Assert.That (_enumerator.MoveNext (), Is.True);
+      Assert.That (_enumerator.MoveNext(), Is.True);
       Assert.That (_enumerator.Current, Is.EqualTo (100));
-      Assert.That (_enumerator.MoveNext (), Is.True);
+      Assert.That (_enumerator.MoveNext(), Is.True);
       Assert.That (_enumerator.Current, Is.EqualTo (1));
     }
 
     [Test]
     public void IntegrationTest_ValueRemoved_AfterCurrent ()
     {
-      _enumerator.MoveNext ();
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Current, Is.EqualTo (1));
 
       _collection.RemoveAt (2);
 
       Assert.That (_enumerator.Current, Is.EqualTo (1));
-      Assert.That (_enumerator.MoveNext (), Is.True);
+      Assert.That (_enumerator.MoveNext(), Is.True);
       Assert.That (_enumerator.Current, Is.EqualTo (3));
     }
 
     [Test]
     public void IntegrationTest_ValueRemoved_BeforeCurrent ()
     {
-      _enumerator.MoveNext ();
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Current, Is.EqualTo (1));
 
       _collection.RemoveAt (0);
 
       Assert.That (_enumerator.Current, Is.EqualTo (1));
-      Assert.That (_enumerator.MoveNext (), Is.True);
+      Assert.That (_enumerator.MoveNext(), Is.True);
       Assert.That (_enumerator.Current, Is.EqualTo (2));
 
-      _enumerator.Reset ();
-      Assert.That (_enumerator.MoveNext (), Is.True);
+      _enumerator.Reset();
+      Assert.That (_enumerator.MoveNext(), Is.True);
       Assert.That (_enumerator.Current, Is.EqualTo (1));
     }
 
     [Test]
     public void IntegrationTest_ValueRemoved_AtCurrent ()
     {
-      _enumerator.MoveNext ();
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Current, Is.EqualTo (1));
 
       _collection.RemoveAt (1);
 
       Assert.That (_enumerator.Current, Is.EqualTo (0));
-      Assert.That (_enumerator.MoveNext (), Is.True);
+      Assert.That (_enumerator.MoveNext(), Is.True);
       Assert.That (_enumerator.Current, Is.EqualTo (2));
-      Assert.That (_enumerator.MoveNext (), Is.True);
+      Assert.That (_enumerator.MoveNext(), Is.True);
       Assert.That (_enumerator.Current, Is.EqualTo (3));
     }
 
     [Test]
     public void IntegrationTest_ValuesCleared ()
     {
-      _enumerator.MoveNext ();
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Current, Is.EqualTo (1));
 
       _collection.Clear();
 
-      Assert.That (_enumerator.MoveNext (), Is.False);
+      Assert.That (_enumerator.MoveNext(), Is.False);
     }
 
     [Test]
     public void IntegrationTest_ValueSet_AtCurrent ()
     {
-      _enumerator.MoveNext ();
-      _enumerator.MoveNext ();
+      _enumerator.MoveNext();
+      _enumerator.MoveNext();
       Assert.That (_enumerator.Current, Is.EqualTo (1));
 
       _collection[1] = 100;
 
       Assert.That (_enumerator.Current, Is.EqualTo (100));
-      Assert.That (_enumerator.MoveNext (), Is.True);
+      Assert.That (_enumerator.MoveNext(), Is.True);
       Assert.That (_enumerator.Current, Is.EqualTo (2));
     }
   }

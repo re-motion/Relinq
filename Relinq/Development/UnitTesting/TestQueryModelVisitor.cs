@@ -16,8 +16,8 @@
 // 
 
 using System;
+using System.Collections.ObjectModel;
 using Remotion.Linq.Clauses;
-using Remotion.Linq.Collections;
 
 namespace Remotion.Linq.Development.UnitTesting
 {

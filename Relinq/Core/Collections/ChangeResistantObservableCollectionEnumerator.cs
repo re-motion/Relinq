@@ -17,6 +17,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Collections
@@ -26,11 +28,12 @@ namespace Remotion.Linq.Collections
   /// </summary>
   /// <typeparam name="T">The element type of the <see cref="ObservableCollection{T}"/>.</typeparam>
   /// <remarks>
-  /// This class subscribes to the events exposed by <see cref="ObservableCollection{T}"/> and reacts on changes to the collection. 
-  /// If an item is inserted or removed before the current element, the enumerator will continue after the current element without
-  /// regarding the new or removed item. If the current item is removed, the enumerator will continue with the item that previously followe the 
-  /// current item. If an item is inserted or removed after the current element, the enumerator will simply continue, including the newly inserted
-  /// item and not including the removed item.
+  /// This class subscribes to the <see cref="ObservableCollection{T}.CollectionChanged"/> event exposed by <see cref="ObservableCollection{T}"/> 
+  /// and reacts on changes to the collection. If an item is inserted or removed before the current element, the enumerator will continue after 
+  /// the current element without regarding the new or removed item. If the current item is removed, the enumerator will continue with the item that 
+  /// previously followed the current item. If an item is inserted or removed after the current element, the enumerator will simply continue, 
+  /// including the newly inserted item and not including the removed item. If an item is moved or replaced, the enumeration will also continue 
+  /// with the item located at the next position in the sequence.
   /// </remarks>
   public class ChangeResistantObservableCollectionEnumerator<T> : IEnumerator<T>
   {
@@ -45,9 +48,7 @@ namespace Remotion.Linq.Collections
       _collection = collection;
       _index = -1;
       _disposed = false;
-
-      _collection.ItemInserted += Collection_ItemInserted;
-      _collection.ItemRemoved += Collection_ItemRemoved;
+      _collection.CollectionChanged += Collection_CollectionChanged;
     }
 
     public int Index
@@ -66,8 +67,7 @@ namespace Remotion.Linq.Collections
       if (!_disposed)
       {
         _disposed = true;
-        _collection.ItemInserted -= Collection_ItemInserted;
-        _collection.ItemRemoved -= Collection_ItemRemoved;
+        _collection.CollectionChanged -= Collection_CollectionChanged;
       }
     }
 
@@ -108,16 +108,32 @@ namespace Remotion.Linq.Collections
       get { return Current; }
     }
 
-    void Collection_ItemInserted (object sender, ObservableCollectionChangedEventArgs<T> e)
+    private void Collection_CollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
     {
-      if (e.Index <= _index)
-        ++_index;
-    }
+      ArgumentUtility.CheckNotNull ("e", e);
 
-    private void Collection_ItemRemoved (object sender, ObservableCollectionChangedEventArgs<T> e)
-    {
-      if (e.Index <= _index)
-        --_index;
+      switch (e.Action)
+      {
+        case NotifyCollectionChangedAction.Add:
+          if (e.NewStartingIndex <= _index)
+            _index += e.NewItems.Count;
+          break;
+        case NotifyCollectionChangedAction.Remove:
+          if (e.OldStartingIndex <= _index)
+            _index -= e.OldItems.Count;
+          break;
+        case NotifyCollectionChangedAction.Replace:
+          // NOP
+          break;
+        case NotifyCollectionChangedAction.Move:
+          // NOP
+          break;
+        case NotifyCollectionChangedAction.Reset:
+          _index = 0;
+          break;
+        default:
+          throw new ArgumentOutOfRangeException();
+      }
     }
   }
 }
