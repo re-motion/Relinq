@@ -20,11 +20,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing.Structure;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Development.UnitTesting
 {
@@ -39,6 +41,8 @@ namespace Remotion.Linq.Development.UnitTesting
 
     public static Expression CreateExpression (Type type)
     {
+      ArgumentUtility.CheckNotNull ("type", type);
+
       object value = null;
       if (type.IsValueType)
         value = Activator.CreateInstance (type);
@@ -53,16 +57,24 @@ namespace Remotion.Linq.Development.UnitTesting
 
     public static Expression<Func<TSource, TResult>> CreateLambdaExpression<TSource, TResult> (Expression<Func<TSource, TResult>> expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       return expression;
     }
 
-    public static Expression<Func<TSource1, TSource2, TResult>> CreateLambdaExpression<TSource1, TSource2, TResult> (Expression<Func<TSource1, TSource2, TResult>> expression)
+    public static Expression<Func<TSource1, TSource2, TResult>> CreateLambdaExpression<TSource1, TSource2, TResult> (
+        Expression<Func<TSource1, TSource2, TResult>> expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       return expression;
     }
 
-    public static Expression<Func<TSource1, TSource2, TSource3, TResult>> CreateLambdaExpression<TSource1, TSource2, TSource3, TResult> (Expression<Func<TSource1, TSource2, TSource3, TResult>> expression)
+    public static Expression<Func<TSource1, TSource2, TSource3, TResult>> CreateLambdaExpression<TSource1, TSource2, TSource3, TResult> (
+        Expression<Func<TSource1, TSource2, TSource3, TResult>> expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       return expression;
     }
 
@@ -78,64 +90,53 @@ namespace Remotion.Linq.Development.UnitTesting
 
     public static JoinClause CreateJoinClause<T> ()
     {
-      Expression innerSequence = CreateExpression ();
-      Expression outerKeySelector = CreateExpression ();
-      Expression innerKeySelector = CreateExpression ();
+      Expression innerSequence = CreateExpression();
+      Expression outerKeySelector = CreateExpression();
+      Expression innerKeySelector = CreateExpression();
 
-      return new JoinClause ("x", typeof(T), innerSequence, outerKeySelector, innerKeySelector);
+      return new JoinClause ("x", typeof (T), innerSequence, outerKeySelector, innerKeySelector);
     }
 
     public static GroupJoinClause CreateGroupJoinClause<T> ()
     {
-      return CreateGroupJoinClause<T> (CreateJoinClause<T> ());
+      return CreateGroupJoinClause<T> (CreateJoinClause<T>());
     }
 
     public static GroupJoinClause CreateGroupJoinClause<T> (JoinClause joinClause)
     {
+      ArgumentUtility.CheckNotNull ("joinClause", joinClause);
+
       return new GroupJoinClause ("xs", typeof (IEnumerable<T>), joinClause);
     }
 
     public static QueryModel CreateQueryModel (MainFromClause mainFromClause)
     {
+      ArgumentUtility.CheckNotNull ("mainFromClause", mainFromClause);
+
       var selectClause = new SelectClause (new QuerySourceReferenceExpression (mainFromClause));
       return new QueryModel (mainFromClause, selectClause);
     }
 
     public static QueryModel CreateQueryModel<T> ()
     {
-      return CreateQueryModel (CreateMainFromClause_Int("s", typeof (T), CreateQueryable<T>()));
+      return CreateQueryModel (CreateMainFromClause_Int ("s", typeof (T), CreateQueryable<T>()));
     }
 
     public static QueryModel CreateQueryModel_Int ()
     {
-      return CreateQueryModel (CreateMainFromClause_Int ("i", typeof (int), CreateIntQueryable ()));
+      return CreateQueryModel (CreateMainFromClause_Int ("i", typeof (int), CreateIntQueryable()));
     }
 
     public static MainFromClause CreateMainFromClause_Int ()
     {
-      IQueryable querySource = CreateIntQueryable (); 
-      return CreateMainFromClause_Int("main", typeof (int), querySource);
+      IQueryable querySource = CreateIntQueryable();
+      return CreateMainFromClause_Int ("main", typeof (int), querySource);
     }
 
     public static MainFromClause CreateMainFromClause<T> ()
     {
       return CreateMainFromClause_Int ("s", typeof (T), CreateQueryable<T>());
     }
-
-    //public static MainFromClause CreateMainFromClause_Bool ()
-    //{
-    //  return CreateMainFromClause_Int ("s", typeof (bool), CreateCookQueryable ());
-    //}
-
-    //public static MainFromClause CreateMainFromClause_Kitchen ()
-    //{
-    //  return CreateMainFromClause_Int ("sd", typeof (Kitchen), CreateKitchenQueryable ());
-    //}
-
-    //public static MainFromClause CreateMainFromClause_Detail_Detail ()
-    //{
-    //  return CreateMainFromClause_Int ("sdd", typeof (Company), CreateCompanyQueryable());
-    //}
 
     public static AdditionalFromClause CreateAdditionalFromClause ()
     {
@@ -144,7 +145,10 @@ namespace Remotion.Linq.Development.UnitTesting
 
     public static AdditionalFromClause CreateAdditionalFromClause (string itemName, Type itemType)
     {
-      return new AdditionalFromClause (itemName, itemType, CreateExpression ());
+      ArgumentUtility.CheckNotNullOrEmpty ("itemName", itemName);
+      ArgumentUtility.CheckNotNull ("itemType", itemType);
+
+      return new AdditionalFromClause (itemName, itemType, CreateExpression());
     }
 
     public static GroupResultOperator CreateGroupResultOperator ()
@@ -153,24 +157,24 @@ namespace Remotion.Linq.Development.UnitTesting
       MainFromClause fromClause2 = CreateMainFromClause_Int ("j", typeof (int), CreateIntQueryable());
 
       var keySelector = Resolve<int, string> (fromClause2, j => (j % 3).ToString());
-      var elementSelector = Resolve<int, string> (fromClause1, i => i.ToString ());
+      var elementSelector = Resolve<int, string> (fromClause1, i => i.ToString());
 
       return new GroupResultOperator ("groupings", keySelector, elementSelector);
     }
 
     public static UnionResultOperator CreateUnionResultOperator ()
     {
-      return new UnionResultOperator ("union", typeof (int), Expression.Constant (new [] { 1, 2 }));
+      return new UnionResultOperator ("union", typeof (int), Expression.Constant (new[] { 1, 2 }));
     }
 
     public static Ordering CreateOrdering ()
     {
-      return new Ordering (CreateExpression (), OrderingDirection.Asc);
+      return new Ordering (CreateExpression(), OrderingDirection.Asc);
     }
 
-    public static OrderByClause CreateOrderByClause()
+    public static OrderByClause CreateOrderByClause ()
     {
-      return new OrderByClause ();
+      return new OrderByClause();
     }
 
     public static SelectClause CreateSelectClause ()
@@ -181,18 +185,22 @@ namespace Remotion.Linq.Development.UnitTesting
 
     public static SelectClause CreateSelectClause (MainFromClause referencedClause)
     {
+      ArgumentUtility.CheckNotNull ("referencedClause", referencedClause);
+
       return new SelectClause (new QuerySourceReferenceExpression (referencedClause));
     }
 
     public static MethodCallExpression CreateMethodCallExpression<T> (IQueryable<T> query)
     {
-      var methodInfo = ReflectionUtility.GetMethod (() => query.Count ());
+      ArgumentUtility.CheckNotNull ("query", query);
+
+      var methodInfo = ReflectionUtility.GetMethod (() => query.Count());
       return Expression.Call (methodInfo, query.Expression);
     }
 
     public static MethodCallExpression CreateMethodCallExpression<T> ()
     {
-      return CreateMethodCallExpression (CreateQueryable<T> ());
+      return CreateMethodCallExpression (CreateQueryable<T>());
     }
 
     public static WhereClause CreateWhereClause ()
@@ -201,7 +209,7 @@ namespace Remotion.Linq.Development.UnitTesting
       return new WhereClause (predicate);
     }
 
-    public static IClause CreateClause()
+    public static IClause CreateClause ()
     {
       return CreateMainFromClause_Int();
     }
@@ -211,78 +219,34 @@ namespace Remotion.Linq.Development.UnitTesting
       return new TestQueryable<int> (QueryParser.CreateDefault(), s_executor);
     }
 
-    public static IQueryable<T> CreateQueryable<T>()
+    public static IQueryable<T> CreateQueryable<T> ()
     {
       return CreateQueryable<T> (s_executor);
     }
 
-    //public static IQueryable<Knife> CreateKnifeQueryable ()
-    //{
-    //  return CreateKnifeQueryable (s_executor);
-    //}
-
-    //public static IQueryable<Chef> CreateChefQueryable ()
-    //{
-    //  return CreateChefQueryable (s_executor);
-    //}
-        
     public static IQueryable<T> CreateQueryable<T> (IQueryExecutor executor)
     {
-      return new TestQueryable<T> (QueryParser.CreateDefault (), executor);
+      ArgumentUtility.CheckNotNull ("executor", executor);
+
+      return new TestQueryable<T> (QueryParser.CreateDefault(), executor);
     }
 
-    //public static IQueryable<Knife> CreateKnifeQueryable (IQueryExecutor executor)
-    //{
-    //  return new TestQueryable<Knife> (QueryParser.CreateDefault (), executor);
-    //}
-
-    //public static IQueryable<Chef> CreateChefQueryable (IQueryExecutor executor)
-    //{
-    //  return new TestQueryable<Chef> (QueryParser.CreateDefault (), executor);
-    //}
-
-    //public static IQueryable<Kitchen> CreateKitchenQueryable()
-    //{
-    //  return CreateKitchenQueryable (s_executor);
-    //}
-
-    //public static IQueryable<Kitchen> CreateKitchenQueryable (IQueryExecutor executor)
-    //{
-    //  return new TestQueryable<Kitchen> (QueryParser.CreateDefault (), executor);
-    //}
-
-    //public static IQueryable<Company> CreateCompanyQueryable ()
-    //{
-    //  return CreateCompanyQueryable (s_executor);
-    //}
-
-    //public static IQueryable<Company> CreateCompanyQueryable (IQueryExecutor executor)
-    //{
-    //  return new TestQueryable<Company> (QueryParser.CreateDefault (), executor);
-    //}
-
-    //public static  IQueryable<Restaurant> CreateRestaurantQueryable ()
-    //{
-    //  return CreateRestaurantQueryable (s_executor);
-    //}
-
-    //public static IQueryable<Restaurant> CreateRestaurantQueryable( IQueryExecutor executor)
-    //{
-    //  return new TestQueryable<Restaurant> (QueryParser.CreateDefault (), executor);
-    //}
-
-    public static IQueryExecutor CreateExecutor()
+    public static IQueryExecutor CreateExecutor ()
     {
       return new StubQueryExecutor();
     }
 
     public static object ExecuteLambda (LambdaExpression lambdaExpression, params object[] args)
     {
+      ArgumentUtility.CheckNotNull ("args", args);
+
       return lambdaExpression.Compile().DynamicInvoke (args);
     }
 
     public static QueryModel ParseQuery<T> (IQueryable<T> query)
     {
+      ArgumentUtility.CheckNotNull ("query", query);
+
       return ParseQuery (query.Expression);
     }
 
@@ -294,21 +258,31 @@ namespace Remotion.Linq.Development.UnitTesting
 
     public static MainFromClause CreateMainFromClause_Int (string itemName, Type itemType, IQueryable querySource)
     {
+      ArgumentUtility.CheckNotNullOrEmpty ("itemName", itemName);
+      ArgumentUtility.CheckNotNull ("querySource", querySource);
+      ArgumentUtility.CheckNotNull ("querySource", querySource);
+
       return new MainFromClause (itemName, itemType, Expression.Constant (querySource));
     }
 
     public static Expression MakeExpression<TRet> (Expression<Func<TRet>> expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       return expression.Body;
     }
 
     public static Expression MakeExpression<TArg, TRet> (Expression<Func<TArg, TRet>> expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       return expression.Body;
     }
 
     public static MemberInfo GetMember<T> (Expression<Func<T, object>> memberAccess)
     {
+      ArgumentUtility.CheckNotNull ("memberAccess", memberAccess);
+
       Expression expression = memberAccess.Body;
       while (expression is UnaryExpression)
         expression = ((UnaryExpression) expression).Operand; // strip casts
@@ -317,16 +291,31 @@ namespace Remotion.Linq.Development.UnitTesting
 
     public static ResultOperatorBase CreateResultOperator ()
     {
-      return new DistinctResultOperator ();
+      return new DistinctResultOperator();
     }
 
-    public static Expression Resolve<TParameter, TResult> (IQuerySource sourceToReference, Expression<Func<TParameter, TResult>> expressionToBeResolved)
+    public static Expression Resolve<TParameter, TResult> (
+        IQuerySource sourceToReference,
+        Expression<Func<TParameter, TResult>> expressionToBeResolved)
     {
-      return ReplacingExpressionTreeVisitor.Replace (expressionToBeResolved.Parameters[0], new QuerySourceReferenceExpression (sourceToReference), expressionToBeResolved.Body);
+      ArgumentUtility.CheckNotNull ("sourceToReference", sourceToReference);
+      ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
+
+      return ReplacingExpressionTreeVisitor.Replace (
+          expressionToBeResolved.Parameters[0],
+          new QuerySourceReferenceExpression (sourceToReference),
+          expressionToBeResolved.Body);
     }
 
-    public static Expression Resolve<TParameter1, TParameter2, TResult> (IQuerySource sourceToReference1, IQuerySource sourceToReference2, Expression<Func<TParameter1, TParameter2, TResult>> expressionToBeResolved)
+    public static Expression Resolve<TParameter1, TParameter2, TResult> (
+        IQuerySource sourceToReference1,
+        IQuerySource sourceToReference2,
+        Expression<Func<TParameter1, TParameter2, TResult>> expressionToBeResolved)
     {
+      ArgumentUtility.CheckNotNull ("sourceToReference1", sourceToReference1);
+      ArgumentUtility.CheckNotNull ("sourceToReference2", sourceToReference2);
+      ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
+
       var expressionMapping = new Dictionary<Expression, Expression> (2)
                               {
                                   { expressionToBeResolved.Parameters[0], new QuerySourceReferenceExpression (sourceToReference1) },
@@ -336,8 +325,17 @@ namespace Remotion.Linq.Development.UnitTesting
       return result;
     }
 
-    public static Expression Resolve<TParameter1, TParameter2, TParameter3, TResult> (IQuerySource sourceToReference1, IQuerySource sourceToReference2, IQuerySource sourceToReference3, Expression<Func<TParameter1, TParameter2, TParameter3, TResult>> expressionToBeResolved)
+    public static Expression Resolve<TParameter1, TParameter2, TParameter3, TResult> (
+        IQuerySource sourceToReference1,
+        IQuerySource sourceToReference2,
+        IQuerySource sourceToReference3,
+        Expression<Func<TParameter1, TParameter2, TParameter3, TResult>> expressionToBeResolved)
     {
+      ArgumentUtility.CheckNotNull ("sourceToReference1", sourceToReference1);
+      ArgumentUtility.CheckNotNull ("sourceToReference2", sourceToReference2);
+      ArgumentUtility.CheckNotNull ("sourceToReference3", sourceToReference3);
+      ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
+      
       var expressionMapping = new Dictionary<Expression, Expression> (3)
                               {
                                   { expressionToBeResolved.Parameters[0], new QuerySourceReferenceExpression (sourceToReference1) },
@@ -349,14 +347,17 @@ namespace Remotion.Linq.Development.UnitTesting
     }
 
     public static Expression ResolveLambdaParameter<TParameter1, TParameter2, TResult> (
-        int parameterToResolveIndex, 
-        IQuerySource source, 
+        int parameterToResolveIndex,
+        IQuerySource source,
         Expression<Func<TParameter1, TParameter2, TResult>> expressionToBeResolved)
     {
+      ArgumentUtility.CheckNotNull ("source", source);
+      ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
+      
       var parameterToResolve = expressionToBeResolved.Parameters[parameterToResolveIndex];
 
       var resolvedBody = ReplacingExpressionTreeVisitor.Replace (
-          parameterToResolve, 
+          parameterToResolve,
           new QuerySourceReferenceExpression (source),
           expressionToBeResolved.Body);
 
