@@ -17,7 +17,7 @@
 
 using System;
 using System.Collections.Generic;
-using Remotion.Linq.Utilities;
+using Remotion.Linq.SqlBackend.Utilities;
 
 namespace Remotion.Linq.UnitTests.Utilities
 {
