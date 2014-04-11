@@ -420,7 +420,6 @@
     <Compile Include="Linq\Core\ExpressionHelper.cs" />
     <Compile Include="Linq\Core\ExpressionTreeNavigator.cs" />
     <Compile Include="Linq\Core\Parsing\AnonymousType.cs" />
-    <Compile Include="Linq\Core\Parsing\ExpressionTreeComparer.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\MemberBindings\FieldInfoBindingTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\MemberBindings\MemberBindingTest.cs" />
     <Compile Include="Linq\Core\Parsing\ExpressionTreeVisitors\MemberBindings\MemberBindingTestBase.cs" />
@@ -636,6 +635,10 @@
     <ProjectReference Include="..\Core\Linq.Core.csproj">
       <Project>{028E7899-0D5F-49C8-9EB6-8B051E02F1E0}</Project>
       <Name>Linq.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Development\Linq.Development.csproj">
+      <Project>{31A1AE30-079F-489E-9757-4EFB4C457E43}</Project>
+      <Name>Linq.Development</Name>
     </ProjectReference>
     <ProjectReference Include="..\LinqToSqlAdapter\Linq.LinqToSqlAdapter.csproj">
       <Project>{6A28082C-F2B7-40A3-9E32-0AB28E7DA46E}</Project>

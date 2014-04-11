@@ -14,22 +14,28 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
+
 using System;
 using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using NUnit.Framework;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.SqlBackend.SqlStatementModel.SqlSpecificExpressions;
 using Remotion.Utilities;
 
-namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
+namespace Remotion.Linq.Development.UnitTesting
 {
+  /// <summary>
+  /// Compares two <see cref="Expression"/> trees constructed from <B>System.Linq</B> expressions.
+  /// </summary>
   public class ExpressionTreeComparer
   {
     public static void CheckAreEqualTrees (Expression expectedTree, Expression actualTree)
     {
+      ArgumentUtility.CheckNotNull ("expectedTree", expectedTree);
+      ArgumentUtility.CheckNotNull ("actualTree", actualTree);
+
       var comparer = new ExpressionTreeComparer (
           FormattingExpressionTreeVisitor.Format (expectedTree), 
           FormattingExpressionTreeVisitor.Format (actualTree));
@@ -51,13 +57,15 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
     private void CheckAreEqualNodes (Expression expected, Expression actual)
     {
       if (expected == null)
-        Assert.IsNull (actual, GetMessage (null, actual, "Null nodes"));
+      {
+        Assert.AreEqual (null, actual, GetMessage (null, actual, "Null nodes"));
+      }
       else
       {
-        Assert.AreEqual (expected.GetType (), actual.GetType (), GetMessage (expected, actual, "NodeType"));
+        Assert.AreEqual (expected.GetType(), actual.GetType(), GetMessage (expected, actual, "NodeType"));
         Assert.AreEqual (expected.NodeType, actual.NodeType, GetMessage (expected, actual, "NodeType"));
         Assert.AreEqual (expected.Type, actual.Type, GetMessage (expected, actual, "Type"));
-        CheckAreEqualObjects(expected, actual);
+        CheckAreEqualObjects (expected, actual);
       }
     }
 
@@ -101,7 +109,7 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
           {
             var elementType1 = list1[i] != null ? list1[i].GetType () : typeof (object);
             var elementType2 = list2[i] != null ? list2[i].GetType () : typeof (object);
-            Assert.AreSame (
+            Assert.AreEqual (
                 elementType1, 
                 elementType2, 
                 string.Format (
@@ -123,6 +131,28 @@ namespace Remotion.Linq.UnitTests.Linq.Core.Parsing
     private string GetMessage (object e1, object e2, string context)
     {
       return string.Format ("Trees are not equal: {0}\nNode 1: {1}\nNode 2: {2}\nTree 1: {3}\nTree 2: {4}", context, e1, e2, _expectedInitial, _actualInitial);
+    }
+  }
+
+  internal static class Assert
+  {
+    public static void AreEqual (object expected, object actual, string message)
+    {
+      if (expected == actual)
+        return;
+
+      if (expected == null)
+        throw new InvalidOperationException (message);
+
+      if (expected.Equals (actual))
+        return;
+
+      var expectedEnumerable = expected as IEnumerable;
+      var actualEnumerable = actual as IEnumerable;
+      if (expectedEnumerable != null && actualEnumerable != null && expectedEnumerable.Cast<object>().SequenceEqual (actualEnumerable.Cast<object>()))
+        return;
+
+      throw new InvalidOperationException (message);
     }
   }
 }

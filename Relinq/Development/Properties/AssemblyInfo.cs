@@ -24,8 +24,8 @@ using System.Security;
 // associated with an assembly.
 //
 
-[assembly: AssemblyTitle("Unit Tests for Remotion Linq Library")]
-[assembly: AssemblyDescription("Unit Tests for Remotion Linq Library")]
-[assembly: AssemblyCulture("")]		
+[assembly: AssemblyTitle ("Remotion Development Support Library for Remotion.Linq")]
+[assembly: AssemblyDescription ("Library for unit testing, building and other development-time activities.")]
+[assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
-[assembly: AllowPartiallyTrustedCallers] // required for sandbox tests
+[assembly: AllowPartiallyTrustedCallers] // required for sandboxing

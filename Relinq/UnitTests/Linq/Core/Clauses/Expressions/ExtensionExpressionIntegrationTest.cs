@@ -17,8 +17,8 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions.TestDomain;
-using Remotion.Linq.UnitTests.Linq.Core.Parsing;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Linq.Core.Clauses.Expressions
