@@ -28,10 +28,5 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
         : base(message)
     {
     }
-
-    internal ExpressionNodeInstantiationException (string message, Exception innerException)
-        : base(message, innerException)
-    {
-    }
   }
 }

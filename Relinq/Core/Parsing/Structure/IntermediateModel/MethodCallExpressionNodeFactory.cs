@@ -31,6 +31,13 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </remarks>
   public class MethodCallExpressionNodeFactory
   {
+    /// <summary>
+    /// Creates an instace of type <paramref name="nodeType"/>.
+    /// </summary>
+    /// <exception cref="ExpressionNodeInstantiationException">
+    /// Thrown if the <paramref name="parseInfo"/> or the <paramref name="additionalConstructorParameters"/> 
+    /// do not match expected constructor parameters of the <paramref name="nodeType"/>.
+    /// </exception>
     public static IExpressionNode CreateExpressionNode (
         Type nodeType, MethodCallExpressionParseInfo parseInfo, object[] additionalConstructorParameters)
     {
@@ -55,7 +62,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       catch (ArgumentException ex)
       {
         var message = GetArgumentMismatchMessage (ex);
-        throw new ExpressionNodeInstantiationException (message, ex);
+        throw new ExpressionNodeInstantiationException (message);
       }
     }
 
