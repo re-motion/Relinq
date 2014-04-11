@@ -15,28 +15,21 @@
 // along with re-linq; if not, see http://www.gnu.org/licenses.
 // 
 using System;
-using System.Runtime.Serialization;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 {
   /// <summary>
   /// Thrown whan an <see cref="IExpressionNode"/> parser cannot be instantiated for a query.
   /// </summary>
-  [Serializable]
   public class ExpressionNodeInstantiationException : Exception
   {
-    public ExpressionNodeInstantiationException (string message)
+    internal ExpressionNodeInstantiationException (string message)
         : base(message)
     {
     }
 
-    public ExpressionNodeInstantiationException (string message, Exception innerException)
+    internal ExpressionNodeInstantiationException (string message, Exception innerException)
         : base(message, innerException)
-    {
-    }
-
-    protected ExpressionNodeInstantiationException (SerializationInfo info, StreamingContext context)
-        : base(info, context)
     {
     }
   }
