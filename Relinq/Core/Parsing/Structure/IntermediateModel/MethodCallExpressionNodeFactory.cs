@@ -15,6 +15,7 @@
 // under the License.
 // 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Utilities;
@@ -29,7 +30,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// constructor parameters handed to the <see cref="CreateExpressionNode"/> method are passed on to the constructor; for each argument where no 
   /// parameter is passed, <see langword="null"/> is passed to the constructor.
   /// </remarks>
-  public class MethodCallExpressionNodeFactory
+  public static class MethodCallExpressionNodeFactory
   {
     /// <summary>
     /// Creates an instace of type <paramref name="nodeType"/>.
@@ -45,7 +46,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckTypeIsAssignableFrom ("nodeType", nodeType, typeof (IExpressionNode));
       ArgumentUtility.CheckNotNull ("additionalConstructorParameters", additionalConstructorParameters);
 
-      var constructors = nodeType.GetConstructors();
+      var constructors = nodeType.GetTypeInfo().DeclaredConstructors.Where (c => c.IsPublic).ToArray();
       if (constructors.Length > 1)
       {
         var message = string.Format (

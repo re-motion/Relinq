@@ -70,12 +70,5 @@ namespace System
           .Select (ti => ti.AsType())
           .ToArray();
     }
-
-    public static ConstructorInfo[] GetConstructors (this Type type)
-    {
-      return type.GetTypeInfo().DeclaredConstructors
-          .Where (ci => !ci.IsStatic && ci.IsPublic)
-          .ToArray();
-    }
   }
 }
