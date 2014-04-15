@@ -35,7 +35,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders
     [SetUp]
     public void SetUp ()
     {
-      _registry = new MethodInfoBasedNodeTypeRegistry ();
+      _registry = new MethodInfoBasedNodeTypeRegistry();
     }
 
     [Test]
@@ -104,7 +104,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders
           .Where (m => m.Name == "GenericMethodHavingOverloadWithSameParameterCount" && m.GetParameters().Last().ParameterType == typeof (string))
           .Select (m => m.MakeGenericMethod (typeof (double)))
           .Single();
-      
+
       var expectedMethod1 = typeof (GenericClass<>).GetMethods()
           .Where (m => m.Name == "GenericMethodHavingOverloadWithSameParameterCount" && m.GetParameters().Last().ParameterType == typeof (int))
           .Select (m => m.MakeGenericMethod (typeof (double)))
@@ -129,7 +129,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders
 
       _registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
 
-      Assert.That(_registry.RegisteredMethodInfoCount, Is.EqualTo (2));
+      Assert.That (_registry.RegisteredMethodInfoCount, Is.EqualTo (2));
     }
 
     [Test]
@@ -178,7 +178,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders
     {
       _registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
 
-      var closedGenericMethodCallExpression = 
+      var closedGenericMethodCallExpression =
           (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select (i => i + 1));
       var type = _registry.GetNodeType (closedGenericMethodCallExpression.Method);
 
@@ -282,11 +282,66 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders
       MethodInfoBasedNodeTypeRegistry registry = MethodInfoBasedNodeTypeRegistry.CreateFromTypes (
           new[] { typeof (SelectExpressionNode), typeof (WhereExpressionNode) });
 
-      Assert.That (registry.RegisteredMethodInfoCount, 
+      Assert.That (
+          registry.RegisteredMethodInfoCount,
           Is.EqualTo (SelectExpressionNode.SupportedMethods.Length + WhereExpressionNode.SupportedMethods.Length));
 
       AssertAllMethodsRegistered (registry, typeof (SelectExpressionNode));
       AssertAllMethodsRegistered (registry, typeof (WhereExpressionNode));
+    }
+
+    [Test]
+    public void CreateFromTypes_UsesPublicStaticField ()
+    {
+      var registry = MethodInfoBasedNodeTypeRegistry.CreateFromTypes (new[] { typeof (TestExpressionNode) });
+
+      Assert.That (registry.RegisteredMethodInfoCount, Is.EqualTo (1));
+
+      Assert.That (registry.GetNodeType (typeof (TestExpressionNode).GetMethod ("RegisteredMethod")), Is.SameAs (typeof (TestExpressionNode)));
+    }
+
+    [Test]
+    public void CreateFromTypes_WithStaticFieldIgnoresStaticFieldFromBaseType ()
+    {
+      var registry = MethodInfoBasedNodeTypeRegistry.CreateFromTypes (new[] { typeof (DerivedTestExpressionNode) });
+
+      Assert.That (registry.RegisteredMethodInfoCount, Is.EqualTo (1));
+
+      Assert.That (
+          registry.GetNodeType (typeof (DerivedTestExpressionNode).GetMethod ("MethodOnDerivedNode")),
+          Is.SameAs (typeof (DerivedTestExpressionNode)));
+    }
+
+    [Test]
+    public void CreateFromTypes_IgnoresInstanceField ()
+    {
+      var registry = MethodInfoBasedNodeTypeRegistry.CreateFromTypes (new[] { typeof (TestExpressionNodeWithInstanceField) });
+
+      Assert.That (registry.RegisteredMethodInfoCount, Is.EqualTo (0));
+    }
+
+    [Test]
+    public void CreateFromTypes_IgnoresNonPublicStaticField ()
+    {
+      var registry = MethodInfoBasedNodeTypeRegistry.CreateFromTypes (new[] { typeof (TestExpressionNodeWithNonPublicStaticField) });
+
+      Assert.That (registry.RegisteredMethodInfoCount, Is.EqualTo (0));
+    }
+
+    [Test]
+    public void CreateFromTypes_WithoutStaticField ()
+    {
+      var registry = MethodInfoBasedNodeTypeRegistry.CreateFromTypes (new[] { typeof (TestExpressionNodeWithoutStaticField) });
+
+      Assert.That (registry.RegisteredMethodInfoCount, Is.EqualTo (0));
+    }
+
+    [Test]
+    public void CreateFromTypes_WithoutStaticFieldIgnoresStaticFieldFromBaseType ()
+    {
+      var registry = MethodInfoBasedNodeTypeRegistry.CreateFromTypes (new[] { typeof (DerivedTestExpressionNodeWithoutStaticField) });
+
+      Assert.That (registry.RegisteredMethodInfoCount, Is.EqualTo (0));
     }
 
     private void AssertAllMethodsRegistered (MethodInfoBasedNodeTypeRegistry registry, Type type)
@@ -308,7 +363,138 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders
         Assert.That (methodNames.Length, Is.GreaterThan (0));
 
         foreach (var methodName in methodNames)
-          Assert.That (registry.GetNodeType (type.GetMethod(methodName)), Is.SameAs (type));
+          Assert.That (registry.GetNodeType (type.GetMethod (methodName)), Is.SameAs (type));
+      }
+    }
+
+
+    internal class TestExpressionNode : MethodCallExpressionNodeBase
+    {
+      public static MethodInfo[] SupportedMethods =
+      {
+          ReflectionUtility.GetMethod (() => ((TestExpressionNode) null).RegisteredMethod()),
+      };
+
+      public TestExpressionNode (MethodCallExpressionParseInfo parseInfo)
+          : base (parseInfo)
+      {
+      }
+
+      public int RegisteredMethod ()
+      {
+        throw new NotImplementedException();
+      }
+
+      public override Expression Resolve (
+          ParameterExpression inputParameter,
+          Expression expressionToBeResolved,
+          ClauseGenerationContext clauseGenerationContext)
+      {
+        throw new NotImplementedException();
+      }
+
+      protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+      {
+        throw new NotImplementedException();
+      }
+    }
+
+    internal class DerivedTestExpressionNode : TestExpressionNode
+    {
+      public new static MethodInfo[] SupportedMethods =
+      {
+          ReflectionUtility.GetMethod (() => ((DerivedTestExpressionNode) null).MethodOnDerivedNode()),
+      };
+
+      public DerivedTestExpressionNode (MethodCallExpressionParseInfo parseInfo)
+          : base (parseInfo)
+      {
+      }
+
+      public int MethodOnDerivedNode ()
+      {
+        throw new NotImplementedException();
+      }
+    }
+
+    internal class DerivedTestExpressionNodeWithoutStaticField : TestExpressionNode
+    {
+      public DerivedTestExpressionNodeWithoutStaticField (MethodCallExpressionParseInfo parseInfo)
+          : base (parseInfo)
+      {
+      }
+    }
+
+    internal class TestExpressionNodeWithInstanceField : MethodCallExpressionNodeBase
+    {
+      public MethodInfo[] SupportedMethods =
+      {
+          ReflectionUtility.GetMethod (() => ((TestExpressionNode) null).Resolve (null, null, new ClauseGenerationContext())),
+      };
+
+      public TestExpressionNodeWithInstanceField (MethodCallExpressionParseInfo parseInfo)
+          : base (parseInfo)
+      {
+      }
+
+      public override Expression Resolve (
+          ParameterExpression inputParameter,
+          Expression expressionToBeResolved,
+          ClauseGenerationContext clauseGenerationContext)
+      {
+        throw new NotImplementedException();
+      }
+
+      protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+      {
+        throw new NotImplementedException();
+      }
+    }
+
+    internal class TestExpressionNodeWithNonPublicStaticField : MethodCallExpressionNodeBase
+    {
+      protected static MethodInfo[] SupportedMethods =
+      {
+          ReflectionUtility.GetMethod (() => ((TestExpressionNodeWithNonPublicStaticField) null).Resolve (null, null, new ClauseGenerationContext())),
+      };
+
+      public TestExpressionNodeWithNonPublicStaticField (MethodCallExpressionParseInfo parseInfo)
+          : base (parseInfo)
+      {
+      }
+
+      public override Expression Resolve (
+          ParameterExpression inputParameter,
+          Expression expressionToBeResolved,
+          ClauseGenerationContext clauseGenerationContext)
+      {
+        throw new NotImplementedException();
+      }
+
+      protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+      {
+        throw new NotImplementedException();
+      }
+    }
+
+    internal class TestExpressionNodeWithoutStaticField : MethodCallExpressionNodeBase
+    {
+      public TestExpressionNodeWithoutStaticField (MethodCallExpressionParseInfo parseInfo)
+          : base (parseInfo)
+      {
+      }
+
+      public override Expression Resolve (
+          ParameterExpression inputParameter,
+          Expression expressionToBeResolved,
+          ClauseGenerationContext clauseGenerationContext)
+      {
+        throw new NotImplementedException();
+      }
+
+      protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+      {
+        throw new NotImplementedException();
       }
     }
   }

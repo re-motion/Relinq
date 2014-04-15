@@ -45,15 +45,17 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
                                 where typeof (IExpressionNode).IsAssignableFrom (t)
                                 select t;
 
-      var infoForTypes = from t in expressionNodeTypes
-                                     let supportedMethodNamesField = t.GetPublicStaticField("SupportedMethodNames")
-                                     select new { 
-                                         Type = t,
-                                         RegistrationInfo =
-                                         supportedMethodNamesField != null
-                                             ? ((IEnumerable<NameBasedRegistrationInfo>) supportedMethodNamesField.GetValue (null))
-                                             : Enumerable.Empty<NameBasedRegistrationInfo> ()
-                                     };
+      var infoForTypes =
+          from t in expressionNodeTypes
+          let supportedMethodNamesField = t.GetRuntimeField ("SupportedMethodNames")
+          select new
+                 {
+                     Type = t,
+                     RegistrationInfo =
+                         supportedMethodNamesField != null && supportedMethodNamesField.IsStatic
+                             ? ((IEnumerable<NameBasedRegistrationInfo>) supportedMethodNamesField.GetValue (null))
+                             : Enumerable.Empty<NameBasedRegistrationInfo>()
+                 };
 
       var registry = new MethodNameBasedNodeTypeRegistry();
 

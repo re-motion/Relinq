@@ -45,17 +45,6 @@ namespace System
           : typeInfo.GenericTypeArguments;
     }
 
-    public static FieldInfo GetPublicStaticField (this Type type, string name)
-    {
-      var fieldInfo = type.GetRuntimeField (name);
-
-      return fieldInfo != null
-             && fieldInfo.IsStatic
-             && fieldInfo.IsPublic
-          ? fieldInfo
-          : null;
-    }
-
     public static Type[] GetTypes (this Assembly assembly)
     {
       return assembly.DefinedTypes
