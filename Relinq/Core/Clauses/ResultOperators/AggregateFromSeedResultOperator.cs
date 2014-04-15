@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses.StreamedData;
@@ -244,7 +245,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     private bool DescribesValidFuncType (LambdaExpression value)
     {
       var funcType = value.Type;
-      if (!funcType.IsGenericType || funcType.GetGenericTypeDefinition () != typeof (Func<,>))
+      if (!funcType.GetTypeInfo().IsGenericType || funcType.GetGenericTypeDefinition () != typeof (Func<,>))
         return false;
 
       var genericArguments = funcType.GetGenericArguments ();
@@ -253,7 +254,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     private bool DescribesValidResultSelectorType (LambdaExpression value)
     {
-      return value == null || (value.Type.IsGenericType && value.Type.GetGenericTypeDefinition () == typeof (Func<,>));
+      return value == null || (value.Type.GetTypeInfo().IsGenericType && value.Type.GetGenericTypeDefinition() == typeof (Func<,>));
     }
   }
 }

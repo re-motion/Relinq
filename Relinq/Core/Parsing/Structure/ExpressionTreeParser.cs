@@ -53,7 +53,7 @@ namespace Remotion.Linq.Parsing.Structure
     /// registered.</returns>
     public static CompoundNodeTypeProvider CreateDefaultNodeTypeProvider ()
     {
-      var searchedTypes = typeof (MethodInfoBasedNodeTypeRegistry).Assembly.GetTypes ();
+      var searchedTypes = typeof (MethodInfoBasedNodeTypeRegistry).GetTypeInfo().Assembly.GetTypes ();
       var innerProviders = new INodeTypeProvider[]
                            {
                                MethodInfoBasedNodeTypeRegistry.CreateFromTypes (searchedTypes),
@@ -175,7 +175,7 @@ namespace Remotion.Linq.Parsing.Structure
         if (propertyInfo == null)
           return null;
 
-        var getterMethod = propertyInfo.GetGetMethod ();
+        var getterMethod = propertyInfo.GetMethod;
         if (getterMethod == null || !_nodeTypeProvider.IsRegistered (getterMethod))
           return null;
 

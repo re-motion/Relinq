@@ -46,7 +46,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
 
     private bool IsDeclaredByNullableType (MemberInfo memberInfo)
     {
-      return memberInfo.DeclaringType.IsGenericType && memberInfo.DeclaringType.GetGenericTypeDefinition() == typeof (Nullable<>);
+      return memberInfo.DeclaringType.GetTypeInfo().IsGenericType && memberInfo.DeclaringType.GetGenericTypeDefinition() == typeof (Nullable<>);
     }
   }
 }

@@ -60,7 +60,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
     {
       // In .NET 4, Expression.New (...) will convert the get method into a property. That way, the generated NewExpression will look exactly like
       // an anonymous type expression.
-      return instantiatedType.GetProperty (propertyName).GetGetMethod ();
+      return instantiatedType.GetRuntimeProperty (propertyName).GetMethod;
     }
   }
 }

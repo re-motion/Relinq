@@ -37,7 +37,7 @@ namespace Remotion.Linq.Utilities
         case ExpressionType.MemberAccess:
           var memberExpression = (MemberExpression) wrappedCall.Body;
           var property = memberExpression.Member as PropertyInfo;
-          var method = property != null ? property.GetGetMethod() : null;
+          var method = property != null ? property.GetMethod : null;
           if (method != null)
             return method;
           break;
@@ -65,17 +65,19 @@ namespace Remotion.Linq.Utilities
     {
       ArgumentUtility.CheckNotNull ("member", member);
 
-      switch (member.MemberType)
-      {
-        case MemberTypes.Property:
-          return ((PropertyInfo) member).PropertyType;
-        case MemberTypes.Field:
-          return ((FieldInfo) member).FieldType;
-        case MemberTypes.Method:
-          return ((MethodInfo) member).ReturnType;
-        default:
-          throw new ArgumentException ("Argument must be FieldInfo, PropertyInfo, or MethodInfo.", "member");
-      }
+      var propertyInfo = member as PropertyInfo;
+      if (propertyInfo != null)
+        return propertyInfo.PropertyType;
+
+      var fieldInfo = member as FieldInfo;
+      if (fieldInfo != null)
+        return fieldInfo.FieldType;
+
+      var methodInfo = member as MethodInfo;
+      if (methodInfo != null)
+        return methodInfo.ReturnType;
+
+      throw new ArgumentException ("Argument must be FieldInfo, PropertyInfo, or MethodInfo.", "member");
     }
 
     public static Type TryGetItemTypeOfIEnumerable (Type possibleEnumerableType)
@@ -92,7 +94,7 @@ namespace Remotion.Linq.Utilities
       }
       else
       {
-        if (implementedEnumerableInterface.IsGenericType)
+        if (implementedEnumerableInterface.GetTypeInfo().IsGenericType)
           return implementedEnumerableInterface.GetGenericArguments ()[0];
         else
           return typeof (object);
@@ -107,9 +109,9 @@ namespace Remotion.Linq.Utilities
       }
       else
       {
-        return (from i in enumerableType.GetInterfaces()
+        return (from i in enumerableType.GetTypeInfo().ImplementedInterfaces
                 where IsIEnumerable (i)
-                let genericArgsCount = i.IsGenericType ? i.GetGenericArguments ().Length : 0
+                let genericArgsCount = i.GetTypeInfo().IsGenericType ? i.GetGenericArguments ().Length : 0
                 orderby genericArgsCount descending
                 select i).FirstOrDefault();
       }
@@ -117,8 +119,8 @@ namespace Remotion.Linq.Utilities
 
     private static bool IsIEnumerable (Type enumerableType)
     {
-      return enumerableType == typeof (IEnumerable) 
-          || (enumerableType.IsGenericType && enumerableType.GetGenericTypeDefinition() == typeof (IEnumerable<>));
+      return enumerableType == typeof(IEnumerable)
+             || (enumerableType.GetTypeInfo().IsGenericType && enumerableType.GetGenericTypeDefinition() == typeof(IEnumerable<>));
     }
   }
 }

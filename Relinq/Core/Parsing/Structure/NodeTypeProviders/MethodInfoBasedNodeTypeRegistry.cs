@@ -46,7 +46,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
                                 select t;
 
       var supportedMethodsForTypes = from t in expressionNodeTypes
-                                     let supportedMethodsField = t.GetField ("SupportedMethods", BindingFlags.Static | BindingFlags.Public)
+                                     let supportedMethodsField = t.GetPublicStaticField("SupportedMethods")
                                      select new { 
                                          Type = t,
                                          Methods = 
@@ -76,12 +76,16 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
     public static MethodInfo GetRegisterableMethodDefinition (MethodInfo method)
     {
       var genericMethodDefinition = method.IsGenericMethod ? method.GetGenericMethodDefinition () : method;
-      if (genericMethodDefinition.DeclaringType.IsGenericType)
+      if (genericMethodDefinition.DeclaringType.GetTypeInfo().IsGenericType)
       {
         var declaringTypeDefinition = genericMethodDefinition.DeclaringType.GetGenericTypeDefinition ();
 
         // find corresponding method on the generic type definition
-        return (MethodInfo) MethodBase.GetMethodFromHandle (genericMethodDefinition.MethodHandle, declaringTypeDefinition.TypeHandle);
+
+        // TODO RM-6131: Review new implementation in regards to performance and generics semantics
+        // Original: return (MethodInfo) MethodBase.GetMethodFromHandle (genericMethodDefinition.MethodHandle, declaringTypeDefinition.TypeHandle);
+        return declaringTypeDefinition.GetRuntimeMethods()
+            .Single (mi => mi.Name == genericMethodDefinition.Name && mi.GetParameters().Length == genericMethodDefinition.GetParameters().Length);
       }
       else
       {
@@ -118,7 +122,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
           throw new InvalidOperationException (message);
         }
 
-        if (method.DeclaringType.IsGenericType && !method.DeclaringType.IsGenericTypeDefinition)
+        if (method.DeclaringType.GetTypeInfo().IsGenericType && !method.DeclaringType.GetTypeInfo().IsGenericTypeDefinition)
         {
           var message = string.Format (
               "Cannot register method '{0}' in closed generic type '{1}', try to register its equivalent in the generic type definition instead.", 

@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing
@@ -48,10 +49,10 @@ namespace Remotion.Linq.Parsing
     {
       ArgumentUtility.CheckNotNull ("tupleExpression", tupleExpression);
 
-      while (tupleExpression.Type.IsGenericType && tupleExpression.Type.GetGenericTypeDefinition() == typeof (KeyValuePair<,>))
+      while (tupleExpression.Type.GetTypeInfo().IsGenericType && tupleExpression.Type.GetGenericTypeDefinition() == typeof (KeyValuePair<,>))
       {
-        yield return Expression.MakeMemberAccess (tupleExpression, tupleExpression.Type.GetProperty ("Key"));
-        tupleExpression = Expression.MakeMemberAccess (tupleExpression, tupleExpression.Type.GetProperty ("Value"));
+        yield return Expression.MakeMemberAccess (tupleExpression, tupleExpression.Type.GetRuntimeProperty ("Key"));
+        tupleExpression = Expression.MakeMemberAccess (tupleExpression, tupleExpression.Type.GetRuntimeProperty ("Value"));
       }
 
       yield return tupleExpression;

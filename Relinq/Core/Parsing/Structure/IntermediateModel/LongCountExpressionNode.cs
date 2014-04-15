@@ -38,9 +38,8 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Queryable.LongCount<object> (null, null)),
                                                                GetSupportedMethod (() => Enumerable.LongCount<object> (null)),
                                                                GetSupportedMethod (() => Enumerable.LongCount<object> (null, null)),
-// ReSharper disable PossibleNullReferenceException
-                                                               GetSupportedMethod (() => (((Array) null).LongLength)),
-// ReSharper restore PossibleNullReferenceException
+                                                               //TODO RM-6132: Replace with graceful reflection call
+                                                               //GetSupportedMethod (() => (((Array) null).LongLength)),
                                                            };
 
 

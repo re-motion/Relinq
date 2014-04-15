@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Utilities;
 
@@ -55,7 +56,7 @@ namespace Remotion.Linq
     {
       ArgumentUtility.CheckTypeIsAssignableFrom ("queryableType", queryableType, typeof (IQueryable));
 
-      if (!queryableType.IsGenericTypeDefinition)
+      if (!queryableType.GetTypeInfo().IsGenericTypeDefinition)
       {
         var message = string.Format (
             "Expected the generic type definition of an implementation of IQueryable<T>, but was '{0}'.",
