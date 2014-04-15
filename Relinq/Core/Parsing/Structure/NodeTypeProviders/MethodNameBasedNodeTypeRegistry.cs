@@ -39,8 +39,10 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
     /// </summary>
     /// <returns>A <see cref="MethodInfoBasedNodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types with a <c>SupportedMethodNames</c>
     /// field registered.</returns>
-    public static MethodNameBasedNodeTypeRegistry CreateFromTypes (Type[] searchedTypes)
+    public static MethodNameBasedNodeTypeRegistry CreateFromTypes (IEnumerable<Type> searchedTypes)
     {
+      ArgumentUtility.CheckNotNull ("searchedTypes", searchedTypes);
+      
       var expressionNodeTypes = from t in searchedTypes
                                 where typeof (IExpressionNode).IsAssignableFrom (t)
                                 select t;

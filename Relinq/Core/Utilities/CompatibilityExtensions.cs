@@ -44,12 +44,5 @@ namespace System
           ? typeInfo.GenericTypeParameters
           : typeInfo.GenericTypeArguments;
     }
-
-    public static Type[] GetTypes (this Assembly assembly)
-    {
-      return assembly.DefinedTypes
-          .Select (ti => ti.AsType())
-          .ToArray();
-    }
   }
 }
