@@ -21,6 +21,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
@@ -47,7 +48,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       ArgumentUtility.CheckNotNull ("input", input);
 
-      var method = typeof (Enumerable).GetPublicStaticMethod ("Average", new[] { typeof(IEnumerable<T>) });
+      var method = typeof (Enumerable).GetRuntimeMethod ("Average", new[] { typeof(IEnumerable<T>) });
       if (method == null)
       {
         var message = string.Format ("Cannot calculate the average of objects of type '{0}' in memory.", typeof (T).FullName);

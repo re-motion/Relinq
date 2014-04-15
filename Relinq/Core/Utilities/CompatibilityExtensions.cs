@@ -45,17 +45,6 @@ namespace System
           : typeInfo.GenericTypeArguments;
     }
 
-    public static MethodInfo GetPublicStaticMethod (this Type type, string name, Type[] parameters)
-    {
-      var methodInfo = type.GetRuntimeMethod (name, parameters);
-
-      return methodInfo != null
-             && methodInfo.IsPublic
-             && methodInfo.IsStatic
-          ? methodInfo
-          : null;
-    }
-
     public static FieldInfo GetPublicStaticField (this Type type, string name)
     {
       var fieldInfo = type.GetRuntimeField (name);
