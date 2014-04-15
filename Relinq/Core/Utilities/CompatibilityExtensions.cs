@@ -16,20 +16,19 @@
 // 
 
 using System;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reflection;
 
 namespace System
 {
-  // TODO RM-6132: See which methods can be replaced by existing functionality, e.g. ReflectionUtility.GetMethodInfo (...) or by passing parameter types.
   internal static class TypeExtensions
   {
+  // TODO RM-6132: Check if the current way to deal with IsAssignableFrom that works with good performance in PCL and .NET 4.5 code or if there is a better solution
     public static bool IsAssignableFrom (this Type type, Type c)
     {
       return c != null && type.GetTypeInfo().IsAssignableFrom (c.GetTypeInfo());
     }
 
+  // TODO RM-6132: Check if semantics of GetGenericArguments are correct
     public static Type[] GetGenericArguments (this Type type)
     {
       var typeInfo = type.GetTypeInfo();
