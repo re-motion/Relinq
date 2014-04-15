@@ -56,14 +56,6 @@ namespace System
           : null;
     }
 
-    public static ConstructorInfo GetConstructor (this Type type, Type[] types)
-    {
-      return type.GetTypeInfo().DeclaredConstructors
-          .SingleOrDefault (c => !c.IsStatic
-                                 && c.IsPublic
-                                 && c.GetParameters().Select (p => p.ParameterType).SequenceEqual (types));
-    }
-
     public static Type[] GetTypes (this Assembly assembly)
     {
       return assembly.DefinedTypes

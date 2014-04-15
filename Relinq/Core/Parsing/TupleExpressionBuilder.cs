@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing
@@ -63,7 +64,7 @@ namespace Remotion.Linq.Parsing
       var tupleType = typeof (KeyValuePair<,>).MakeGenericType (left.Type, right.Type);
       var newTupleExpression =
           Expression.New (
-              tupleType.GetConstructor (new[] { left.Type, right.Type }),
+              tupleType.GetTypeInfo().DeclaredConstructors.Single(),
               new[] { left, right },
               new MemberInfo[] { tupleType.GetRuntimeProperty ("Key").GetMethod, tupleType.GetRuntimeProperty ("Value").GetMethod });
       return newTupleExpression;
