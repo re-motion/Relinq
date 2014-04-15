@@ -33,7 +33,7 @@ namespace Remotion.Linq
   public abstract class QueryProviderBase : IQueryProvider
   {
     private static readonly MethodInfo s_genericCreateQueryMethod =
-        typeof (QueryProviderBase).GetRuntimeMethods().Where (m => m.Name == "CreateQuery" && m.IsGenericMethod).Single();
+        typeof (QueryProviderBase).GetRuntimeMethods().Single(m => m.Name == "CreateQuery" && m.IsGenericMethod);
 
     private readonly IQueryParser _queryParser;
     private readonly IQueryExecutor _executor;
