@@ -46,6 +46,23 @@ namespace Remotion.Linq.Utilities
       throw new ArgumentException (string.Format ("Cannot extract a method from the given expression '{0}'.", wrappedCall.Body), "wrappedCall");
     }
 
+    public static MethodInfo GetRuntimeMethodChecked (this Type type, string methodName, Type[] parameterTypes)
+    {
+      ArgumentUtility.CheckNotNull ("type", type);
+      ArgumentUtility.CheckNotNullOrEmpty ("methodName", methodName);
+      ArgumentUtility.CheckNotNull ("parameterTypes", parameterTypes);
+
+      var methodInfo = type.GetRuntimeMethod (methodName, parameterTypes);
+      Assertion.IsNotNull (
+          methodInfo,
+          "Method '{0} ({1})' was not found on type '{2}'",
+          methodName,
+          string.Join (", ", parameterTypes.Select (t => t.Name)),
+          type.FullName);
+
+      return methodInfo;
+    }
+
     public static Type GetItemTypeOfIEnumerable (Type enumerableType, string argumentName)
     {
       ArgumentUtility.CheckNotNull ("enumerableType", enumerableType);

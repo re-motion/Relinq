@@ -16,9 +16,11 @@
 // 
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
@@ -32,6 +34,9 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
   {
     private const string c_vbOperatorsClassName = "Microsoft.VisualBasic.CompilerServices.Operators";
     private const string c_vbCompareStringOperatorMethodName = "CompareString";
+
+    private static readonly MethodInfo s_stringCompareToMethod = 
+        typeof (string).GetRuntimeMethodChecked ("CompareTo", new[] { typeof (string) });
 
     public ExpressionType[] SupportedExpressionTypes
     {
@@ -87,8 +92,8 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
 
       var methodCallExpression = MethodCallExpression.Call (
           leftSideAsMethodCallExpression.Arguments[0],
-          typeof (string).GetMethod ("CompareTo", new[] { typeof (string) }),
-          leftSideAsMethodCallExpression.Arguments[1]);
+          s_stringCompareToMethod,
+          new[] { leftSideAsMethodCallExpression.Arguments[1] });
       var vbExpression = new VBStringComparisonExpression (methodCallExpression, (bool) leftSideArgument2AsConstantExpression.Value);
 
       if (expression.NodeType == ExpressionType.GreaterThan)

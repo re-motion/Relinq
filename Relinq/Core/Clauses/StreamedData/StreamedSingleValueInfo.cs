@@ -17,6 +17,7 @@
 using System;
 using System.Reflection;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.StreamedData
@@ -27,7 +28,8 @@ namespace Remotion.Linq.Clauses.StreamedData
   /// </summary>
   public class StreamedSingleValueInfo : StreamedValueInfo
   {
-    private static readonly MethodInfo s_executeMethod = (typeof (StreamedSingleValueInfo).GetMethod ("ExecuteSingleQueryModel"));
+    private static readonly MethodInfo s_executeMethod = 
+        (typeof (StreamedSingleValueInfo).GetRuntimeMethodChecked ("ExecuteSingleQueryModel", new[] { typeof (QueryModel), typeof (IQueryExecutor) }));
 
     private readonly bool _returnDefaultWhenEmpty;
 

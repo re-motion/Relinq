@@ -45,28 +45,6 @@ namespace System
           : typeInfo.GenericTypeArguments;
     }
 
-    public static MethodInfo GetMethod (this Type type, string name)
-    {
-      var methodInfos = type.GetRuntimeMethods()
-          .Where (mi =>
-              mi.IsPublic
-              && mi.Name.Equals (name, StringComparison.Ordinal))
-          .ToArray();
-
-      if (methodInfos.Length == 0)
-        return null;
-
-      if (methodInfos.Length > 1)
-        throw new AmbiguousMatchException();
-
-      return methodInfos[0];
-    }
-
-    public static MethodInfo GetMethod (this Type type, string name, Type[] parameters)
-    {
-      return type.GetRuntimeMethod (name, parameters);
-    }
-
     public static MethodInfo GetPublicStaticMethod (this Type type, string name, Type[] parameters)
     {
       var methodInfo = type.GetRuntimeMethod (name, parameters);

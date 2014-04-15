@@ -31,7 +31,8 @@ namespace Remotion.Linq.Clauses.StreamedData
   /// </summary>
   public class StreamedSequenceInfo : IStreamedDataInfo
   {
-    private static readonly MethodInfo s_executeMethod = (typeof (StreamedSequenceInfo).GetMethod ("ExecuteCollectionQueryModel"));
+    private static readonly MethodInfo s_executeMethod = 
+        (typeof (StreamedSequenceInfo).GetRuntimeMethodChecked ("ExecuteCollectionQueryModel", new[] { typeof (QueryModel), typeof (IQueryExecutor) }));
 
     public StreamedSequenceInfo (Type dataType, Expression itemExpression)
     {

@@ -29,5 +29,15 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.TestDomain
     {
       return false;
     }
+
+    public bool GenericMethodHavingOverloadWithSameParameterCount<T2> (T item1, T2 item2, int value)
+    {
+      return false;
+    }
+
+    public bool GenericMethodHavingOverloadWithSameParameterCount<T2> (T item1, T2 item2, string value)
+    {
+      return false;
+    }
   }
 }

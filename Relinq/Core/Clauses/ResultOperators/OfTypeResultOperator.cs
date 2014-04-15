@@ -18,7 +18,9 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
@@ -36,6 +38,9 @@ namespace Remotion.Linq.Clauses.ResultOperators
   /// </example>
   public class OfTypeResultOperator : SequenceFromSequenceResultOperatorBase
   {
+    private static readonly MethodInfo s_enumerableOfTypeMethod = 
+        typeof (Enumerable).GetRuntimeMethodChecked ("OfType", new[] { typeof (IEnumerable) });
+
     private Type _searchedItemType;
 
     public OfTypeResultOperator (Type searchedItemType)
@@ -62,7 +67,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     public override StreamedSequence ExecuteInMemory<TInput> (StreamedSequence input)
     {
       var sequence = input.GetTypedSequence<TInput> ();
-      var castMethod = typeof (Enumerable).GetMethod ("OfType", new[] { typeof (IEnumerable) }).MakeGenericMethod (SearchedItemType);
+      var castMethod = s_enumerableOfTypeMethod.MakeGenericMethod (SearchedItemType);
       var result = (IEnumerable) InvokeExecuteMethod (castMethod, sequence);
       return new StreamedSequence (result.AsQueryable(), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
     }

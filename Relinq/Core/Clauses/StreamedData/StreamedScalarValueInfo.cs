@@ -17,6 +17,7 @@
 using System;
 using System.Reflection;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.StreamedData
@@ -27,7 +28,8 @@ namespace Remotion.Linq.Clauses.StreamedData
   /// </summary>
   public class StreamedScalarValueInfo : StreamedValueInfo
   {
-    private static readonly MethodInfo s_executeMethod = (typeof (StreamedScalarValueInfo).GetMethod ("ExecuteScalarQueryModel"));
+    private static readonly MethodInfo s_executeMethod = 
+        (typeof (StreamedScalarValueInfo).GetRuntimeMethodChecked ("ExecuteScalarQueryModel", new[] { typeof (QueryModel), typeof (IQueryExecutor) }));
 
     public StreamedScalarValueInfo (Type dataType)
         : base(dataType)

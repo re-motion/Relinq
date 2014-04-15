@@ -17,9 +17,11 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
@@ -40,6 +42,9 @@ namespace Remotion.Linq.Clauses.ResultOperators
   /// </example>
   public class GroupResultOperator : SequenceFromSequenceResultOperatorBase, IQuerySource
   {
+    private static readonly MethodInfo s_executeMethod = 
+        typeof (GroupResultOperator).GetRuntimeMethodChecked ("ExecuteGroupingInMemory", new[] { typeof (StreamedSequence) });
+
     private string _itemName;
 
     private Expression _keySelector;
@@ -141,12 +146,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       ArgumentUtility.CheckNotNull ("input", input);
 
-      var executeMethod = typeof (GroupResultOperator).GetMethod ("ExecuteGroupingInMemory");
-      var closedExecuteMethod = executeMethod.MakeGenericMethod (
-          typeof (TInput),
-          KeySelector.Type,
-          ElementSelector.Type);
-
+      var closedExecuteMethod = s_executeMethod.MakeGenericMethod (typeof (TInput), KeySelector.Type, ElementSelector.Type);
       return (StreamedSequence) InvokeExecuteMethod (closedExecuteMethod, input);
     }
 

@@ -21,6 +21,7 @@ using System.Reflection;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
@@ -38,6 +39,9 @@ namespace Remotion.Linq.Clauses.ResultOperators
   /// </example>
   public class AggregateFromSeedResultOperator : ValueFromSequenceResultOperatorBase
   {
+    private static readonly MethodInfo s_executeMethod =
+        typeof (AggregateFromSeedResultOperator).GetRuntimeMethodChecked ("ExecuteAggregateInMemory", new[] { typeof (StreamedSequence) });
+
     private Expression _seed;
     private LambdaExpression _func;
     private LambdaExpression _resultSelector;
@@ -133,12 +137,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       ArgumentUtility.CheckNotNull ("input", input);
 
-      var executeMethod = typeof (AggregateFromSeedResultOperator).GetMethod ("ExecuteAggregateInMemory");
-      var closedExecuteMethod = executeMethod.MakeGenericMethod (
-          typeof (TInput),
-          Seed.Type,
-          GetResultType ());
-
+      var closedExecuteMethod = s_executeMethod.MakeGenericMethod (typeof (TInput), Seed.Type, GetResultType());
       return (StreamedValue) InvokeExecuteMethod (closedExecuteMethod, input);
     }
 
