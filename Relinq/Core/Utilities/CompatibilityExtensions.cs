@@ -25,12 +25,6 @@ namespace System
   // TODO RM-6132: See which methods can be replaced by existing functionality, e.g. ReflectionUtility.GetMethodInfo (...) or by passing parameter types.
   internal static class TypeExtensions
   {
-    public static bool IsInstanceOfType (this Type type, object o)
-    {
-      // ReSharper disable once UseMethodIsInstanceOfType
-      return o != null && type.IsAssignableFrom (o.GetType());
-    }
-
     public static bool IsAssignableFrom (this Type type, Type c)
     {
       return c != null && type.GetTypeInfo().IsAssignableFrom (c.GetTypeInfo());
