@@ -46,6 +46,7 @@ namespace Remotion.Linq.Utilities
       throw new ArgumentException (string.Format ("Cannot extract a method from the given expression '{0}'.", wrappedCall.Body), "wrappedCall");
     }
 
+    //TODO RM-6131: Write tests
     public static MethodInfo GetRuntimeMethodChecked (this Type type, string methodName, Type[] parameterTypes)
     {
       ArgumentUtility.CheckNotNull ("type", type);
