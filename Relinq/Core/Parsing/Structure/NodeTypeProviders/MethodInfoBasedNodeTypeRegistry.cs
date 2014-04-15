@@ -84,7 +84,8 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
 
         // find corresponding method on the generic type definition
 
-        // TODO RM-6131: Review new implementation in regards to performance and generics semantics
+        // TODO RM-6131: New implementation still needs to check parameter types for exact match.
+        // TODO RM-6131: New implementation will need to be cached (probably).
         // Original: return (MethodInfo) MethodBase.GetMethodFromHandle (genericMethodDefinition.MethodHandle, declaringTypeDefinition.TypeHandle);
         return declaringTypeDefinition.GetRuntimeMethods()
             .Single (mi => mi.Name == genericMethodDefinition.Name && mi.GetParameters().Length == genericMethodDefinition.GetParameters().Length);
