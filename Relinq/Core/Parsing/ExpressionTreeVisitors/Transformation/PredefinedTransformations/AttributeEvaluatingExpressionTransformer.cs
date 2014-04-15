@@ -62,7 +62,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
       {
         var property = (PropertyInfo) memberExpression.Member;
         var getter = property.GetGetMethod (true);
-        Trace.Assert (getter != null);
+        Assertion.IsNotNull (getter);
 
         var methodCallExpressionTransformerProvider = GetTransformerProvider (getter);
         if (methodCallExpressionTransformerProvider != null)

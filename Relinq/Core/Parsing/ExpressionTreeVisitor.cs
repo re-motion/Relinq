@@ -171,7 +171,7 @@ namespace Remotion.Linq.Parsing
       ArgumentUtility.CheckNotNull ("arguments", arguments);
       ArgumentUtility.CheckNotNull ("members", members);
 
-      Trace.Assert (arguments.Count == members.Count);
+      Assertion.IsTrue (arguments.Count == members.Count);
 
       for (int i = 0; i < arguments.Count; ++i)
       {

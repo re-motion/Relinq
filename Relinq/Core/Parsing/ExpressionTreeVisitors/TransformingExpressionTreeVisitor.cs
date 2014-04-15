@@ -57,7 +57,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       foreach (var transformation in transformations)
       {
         var transformedExpression = transformation (newExpression);
-        Trace.Assert (transformedExpression != null);
+        Assertion.IsNotNull (transformedExpression);
         if (transformedExpression != newExpression)
           return VisitExpression (transformedExpression);
       }
