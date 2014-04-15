@@ -321,7 +321,7 @@ namespace Remotion.Linq.Parsing
       }
 
       if (newList != null)
-        return newList.AsReadOnly ();
+        return new ReadOnlyCollection<T> (newList);
       else
         return list;
     }

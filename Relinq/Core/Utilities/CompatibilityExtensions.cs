@@ -78,15 +78,4 @@ namespace System
           .ToArray();
     }
   }
-
-  namespace Collections.Generic
-  {
-    internal static class ListExtensions
-    {
-      public static ReadOnlyCollection<T> AsReadOnly<T> (this List<T> list)
-      {
-        return new ReadOnlyCollection<T> (list);
-      }
-    }
-  }
 }
