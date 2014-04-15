@@ -42,7 +42,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
     public static MethodNameBasedNodeTypeRegistry CreateFromTypes (IEnumerable<Type> searchedTypes)
     {
       ArgumentUtility.CheckNotNull ("searchedTypes", searchedTypes);
-      
+
       var expressionNodeTypes = from t in searchedTypes
                                 where typeof (IExpressionNode).IsAssignableFrom (t)
                                 select t;
