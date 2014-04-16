@@ -20,6 +20,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
@@ -87,8 +88,37 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
         // TODO RM-6131: New implementation still needs to check parameter types for exact match.
         // TODO RM-6131: New implementation will need to be cached (probably).
         // Original: return (MethodInfo) MethodBase.GetMethodFromHandle (genericMethodDefinition.MethodHandle, declaringTypeDefinition.TypeHandle);
-        return declaringTypeDefinition.GetRuntimeMethods()
-            .Single (mi => mi.Name == genericMethodDefinition.Name && mi.GetParameters().Length == genericMethodDefinition.GetParameters().Length);
+
+        return declaringTypeDefinition.GetRuntimeMethodChecked (
+            genericMethodDefinition.Name,
+            genericMethodDefinition.GetParameters().Select (p => p.ParameterType).ToArray());
+
+        // methods on declaringTypeDefintion can have open generic parameters inherited from the open generic type.
+        // genericMethodDefinition already has those open generic parameters closed 
+        // => what is the best way to match those?
+
+        /* class MyType<T1>
+         * {
+         *   void MyNonGenericMethodOnlyGenericFromType (T1 p1){} -> IsGenricMethodDefinition == false, ContainsGenericParameters == true
+         *   void MyGenericMethod<T2> (int p1, T2 p2){} -> IsGenricMethodDefinition == true, ContainsGenericParameters == true
+         *   void MyGenericMethodAlsoGenericFromType<T2> (T1 p1, T2 p2){} -> IsGenricMethodDefinition == true, ContainsGenericParameters == true
+         * }
+         * 
+         * MyType<string>.MyNonGenericMethodOnlyGenericFromType(string p1) 
+         *  -> GetGenericMethodDefinition () 
+         *  -> MyType<string>.MyNonGenericMethodOnlyGenericFromType(string p1)
+         * 
+         * MyType<string>.MyGenericMethod<double>(int p1, double p2) 
+         *  -> GetGenericMethodDefinition () 
+         *  -> MyType<string>.MyGenericMethod<T2>(int p1, T2 p2)
+         * 
+         * MyType<string>.MyGenericMethodAlsoGenericFromType<int>(string p1, int p2) 
+         *  -> GetGenericMethodDefinition () 
+         *  -> MyType<string>.MyGenericMethodAlsoGenericFromType<T2>(string p1, T2 p2)
+         */
+
+        //return declaringTypeDefinition.GetRuntimeMethods()
+        //    .Single (mi => mi.Name == genericMethodDefinition.Name && mi.GetParameters().Length == genericMethodDefinition.GetParameters().Length);
       }
       else
       {
