@@ -22,6 +22,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 {
@@ -35,8 +36,12 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class CountExpressionNode : ResultOperatorExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
+    public static readonly MethodInfo[] SupportedMethods;
+
+    static CountExpressionNode ()
+    {
+      var supportedMethods = new List<MethodInfo>
+                             {
                                                                GetSupportedMethod (() => Queryable.Count<object> (null)),
                                                                GetSupportedMethod (() => Queryable.Count<object> (null, null)),
                                                                GetSupportedMethod (() => Enumerable.Count<object> (null)),
@@ -44,13 +49,30 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 // ReSharper disable PossibleNullReferenceException
                                                                GetSupportedMethod (() => ((List<int>) null).Count),
                                                                GetSupportedMethod (() => ((ICollection<int>) null).Count),
-                                                               //TODO RM-6132: Replace with graceful reflection call
-                                                               //GetSupportedMethod (() => ((ArrayList) null).Count),
                                                                GetSupportedMethod (() => ((ICollection) null).Count),
                                                                GetSupportedMethod (() => (((Array) null).Length)),
 // ReSharper restore PossibleNullReferenceException
-                                                           };
+                         };
 
+      var arrayListCountExpression = GetArrayListCountExpression();
+      if (arrayListCountExpression != null)
+        supportedMethods.Add (GetSupportedMethod (arrayListCountExpression));
+
+      SupportedMethods = supportedMethods.ToArray();
+    }
+
+    private static Expression<Func<int>> GetArrayListCountExpression ()
+    {
+      var arrayListType = Type.GetType ("System.Collections.ArrayList", false);
+      if (arrayListType == null)
+        return null;
+
+      var property = arrayListType.GetRuntimeProperty ("Count");
+      Assertion.IsNotNull (property, "Property 'Count' was not found on type 'System.Collections.ArrayList'.");
+
+      //() => ((ArrayList) null).Count;
+      return Expression.Lambda<Func<int>>(Expression.MakeMemberAccess (Expression.Constant (null, arrayListType), property));
+    }
 
     public CountExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate)
         : base (parseInfo, optionalPredicate, null)
