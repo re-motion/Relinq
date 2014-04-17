@@ -89,9 +89,38 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
         // TODO RM-6131: New implementation will need to be cached (probably).
         // Original: return (MethodInfo) MethodBase.GetMethodFromHandle (genericMethodDefinition.MethodHandle, declaringTypeDefinition.TypeHandle);
 
-        return declaringTypeDefinition.GetRuntimeMethodChecked (
-            genericMethodDefinition.Name,
-            genericMethodDefinition.GetParameters().Select (p => p.ParameterType).ToArray());
+        var referenceMethodParamterTypes = genericMethodDefinition.GetParameters().Select (p => p.ParameterType).ToArray();
+
+        var candidates = declaringTypeDefinition.GetRuntimeMethods()
+            .Where (m => m.Name == genericMethodDefinition.Name && m.GetParameters().Length == referenceMethodParamterTypes.Length)
+            .ToArray();
+
+        //TODO: also test for return parameter by adding to list of parameters as first parameter, including void
+
+        if (candidates.Length == 1)
+          return candidates.Single();
+
+        for (int i = 0; i < referenceMethodParamterTypes.Length; i++)
+        {
+          var referenceParameterType = referenceMethodParamterTypes[i];
+          candidates =
+              candidates.Where (
+                  c =>
+                      c.GetParameters()[i].ParameterType.GetTypeInfo().ContainsGenericParameters
+                      || c.GetParameters()[i].ParameterType == referenceParameterType).ToArray();
+
+          //TODO: for gneeric parameters, also check on name equality
+        }
+
+        if (candidates.Length == 1)
+          return candidates.Single();
+
+        // flag: throwIfNotDeterminisitic or some such name
+        throw new NotSupportedException (method.Name); //"Use  NameBasedRegistrationInfo instead, ... example via code lookup.
+        // Break Change: It is no logner supported to register query operators that are only distinguishable via a parameter whose type is a generic parameter of the declaring type.
+        //return declaringTypeDefinition.GetRuntimeMethodChecked (
+        //    genericMethodDefinition.Name,
+        //    genericMethodDefinition.GetParameters().Select (p => p.ParameterType).ToArray());
 
         // methods on declaringTypeDefintion can have open generic parameters inherited from the open generic type.
         // genericMethodDefinition already has those open generic parameters closed 

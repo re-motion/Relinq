@@ -107,12 +107,36 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders
 
       var expectedMethod1 = typeof (GenericClass<>).GetMethods()
           .Where (m => m.Name == "GenericMethodHavingOverloadWithSameParameterCount" && m.GetParameters().Last().ParameterType == typeof (int))
-          .Select (m => m.MakeGenericMethod (typeof (double)))
           .Single();
 
       var expectedMethod2 = typeof (GenericClass<>).GetMethods()
           .Where (m => m.Name == "GenericMethodHavingOverloadWithSameParameterCount" && m.GetParameters().Last().ParameterType == typeof (string))
-          .Select (m => m.MakeGenericMethod (typeof (double)))
+          .Single();
+
+      var registerableMethod1 = MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method1);
+      var registerableMethod2 = MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method2);
+
+      Assert.That (registerableMethod1, Is.SameAs (expectedMethod1));
+      Assert.That (registerableMethod2, Is.SameAs (expectedMethod2));
+    }
+
+    [Test]
+    public void GetRegisterableMethodDefinition_ClosedGenericMethod_InClosedGenericType_HavingOverloadsDistinguishedByParameterTypeFromGenericType ()
+    {
+      var method1 = typeof (GenericClass<int, string>).GetMethods()
+          .Where (m => m.Name == "NonGenericMethodOverloadedWithGenericParameterFromType" && m.GetParameters().First().ParameterType.Name == "Int32")
+          .Single();
+
+      var method2 = typeof (GenericClass<int, string>).GetMethods()
+          .Where (m => m.Name == "NonGenericMethodOverloadedWithGenericParameterFromType" && m.GetParameters().First().ParameterType.Name == "String")
+          .Single();
+
+      var expectedMethod1 = typeof (GenericClass<,>).GetMethods()
+          .Where (m => m.Name == "NonGenericMethodOverloadedWithGenericParameterFromType" && m.GetParameters().First().ParameterType.Name == "T1")
+          .Single();
+
+      var expectedMethod2 = typeof (GenericClass<,>).GetMethods()
+          .Where (m => m.Name == "NonGenericMethodOverloadedWithGenericParameterFromType" && m.GetParameters().First().ParameterType.Name == "T2")
           .Single();
 
       var registerableMethod1 = MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method1);
