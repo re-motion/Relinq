@@ -203,6 +203,7 @@
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\NewWithAddedMembersQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\SubQueryQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\MediumTrustQueryParserIntegrationTest.cs" />
+    <Compile Include="Parsing\Structure\TestDomain\GenericClass2.cs" />
     <Compile Include="Parsing\TestThrowingConstantExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\TupleExpressionBuilderTest.cs" />
     <Compile Include="TestDomain\Knife.cs" />

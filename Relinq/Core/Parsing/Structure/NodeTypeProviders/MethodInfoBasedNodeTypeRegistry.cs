@@ -73,86 +73,84 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
     /// that can be registered via a call to <see cref="Register"/>. When the given <paramref name="method"/> is passed to 
     /// <see cref="GetNodeType"/> and its corresponding registerable method was registered, the correct node type is returned.
     /// </summary>
-    /// <param name="method">The method for which the registerable method should be retrieved.</param>
-    /// <returns><paramref name="method"/> itself, unless it is a closed generic method or declared in a closed generic type. In the latter cases,
-    /// the corresponding generic method definition respectively the method declared in a generic type definition is returned.</returns>
-    public static MethodInfo GetRegisterableMethodDefinition (MethodInfo method)
+    /// <param name="method">The method for which the registerable method should be retrieved. Must not be <see langword="null" />.</param>
+    /// <param name="throwOnAmbiguousMatch">
+    ///   <see langword="true" /> to throw a <see cref="NotSupportedException"/> if the method cannot be matched to a distinct generic method definition, 
+    ///   <see langword="false" /> to return <see langword="null" /> if an unambiguous match is not possible.
+    /// </param>
+    /// <returns>
+    /// <para>
+    ///   <paramref name="method"/> itself, unless it is a closed generic method or declared in a closed generic type. In the latter cases,
+    ///   the corresponding generic method definition respectively the method declared in a generic type definition is returned.
+    /// </para><para>
+    ///   If no generic method definition could be matched and <paramref name="throwOnAmbiguousMatch"/> was set to <see langword="false" />, 
+    ///   <see langword="null" /> is returned.
+    /// </para>
+    /// </returns>
+    /// <exception cref="NotSupportedException">
+    /// Thrown if <paramref name="throwOnAmbiguousMatch"/> is set to <see langword="true" /> and no distinct generic method definition could be resolved.
+    /// </exception>
+    public static MethodInfo GetRegisterableMethodDefinition (MethodInfo method, bool throwOnAmbiguousMatch)
     {
+      ArgumentUtility.CheckNotNull ("method", method);
+
       var genericMethodDefinition = method.IsGenericMethod ? method.GetGenericMethodDefinition () : method;
-      if (genericMethodDefinition.DeclaringType.GetTypeInfo().IsGenericType)
-      {
-        var declaringTypeDefinition = genericMethodDefinition.DeclaringType.GetGenericTypeDefinition ();
-
-        // find corresponding method on the generic type definition
-
-        // TODO RM-6131: New implementation still needs to check parameter types for exact match.
-        // TODO RM-6131: New implementation will need to be cached (probably).
-        // Original: return (MethodInfo) MethodBase.GetMethodFromHandle (genericMethodDefinition.MethodHandle, declaringTypeDefinition.TypeHandle);
-
-        var referenceMethodParamterTypes = genericMethodDefinition.GetParameters().Select (p => p.ParameterType).ToArray();
-
-        var candidates = declaringTypeDefinition.GetRuntimeMethods()
-            .Where (m => m.Name == genericMethodDefinition.Name && m.GetParameters().Length == referenceMethodParamterTypes.Length)
-            .ToArray();
-
-        //TODO: also test for return parameter by adding to list of parameters as first parameter, including void
-
-        if (candidates.Length == 1)
-          return candidates.Single();
-
-        for (int i = 0; i < referenceMethodParamterTypes.Length; i++)
-        {
-          var referenceParameterType = referenceMethodParamterTypes[i];
-          candidates =
-              candidates.Where (
-                  c =>
-                      c.GetParameters()[i].ParameterType.GetTypeInfo().ContainsGenericParameters
-                      || c.GetParameters()[i].ParameterType == referenceParameterType).ToArray();
-
-          //TODO: for gneeric parameters, also check on name equality
-        }
-
-        if (candidates.Length == 1)
-          return candidates.Single();
-
-        // flag: throwIfNotDeterminisitic or some such name
-        throw new NotSupportedException (method.Name); //"Use  NameBasedRegistrationInfo instead, ... example via code lookup.
-        // Break Change: It is no logner supported to register query operators that are only distinguishable via a parameter whose type is a generic parameter of the declaring type.
-        //return declaringTypeDefinition.GetRuntimeMethodChecked (
-        //    genericMethodDefinition.Name,
-        //    genericMethodDefinition.GetParameters().Select (p => p.ParameterType).ToArray());
-
-        // methods on declaringTypeDefintion can have open generic parameters inherited from the open generic type.
-        // genericMethodDefinition already has those open generic parameters closed 
-        // => what is the best way to match those?
-
-        /* class MyType<T1>
-         * {
-         *   void MyNonGenericMethodOnlyGenericFromType (T1 p1){} -> IsGenricMethodDefinition == false, ContainsGenericParameters == true
-         *   void MyGenericMethod<T2> (int p1, T2 p2){} -> IsGenricMethodDefinition == true, ContainsGenericParameters == true
-         *   void MyGenericMethodAlsoGenericFromType<T2> (T1 p1, T2 p2){} -> IsGenricMethodDefinition == true, ContainsGenericParameters == true
-         * }
-         * 
-         * MyType<string>.MyNonGenericMethodOnlyGenericFromType(string p1) 
-         *  -> GetGenericMethodDefinition () 
-         *  -> MyType<string>.MyNonGenericMethodOnlyGenericFromType(string p1)
-         * 
-         * MyType<string>.MyGenericMethod<double>(int p1, double p2) 
-         *  -> GetGenericMethodDefinition () 
-         *  -> MyType<string>.MyGenericMethod<T2>(int p1, T2 p2)
-         * 
-         * MyType<string>.MyGenericMethodAlsoGenericFromType<int>(string p1, int p2) 
-         *  -> GetGenericMethodDefinition () 
-         *  -> MyType<string>.MyGenericMethodAlsoGenericFromType<T2>(string p1, T2 p2)
-         */
-
-        //return declaringTypeDefinition.GetRuntimeMethods()
-        //    .Single (mi => mi.Name == genericMethodDefinition.Name && mi.GetParameters().Length == genericMethodDefinition.GetParameters().Length);
-      }
-      else
-      {
+      if (!genericMethodDefinition.DeclaringType.GetTypeInfo().IsGenericType)
         return genericMethodDefinition;
+
+      var declaringTypeDefinition = genericMethodDefinition.DeclaringType.GetGenericTypeDefinition();
+
+      // Simple, fast solution, not possible in PCL because of missing MethodHandle property on MethodInfo type:
+      // return (MethodInfo) MethodBase.GetMethodFromHandle (genericMethodDefinition.MethodHandle, declaringTypeDefinition.TypeHandle);
+
+      // TODO RM-6131: New implementation will need to be cached (probably).
+      // TODO RM-6131: test points of usage of GetRegisterableMethodDefinition for correct throwOnAmbiguousMatch parameter
+      // TODO RM-6131: Document Break Change: It is no logner supported to register query operators that are only distinguishable via a parameter whose type is a generic parameter of the declaring type.
+
+      var referenceMethodSignature =
+          new[] { new { Name = "returnValue", Type = genericMethodDefinition.ReturnType } }
+              .Concat (genericMethodDefinition.GetParameters().Select (p => new { Name = p.Name, Type = p.ParameterType }))
+              .ToArray();
+
+      var candidates = declaringTypeDefinition.GetRuntimeMethods()
+          .Select (
+              m => new
+                   {
+                       Method = m,
+                       SignatureTypes = new[] { m.ReturnType }.Concat (m.GetParameters().Select (p => p.ParameterType)).ToArray(),
+                       SignatureNames = new[] { "returnValue" }.Concat (m.GetParameters().Select (p => p.Name)).ToArray()
+                   })
+          .Where (c => c.Method.Name == genericMethodDefinition.Name && c.SignatureTypes.Length == referenceMethodSignature.Length)
+          .ToArray();
+
+      for (int i = 0; i < referenceMethodSignature.Length; i++)
+      {
+        candidates = candidates
+            .Where (c => c.SignatureTypes[i] == referenceMethodSignature[i].Type || c.SignatureTypes[i].GetTypeInfo().ContainsGenericParameters)
+            .Where (c => c.SignatureNames[i] == referenceMethodSignature[i].Name)
+            .ToArray();
       }
+
+      if (candidates.Length == 1)
+        return candidates.Select (c => c.Method).Single();
+
+      if (!throwOnAmbiguousMatch)
+        return null;
+
+      throw new NotSupportedException (
+          string.Format (
+              "A generic method definition cannot be resolved for method '{0}' on type '{1}' because a distinct match is not possible. "
+              + @"The method can still be registered using the following syntax:
+
+public static readonly NameBasedRegistrationInfo[] SupportedMethodNames = 
+    new[] {{
+        new NameBasedRegistrationInfo (
+            ""{2}"", 
+            mi => /* match rule based on MethodInfo */
+    }};",
+              method,
+              declaringTypeDefinition,
+              method.Name));
     }
 
     private readonly Dictionary<MethodInfo, Type> _registeredMethodInfoTypes = new Dictionary<MethodInfo, Type>();
@@ -204,7 +202,8 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
     {
       ArgumentUtility.CheckNotNull ("method", method);
 
-      var methodDefinition = GetRegisterableMethodDefinition (method);
+      // TODO RM-6131: pass false for throwOnAmbiguousMatch and return false if no match is found
+      var methodDefinition = GetRegisterableMethodDefinition (method, true);
       return _registeredMethodInfoTypes.ContainsKey (methodDefinition);
     }
     
@@ -216,7 +215,8 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
     {
       ArgumentUtility.CheckNotNull ("method", method);
 
-      var methodDefinition = GetRegisterableMethodDefinition (method);
+      // TODO RM-6131: pass false for throwOnAmbiguousMatch and return null if no match is found
+      var methodDefinition = GetRegisterableMethodDefinition (method, true);
       
       Type result;
       _registeredMethodInfoTypes.TryGetValue (methodDefinition, out result);

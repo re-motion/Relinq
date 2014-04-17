@@ -40,47 +40,4 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.TestDomain
       return false;
     }
   }
-
-  public class GenericClass<T1, T2>
-  {
-    public bool NonGenericMethodOverloadedWithGenericParameterFromType (T1 item1, int item2)
-    {
-      return false;
-    }
-
-    public bool NonGenericMethodOverloadedWithGenericParameterFromType (T2 item1, int item2)
-    {
-      return false;
-    }
-
-    public bool NonGenericMethodOverloadedWithGenericParameterFromTypeAtDifferentPosition (T1 item1, int item2)
-    {
-      return false;
-    }
-
-    public bool NonGenericMethodOverloadedWithGenericParameterFromTypeAtDifferentPosition (int item2, T1 item1)
-    {
-      return false;
-    }
-
-    public bool GenericMethodOverloadedWithGenericParameterFromTypeAtSamePosition<T3> (T1 item1, T3 item2)
-    {
-      return false;
-    }
-
-    public bool GenericMethodOverloadedWithGenericParameterFromTypeAtSamePosition<T3> (T2 item1, T3 item2)
-    {
-      return false;
-    }
-
-    public bool GenericMethodOverloadedWithGenericParameterFromTypeAtDifferentPosition<T3> (T1 item1, T3 item2)
-    {
-      return false;
-    }
-
-    public bool GenericMethodOverloadedWithGenericParameterFromTypeAtDifferntPosition<T3> (T3 item1, T1 item2)
-    {
-      return false;
-    }
-  }
 }

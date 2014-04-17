@@ -45,7 +45,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("methodCall", methodCall);
 
       var method = ReflectionUtility.GetMethod (methodCall);
-      return MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method);
+      return MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method, true);
     }
 
     protected MethodCallExpressionNodeBase (MethodCallExpressionParseInfo parseInfo)
