@@ -47,7 +47,22 @@ namespace Remotion.Linq.UnitTests.Utilities
     {
       ReflectionUtility.GetMethod (() => "x");
     }
-    
+
+    [Test]
+    public void GetRuntimeMethodChecked_ExistingMethod_ReturnsMethodInfo ()
+    {
+      MethodInfo method = ReflectionUtility.GetRuntimeMethodChecked (typeof (string), "Substring", new[] { typeof (int) });
+      Assert.That (method, Is.EqualTo (typeof (string).GetMethod ("Substring", new[] { typeof (int) })));
+    }
+
+    [Test]
+    public void GetRuntimeMethodChecked_NonExistingMethod_ThrowsInvalidOperationException ()
+    {
+      Assert.That (
+          () => ReflectionUtility.GetRuntimeMethodChecked (typeof (string), "Substring", new[] { typeof (double) }),
+          Throws.TypeOf<InvalidOperationException>().With.Message.EqualTo ("Method 'Substring (Double)' was not found on type 'System.String'"));
+    }
+
     [Test]
     public void CheckTypeIsClosedGenericIEnumerable_ImplementsIEnumerable_DoesNotThrow()
     {
