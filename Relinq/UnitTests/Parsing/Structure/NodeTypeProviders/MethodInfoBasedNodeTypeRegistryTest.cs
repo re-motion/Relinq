@@ -19,7 +19,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
@@ -121,7 +120,30 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders
     }
 
     [Test]
-    public void GetRegisterableMethodDefinition_ClosedGenericMethod_InClosedGenericType_HavingOverloadsDistinguishedByParameterName ()
+    public void GetRegisterableMethodDefinition_NonGenericMethod_InClosedGenericType_HavingOverloadsDistinguishedByParameterCount ()
+    {
+      var methodName = "NonGenericMethodOverloadedWithGenericParameterFromTypeAndDifferentParameterCount";
+      var method1 = typeof (GenericClass<int, string>).GetMethods()
+          .Single (m => m.Name == methodName && m.GetParameters().Length == 1);
+
+      var method2 = typeof (GenericClass<int, string>).GetMethods()
+          .Single (m => m.Name == methodName && m.GetParameters().Length == 2);
+
+      var expectedMethod1 = typeof (GenericClass<,>).GetMethods()
+          .Single (m => m.Name == methodName && m.GetParameters().Length == 1);
+
+      var expectedMethod2 = typeof (GenericClass<,>).GetMethods()
+          .Single (m => m.Name == methodName && m.GetParameters().Length == 2);
+
+      var registerableMethod1 = MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method1, true);
+      var registerableMethod2 = MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method2, true);
+
+      Assert.That (registerableMethod1, Is.SameAs (expectedMethod1));
+      Assert.That (registerableMethod2, Is.SameAs (expectedMethod2));
+    }
+
+    [Test]
+    public void GetRegisterableMethodDefinition_NonGenericMethod_InClosedGenericType_HavingOverloadsDistinguishedByParameterName ()
     {
       var methodName = "NonGenericMethodOverloadedWithGenericParameterFromTypeAndDifferentParameterName";
       var method1 = typeof (GenericClass<int, string>).GetMethods()
@@ -144,7 +166,34 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders
     }
 
     [Test]
-    public void GetRegisterableMethodDefinition_ClosedGenericMethod_InClosedGenericType_HavingOverloadsDistinguishedByParameterPosition ()
+    public void GetRegisterableMethodDefinition_ClosedGenericMethod_InClosedGenericType_HavingOverloadsDistinguishedByParameterName ()
+    {
+      var methodName = "GenericMethodOverloadedWithGenericParameterFromTypeAndDifferentParameterName";
+      var method1 = typeof (GenericClass<int, string>).GetMethods()
+          .Where (m => m.Name == methodName && m.GetParameters()[0].ParameterType.Name == "Int32")
+          .Select (m => m.MakeGenericMethod (typeof (double)))
+          .Single();
+
+      var method2 = typeof (GenericClass<int, string>).GetMethods()
+          .Where (m => m.Name == methodName && m.GetParameters()[0].ParameterType.Name == "String")
+          .Select (m => m.MakeGenericMethod (typeof (double)))
+          .Single();
+
+      var expectedMethod1 = typeof (GenericClass<,>).GetMethods()
+          .Single (m => m.Name == methodName && m.GetParameters()[0].ParameterType.Name == "T1");
+
+      var expectedMethod2 = typeof (GenericClass<,>).GetMethods()
+          .Single (m => m.Name == methodName && m.GetParameters()[0].ParameterType.Name == "T2");
+
+      var registerableMethod1 = MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method1, true);
+      var registerableMethod2 = MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method2, true);
+
+      Assert.That (registerableMethod1, Is.SameAs (expectedMethod1));
+      Assert.That (registerableMethod2, Is.SameAs (expectedMethod2));
+    }
+
+    [Test]
+    public void GetRegisterableMethodDefinition_NonGenericMethod_InClosedGenericType_HavingOverloadsDistinguishedByParameterPosition ()
     {
       var methodName = "NonGenericMethodOverloadedWithGenericParameterFromTypeAtDifferentPosition";
       var method1 = typeof (GenericClass<int, string>).GetMethods()
@@ -167,7 +216,34 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders
     }
 
     [Test]
-    public void GetRegisterableMethodDefinition_ClosedGenericMethod_InClosedGenericType_HavingOverloadsDistinguishedByGenericParamterAndReturnType ()
+    public void GetRegisterableMethodDefinition_ClosedGenericMethod_InClosedGenericType_HavingOverloadsDistinguishedByParameterPosition ()
+    {
+      var methodName = "GenericMethodOverloadedWithGenericParameterFromTypeAtDifferentPosition";
+      var method1 = typeof (GenericClass<int, string>).GetMethods()
+          .Where( m => m.Name == methodName && m.GetParameters()[0].ParameterType.Name == "Int32")
+          .Select (m => m.MakeGenericMethod (typeof (double)))
+          .Single();
+
+      var method2 = typeof (GenericClass<int, string>).GetMethods()
+          .Where (m => m.Name == methodName && m.GetParameters()[0].ParameterType.Name == "T3")
+          .Select (m => m.MakeGenericMethod (typeof (double)))
+          .Single();
+
+      var expectedMethod1 = typeof (GenericClass<,>).GetMethods()
+          .Single (m => m.Name == methodName && m.GetParameters()[0].ParameterType.Name == "T1");
+
+      var expectedMethod2 = typeof (GenericClass<,>).GetMethods()
+          .Single (m => m.Name == methodName && m.GetParameters()[0].ParameterType.Name == "T3");
+
+      var registerableMethod1 = MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method1, true);
+      var registerableMethod2 = MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method2, true);
+
+      Assert.That (registerableMethod1, Is.SameAs (expectedMethod1));
+      Assert.That (registerableMethod2, Is.SameAs (expectedMethod2));
+    }
+
+    [Test]
+    public void GetRegisterableMethodDefinition_NonGenericMethod_InClosedGenericType_HavingOverloadsDistinguishedByGenericParamterAndReturnType ()
     {
       var methodName = "NonGenericMethodOverloadedWithGenericParameterFromTypeAndDifferentReturnTypes";
       var method1 = typeof (GenericClass<int, string>).GetMethods()
@@ -191,7 +267,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders
 
     [Test]
     public void
-        GetRegisterableMethodDefinition_ClosedGenericMethod_InClosedGenericType_HavingOverloadsDistinguishedByParameterTypeFromGenericClass_WithThrowOnAmbiguity_ThrowsNotSupportedException
+        GetRegisterableMethodDefinition_NonGenericMethod_InClosedGenericType_HavingOverloadsDistinguishedByParameterTypeFromGenericClass_WithThrowOnAmbiguity_ThrowsNotSupportedException
         ()
     {
       var methodName = "NonGenericMethodOverloadedWithGenericParameterFromTypeAndSameParameterName";
@@ -215,7 +291,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders
     }
 
     [Test]
-    public void GetRegisterableMethodDefinition_ClosedGenericMethod_InClosedGenericType_HavingOverloadsDistinguishedByParameterTypeFromGenericClass_WithDoNotThrowOnAmbiguity_ReturnsNull ()
+    public void GetRegisterableMethodDefinition_NonGenericMethod_InClosedGenericType_HavingOverloadsDistinguishedByParameterTypeFromGenericClass_WithDoNotThrowOnAmbiguity_ReturnsNull ()
     {
       var methodName = "NonGenericMethodOverloadedWithGenericParameterFromTypeAndSameParameterName";
       var method1 = typeof (GenericClass<int, string>).GetMethods()

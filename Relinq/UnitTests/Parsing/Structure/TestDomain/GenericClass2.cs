@@ -20,6 +20,16 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.TestDomain
 {
   public class GenericClass<T1, T2>
   {
+    public bool NonGenericMethodOverloadedWithGenericParameterFromTypeAndDifferentParameterCount (T1 p1)
+    {
+      return false;
+    }
+
+    public bool NonGenericMethodOverloadedWithGenericParameterFromTypeAndDifferentParameterCount (T2 p1, double p2)
+    {
+      return false;
+    }
+
     public bool NonGenericMethodOverloadedWithGenericParameterFromTypeAndDifferentParameterName (T1 t1, double p2)
     {
       return false;
@@ -60,12 +70,12 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.TestDomain
       return false;
     }
 
-    public bool GenericMethodOverloadedWithGenericParameterFromTypeAtSamePosition<T3> (T1 t1, T3 t3)
+    public bool GenericMethodOverloadedWithGenericParameterFromTypeAndDifferentParameterName<T3> (T1 t1, T3 t3)
     {
       return false;
     }
 
-    public bool GenericMethodOverloadedWithGenericParameterFromTypeAtSamePosition<T3> (T2 t2, T3 t3)
+    public bool GenericMethodOverloadedWithGenericParameterFromTypeAndDifferentParameterName<T3> (T2 t2, T3 t3)
     {
       return false;
     }
@@ -75,7 +85,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.TestDomain
       return false;
     }
 
-    public bool GenericMethodOverloadedWithGenericParameterFromTypeAtDifferntPosition<T3> (T3 t3, T1 t1)
+    public bool GenericMethodOverloadedWithGenericParameterFromTypeAtDifferentPosition<T3> (T3 t3, T1 t1)
     {
       return false;
     }
