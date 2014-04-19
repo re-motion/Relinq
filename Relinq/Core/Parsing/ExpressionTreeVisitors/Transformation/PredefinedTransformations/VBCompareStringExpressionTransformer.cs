@@ -61,12 +61,12 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
       if (leftSideAsMethodCallExpression != null && (IsVBOperator (leftSideAsMethodCallExpression.Method, c_vbCompareStringOperatorMethodName)))
       {
         var rightSideAsConstantExpression = expression.Right as ConstantExpression;
-        Debug.Assert (
+        Assertion.DebugAssert (
             rightSideAsConstantExpression != null && rightSideAsConstantExpression.Value is Int32 && (int) rightSideAsConstantExpression.Value == 0,
             "The right side of the binary expression has to be a constant expression with value 0.");
 
         var leftSideArgument2AsConstantExpression = leftSideAsMethodCallExpression.Arguments[2] as ConstantExpression;
-        Debug.Assert (
+        Assertion.DebugAssert (
             leftSideArgument2AsConstantExpression != null && leftSideArgument2AsConstantExpression.Value is bool,
             "The second argument of the method call expression has to be a constant expression with a boolean value.");
 
