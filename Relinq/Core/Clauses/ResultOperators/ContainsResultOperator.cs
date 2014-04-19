@@ -17,8 +17,10 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
@@ -89,7 +91,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
 
-      if (!sequenceInfo.ResultItemType.IsAssignableFrom (Item.Type))
+      if (!sequenceInfo.ResultItemType.GetTypeInfo().IsAssignableFrom (Item.Type.GetTypeInfo()))
       {
         var message = string.Format (
             "The items of the input sequence of type '{0}' are not compatible with the item expression of type '{1}'.",

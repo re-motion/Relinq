@@ -21,6 +21,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Collections;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
@@ -44,7 +45,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       ArgumentUtility.CheckNotNull ("searchedTypes", searchedTypes);
 
       var expressionNodeTypes = from t in searchedTypes
-                                where typeof (IExpressionNode).IsAssignableFrom (t)
+                                where typeof (IExpressionNode).GetTypeInfo().IsAssignableFrom (t.GetTypeInfo())
                                 select t;
 
       var infoForTypes =

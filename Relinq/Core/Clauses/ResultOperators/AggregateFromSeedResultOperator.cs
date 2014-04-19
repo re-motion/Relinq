@@ -192,7 +192,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
       Assertion.DebugAssert (Func.Type.GetTypeInfo().IsGenericTypeDefinition == false);
       var aggregatedType = Func.Type.GetTypeInfo().GenericTypeArguments[0];
-      if (!aggregatedType.IsAssignableFrom (Seed.Type))
+      if (!aggregatedType.GetTypeInfo().IsAssignableFrom (Seed.Type.GetTypeInfo()))
       {
         var message = string.Format (
             "The seed expression and the aggregating function don't have matching types. The seed is of type '{0}', but the function aggregates '{1}'.",

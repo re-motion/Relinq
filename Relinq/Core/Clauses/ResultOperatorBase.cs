@@ -20,6 +20,7 @@ using System.Reflection;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses
@@ -167,7 +168,7 @@ namespace Remotion.Linq.Clauses
     protected T GetConstantValueFromExpression<T> (string expressionName, Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      if (!typeof (T).IsAssignableFrom (expression.Type))
+      if (!typeof (T).GetTypeInfo().IsAssignableFrom (expression.Type.GetTypeInfo()))
       {
         var message = string.Format (
             "The value stored by the {0} expression ('{1}') is not of type '{2}', it is of type '{3}'.",
@@ -196,7 +197,7 @@ namespace Remotion.Linq.Clauses
 
     protected void CheckSequenceItemType (StreamedSequenceInfo inputInfo, Type expectedItemType)
     {
-      if (!expectedItemType.IsAssignableFrom (inputInfo.ResultItemType))
+      if (!expectedItemType.GetTypeInfo().IsAssignableFrom (inputInfo.ResultItemType.GetTypeInfo()))
       {
         var message = string.Format (
             "The input sequence must have items of type '{0}', but it has items of type '{1}'.",

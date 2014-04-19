@@ -21,6 +21,7 @@ using System.Reflection;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
@@ -132,7 +133,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
       Assertion.DebugAssert (funcType.GetTypeInfo().IsGenericTypeDefinition == false);
       var genericArguments = funcType.GetTypeInfo().GenericTypeArguments;
-      return genericArguments[0].IsAssignableFrom (genericArguments[1]);
+      return genericArguments[0].GetTypeInfo().IsAssignableFrom (genericArguments[1].GetTypeInfo());
     }
 
     private Type GetExpectedItemType ()
