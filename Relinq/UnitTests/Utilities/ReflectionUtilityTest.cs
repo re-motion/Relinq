@@ -47,70 +47,111 @@ namespace Remotion.Linq.UnitTests.Utilities
     {
       ReflectionUtility.GetMethod (() => "x");
     }
-
+    
     [Test]
-    public void GetItemTypeOfIEnumerable_ArgumentImplementsIEnumerable ()
+    public void CheckTypeIsClosedGenericIEnumerable_ImplementsIEnumerable_DoesNotThrow()
     {
-      Assert.That (ReflectionUtility.GetItemTypeOfIEnumerable (typeof (List<int>), "x"), Is.SameAs (typeof (int)));
+      Assert.That (()=>ReflectionUtility.CheckTypeIsClosedGenericIEnumerable (typeof (List<int>), "x"), Throws.Nothing);
     }
 
     [Test]
-    public void GetItemTypeOfIEnumerable_ArgumentIsIEnumerable ()
+    public void CheckTypeIsClosedGenericIEnumerable_DoesNotImplementsIEnumerable_ThrowsArgumentException ()
     {
-      Assert.That (ReflectionUtility.GetItemTypeOfIEnumerable (typeof (IEnumerable<int>), "x"), Is.SameAs (typeof (int)));
-      Assert.That (ReflectionUtility.GetItemTypeOfIEnumerable (typeof (IEnumerable<IEnumerable<string>>), "x"), Is.SameAs (typeof (IEnumerable<string>)));
+      Assert.That (
+          () => ReflectionUtility.CheckTypeIsClosedGenericIEnumerable (typeof (int), "x"),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "Expected a closed generic type implementing IEnumerable<T>, but found 'System.Int32'.\r\nParameter name: x"));
     }
 
     [Test]
-    [ExpectedException (ExpectedMessage = "Expected a type implementing IEnumerable<T>, but found 'System.Int32'.\r\nParameter name: x")]
-    public void GetItemTypeOfIEnumerable_InvalidType ()
+    public void CheckTypeIsClosedGenericIEnumerable_OpenIEnumerable_ThrowsArgumentException ()
     {
-      ReflectionUtility.GetItemTypeOfIEnumerable (typeof (int), "x");
+      Assert.That (
+          () => ReflectionUtility.CheckTypeIsClosedGenericIEnumerable (typeof (List<>), "x"),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "Expected a closed generic type implementing IEnumerable<T>, but found 'System.Collections.Generic.List`1[T]'.\r\nParameter name: x"));
     }
 
     [Test]
-    public void TryGetItemTypeOfIEnumerable_ArgumentIsArray ()
+    public void GetItemTypeOfClosedGenericIEnumerable_ArgumentImplementsIEnumerable ()
     {
-      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (int[])), Is.SameAs (typeof (int)));
-      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (double[])), Is.SameAs (typeof (double)));
+      Assert.That (ReflectionUtility.GetItemTypeOfClosedGenericIEnumerable (typeof (List<int>), "x"), Is.SameAs (typeof (int)));
     }
 
     [Test]
-    public void TryGetItemTypeOfIEnumerable_ArgumentIsArray_Strange ()
+    public void GetItemTypeOfClosedGenericIEnumerable_ArgumentIsIEnumerable ()
+    {
+      Assert.That (ReflectionUtility.GetItemTypeOfClosedGenericIEnumerable (typeof (IEnumerable<int>), "x"), Is.SameAs (typeof (int)));
+      Assert.That (ReflectionUtility.GetItemTypeOfClosedGenericIEnumerable (typeof (IEnumerable<IEnumerable<string>>), "x"), Is.SameAs (typeof (IEnumerable<string>)));
+    }
+
+    [Test]
+    public void GetItemTypeOfClosedGenericIEnumerable_NonGenericIEnumerable_ThrowsArgumentException ()
+    {
+      Assert.That (
+          () => ReflectionUtility.GetItemTypeOfClosedGenericIEnumerable (typeof (ArrayList), "x"),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "Expected a closed generic type implementing IEnumerable<T>, but found 'System.Collections.ArrayList'.\r\nParameter name: x"));
+    }
+
+    [Test]
+    public void GetItemTypeOfClosedGenericIEnumerable_InvalidType_ThrowsArgumentException ()
+    {
+      Assert.That (
+          () => ReflectionUtility.GetItemTypeOfClosedGenericIEnumerable (typeof (int), "x"),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "Expected a closed generic type implementing IEnumerable<T>, but found 'System.Int32'.\r\nParameter name: x"));
+    }
+
+    [Test]
+    public void TryGetItemTypeOfClosedGenericIEnumerable_ArgumentIsArray ()
+    {
+      Assert.That (ReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (typeof (int[])), Is.SameAs (typeof (int)));
+      Assert.That (ReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (typeof (double[])), Is.SameAs (typeof (double)));
+    }
+
+    [Test]
+    public void TryGetItemTypeOfClosedGenericIEnumerable_ArgumentIsArray_Strange ()
     {
       Expression<Func<int, IEnumerable<double>>> collectionSelector = x => new double[1];
-      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (collectionSelector.Body.Type), Is.SameAs (typeof (double)));
+      Assert.That (ReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (collectionSelector.Body.Type), Is.SameAs (typeof (double)));
     }
 
     [Test]
-    public void TryGetItemTypeOfIEnumerable_ArgumentImplementsIEnumerable ()
+    public void TryGetItemTypeOfClosedGenericIEnumerable_ArgumentImplementsIEnumerable ()
     {
-      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (List<int>)), Is.SameAs (typeof (int)));
+      Assert.That (ReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (typeof (List<int>)), Is.SameAs (typeof (int)));
     }
 
     [Test]
-    public void TryGetItemTypeOfIEnumerable_ArgumentIsIEnumerable ()
+    public void TryGetItemTypeOfClosedGenericIEnumerable_ArgumentIsIEnumerable ()
     {
-      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (IEnumerable<int>)), Is.SameAs (typeof (int)));
-      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (IEnumerable<IEnumerable<string>>)), Is.SameAs (typeof (IEnumerable<string>)));
+      Assert.That (ReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (typeof (IEnumerable<int>)), Is.SameAs (typeof (int)));
+      Assert.That (ReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (typeof (IEnumerable<IEnumerable<string>>)), Is.SameAs (typeof (IEnumerable<string>)));
     }
 
     [Test]
-    public void TryGetItemTypeOfIEnumerable_ArgumentImplementsIEnumerable_NonGeneric ()
+    public void TryGetItemTypeOfClosedGenericIEnumerable_ArgumentImplementsIEnumerable_NonGeneric_ReturnsNull ()
     {
-      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (ArrayList)), Is.SameAs (typeof (object)));
+      Assert.That (ReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (typeof (ArrayList)), Is.Null);
     }
 
     [Test]
-    public void TryGetItemTypeOfIEnumerable_ArgumentImplementsIEnumerable_BothGenericAndNonGeneric ()
+    public void TryGetItemTypeOfClosedGenericIEnumerable_ArgumentImplementsIEnumerable_Generic_ReturnsNull ()
     {
-      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (int[])), Is.SameAs (typeof (int)));
+      Assert.That (ReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (typeof (GenericWithIEnumerable<int>)), Is.Null);
     }
 
     [Test]
-    public void TryGetItemTypeOfIEnumerable_InvalidType ()
+    public void TryGetItemTypeOfClosedGenericIEnumerable_ArgumentImplementsIEnumerable_BothGenericAndNonGeneric ()
     {
-      Assert.That (ReflectionUtility.TryGetItemTypeOfIEnumerable (typeof (int)), Is.Null);
+      Assert.That (ReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (typeof (int[])), Is.SameAs (typeof (int)));
+    }
+
+    [Test]
+    public void TryGetItemTypeOfClosedGenericIEnumerable_InvalidType_ReturnsNull ()
+    {
+      Assert.That (ReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (typeof (int)), Is.Null);
     }
 
     [Test]
@@ -141,13 +182,17 @@ namespace Remotion.Linq.UnitTests.Utilities
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "Argument must be FieldInfo, PropertyInfo, or MethodInfo.\r\nParameter name: member")]
     public void GetMemberReturnType_Other_Throws ()
     {
       var memberInfo = typeof (DateTime);
 
-      ReflectionUtility.GetMemberReturnType (memberInfo);
+      Assert.That (
+          () => ReflectionUtility.GetMemberReturnType (memberInfo),
+          Throws.ArgumentException.With.Message.EqualTo ("Argument must be FieldInfo, PropertyInfo, or MethodInfo.\r\nParameter name: member"));
+    }
+
+    private class GenericWithIEnumerable<T> : ArrayList
+    {
     }
   }
 }

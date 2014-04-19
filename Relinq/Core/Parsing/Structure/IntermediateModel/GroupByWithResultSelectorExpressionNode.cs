@@ -80,7 +80,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
     {
       var optionalElementSelector = GetOptionalElementSelector (elementSelectorOrResultSelector, resultSelectorOrNull);
 
-      var sourceItemType = ReflectionUtility.GetItemTypeOfIEnumerable (
+      var sourceItemType = ReflectionUtility.GetItemTypeOfClosedGenericIEnumerable (
           parseInfo.ParsedExpression.Arguments[0].Type, 
           "parseInfo.ParsedExpression.Arguments[0].Type");
 

@@ -42,7 +42,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     [Test]
     public void GetConstantSource2 ()
     {
-      Assert.That (_resultOperator.GetConstantSource2 (), Is.SameAs (((ConstantExpression) _source2).Value));
+      Assert.That (_resultOperator.GetConstantSource2<int> (), Is.SameAs (((ConstantExpression) _source2).Value));
     }
 
     [Test]
@@ -50,7 +50,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     public void GetConstantSource2_NoConstantExpression ()
     {
       var resultOperator = new IntersectResultOperator (Expression.Parameter (typeof (IEnumerable<string>), "ss"));
-      resultOperator.GetConstantSource2 ();
+      resultOperator.GetConstantSource2<string> ();
     }
 
     [Test]

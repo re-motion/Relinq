@@ -86,7 +86,7 @@ namespace Remotion.Linq.Clauses
       set 
       {
         ArgumentUtility.CheckNotNull ("value", value);
-        ReflectionUtility.GetItemTypeOfIEnumerable (value, "value"); // check whether value implements IEnumerable<T>
+        ReflectionUtility.CheckTypeIsClosedGenericIEnumerable (value, "value");
 
         _itemType = value;
       }

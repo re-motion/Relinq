@@ -52,7 +52,7 @@ namespace Remotion.Linq.UnitTests.Clauses.StreamedData
 
     [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "Expected a type implementing IEnumerable<T>, but found 'System.Int32'.\r\nParameter name: dataType")]
+        "Expected a closed generic type implementing IEnumerable<T>, but found 'System.Int32'.\r\nParameter name: dataType")]
     public void Initialization_DataTypeIsnotAssignableFromIEnumerable ()
     {
       new StreamedSequenceInfo (typeof (int), _stringExpression);

@@ -90,7 +90,7 @@ namespace Remotion.Linq
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      Type elementType = ReflectionUtility.GetItemTypeOfIEnumerable (expression.Type, "expression");
+      Type elementType = ReflectionUtility.GetItemTypeOfClosedGenericIEnumerable (expression.Type, "expression");
       return (IQueryable) s_genericCreateQueryMethod.MakeGenericMethod (elementType).Invoke (this, new object[] { expression });
     }
 

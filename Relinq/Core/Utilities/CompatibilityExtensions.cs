@@ -27,15 +27,5 @@ namespace System
     {
       return c != null && type.GetTypeInfo().IsAssignableFrom (c.GetTypeInfo());
     }
-
-  // TODO RM-6132: Check if semantics of GetGenericArguments are correct
-    public static Type[] GetGenericArguments (this Type type)
-    {
-      var typeInfo = type.GetTypeInfo();
-
-      return typeInfo.IsGenericTypeDefinition
-          ? typeInfo.GenericTypeParameters
-          : typeInfo.GenericTypeArguments;
-    }
   }
 }

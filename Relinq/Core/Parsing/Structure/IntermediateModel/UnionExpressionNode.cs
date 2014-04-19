@@ -45,7 +45,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("source2", source2);
       Source2 = source2;
-      ItemType = ReflectionUtility.GetItemTypeOfIEnumerable (parseInfo.ParsedExpression.Type, "expression");
+      ItemType = ReflectionUtility.GetItemTypeOfClosedGenericIEnumerable (parseInfo.ParsedExpression.Type, "expression");
     }
 
 

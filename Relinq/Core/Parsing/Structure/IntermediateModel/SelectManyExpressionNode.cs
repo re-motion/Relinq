@@ -69,7 +69,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       else
       {
         var parameter1 = Expression.Parameter (collectionSelector.Parameters[0].Type, collectionSelector.Parameters[0].Name);
-        var itemType = ReflectionUtility.GetItemTypeOfIEnumerable (CollectionSelector.Body.Type, "collectionSelector");
+        var itemType = ReflectionUtility.GetItemTypeOfClosedGenericIEnumerable (CollectionSelector.Body.Type, "collectionSelector");
         var parameter2 = Expression.Parameter (itemType, parseInfo.AssociatedIdentifier);
         ResultSelector = Expression.Lambda (parameter2, parameter1, parameter2);
       }
