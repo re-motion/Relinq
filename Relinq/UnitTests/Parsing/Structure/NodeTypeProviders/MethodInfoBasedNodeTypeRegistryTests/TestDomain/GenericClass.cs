@@ -14,9 +14,10 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 
-namespace Remotion.Linq.UnitTests.Parsing.Structure.TestDomain
+namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfoBasedNodeTypeRegistryTests.TestDomain
 {
   public class GenericClass<T>
   {
@@ -26,16 +27,6 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.TestDomain
     }
 
     public bool GenericMethod<T2> (T item1, T2 item2)
-    {
-      return false;
-    }
-
-    public bool GenericMethodHavingOverloadWithSameParameterCount<T2> (T item1, T2 item2, int value)
-    {
-      return false;
-    }
-
-    public bool GenericMethodHavingOverloadWithSameParameterCount<T2> (T item1, T2 item2, string value)
     {
       return false;
     }
