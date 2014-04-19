@@ -176,7 +176,7 @@ namespace Remotion.Linq.Clauses
             FormattingExpressionTreeVisitor.Format (expression),
             typeof (T),
             expression.Type);
-        throw new InvalidOperationException (message);
+        throw new ArgumentException (message, "expression");
       }
 
       var itemAsConstantExpression = expression as ConstantExpression;
@@ -191,7 +191,7 @@ namespace Remotion.Linq.Clauses
             expressionName,
             FormattingExpressionTreeVisitor.Format (expression),
             expression.GetType ().Name);
-        throw new InvalidOperationException (message);
+        throw new ArgumentException (message, "expression");
       }
     }
 

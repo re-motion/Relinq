@@ -115,8 +115,8 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException),
-        ExpectedMessage = "The seed expression ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.")]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
+        "The seed expression ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.\r\nParameter name: expression")]
     public void GetConstantSeed_NoConstantExpression ()
     {
       var resultOperator = new AggregateFromSeedResultOperator (
@@ -127,8 +127,8 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException),
-        ExpectedMessage = "The value stored by the seed expression ('12') is not of type 'System.DateTime', it is of type 'System.Int32'.")]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
+        "The value stored by the seed expression ('12') is not of type 'System.DateTime', it is of type 'System.Int32'.\r\nParameter name: expression")]
     public void GetConstantSeed_NotExpectedType ()
     {
       _resultOperatorWithResultSelector.GetConstantSeed<DateTime> ();
