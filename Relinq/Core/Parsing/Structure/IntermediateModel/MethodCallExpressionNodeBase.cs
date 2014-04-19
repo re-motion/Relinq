@@ -37,15 +37,19 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
     /// If the method is a generic method, its open generic method definition is returned.
     /// This method can be used for registration of the node type with an <see cref="MethodInfoBasedNodeTypeRegistry"/>.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The return type of the <paramref name="methodCall"/>.</typeparam>
     /// <param name="methodCall">The method call.</param>
-    /// <returns></returns>
+    /// <returns>The normalized <see cref="MethodInfo"/> that corresponds to the method call.</returns>
+    /// <exception cref="NotSupportedException">
+    /// Thrown if the <paramref name="methodCall"/> cannot be resolved to a normalized <see cref="MethodInfo"/>. This can happen if the method if part of
+    /// a generic type, uses type parameters from the generic type, and has an overload that is only distinguishable via the type parameters from the generic type.
+    /// </exception>
     protected static MethodInfo GetSupportedMethod<T> (Expression<Func<T>> methodCall)
     {
       ArgumentUtility.CheckNotNull ("methodCall", methodCall);
 
       var method = ReflectionUtility.GetMethod (methodCall);
-      return MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method, true);
+      return MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method, throwOnAmbiguousMatch: true);
     }
 
     protected MethodCallExpressionNodeBase (MethodCallExpressionParseInfo parseInfo)

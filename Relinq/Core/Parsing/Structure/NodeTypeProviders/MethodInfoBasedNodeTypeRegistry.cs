@@ -104,7 +104,6 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       // return (MethodInfo) MethodBase.GetMethodFromHandle (genericMethodDefinition.MethodHandle, declaringTypeDefinition.TypeHandle);
 
       // TODO RM-6131: New implementation will need to be cached (probably).
-      // TODO RM-6131: test points of usage of GetRegisterableMethodDefinition for correct throwOnAmbiguousMatch parameter
       // TODO RM-6131: Document Break Change: It is no logner supported to register query operators that are only distinguishable via a parameter whose type is a generic parameter of the declaring type.
 
       var referenceMethodSignature =
