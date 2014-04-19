@@ -117,8 +117,8 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
               m => new
                    {
                        Method = m,
-                       SignatureTypes = new[] { m.ReturnType }.Concat (m.GetParameters().Select (p => p.ParameterType)).ToArray(),
-                       SignatureNames = new[] { "returnValue" }.Concat (m.GetParameters().Select (p => p.Name)).ToArray()
+                       SignatureNames = new[] { "returnValue" }.Concat (m.GetParameters().Select (p => p.Name)).ToArray(),
+                       SignatureTypes = new[] { m.ReturnType }.Concat (m.GetParameters().Select (p => p.ParameterType)).ToArray()
                    })
           .Where (c => c.Method.Name == genericMethodDefinition.Name && c.SignatureTypes.Length == referenceMethodSignature.Length)
           .ToArray();
@@ -126,8 +126,8 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       for (int i = 0; i < referenceMethodSignature.Length; i++)
       {
         candidates = candidates
-            .Where (c => c.SignatureTypes[i] == referenceMethodSignature[i].Type || c.SignatureTypes[i].GetTypeInfo().ContainsGenericParameters)
             .Where (c => c.SignatureNames[i] == referenceMethodSignature[i].Name)
+            .Where (c => c.SignatureTypes[i] == referenceMethodSignature[i].Type || c.SignatureTypes[i].GetTypeInfo().ContainsGenericParameters)
             .ToArray();
       }
 
