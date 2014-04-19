@@ -133,6 +133,7 @@ public static readonly NameBasedRegistrationInfo[] SupportedMethodNames =
         new NameBasedRegistrationInfo (
             ""{2}"", 
             mi => /* match rule based on MethodInfo */
+        )
     }};",
               method,
               genericMethodDefinition.DeclaringType.GetGenericTypeDefinition(),
