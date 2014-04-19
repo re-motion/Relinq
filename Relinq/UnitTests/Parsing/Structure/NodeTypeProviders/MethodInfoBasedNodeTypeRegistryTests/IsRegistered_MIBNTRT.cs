@@ -22,6 +22,7 @@ using NUnit.Framework;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
+using Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfoBasedNodeTypeRegistryTests.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfoBasedNodeTypeRegistryTests
 {
@@ -37,7 +38,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     }
 
     [Test]
-    public void Test_True ()
+    public void Test_WithRegistered_ReturnsTrue ()
     {
       var registry = _registry;
       registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
@@ -47,7 +48,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     }
 
     [Test]
-    public void Test_True_ClosedGenericMethod ()
+    public void Test_WithClosedGenericMethod_ReturnsTrue ()
     {
       var registry = _registry;
       registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
@@ -60,7 +61,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     }
 
     [Test]
-    public void Test_True_NonGenericMethod ()
+    public void Test_WithNonGenericMethod_ReturnsTrue ()
     {
       var registry = _registry;
       registry.Register (SumExpressionNode.SupportedMethods, typeof (SumExpressionNode));
@@ -74,7 +75,24 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     }
 
     [Test]
-    public void Test_False ()
+    public void Test_WithAmbiguousClosedGenericMethodInClosedGenericType_ReturnsFalse ()
+    {
+      var methodInOpenGenericTypes = typeof (GenericClass<,>).GetMethods()
+          .Where (mi => mi.Name == "NonGenericMethodOverloadedWithGenericParameterFromTypeAndSameParameterName")
+          .ToArray();
+      _registry.Register (methodInOpenGenericTypes, typeof (SelectExpressionNode));
+
+      var methodCallExpressionInClosedGenericType =
+          (MethodCallExpression) ExpressionHelper.MakeExpression<GenericClass<int, string>, bool> (
+              l => l.NonGenericMethodOverloadedWithGenericParameterFromTypeAndSameParameterName ("string", 1.0));
+
+      var result = _registry.IsRegistered (methodCallExpressionInClosedGenericType.Method);
+
+      Assert.That (result, Is.False);
+    }
+
+    [Test]
+    public void Test_WithNotRegistered_ReturnsFalse ()
     {
       var registry = _registry;
       var result = registry.IsRegistered (SelectExpressionNode.SupportedMethods[0]);

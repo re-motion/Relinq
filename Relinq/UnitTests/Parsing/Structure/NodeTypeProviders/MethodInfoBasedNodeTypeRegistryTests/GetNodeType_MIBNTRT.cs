@@ -102,6 +102,23 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     }
 
     [Test]
+    public void Test_AmbiguousClosedGenericMethodInClosedGenericType ()
+    {
+      var methodInOpenGenericTypes = typeof (GenericClass<,>).GetMethods()
+          .Where (mi => mi.Name == "NonGenericMethodOverloadedWithGenericParameterFromTypeAndSameParameterName")
+          .ToArray();
+      _registry.Register (methodInOpenGenericTypes, typeof (SelectExpressionNode));
+
+      var methodCallExpressionInClosedGenericType =
+          (MethodCallExpression) ExpressionHelper.MakeExpression<GenericClass<int, string>, bool> (
+              l => l.NonGenericMethodOverloadedWithGenericParameterFromTypeAndSameParameterName ("string", 1.0));
+
+      var result = _registry.GetNodeType (methodCallExpressionInClosedGenericType.Method);
+
+      Assert.That (result, Is.Null);
+    }
+
+    [Test]
     public void Test_UnknownMethod ()
     {
       var result = _registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);

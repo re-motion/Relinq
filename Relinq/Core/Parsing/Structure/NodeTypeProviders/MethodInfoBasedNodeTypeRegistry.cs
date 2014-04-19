@@ -195,18 +195,16 @@ public static readonly NameBasedRegistrationInfo[] SupportedMethodNames =
       }
     }
 
-   /// <summary>
+    /// <summary>
     /// Determines whether the specified method was registered with this <see cref="MethodInfoBasedNodeTypeRegistry"/>.
     /// </summary>
     public bool IsRegistered (MethodInfo method)
     {
       ArgumentUtility.CheckNotNull ("method", method);
 
-      // TODO RM-6131: pass false for throwOnAmbiguousMatch and return false if no match is found
-      var methodDefinition = GetRegisterableMethodDefinition (method, true);
-      return _registeredMethodInfoTypes.ContainsKey (methodDefinition);
+      return GetNodeType (method) != null;
     }
-    
+
     /// <summary>
     /// Gets the type of <see cref="IExpressionNode"/> registered with this <see cref="MethodInfoBasedNodeTypeRegistry"/> instance that
     /// matches the given <paramref name="method"/>, returning <see langword="null" /> if none can be found.
@@ -215,9 +213,10 @@ public static readonly NameBasedRegistrationInfo[] SupportedMethodNames =
     {
       ArgumentUtility.CheckNotNull ("method", method);
 
-      // TODO RM-6131: pass false for throwOnAmbiguousMatch and return null if no match is found
-      var methodDefinition = GetRegisterableMethodDefinition (method, true);
-      
+      var methodDefinition = GetRegisterableMethodDefinition (method, throwOnAmbiguousMatch: false);
+      if (methodDefinition == null)
+        return null;
+
       Type result;
       _registeredMethodInfoTypes.TryGetValue (methodDefinition, out result);
       return result;

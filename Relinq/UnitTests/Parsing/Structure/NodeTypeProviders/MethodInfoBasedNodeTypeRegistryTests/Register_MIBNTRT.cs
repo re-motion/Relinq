@@ -56,19 +56,26 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
     public void Test_WithMethodInfoAndClosedGenericMethod_NotAllowed ()
     {
       var closedGenericMethod = SelectExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (int), typeof (int));
-      _registry.Register (new[] { closedGenericMethod }, typeof (SelectExpressionNode));
+
+      Assert.That (
+          () => _registry.Register (new[] { closedGenericMethod }, typeof (SelectExpressionNode)),
+          Throws.InvalidOperationException.With.Message.EqualTo (
+              "Cannot register closed generic method 'Select', try to register its generic method definition instead."));
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
     public void Test_WithMethodInfoAndMethodInClosedGenericType_NotAllowed ()
     {
       var methodInClosedGenericType = typeof (GenericClass<int>).GetMethod ("NonGenericMethod");
-      _registry.Register (new[] { methodInClosedGenericType }, typeof (SelectExpressionNode));
+      Assert.That (
+          () => _registry.Register (new[] { methodInClosedGenericType }, typeof (SelectExpressionNode)),
+          Throws.InvalidOperationException.With.Message.EqualTo (
+              "Cannot register method 'NonGenericMethod' in closed generic type "
+              + "'Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfoBasedNodeTypeRegistryTests.TestDomain.GenericClass`1[System.Int32]', "
+              + "try to register its equivalent in the generic type definition instead."));
     }
   }
 }
