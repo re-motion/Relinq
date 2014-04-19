@@ -20,7 +20,6 @@ using NUnit.Framework;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
 using Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfoBasedNodeTypeRegistryTests.TestDomain;
-using Remotion.Linq.UnitTests.Parsing.Structure.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfoBasedNodeTypeRegistryTests
 {

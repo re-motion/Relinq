@@ -21,7 +21,6 @@ using System.Reflection;
 using NUnit.Framework;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
 using Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfoBasedNodeTypeRegistryTests.TestDomain;
-using Remotion.Linq.UnitTests.Parsing.Structure.TestDomain;
 using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfoBasedNodeTypeRegistryTests
