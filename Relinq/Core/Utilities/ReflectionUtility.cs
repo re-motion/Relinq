@@ -122,13 +122,10 @@ namespace Remotion.Linq.Utilities
       if (!IsIEnumerable (possibleEnumerableTypeInfo))
         return null;
 
-      if (!possibleEnumerableTypeInfo.IsGenericType)
-        return null;
-
       if (possibleEnumerableTypeInfo.IsGenericTypeDefinition)
         return null;
 
-      if (possibleEnumerableType.GetGenericTypeDefinition() == typeof (IEnumerable<>))
+      if (possibleEnumerableTypeInfo.IsGenericType && possibleEnumerableType.GetGenericTypeDefinition() == typeof (IEnumerable<>))
         return possibleEnumerableTypeInfo.GenericTypeArguments[0];
 
       var implementedEnumerableInterface =

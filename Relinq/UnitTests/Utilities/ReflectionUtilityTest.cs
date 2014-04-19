@@ -139,6 +139,12 @@ namespace Remotion.Linq.UnitTests.Utilities
     }
 
     [Test]
+    public void TryGetItemTypeOfClosedGenericIEnumerable_ArgumentImplementsIEnumerableOnBaseClass ()
+    {
+      Assert.That (ReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (typeof (ClosedGenericList)), Is.SameAs (typeof (int)));
+    }
+
+    [Test]
     public void TryGetItemTypeOfClosedGenericIEnumerable_ArgumentIsIEnumerable ()
     {
       Assert.That (ReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (typeof (IEnumerable<int>)), Is.SameAs (typeof (int)));
@@ -207,6 +213,10 @@ namespace Remotion.Linq.UnitTests.Utilities
     }
 
     private class GenericWithIEnumerable<T> : ArrayList
+    {
+    }
+
+    private class ClosedGenericList : List<int>
     {
     }
   }
