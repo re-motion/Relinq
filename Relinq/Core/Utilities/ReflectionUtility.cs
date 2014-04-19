@@ -115,38 +115,42 @@ namespace Remotion.Linq.Utilities
     {
       ArgumentUtility.CheckNotNull ("possibleEnumerableType", possibleEnumerableType);
 
-      if (possibleEnumerableType.IsArray)
-        return possibleEnumerableType.GetElementType();
+      var possibleEnumerableTypeInfo = possibleEnumerableType.GetTypeInfo();
 
-      if (!IsIEnumerable (possibleEnumerableType))
+      if (possibleEnumerableTypeInfo.IsArray)
+        return possibleEnumerableTypeInfo.GetElementType();
+
+      if (!IsIEnumerable (possibleEnumerableTypeInfo))
         return null;
 
-      if (!possibleEnumerableType.GetTypeInfo().IsGenericType)
+      if (!possibleEnumerableTypeInfo.IsGenericType)
         return null;
 
-      if (possibleEnumerableType.GetTypeInfo().IsGenericTypeDefinition)
+      if (possibleEnumerableTypeInfo.IsGenericTypeDefinition)
         return null;
 
       if (possibleEnumerableType.GetGenericTypeDefinition() == typeof (IEnumerable<>))
-        return possibleEnumerableType.GetTypeInfo().GenericTypeArguments[0];
+        return possibleEnumerableTypeInfo.GenericTypeArguments[0];
 
-      var implementedEnumerableInterface = possibleEnumerableType.GetTypeInfo().ImplementedInterfaces.FirstOrDefault (IsGenericIEnumerable);
+      var implementedEnumerableInterface =
+          possibleEnumerableTypeInfo.ImplementedInterfaces.Select (t => t.GetTypeInfo()).FirstOrDefault (IsGenericIEnumerable);
+
       if (implementedEnumerableInterface == null)
         return null;
 
-      Assertion.DebugAssert (implementedEnumerableInterface.GetTypeInfo().IsGenericType);
-      return implementedEnumerableInterface.GetTypeInfo().GenericTypeArguments[0];
+      Assertion.DebugAssert (implementedEnumerableInterface.IsGenericType);
+      return implementedEnumerableInterface.GenericTypeArguments[0];
     }
 
-    private static bool IsIEnumerable (Type type)
+    private static bool IsIEnumerable (TypeInfo type)
     {
-      return typeof (IEnumerable).IsAssignableFrom (type);
+      return typeof (IEnumerable).GetTypeInfo().IsAssignableFrom (type);
     }
 
-    private static bool IsGenericIEnumerable (Type enumerableType)
+    private static bool IsGenericIEnumerable (TypeInfo enumerableType)
     {
       return IsIEnumerable (enumerableType)
-             && enumerableType.GetTypeInfo().IsGenericType
+             && enumerableType.IsGenericType
              && enumerableType.GetGenericTypeDefinition() == typeof (IEnumerable<>);
     }
   }
