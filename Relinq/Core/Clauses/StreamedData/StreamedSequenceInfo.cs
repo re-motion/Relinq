@@ -101,9 +101,12 @@ namespace Remotion.Linq.Clauses.StreamedData
         }
       }
 
+      //Assertions to document that the StreamedSequenceInfo constructor will only throw argument exceptions for mismatched data type.
+      Assertion.IsNotNull (dataType, "dateType cannot be null.");
+      Assertion.IsNotNull (ItemExpression, "ItemExpression cannot be null.");
+
       try
       {
-        //TODO: RM-5940: Add Assertions
         return new StreamedSequenceInfo (dataType, ItemExpression);
       }
       catch (ArgumentException)
