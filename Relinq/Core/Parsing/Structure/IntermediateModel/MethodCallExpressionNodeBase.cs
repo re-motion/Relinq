@@ -158,18 +158,16 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       return newMainSourceNode.Apply (null, clauseGenerationContext);
     }
 
-    protected InvalidOperationException CreateResolveNotSupportedException ()
+    protected NotSupportedException CreateResolveNotSupportedException ()
     {
-      return
-          new InvalidOperationException (
-              GetType().Name + " does not support resolving of expressions, because it does not stream any data to the following node.");
+      return new NotSupportedException (
+          GetType().Name + " does not support resolving of expressions, because it does not stream any data to the following node.");
     }
 
-    protected InvalidOperationException CreateOutputParameterNotSupportedException ()
+    protected NotSupportedException CreateOutputParameterNotSupportedException ()
     {
-      return
-          new InvalidOperationException (
-              GetType().Name + " does not support creating a parameter for its output because it does not stream any data to the following node.");
+      return new NotSupportedException (
+          GetType().Name + " does not support creating a parameter for its output because it does not stream any data to the following node.");
     }
   }
 }
