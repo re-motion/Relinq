@@ -50,6 +50,8 @@ namespace Remotion.Linq.Clauses.ResultOperators
     public AggregateResultOperator (LambdaExpression func)
     {
       ArgumentUtility.CheckNotNull ("func", func);
+      if (func.Type.GetTypeInfo().IsGenericTypeDefinition)
+        throw new ArgumentException ("Open generic delegates are not supported with AggregateResultOperator", "func");
 
       Func = func;
     }
@@ -66,6 +68,8 @@ namespace Remotion.Linq.Clauses.ResultOperators
       set 
       {
         ArgumentUtility.CheckNotNull ("value", value);
+        if (value.Type.GetTypeInfo().IsGenericTypeDefinition)
+          throw new ArgumentException ("Open generic delegates are not supported with AggregateResultOperator", "value");
 
         if (!DescribesValidFuncType (value))
         {
@@ -126,13 +130,15 @@ namespace Remotion.Linq.Clauses.ResultOperators
       if (!funcType.GetTypeInfo().IsGenericType || funcType.GetGenericTypeDefinition () != typeof (Func<,>))
         return false;
 
-      var genericArguments = funcType.GetGenericArguments ();
+      Assertion.DebugAssert (funcType.GetTypeInfo().IsGenericTypeDefinition == false);
+      var genericArguments = funcType.GetTypeInfo().GenericTypeArguments;
       return genericArguments[0].IsAssignableFrom (genericArguments[1]);
     }
 
     private Type GetExpectedItemType ()
     {
-      return Func.Type.GetGenericArguments ()[0];
+      Assertion.DebugAssert (Func.Type.GetTypeInfo().IsGenericTypeDefinition == false);
+      return Func.Type.GetTypeInfo().GenericTypeArguments[0];
     }
   }
 }

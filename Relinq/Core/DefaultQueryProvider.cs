@@ -56,14 +56,15 @@ namespace Remotion.Linq
     {
       ArgumentUtility.CheckTypeIsAssignableFrom ("queryableType", queryableType, typeof (IQueryable));
 
-      if (!queryableType.GetTypeInfo().IsGenericTypeDefinition)
+      TypeInfo queryableTypeInfo = queryableType.GetTypeInfo();
+      if (!queryableTypeInfo.IsGenericTypeDefinition)
       {
         var message = string.Format (
             "Expected the generic type definition of an implementation of IQueryable<T>, but was '{0}'.",
             queryableType);
         throw new ArgumentException (message, "queryableType");
       }
-      var genericArgumentCount = queryableType.GetGenericArguments().Length;
+      var genericArgumentCount = queryableTypeInfo.GenericTypeParameters.Length;
       if (genericArgumentCount != 1)
       {
         var message = string.Format (
