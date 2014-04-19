@@ -19,8 +19,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
-using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
@@ -32,6 +32,9 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
   /// </summary>
   public sealed class MethodInfoBasedNodeTypeRegistry : INodeTypeProvider
   {
+    private static readonly Dictionary<MethodInfo, Lazy<IReadOnlyCollection<MethodInfo>>> s_genericMethodDefinitionCandidates = 
+        new Dictionary<MethodInfo, Lazy<IReadOnlyCollection<MethodInfo>>>();
+
     /// <summary>
     /// Creates a <see cref="MethodInfoBasedNodeTypeRegistry"/> and automatically registers all types implementing <see cref="IExpressionNode"/> 
     /// from a given type sequence that offer a public static <c>SupportedMethods</c> field.
@@ -94,44 +97,28 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
     {
       ArgumentUtility.CheckNotNull ("method", method);
 
-      var genericMethodDefinition = method.IsGenericMethod ? method.GetGenericMethodDefinition () : method;
+      var genericMethodDefinition = method.IsGenericMethod ? method.GetGenericMethodDefinition() : method;
       if (!genericMethodDefinition.DeclaringType.GetTypeInfo().IsGenericType)
         return genericMethodDefinition;
 
-      var declaringTypeDefinition = genericMethodDefinition.DeclaringType.GetGenericTypeDefinition();
-
       // Simple, fast solution, not possible in PCL because of missing MethodHandle property on MethodInfo type:
+      // var declaringTypeDefinition = genericMethodDefinition.DeclaringType.GetGenericTypeDefinition();
       // return (MethodInfo) MethodBase.GetMethodFromHandle (genericMethodDefinition.MethodHandle, declaringTypeDefinition.TypeHandle);
 
-      // TODO RM-6131: New implementation will need to be cached (probably).
-      // TODO RM-6131: Document Break Change: It is no logner supported to register query operators that are only distinguishable via a parameter whose type is a generic parameter of the declaring type.
-
-      var referenceMethodSignature =
-          new[] { new { Name = "returnValue", Type = genericMethodDefinition.ReturnType } }
-              .Concat (genericMethodDefinition.GetParameters().Select (p => new { Name = p.Name, Type = p.ParameterType }))
-              .ToArray();
-
-      var candidates = declaringTypeDefinition.GetRuntimeMethods()
-          .Select (
-              m => new
-                   {
-                       Method = m,
-                       SignatureNames = new[] { "returnValue" }.Concat (m.GetParameters().Select (p => p.Name)).ToArray(),
-                       SignatureTypes = new[] { m.ReturnType }.Concat (m.GetParameters().Select (p => p.ParameterType)).ToArray()
-                   })
-          .Where (c => c.Method.Name == genericMethodDefinition.Name && c.SignatureTypes.Length == referenceMethodSignature.Length)
-          .ToArray();
-
-      for (int i = 0; i < referenceMethodSignature.Length; i++)
+      Lazy<IReadOnlyCollection<MethodInfo>> candidates;
+      lock (s_genericMethodDefinitionCandidates)
       {
-        candidates = candidates
-            .Where (c => c.SignatureNames[i] == referenceMethodSignature[i].Name)
-            .Where (c => c.SignatureTypes[i] == referenceMethodSignature[i].Type || c.SignatureTypes[i].GetTypeInfo().ContainsGenericParameters)
-            .ToArray();
+        if (!s_genericMethodDefinitionCandidates.TryGetValue (method, out candidates))
+        {
+          candidates = new Lazy<IReadOnlyCollection<MethodInfo>> (
+              () => GetGenericMethodDefinitionCandidates (genericMethodDefinition),
+              LazyThreadSafetyMode.ExecutionAndPublication);
+          s_genericMethodDefinitionCandidates.Add (method, candidates);
+        }
       }
 
-      if (candidates.Length == 1)
-        return candidates.Select (c => c.Method).Single();
+      if (candidates.Value.Count == 1)
+        return candidates.Value.Single();
 
       if (!throwOnAmbiguousMatch)
         return null;
@@ -148,8 +135,39 @@ public static readonly NameBasedRegistrationInfo[] SupportedMethodNames =
             mi => /* match rule based on MethodInfo */
     }};",
               method,
-              declaringTypeDefinition,
+              genericMethodDefinition.DeclaringType.GetGenericTypeDefinition(),
               method.Name));
+    }
+
+    private static MethodInfo[] GetGenericMethodDefinitionCandidates (MethodInfo referenceMethodDefinition)
+    {
+      var declaringTypeDefinition = referenceMethodDefinition.DeclaringType.GetGenericTypeDefinition();
+
+      var referenceMethodSignature =
+          new[] { new { Name = "returnValue", Type = referenceMethodDefinition.ReturnType } }
+              .Concat (referenceMethodDefinition.GetParameters().Select (p => new { Name = p.Name, Type = p.ParameterType }))
+              .ToArray();
+
+      var candidates = declaringTypeDefinition.GetRuntimeMethods()
+          .Select (
+              m => new
+                   {
+                       Method = m,
+                       SignatureNames = new[] { "returnValue" }.Concat (m.GetParameters().Select (p => p.Name)).ToArray(),
+                       SignatureTypes = new[] { m.ReturnType }.Concat (m.GetParameters().Select (p => p.ParameterType)).ToArray()
+                   })
+          .Where (c => c.Method.Name == referenceMethodDefinition.Name && c.SignatureTypes.Length == referenceMethodSignature.Length)
+          .ToArray();
+
+      for (int i = 0; i < referenceMethodSignature.Length; i++)
+      {
+        candidates = candidates
+            .Where (c => c.SignatureNames[i] == referenceMethodSignature[i].Name)
+            .Where (c => c.SignatureTypes[i] == referenceMethodSignature[i].Type || c.SignatureTypes[i].GetTypeInfo().ContainsGenericParameters)
+            .ToArray();
+      }
+
+      return candidates.Select (c => c.Method).ToArray();
     }
 
     private readonly Dictionary<MethodInfo, Type> _registeredMethodInfoTypes = new Dictionary<MethodInfo, Type>();
