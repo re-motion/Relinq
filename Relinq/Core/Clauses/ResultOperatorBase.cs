@@ -115,7 +115,7 @@ namespace Remotion.Linq.Clauses
       ArgumentUtility.CheckNotNull ("input", input);
       ArgumentUtility.CheckNotNull ("genericExecuteCaller", genericExecuteCaller);
 
-      var method = genericExecuteCaller.Method;
+      var method = genericExecuteCaller.GetMethodInfo();
       if (!method.IsGenericMethod || method.GetGenericArguments ().Length != 1)
       {
         throw new ArgumentException (
@@ -167,7 +167,7 @@ namespace Remotion.Linq.Clauses
     protected T GetConstantValueFromExpression<T> (string expressionName, Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      if (!typeof (T).IsAssignableFrom (expression.Type))
+      if (!typeof (T).GetTypeInfo().IsAssignableFrom (expression.Type.GetTypeInfo()))
       {
         var message = string.Format (
             "The value stored by the {0} expression ('{1}') is not of type '{2}', it is of type '{3}'.",
@@ -175,7 +175,7 @@ namespace Remotion.Linq.Clauses
             FormattingExpressionTreeVisitor.Format (expression),
             typeof (T),
             expression.Type);
-        throw new InvalidOperationException (message);
+        throw new ArgumentException (message, "expression");
       }
 
       var itemAsConstantExpression = expression as ConstantExpression;
@@ -190,13 +190,13 @@ namespace Remotion.Linq.Clauses
             expressionName,
             FormattingExpressionTreeVisitor.Format (expression),
             expression.GetType ().Name);
-        throw new InvalidOperationException (message);
+        throw new ArgumentException (message, "expression");
       }
     }
 
     protected void CheckSequenceItemType (StreamedSequenceInfo inputInfo, Type expectedItemType)
     {
-      if (!expectedItemType.IsAssignableFrom (inputInfo.ResultItemType))
+      if (!expectedItemType.GetTypeInfo().IsAssignableFrom (inputInfo.ResultItemType.GetTypeInfo()))
       {
         var message = string.Format (
             "The input sequence must have items of type '{0}', but it has items of type '{1}'.",

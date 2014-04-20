@@ -15,6 +15,7 @@
 // under the License.
 // 
 using System;
+using System.Collections;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
@@ -34,9 +35,10 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier);
       ArgumentUtility.CheckNotNull ("expression", expression);
+      ArgumentUtility.CheckTypeIsAssignableFrom ("expression.Type", expression.Type, typeof (IEnumerable));
 
       QuerySourceType = expression.Type;
-      QuerySourceElementType = ReflectionUtility.GetItemTypeOfIEnumerable (expression.Type, "expression");
+      QuerySourceElementType = ReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (expression.Type) ?? typeof (object);
 
       AssociatedIdentifier = associatedIdentifier;
       ParsedExpression = expression;

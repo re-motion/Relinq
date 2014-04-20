@@ -39,21 +39,25 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
     /// </summary>
     /// <returns>A <see cref="MethodInfoBasedNodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types with a <c>SupportedMethodNames</c>
     /// field registered.</returns>
-    public static MethodNameBasedNodeTypeRegistry CreateFromTypes (Type[] searchedTypes)
+    public static MethodNameBasedNodeTypeRegistry CreateFromTypes (IEnumerable<Type> searchedTypes)
     {
+      ArgumentUtility.CheckNotNull ("searchedTypes", searchedTypes);
+
       var expressionNodeTypes = from t in searchedTypes
-                                where typeof (IExpressionNode).IsAssignableFrom (t)
+                                where typeof (IExpressionNode).GetTypeInfo().IsAssignableFrom (t.GetTypeInfo())
                                 select t;
 
-      var infoForTypes = from t in expressionNodeTypes
-                                     let supportedMethodNamesField = t.GetField ("SupportedMethodNames", BindingFlags.Static | BindingFlags.Public)
-                                     select new { 
-                                         Type = t,
-                                         RegistrationInfo =
-                                         supportedMethodNamesField != null
-                                             ? ((IEnumerable<NameBasedRegistrationInfo>) supportedMethodNamesField.GetValue (null))
-                                             : Enumerable.Empty<NameBasedRegistrationInfo> ()
-                                     };
+      var infoForTypes =
+          from t in expressionNodeTypes
+          let supportedMethodNamesField = t.GetRuntimeField ("SupportedMethodNames")
+          select new
+                 {
+                     Type = t,
+                     RegistrationInfo =
+                         supportedMethodNamesField != null && supportedMethodNamesField.IsStatic
+                             ? ((IEnumerable<NameBasedRegistrationInfo>) supportedMethodNamesField.GetValue (null))
+                             : Enumerable.Empty<NameBasedRegistrationInfo>()
+                 };
 
       var registry = new MethodNameBasedNodeTypeRegistry();
 

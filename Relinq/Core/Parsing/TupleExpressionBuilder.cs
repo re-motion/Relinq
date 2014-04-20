@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing
@@ -48,10 +49,10 @@ namespace Remotion.Linq.Parsing
     {
       ArgumentUtility.CheckNotNull ("tupleExpression", tupleExpression);
 
-      while (tupleExpression.Type.IsGenericType && tupleExpression.Type.GetGenericTypeDefinition() == typeof (KeyValuePair<,>))
+      while (tupleExpression.Type.GetTypeInfo().IsGenericType && tupleExpression.Type.GetGenericTypeDefinition() == typeof (KeyValuePair<,>))
       {
-        yield return Expression.MakeMemberAccess (tupleExpression, tupleExpression.Type.GetProperty ("Key"));
-        tupleExpression = Expression.MakeMemberAccess (tupleExpression, tupleExpression.Type.GetProperty ("Value"));
+        yield return Expression.MakeMemberAccess (tupleExpression, tupleExpression.Type.GetRuntimeProperty ("Key"));
+        tupleExpression = Expression.MakeMemberAccess (tupleExpression, tupleExpression.Type.GetRuntimeProperty ("Value"));
       }
 
       yield return tupleExpression;
@@ -62,9 +63,9 @@ namespace Remotion.Linq.Parsing
       var tupleType = typeof (KeyValuePair<,>).MakeGenericType (left.Type, right.Type);
       var newTupleExpression =
           Expression.New (
-              tupleType.GetConstructor (new[] { left.Type, right.Type }),
+              tupleType.GetTypeInfo().DeclaredConstructors.Single(),
               new[] { left, right },
-              new[] { tupleType.GetMethod ("get_Key"), tupleType.GetMethod ("get_Value") });
+              new MemberInfo[] { tupleType.GetRuntimeProperty ("Key").GetMethod, tupleType.GetRuntimeProperty ("Value").GetMethod });
       return newTupleExpression;
     }
   }

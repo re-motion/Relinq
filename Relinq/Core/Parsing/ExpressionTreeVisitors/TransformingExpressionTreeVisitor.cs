@@ -15,7 +15,6 @@
 // under the License.
 // 
 using System;
-using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Utilities;

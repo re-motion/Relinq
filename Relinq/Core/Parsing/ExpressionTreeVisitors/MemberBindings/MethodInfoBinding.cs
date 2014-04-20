@@ -40,7 +40,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.MemberBindings
         return true;
 
       var property = readMember as PropertyInfo;
-      if (property != null && property.CanRead && property.GetGetMethod() == BoundMember)
+      if (property != null && property.CanRead && property.GetMethod == BoundMember)
         return true;
 
       return false;

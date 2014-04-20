@@ -31,15 +31,16 @@ namespace Remotion.Linq.Clauses.StreamedData
   /// </summary>
   public class StreamedSequenceInfo : IStreamedDataInfo
   {
-    private static readonly MethodInfo s_executeMethod = (typeof (StreamedSequenceInfo).GetMethod ("ExecuteCollectionQueryModel"));
+    private static readonly MethodInfo s_executeMethod = 
+        (typeof (StreamedSequenceInfo).GetRuntimeMethodChecked ("ExecuteCollectionQueryModel", new[] { typeof (QueryModel), typeof (IQueryExecutor) }));
 
     public StreamedSequenceInfo (Type dataType, Expression itemExpression)
     {
       ArgumentUtility.CheckNotNull ("dataType", dataType);
       ArgumentUtility.CheckNotNull ("itemExpression", itemExpression);
 
-      ResultItemType = ReflectionUtility.GetItemTypeOfIEnumerable (dataType, "dataType");
-      if (!ResultItemType.IsAssignableFrom (itemExpression.Type))
+      ResultItemType = ReflectionUtility.GetItemTypeOfClosedGenericIEnumerable (dataType, "dataType");
+      if (!ResultItemType.GetTypeInfo().IsAssignableFrom (itemExpression.Type.GetTypeInfo()))
       {
         var message = string.Format ("ItemExpression is of type '{0}', but should be '{1}' (or derived from it).", itemExpression.Type, ResultItemType);
         throw new ArgumentException (message, "itemExpression");
@@ -83,7 +84,7 @@ namespace Remotion.Linq.Clauses.StreamedData
     {
       ArgumentUtility.CheckNotNull ("dataType", dataType);
 
-      if (dataType.IsGenericTypeDefinition)
+      if (dataType.GetTypeInfo().IsGenericTypeDefinition)
       {
         try
         {
@@ -100,9 +101,12 @@ namespace Remotion.Linq.Clauses.StreamedData
         }
       }
 
+      //Assertions to document that the StreamedSequenceInfo constructor will only throw argument exceptions for mismatched data type.
+      Assertion.IsNotNull (dataType, "dateType cannot be null.");
+      Assertion.IsNotNull (ItemExpression, "ItemExpression cannot be null.");
+
       try
       {
-        //TODO: RM-5940: Add Assertions
         return new StreamedSequenceInfo (dataType, ItemExpression);
       }
       catch (ArgumentException)
@@ -145,8 +149,8 @@ namespace Remotion.Linq.Clauses.StreamedData
       var executeMethod = s_executeMethod.MakeGenericMethod (ResultItemType);
 
       // wrap executeMethod into a delegate instead of calling Invoke in order to allow for exceptions that are bubbled up correctly
-      var func = (Func<QueryModel, IQueryExecutor, IEnumerable>)
-          Delegate.CreateDelegate (typeof (Func<QueryModel, IQueryExecutor, IEnumerable>), this, executeMethod);
+      var func =
+          (Func<QueryModel, IQueryExecutor, IEnumerable>) executeMethod.CreateDelegate (typeof (Func<QueryModel, IQueryExecutor, IEnumerable>), this);
       var result = func (queryModel, executor).AsQueryable ();
 
       return new StreamedSequence (result, new StreamedSequenceInfo (result.GetType(), ItemExpression));

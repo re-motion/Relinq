@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
 
@@ -31,6 +32,9 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
   /// </summary>
   public sealed class MethodInfoBasedNodeTypeRegistry : INodeTypeProvider
   {
+    private static readonly Dictionary<MethodInfo, Lazy<IReadOnlyCollection<MethodInfo>>> s_genericMethodDefinitionCandidates = 
+        new Dictionary<MethodInfo, Lazy<IReadOnlyCollection<MethodInfo>>>();
+
     /// <summary>
     /// Creates a <see cref="MethodInfoBasedNodeTypeRegistry"/> and automatically registers all types implementing <see cref="IExpressionNode"/> 
     /// from a given type sequence that offer a public static <c>SupportedMethods</c> field.
@@ -42,18 +46,20 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       ArgumentUtility.CheckNotNull ("searchedTypes", searchedTypes);
 
       var expressionNodeTypes = from t in searchedTypes
-                                where typeof (IExpressionNode).IsAssignableFrom (t)
+                                where typeof (IExpressionNode).GetTypeInfo().IsAssignableFrom (t.GetTypeInfo())
                                 select t;
 
-      var supportedMethodsForTypes = from t in expressionNodeTypes
-                                     let supportedMethodsField = t.GetField ("SupportedMethods", BindingFlags.Static | BindingFlags.Public)
-                                     select new { 
-                                         Type = t,
-                                         Methods = 
-                                         supportedMethodsField != null
-                                             ? (IEnumerable<MethodInfo>) supportedMethodsField.GetValue (null)
-                                             : Enumerable.Empty<MethodInfo>()
-                                     };
+      var supportedMethodsForTypes =
+          from t in expressionNodeTypes
+          let supportedMethodsField = t.GetRuntimeField ("SupportedMethods")
+          select new
+                 {
+                     Type = t,
+                     Methods =
+                         supportedMethodsField != null && supportedMethodsField.IsStatic
+                             ? (IEnumerable<MethodInfo>) supportedMethodsField.GetValue (null)
+                             : Enumerable.Empty<MethodInfo>()
+                 };
 
       var registry = new MethodInfoBasedNodeTypeRegistry();
 
@@ -70,23 +76,99 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
     /// that can be registered via a call to <see cref="Register"/>. When the given <paramref name="method"/> is passed to 
     /// <see cref="GetNodeType"/> and its corresponding registerable method was registered, the correct node type is returned.
     /// </summary>
-    /// <param name="method">The method for which the registerable method should be retrieved.</param>
-    /// <returns><paramref name="method"/> itself, unless it is a closed generic method or declared in a closed generic type. In the latter cases,
-    /// the corresponding generic method definition respectively the method declared in a generic type definition is returned.</returns>
-    public static MethodInfo GetRegisterableMethodDefinition (MethodInfo method)
+    /// <param name="method">The method for which the registerable method should be retrieved. Must not be <see langword="null" />.</param>
+    /// <param name="throwOnAmbiguousMatch">
+    ///   <see langword="true" /> to throw a <see cref="NotSupportedException"/> if the method cannot be matched to a distinct generic method definition, 
+    ///   <see langword="false" /> to return <see langword="null" /> if an unambiguous match is not possible.
+    /// </param>
+    /// <returns>
+    /// <para>
+    ///   <paramref name="method"/> itself, unless it is a closed generic method or declared in a closed generic type. In the latter cases,
+    ///   the corresponding generic method definition respectively the method declared in a generic type definition is returned.
+    /// </para><para>
+    ///   If no generic method definition could be matched and <paramref name="throwOnAmbiguousMatch"/> was set to <see langword="false" />, 
+    ///   <see langword="null" /> is returned.
+    /// </para>
+    /// </returns>
+    /// <exception cref="NotSupportedException">
+    /// Thrown if <paramref name="throwOnAmbiguousMatch"/> is set to <see langword="true" /> and no distinct generic method definition could be resolved.
+    /// </exception>
+    public static MethodInfo GetRegisterableMethodDefinition (MethodInfo method, bool throwOnAmbiguousMatch)
     {
-      var genericMethodDefinition = method.IsGenericMethod ? method.GetGenericMethodDefinition () : method;
-      if (genericMethodDefinition.DeclaringType.IsGenericType)
-      {
-        var declaringTypeDefinition = genericMethodDefinition.DeclaringType.GetGenericTypeDefinition ();
+      ArgumentUtility.CheckNotNull ("method", method);
 
-        // find corresponding method on the generic type definition
-        return (MethodInfo) MethodBase.GetMethodFromHandle (genericMethodDefinition.MethodHandle, declaringTypeDefinition.TypeHandle);
-      }
-      else
-      {
+      var genericMethodDefinition = method.IsGenericMethod ? method.GetGenericMethodDefinition() : method;
+      if (!genericMethodDefinition.DeclaringType.GetTypeInfo().IsGenericType)
         return genericMethodDefinition;
+
+      // Simple, fast solution, not possible in PCL because of missing MethodHandle property on MethodInfo type:
+      // var declaringTypeDefinition = genericMethodDefinition.DeclaringType.GetGenericTypeDefinition();
+      // return (MethodInfo) MethodBase.GetMethodFromHandle (genericMethodDefinition.MethodHandle, declaringTypeDefinition.TypeHandle);
+
+      Lazy<IReadOnlyCollection<MethodInfo>> candidates;
+      lock (s_genericMethodDefinitionCandidates)
+      {
+        if (!s_genericMethodDefinitionCandidates.TryGetValue (method, out candidates))
+        {
+          candidates = new Lazy<IReadOnlyCollection<MethodInfo>> (
+              () => GetGenericMethodDefinitionCandidates (genericMethodDefinition),
+              LazyThreadSafetyMode.ExecutionAndPublication);
+          s_genericMethodDefinitionCandidates.Add (method, candidates);
+        }
       }
+
+      if (candidates.Value.Count == 1)
+        return candidates.Value.Single();
+
+      if (!throwOnAmbiguousMatch)
+        return null;
+
+      throw new NotSupportedException (
+          string.Format (
+              "A generic method definition cannot be resolved for method '{0}' on type '{1}' because a distinct match is not possible. "
+              + @"The method can still be registered using the following syntax:
+
+public static readonly NameBasedRegistrationInfo[] SupportedMethodNames = 
+    new[] {{
+        new NameBasedRegistrationInfo (
+            ""{2}"", 
+            mi => /* match rule based on MethodInfo */
+        )
+    }};",
+              method,
+              genericMethodDefinition.DeclaringType.GetGenericTypeDefinition(),
+              method.Name));
+    }
+
+    private static MethodInfo[] GetGenericMethodDefinitionCandidates (MethodInfo referenceMethodDefinition)
+    {
+      var declaringTypeDefinition = referenceMethodDefinition.DeclaringType.GetGenericTypeDefinition();
+
+      var referenceMethodSignature =
+          new[] { new { Name = "returnValue", Type = referenceMethodDefinition.ReturnType } }
+              .Concat (referenceMethodDefinition.GetParameters().Select (p => new { Name = p.Name, Type = p.ParameterType }))
+              .ToArray();
+
+      var candidates = declaringTypeDefinition.GetRuntimeMethods()
+          .Select (
+              m => new
+                   {
+                       Method = m,
+                       SignatureNames = new[] { "returnValue" }.Concat (m.GetParameters().Select (p => p.Name)).ToArray(),
+                       SignatureTypes = new[] { m.ReturnType }.Concat (m.GetParameters().Select (p => p.ParameterType)).ToArray()
+                   })
+          .Where (c => c.Method.Name == referenceMethodDefinition.Name && c.SignatureTypes.Length == referenceMethodSignature.Length)
+          .ToArray();
+
+      for (int i = 0; i < referenceMethodSignature.Length; i++)
+      {
+        candidates = candidates
+            .Where (c => c.SignatureNames[i] == referenceMethodSignature[i].Name)
+            .Where (c => c.SignatureTypes[i] == referenceMethodSignature[i].Type || c.SignatureTypes[i].GetTypeInfo().ContainsGenericParameters)
+            .ToArray();
+      }
+
+      return candidates.Select (c => c.Method).ToArray();
     }
 
     private readonly Dictionary<MethodInfo, Type> _registeredMethodInfoTypes = new Dictionary<MethodInfo, Type>();
@@ -118,7 +200,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
           throw new InvalidOperationException (message);
         }
 
-        if (method.DeclaringType.IsGenericType && !method.DeclaringType.IsGenericTypeDefinition)
+        if (method.DeclaringType.GetTypeInfo().IsGenericType && !method.DeclaringType.GetTypeInfo().IsGenericTypeDefinition)
         {
           var message = string.Format (
               "Cannot register method '{0}' in closed generic type '{1}', try to register its equivalent in the generic type definition instead.", 
@@ -131,17 +213,16 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       }
     }
 
-   /// <summary>
+    /// <summary>
     /// Determines whether the specified method was registered with this <see cref="MethodInfoBasedNodeTypeRegistry"/>.
     /// </summary>
     public bool IsRegistered (MethodInfo method)
     {
       ArgumentUtility.CheckNotNull ("method", method);
 
-      var methodDefinition = GetRegisterableMethodDefinition (method);
-      return _registeredMethodInfoTypes.ContainsKey (methodDefinition);
+      return GetNodeType (method) != null;
     }
-    
+
     /// <summary>
     /// Gets the type of <see cref="IExpressionNode"/> registered with this <see cref="MethodInfoBasedNodeTypeRegistry"/> instance that
     /// matches the given <paramref name="method"/>, returning <see langword="null" /> if none can be found.
@@ -150,8 +231,10 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
     {
       ArgumentUtility.CheckNotNull ("method", method);
 
-      var methodDefinition = GetRegisterableMethodDefinition (method);
-      
+      var methodDefinition = GetRegisterableMethodDefinition (method, throwOnAmbiguousMatch: false);
+      if (methodDefinition == null)
+        return null;
+
       Type result;
       _registeredMethodInfoTypes.TryGetValue (methodDefinition, out result);
       return result;

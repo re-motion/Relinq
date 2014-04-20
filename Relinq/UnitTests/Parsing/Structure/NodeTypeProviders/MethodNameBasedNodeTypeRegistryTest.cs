@@ -159,13 +159,57 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders
     }
 
     [Test]
-    public void CreateFromTypes ()
+    public void CreateFromTypes_UsesPublicStaticField ()
     {
       var registry = MethodNameBasedNodeTypeRegistry.CreateFromTypes (new[] { typeof (TestExpressionNode) });
 
       Assert.That (registry.RegisteredNamesCount, Is.EqualTo (2));
 
       Assert.That (registry.GetNodeType (typeof (TestExpressionNode).GetMethod ("Resolve")), Is.SameAs (typeof (TestExpressionNode)));
+    }
+
+    [Test]
+    public void CreateFromTypes_WithStaticFieldIgnoresStaticFieldFromBaseType ()
+    {
+      var registry = MethodNameBasedNodeTypeRegistry.CreateFromTypes (new[] { typeof (DerivedTestExpressionNode) });
+
+      Assert.That (registry.RegisteredNamesCount, Is.EqualTo (1));
+
+      Assert.That (
+          registry.GetNodeType (typeof (DerivedTestExpressionNode).GetMethod ("MethodOnDerivedNode")),
+          Is.SameAs (typeof (DerivedTestExpressionNode)));
+    }
+
+    [Test]
+    public void CreateFromTypes_IgnoresInstanceField ()
+    {
+      var registry = MethodNameBasedNodeTypeRegistry.CreateFromTypes (new[] { typeof (TestExpressionNodeWithInstanceField) });
+
+      Assert.That (registry.RegisteredNamesCount, Is.EqualTo (0));
+    }
+
+    [Test]
+    public void CreateFromTypes_IgnoresNonPublicStaticField ()
+    {
+      var registry = MethodNameBasedNodeTypeRegistry.CreateFromTypes (new[] { typeof (TestExpressionNodeWithNonPublicStaticField) });
+
+      Assert.That (registry.RegisteredNamesCount, Is.EqualTo (0));
+    }
+
+    [Test]
+    public void CreateFromTypes_WithoutStaticField ()
+    {
+      var registry = MethodNameBasedNodeTypeRegistry.CreateFromTypes (new[] { typeof (TestExpressionNodeWithoutStaticField) });
+
+      Assert.That (registry.RegisteredNamesCount, Is.EqualTo (0));
+    }
+
+    [Test]
+    public void CreateFromTypes_WithoutStaticFieldIgnoresStaticFieldFromBaseType ()
+    {
+      var registry = MethodNameBasedNodeTypeRegistry.CreateFromTypes (new[] { typeof (DerivedTestExpressionNodeWithoutStaticField) });
+
+      Assert.That (registry.RegisteredNamesCount, Is.EqualTo (0));
     }
 
     internal class TestExpressionNode : ResultOperatorExpressionNodeBase
@@ -176,6 +220,96 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders
       };
 
       public TestExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
+        : base (parseInfo, optionalPredicate, optionalSelector)
+      {
+      }
+
+      public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
+      {
+        throw new NotImplementedException ();
+      }
+
+      protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
+      {
+        throw new NotImplementedException ();
+      }
+    }
+
+    internal class DerivedTestExpressionNode : TestExpressionNode
+    {
+      public static new NameBasedRegistrationInfo[] SupportedMethodNames =
+      {
+          new NameBasedRegistrationInfo ("MethodOnDerivedNode", mi => true),
+      };
+
+      public DerivedTestExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
+        : base (parseInfo, optionalPredicate, optionalSelector)
+      {
+      }
+
+      public void MethodOnDerivedNode ()
+      {
+        throw new NotImplementedException();
+      }
+    }
+
+    internal class DerivedTestExpressionNodeWithoutStaticField : TestExpressionNode
+    {
+      public DerivedTestExpressionNodeWithoutStaticField (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
+        : base (parseInfo, optionalPredicate, optionalSelector)
+      {
+      }
+    }
+    
+    internal class TestExpressionNodeWithInstanceField : ResultOperatorExpressionNodeBase
+    {
+      public NameBasedRegistrationInfo[] SupportedMethodNames = {
+          new NameBasedRegistrationInfo ("Resolve", mi => true),
+          new NameBasedRegistrationInfo ("CreateResultOperator", mi => false),
+      };
+
+      public TestExpressionNodeWithInstanceField (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
+        : base (parseInfo, optionalPredicate, optionalSelector)
+      {
+      }
+
+      public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
+      {
+        throw new NotImplementedException ();
+      }
+
+      protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
+      {
+        throw new NotImplementedException ();
+      }
+    }
+    
+    internal class TestExpressionNodeWithNonPublicStaticField : ResultOperatorExpressionNodeBase
+    {
+      protected static NameBasedRegistrationInfo[] SupportedMethodNames = {
+          new NameBasedRegistrationInfo ("Resolve", mi => true),
+          new NameBasedRegistrationInfo ("CreateResultOperator", mi => false),
+      };
+
+      public TestExpressionNodeWithNonPublicStaticField (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
+        : base (parseInfo, optionalPredicate, optionalSelector)
+      {
+      }
+
+      public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
+      {
+        throw new NotImplementedException ();
+      }
+
+      protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
+      {
+        throw new NotImplementedException ();
+      }
+    }
+
+    internal class TestExpressionNodeWithoutStaticField : ResultOperatorExpressionNodeBase
+    {
+      public TestExpressionNodeWithoutStaticField (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
         : base (parseInfo, optionalPredicate, optionalSelector)
       {
       }

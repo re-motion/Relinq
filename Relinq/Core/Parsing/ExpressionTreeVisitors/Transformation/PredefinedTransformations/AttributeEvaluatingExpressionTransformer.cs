@@ -15,7 +15,6 @@
 // under the License.
 // 
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -58,10 +57,10 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       var memberExpression = expression as MemberExpression;
-      if (memberExpression != null && memberExpression.Member.MemberType == MemberTypes.Property)
+      if (memberExpression != null && memberExpression.Member is PropertyInfo)
       {
         var property = (PropertyInfo) memberExpression.Member;
-        var getter = property.GetGetMethod (true);
+        var getter = property.GetMethod;
         Assertion.IsNotNull (getter);
 
         var methodCallExpressionTransformerProvider = GetTransformerProvider (getter);
@@ -82,8 +81,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
 
     private static IMethodCallExpressionTransformerAttribute GetTransformerProvider (MethodInfo methodInfo)
     {
-      var attributes =
-          (IMethodCallExpressionTransformerAttribute[]) methodInfo.GetCustomAttributes (typeof (IMethodCallExpressionTransformerAttribute), true);
+      var attributes = methodInfo.GetCustomAttributes (true).OfType<IMethodCallExpressionTransformerAttribute>().ToArray();
 
       if (attributes.Length > 1)
       {

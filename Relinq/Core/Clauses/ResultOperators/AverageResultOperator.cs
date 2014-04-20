@@ -16,7 +16,6 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -47,14 +46,14 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       ArgumentUtility.CheckNotNull ("input", input);
 
-      var method = typeof (Enumerable).GetMethod ("Average", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof (IEnumerable<T>) }, null);
+      var method = typeof (Enumerable).GetRuntimeMethod ("Average", new[] { typeof(IEnumerable<T>) });
       if (method == null)
       {
         var message = string.Format ("Cannot calculate the average of objects of type '{0}' in memory.", typeof (T).FullName);
         throw new NotSupportedException (message);
       }
 
-      Debug.Assert (GetOutputDataInfo (input.DataInfo).DataType == method.ReturnType, "ReturnType of method matches return type of this operator");
+      Assertion.DebugAssert (GetOutputDataInfo (input.DataInfo).DataType == method.ReturnType, "ReturnType of method matches return type of this operator");
 
       var result = method.Invoke (null, new[] { input.GetTypedSequence<T>() });
       return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));

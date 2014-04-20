@@ -17,6 +17,7 @@
 using System;
 using System.Reflection;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.StreamedData
@@ -27,7 +28,8 @@ namespace Remotion.Linq.Clauses.StreamedData
   /// </summary>
   public class StreamedSingleValueInfo : StreamedValueInfo
   {
-    private static readonly MethodInfo s_executeMethod = (typeof (StreamedSingleValueInfo).GetMethod ("ExecuteSingleQueryModel"));
+    private static readonly MethodInfo s_executeMethod = 
+        (typeof (StreamedSingleValueInfo).GetRuntimeMethodChecked ("ExecuteSingleQueryModel", new[] { typeof (QueryModel), typeof (IQueryExecutor) }));
 
     private readonly bool _returnDefaultWhenEmpty;
 
@@ -49,8 +51,7 @@ namespace Remotion.Linq.Clauses.StreamedData
 
       var executeMethod = s_executeMethod.MakeGenericMethod (DataType);
       // wrap executeMethod into a delegate instead of calling Invoke in order to allow for exceptions that are bubbled up correctly
-      var func = (Func<QueryModel, IQueryExecutor, object>)
-          Delegate.CreateDelegate (typeof (Func<QueryModel, IQueryExecutor, object>), this, executeMethod);
+      var func = (Func<QueryModel, IQueryExecutor, object>) executeMethod.CreateDelegate (typeof (Func<QueryModel, IQueryExecutor, object>), this);
       var result = func (queryModel, executor);
 
       return new StreamedValue (result, this);

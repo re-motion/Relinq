@@ -80,7 +80,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
     {
       var optionalElementSelector = GetOptionalElementSelector (elementSelectorOrResultSelector, resultSelectorOrNull);
 
-      var sourceItemType = ReflectionUtility.GetItemTypeOfIEnumerable (
+      var sourceItemType = ReflectionUtility.GetItemTypeOfClosedGenericIEnumerable (
           parseInfo.ParsedExpression.Arguments[0].Type, 
           "parseInfo.ParsedExpression.Arguments[0].Type");
 
@@ -122,7 +122,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       // the key selector.
       var elementType = optionalElementSelector != null ? optionalElementSelector.Body.Type : keySelector.Parameters[0].Type;
       var groupingType = typeof (IGrouping<,>).MakeGenericType (keySelector.Body.Type, elementType);
-      var keyProperty = groupingType.GetProperty ("Key");
+      var keyProperty = groupingType.GetRuntimeProperty ("Key");
 
       var groupParameter = Expression.Parameter (groupingType, "group");
       var keyExpression = Expression.MakeMemberAccess (groupParameter, keyProperty);

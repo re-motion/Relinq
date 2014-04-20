@@ -28,5 +28,4 @@ using System.Security;
 [assembly: AssemblyDescription("Framework for working with linq queries.")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
-[assembly: AllowPartiallyTrustedCallers] // required for partial trust support
-[assembly: SecurityRules(SecurityRuleSet.Level1)]
+[assembly: SecurityTransparent] // required to allow assembly to be linked from assemblies having the AllowPartiallyTrustedCallersAttribute applied

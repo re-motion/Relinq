@@ -184,10 +184,15 @@
     <Compile Include="Parsing\ExpressionTreeVisitorTests\TypeForNewExpression.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Parsing\Structure\IntermediateModel\TestDomain\ExpressionNodeWithOnePublicInstanceCtor.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\CompoundNodeTypeProviderTest.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\CompoundExpressionTreeProcessorTest.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\NullExpressionTreeProcessorTest.cs" />
-    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTest.cs" />
+    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\GetRegisterableMethodDefinition_MIBNTRT.cs" />
+    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\CreateFromTypes_MIBNTRT.cs" />
+    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\GetNodeType_MIBNTRT.cs" />
+    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\Register_MIBNTRT.cs" />
+    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\IsRegistered_MIBNTRT.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\MethodNameBasedNodeTypeRegistryTest.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\TransformingExpressionProcessorTest.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\PartialEvaluatingExpressionTreeProcessorTest.cs" />
@@ -202,8 +207,10 @@
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\NewWithAddedMembersQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\SubQueryQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\MediumTrustQueryParserIntegrationTest.cs" />
+    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\TestDomain\GenericClass2.cs" />
     <Compile Include="Parsing\TestThrowingConstantExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\TupleExpressionBuilderTest.cs" />
+    <Compile Include="TestDomain\Course.cs" />
     <Compile Include="TestDomain\Knife.cs" />
     <Compile Include="TestDomain\ISpecificCook.cs" />
     <Compile Include="TestDomain\MetaID.cs" />
@@ -274,7 +281,7 @@
     <Compile Include="Clauses\StreamedData\StreamedValueTest.cs" />
     <Compile Include="Clauses\WhereClauseTest.cs" />
     <Compile Include="Collections\ChangeResistantObservableCollectionEnumeratorTest.cs" />
-    <Compile Include="Collections\MultiDictionaryTest.cs" />
+    <Compile Include="Collections\MultiDictionaryExtensionsTest.cs" />
     <Compile Include="Collections\ObservableCollectionExtensionsTest.cs" />
     <Compile Include="DefaultQueryProviderTest.cs" />
     <Compile Include="EagerFetching\FetchFilteringQueryModelVisitorTest.cs" />
@@ -371,7 +378,7 @@
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\SelectQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\WhereQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserTest.cs" />
-    <Compile Include="Parsing\Structure\TestDomain\GenericClass.cs" />
+    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\TestDomain\GenericClass.cs" />
     <Compile Include="Parsing\Structure\TestDomain\NonGenericFakeCollection.cs" />
     <Compile Include="Parsing\Structure\TestDomain\QueryableFakeWithCount.cs" />
     <Compile Include="Parsing\TestThrowingExpressionTreeVisitor.cs" />

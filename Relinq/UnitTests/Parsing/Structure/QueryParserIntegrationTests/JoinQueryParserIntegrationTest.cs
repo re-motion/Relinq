@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
@@ -100,6 +101,30 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
           mainFromClause,
           joinClause,
           (s, sd) => Tuple.Create (s, sd));
+    }
+
+    [Test]
+    public void Join_InnerSequenceIsNonGenericIEnumerableAsProperty ()
+    {
+      var query = from s in QuerySource
+                  from s2 in (from s1 in QuerySource join s2 in s.Courses.Cast<Course>() on "special course" equals s2.Name select s2)
+                  select s2;
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+      var mainFromClause = queryModel.MainFromClause;
+      var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
+      
+      var innerJoinClause = ((JoinClause) ((SubQueryExpression) additionalFromClause.FromExpression).QueryModel.BodyClauses[0]);
+
+      Assert.That (innerJoinClause.InnerSequence, Is.TypeOf (typeof (SubQueryExpression)));
+      var subQueryModel = ((SubQueryExpression) innerJoinClause.InnerSequence).QueryModel;
+
+      Assert.That (subQueryModel.MainFromClause.FromExpression, Is.InstanceOf (typeof (MemberExpression)));
+      var propertyExpression = (MemberExpression) subQueryModel.MainFromClause.FromExpression;
+      Assert.That (propertyExpression.Member, Is.SameAs (typeof (Cook).GetProperty ("Courses")));
+
+      Assert.That (innerJoinClause.ItemType, Is.SameAs (typeof (Course)));
+      Assert.That (innerJoinClause.ItemName, Is.EqualTo ("s2"));
     }
   }
 }

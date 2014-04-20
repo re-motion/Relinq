@@ -17,9 +17,11 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
@@ -37,6 +39,9 @@ namespace Remotion.Linq.Clauses.ResultOperators
   /// </example>
   public class AggregateFromSeedResultOperator : ValueFromSequenceResultOperatorBase
   {
+    private static readonly MethodInfo s_executeMethod =
+        typeof (AggregateFromSeedResultOperator).GetRuntimeMethodChecked ("ExecuteAggregateInMemory", new[] { typeof (StreamedSequence) });
+
     private Expression _seed;
     private LambdaExpression _func;
     private LambdaExpression _resultSelector;
@@ -53,6 +58,8 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       ArgumentUtility.CheckNotNull ("seed", seed);
       ArgumentUtility.CheckNotNull ("func", func);
+      if (func.Type.GetTypeInfo().IsGenericTypeDefinition)
+        throw new ArgumentException ("Open generic delegates are not supported with AggregateFromSeedResultOperator", "func");
 
       Seed = seed;
       Func = func;
@@ -71,6 +78,8 @@ namespace Remotion.Linq.Clauses.ResultOperators
       set
       {
         ArgumentUtility.CheckNotNull ("value", value);
+        if (value.Type.GetTypeInfo().IsGenericTypeDefinition)
+          throw new ArgumentException ("Open generic delegates are not supported with AggregateFromSeedResultOperator", "value");
 
         if (!DescribesValidFuncType (value))
         {
@@ -104,6 +113,9 @@ namespace Remotion.Linq.Clauses.ResultOperators
       get { return _resultSelector; }
       set
       {
+        if (value != null && value.Type.GetTypeInfo().IsGenericTypeDefinition)
+          throw new ArgumentException ("Open generic delegates are not supported with AggregateFromSeedResultOperator", "value");
+
         if (!DescribesValidResultSelectorType (value))
         {
           var message = string.Format (
@@ -132,12 +144,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       ArgumentUtility.CheckNotNull ("input", input);
 
-      var executeMethod = typeof (AggregateFromSeedResultOperator).GetMethod ("ExecuteAggregateInMemory");
-      var closedExecuteMethod = executeMethod.MakeGenericMethod (
-          typeof (TInput),
-          Seed.Type,
-          GetResultType ());
-
+      var closedExecuteMethod = s_executeMethod.MakeGenericMethod (typeof (TInput), Seed.Type, GetResultType());
       return (StreamedValue) InvokeExecuteMethod (closedExecuteMethod, input);
     }
 
@@ -183,8 +190,9 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
 
-      var aggregatedType = Func.Type.GetGenericArguments ()[0];
-      if (!aggregatedType.IsAssignableFrom (Seed.Type))
+      Assertion.DebugAssert (Func.Type.GetTypeInfo().IsGenericTypeDefinition == false);
+      var aggregatedType = Func.Type.GetTypeInfo().GenericTypeArguments[0];
+      if (!aggregatedType.GetTypeInfo().IsAssignableFrom (Seed.Type.GetTypeInfo()))
       {
         var message = string.Format (
             "The seed expression and the aggregating function don't have matching types. The seed is of type '{0}', but the function aggregates '{1}'.",
@@ -193,12 +201,13 @@ namespace Remotion.Linq.Clauses.ResultOperators
         throw new InvalidOperationException (message);
       }
 
-      var resultTransformedType = OptionalResultSelector != null ? OptionalResultSelector.Type.GetGenericArguments ()[0] : null;
+      Assertion.DebugAssert (OptionalResultSelector == null || OptionalResultSelector.Type.GetTypeInfo().IsGenericTypeDefinition == false);
+      var resultTransformedType = OptionalResultSelector != null ? OptionalResultSelector.Type.GetTypeInfo().GenericTypeArguments[0] : null;
       if (resultTransformedType != null && aggregatedType != resultTransformedType)
       {
         var message = string.Format (
-            "The aggregating function and the result selector don't have matching types. The function aggregates type '{0}', but the result selector "
-            + "takes '{1}'.",
+            "The aggregating function and the result selector don't have matching types. The function aggregates type '{0}', "
+            + "but the result selector takes '{1}'.",
             aggregatedType,
             resultTransformedType);
         throw new InvalidOperationException (message);
@@ -244,16 +253,17 @@ namespace Remotion.Linq.Clauses.ResultOperators
     private bool DescribesValidFuncType (LambdaExpression value)
     {
       var funcType = value.Type;
-      if (!funcType.IsGenericType || funcType.GetGenericTypeDefinition () != typeof (Func<,>))
+      if (!funcType.GetTypeInfo().IsGenericType || funcType.GetGenericTypeDefinition () != typeof (Func<,>))
         return false;
 
-      var genericArguments = funcType.GetGenericArguments ();
+      Assertion.DebugAssert (funcType.GetTypeInfo().IsGenericTypeDefinition == false);
+      var genericArguments = funcType.GetTypeInfo().GenericTypeArguments;
       return genericArguments[0] == genericArguments[1];
     }
 
     private bool DescribesValidResultSelectorType (LambdaExpression value)
     {
-      return value == null || (value.Type.IsGenericType && value.Type.GetGenericTypeDefinition () == typeof (Func<,>));
+      return value == null || (value.Type.GetTypeInfo().IsGenericType && value.Type.GetGenericTypeDefinition() == typeof (Func<,>));
     }
   }
 }

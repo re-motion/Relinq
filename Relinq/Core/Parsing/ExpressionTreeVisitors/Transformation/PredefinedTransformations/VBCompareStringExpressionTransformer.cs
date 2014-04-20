@@ -15,10 +15,10 @@
 // under the License.
 // 
 using System;
-using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
@@ -32,6 +32,9 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
   {
     private const string c_vbOperatorsClassName = "Microsoft.VisualBasic.CompilerServices.Operators";
     private const string c_vbCompareStringOperatorMethodName = "CompareString";
+
+    private static readonly MethodInfo s_stringCompareToMethod = 
+        typeof (string).GetRuntimeMethodChecked ("CompareTo", new[] { typeof (string) });
 
     public ExpressionType[] SupportedExpressionTypes
     {
@@ -56,12 +59,12 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
       if (leftSideAsMethodCallExpression != null && (IsVBOperator (leftSideAsMethodCallExpression.Method, c_vbCompareStringOperatorMethodName)))
       {
         var rightSideAsConstantExpression = expression.Right as ConstantExpression;
-        Debug.Assert (
+        Assertion.DebugAssert (
             rightSideAsConstantExpression != null && rightSideAsConstantExpression.Value is Int32 && (int) rightSideAsConstantExpression.Value == 0,
             "The right side of the binary expression has to be a constant expression with value 0.");
 
         var leftSideArgument2AsConstantExpression = leftSideAsMethodCallExpression.Arguments[2] as ConstantExpression;
-        Debug.Assert (
+        Assertion.DebugAssert (
             leftSideArgument2AsConstantExpression != null && leftSideArgument2AsConstantExpression.Value is bool,
             "The second argument of the method call expression has to be a constant expression with a boolean value.");
 
@@ -87,8 +90,8 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
 
       var methodCallExpression = MethodCallExpression.Call (
           leftSideAsMethodCallExpression.Arguments[0],
-          typeof (string).GetMethod ("CompareTo", new[] { typeof (string) }),
-          leftSideAsMethodCallExpression.Arguments[1]);
+          s_stringCompareToMethod,
+          new[] { leftSideAsMethodCallExpression.Arguments[1] });
       var vbExpression = new VBStringComparisonExpression (methodCallExpression, (bool) leftSideArgument2AsConstantExpression.Value);
 
       if (expression.NodeType == ExpressionType.GreaterThan)

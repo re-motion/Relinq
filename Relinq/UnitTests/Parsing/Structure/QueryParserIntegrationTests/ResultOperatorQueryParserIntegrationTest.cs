@@ -336,7 +336,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (ExceptResultOperator)));
       var exceptResultOperator = ((ExceptResultOperator) queryModel.ResultOperators[0]);
-      Assert.That (exceptResultOperator.GetConstantSource2(), Is.SameAs (students));
+      Assert.That (exceptResultOperator.GetConstantSource2<Cook>(), Is.SameAs (students));
       
       var selectClause = queryModel.SelectClause;
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedQuerySource, Is.SameAs (mainFromClause));
@@ -382,7 +382,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (IntersectResultOperator)));
       var intersectResultOperator = ((IntersectResultOperator) queryModel.ResultOperators[0]);
-      Assert.That (intersectResultOperator.GetConstantSource2 (), Is.SameAs (students));
+      Assert.That (intersectResultOperator.GetConstantSource2<Cook> (), Is.SameAs (students));
       
       var selectClause = queryModel.SelectClause;
       Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedQuerySource, Is.SameAs (mainFromClause));

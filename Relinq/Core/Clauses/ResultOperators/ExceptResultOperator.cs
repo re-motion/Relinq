@@ -15,7 +15,6 @@
 // under the License.
 // 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -56,7 +55,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
       set 
       {
         ArgumentUtility.CheckNotNull ("value", value);
-        ReflectionUtility.GetItemTypeOfIEnumerable (value.Type, "value"); // check that Source2 really is an IEnumerable<T>
+        ReflectionUtility.CheckTypeIsClosedGenericIEnumerable (value.Type, "value");
 
         _source2 = value; 
       }
@@ -67,9 +66,9 @@ namespace Remotion.Linq.Clauses.ResultOperators
     /// an exception is thrown.
     /// </summary>
     /// <returns>The constant value of <see cref="Source2"/>.</returns>
-    public IEnumerable GetConstantSource2 ()
+    public IEnumerable<T> GetConstantSource2<T> ()
     {
-      return GetConstantValueFromExpression<IEnumerable> ("source2", Source2);
+      return GetConstantValueFromExpression<IEnumerable<T>> ("source2", Source2);
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
@@ -79,8 +78,10 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     public override StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
     {
+      ArgumentUtility.CheckNotNull ("input", input);
+
       var sequence = input.GetTypedSequence<T> ();
-      var result = sequence.Except ((IEnumerable<T>) GetConstantSource2());
+      var result = sequence.Except (GetConstantSource2<T>());
       return new StreamedSequence (result.AsQueryable (), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
     }
 

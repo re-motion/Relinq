@@ -238,7 +238,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
       var expression = Expression.Call (querySourceExpression, containsMethod, itemExpression);
 
       _methodInfoBasedNodeTypeRegistry.Register (
-          new[] { MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition(containsMethod) }, 
+          new[] { MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition(containsMethod, true) }, 
           typeof (ContainsExpressionNode));
 
       var result = _expressionTreeParser.ParseTree (expression);

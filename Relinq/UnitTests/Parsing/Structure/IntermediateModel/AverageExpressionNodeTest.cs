@@ -157,7 +157,8 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage =
+        "AverageExpressionNode does not support resolving of expressions, because it does not stream any data to the following node.")]
     public void Resolve_ThrowsInvalidOperationException ()
     {
       _node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext);

@@ -53,7 +53,7 @@ namespace Remotion.Linq.Clauses.StreamedData
     {
       ArgumentUtility.CheckNotNull ("dataType", dataType);
 
-      if (!dataType.IsAssignableFrom (DataType))
+      if (!dataType.GetTypeInfo().IsAssignableFrom (DataType.GetTypeInfo()))
       {
         var message = string.Format ("'{0}' cannot be used as the new data type for a value of type '{1}'.", dataType, DataType);
         throw new ArgumentException (message, "dataType");

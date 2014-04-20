@@ -47,8 +47,8 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
           new NameBasedRegistrationInfo (
               "Contains",
               mi => mi.DeclaringType != typeof (string) 
-                  && typeof (IEnumerable).IsAssignableFrom (mi.DeclaringType)
-                  && !typeof (IDictionary).IsAssignableFrom (mi.DeclaringType)
+                  && typeof (IEnumerable).GetTypeInfo().IsAssignableFrom (mi.DeclaringType.GetTypeInfo())
+                  && !typeof (IDictionary).GetTypeInfo().IsAssignableFrom (mi.DeclaringType.GetTypeInfo())
                   && (mi.IsStatic && mi.GetParameters().Length == 2 || !mi.IsStatic && mi.GetParameters().Length == 1))
         };
 

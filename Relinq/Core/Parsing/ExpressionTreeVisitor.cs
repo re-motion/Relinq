@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses.Expressions;
@@ -321,7 +320,7 @@ namespace Remotion.Linq.Parsing
       }
 
       if (newList != null)
-        return newList.AsReadOnly ();
+        return new ReadOnlyCollection<T> (newList);
       else
         return list;
     }
@@ -519,7 +518,7 @@ namespace Remotion.Linq.Parsing
         case MemberBindingType.MemberBinding:
           return VisitMemberMemberBinding ((MemberMemberBinding) memberBinding);
         default:
-          Debug.Assert (
+          Assertion.DebugAssert (
               memberBinding.BindingType == MemberBindingType.ListBinding, "Invalid member binding type " + memberBinding.GetType().FullName);
           return VisitMemberListBinding ((MemberListBinding) memberBinding);
       }

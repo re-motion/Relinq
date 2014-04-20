@@ -33,7 +33,7 @@ namespace Remotion.Linq
   public abstract class QueryProviderBase : IQueryProvider
   {
     private static readonly MethodInfo s_genericCreateQueryMethod =
-        typeof (QueryProviderBase).GetMethods().Where (m => m.Name == "CreateQuery" && m.IsGenericMethod).Single();
+        typeof (QueryProviderBase).GetRuntimeMethods().Single(m => m.Name == "CreateQuery" && m.IsGenericMethod);
 
     private readonly IQueryParser _queryParser;
     private readonly IQueryExecutor _executor;
@@ -90,7 +90,7 @@ namespace Remotion.Linq
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      Type elementType = ReflectionUtility.GetItemTypeOfIEnumerable (expression.Type, "expression");
+      Type elementType = ReflectionUtility.GetItemTypeOfClosedGenericIEnumerable (expression.Type, "expression");
       return (IQueryable) s_genericCreateQueryMethod.MakeGenericMethod (elementType).Invoke (this, new object[] { expression });
     }
 

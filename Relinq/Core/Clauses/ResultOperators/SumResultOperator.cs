@@ -46,7 +46,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       ArgumentUtility.CheckNotNull ("input", input);
 
-      var method = typeof (Enumerable).GetMethod ("Sum", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof (IEnumerable<T>) }, null);
+      var method = typeof (Enumerable).GetRuntimeMethod ("Sum", new[] { typeof (IEnumerable<T>) });
       if (method == null)
       {
         var message = string.Format ("Cannot calculate the sum of objects of type '{0}' in memory.", typeof (T).FullName);

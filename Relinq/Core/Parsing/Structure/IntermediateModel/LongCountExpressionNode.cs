@@ -15,6 +15,7 @@
 // under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -32,17 +33,34 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class LongCountExpressionNode : ResultOperatorExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.LongCount<object> (null)),
-                                                               GetSupportedMethod (() => Queryable.LongCount<object> (null, null)),
-                                                               GetSupportedMethod (() => Enumerable.LongCount<object> (null)),
-                                                               GetSupportedMethod (() => Enumerable.LongCount<object> (null, null)),
-// ReSharper disable PossibleNullReferenceException
-                                                               GetSupportedMethod (() => (((Array) null).LongLength)),
-// ReSharper restore PossibleNullReferenceException
-                                                           };
+    public static readonly MethodInfo[] SupportedMethods;
 
+    static LongCountExpressionNode ()
+    {
+      var supportedMethods = new List<MethodInfo>
+                             {
+                             GetSupportedMethod (() => Queryable.LongCount<object> (null)),
+                             GetSupportedMethod (() => Queryable.LongCount<object> (null, null)),
+                             GetSupportedMethod (() => Enumerable.LongCount<object> (null)),
+                             GetSupportedMethod (() => Enumerable.LongCount<object> (null, null)),
+                         };
+
+      var arrayLongLengthExpression = GetArrayLongLengthExpression();
+      if (arrayLongLengthExpression != null)
+        supportedMethods.Add (GetSupportedMethod (arrayLongLengthExpression));
+
+      SupportedMethods = supportedMethods.ToArray();
+    }
+
+    private static Expression<Func<long>> GetArrayLongLengthExpression ()
+    {
+      var property = typeof (Array).GetRuntimeProperty ("LongLength");
+      if (property == null)
+        return null;
+
+      //() => (((Array) null).LongLength;
+      return Expression.Lambda<Func<long>>(Expression.MakeMemberAccess (Expression.Constant (null, typeof (Array)), property));
+    }
 
     public LongCountExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate)
         : base (parseInfo, optionalPredicate, null)

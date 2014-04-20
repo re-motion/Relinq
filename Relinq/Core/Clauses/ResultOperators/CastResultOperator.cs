@@ -18,7 +18,9 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
@@ -36,6 +38,9 @@ namespace Remotion.Linq.Clauses.ResultOperators
   /// </example>
   public class CastResultOperator : SequenceFromSequenceResultOperatorBase
   {
+    private static readonly MethodInfo s_enumerableCastMethod = 
+        typeof (Enumerable).GetRuntimeMethodChecked ("Cast", new[] { typeof (IEnumerable) });
+
     private Type _castItemType;
 
     public CastResultOperator (Type castItemType)
@@ -64,7 +69,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
       ArgumentUtility.CheckNotNull ("input", input);
 
       var sequence = input.GetTypedSequence<TInput> ();
-      var castMethod = typeof (Enumerable).GetMethod ("Cast", new[] { typeof (IEnumerable) }).MakeGenericMethod (CastItemType);
+      var castMethod = s_enumerableCastMethod.MakeGenericMethod (CastItemType);
       var result = (IEnumerable) InvokeExecuteMethod (castMethod, sequence);
       return new StreamedSequence (result.AsQueryable(), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
     }

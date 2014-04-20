@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Utilities;
 
@@ -65,7 +64,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
 
     private Expression InlineLambdaExpression (LambdaExpression lambdaExpression, ReadOnlyCollection<Expression> arguments)
     {
-      Debug.Assert (lambdaExpression.Parameters.Count == arguments.Count);
+      Assertion.DebugAssert (lambdaExpression.Parameters.Count == arguments.Count);
 
       var mapping = new Dictionary<Expression, Expression> (arguments.Count);
       

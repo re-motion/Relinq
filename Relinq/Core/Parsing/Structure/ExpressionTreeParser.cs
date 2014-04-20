@@ -35,7 +35,7 @@ namespace Remotion.Linq.Parsing.Structure
   /// </summary>
   public sealed class ExpressionTreeParser
   {
-    private static readonly MethodInfo s_getArrayLengthMethod = typeof (Array).GetMethod ("get_Length");
+    private static readonly MethodInfo s_getArrayLengthMethod = typeof (Array).GetRuntimeProperty ("Length").GetMethod;
 
     [Obsolete (
         "This method has been removed. Use QueryParser.CreateDefault, or create a customized ExpressionTreeParser using the constructor. (1.13.93)", 
@@ -53,7 +53,7 @@ namespace Remotion.Linq.Parsing.Structure
     /// registered.</returns>
     public static CompoundNodeTypeProvider CreateDefaultNodeTypeProvider ()
     {
-      var searchedTypes = typeof (MethodInfoBasedNodeTypeRegistry).Assembly.GetTypes ();
+      var searchedTypes = typeof (MethodInfoBasedNodeTypeRegistry).GetTypeInfo().Assembly.DefinedTypes.Select (ti => ti.AsType()).ToList();
       var innerProviders = new INodeTypeProvider[]
                            {
                                MethodInfoBasedNodeTypeRegistry.CreateFromTypes (searchedTypes),
@@ -175,7 +175,7 @@ namespace Remotion.Linq.Parsing.Structure
         if (propertyInfo == null)
           return null;
 
-        var getterMethod = propertyInfo.GetGetMethod ();
+        var getterMethod = propertyInfo.GetMethod;
         if (getterMethod == null || !_nodeTypeProvider.IsRegistered (getterMethod))
           return null;
 

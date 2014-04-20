@@ -53,7 +53,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
       {
         return (IExpressionTransformer<MethodCallExpression>) Activator.CreateInstance (_transformerType);
       }
-      catch (MissingMethodException ex)
+      catch (MissingMemberException ex)
       {
         var message = String.Format (
             "The method call transformer '{0}' has no public default constructor and therefore cannot be used with the MethodCallExpressionTransformerAttribute.",

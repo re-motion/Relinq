@@ -1,4 +1,4 @@
-// Copyright (c) rubicon IT GmbH, www.rubicon.eu
+﻿// Copyright (c) rubicon IT GmbH, www.rubicon.eu
 //
 // See the NOTICE file distributed with this work for additional information
 // regarding copyright ownership.  rubicon licenses this file to you under 
@@ -16,17 +16,11 @@
 // 
 
 using System;
-using System.Reflection;
-using System.Security;
 
-//
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-//
-
-[assembly: AssemblyTitle ("Remotion Development Support Library for Remotion.Linq")]
-[assembly: AssemblyDescription ("Library for unit testing, building and other development-time activities.")]
-[assembly: AssemblyCulture("")]
-[assembly: CLSCompliant(true)]
-[assembly: SecurityTransparent] // required to allow assembly to be linked from assemblies having the AllowPartiallyTrustedCallersAttribute applied
+namespace Remotion.Linq.UnitTests.TestDomain
+{
+  public class Course
+  {
+    public string Name { get; set; }
+  }
+}

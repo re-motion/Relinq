@@ -40,7 +40,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.MemberBindings
         return true;
 
       var methodInfo = member as MethodInfo;
-      if (methodInfo != null && ((PropertyInfo) BoundMember).CanRead && methodInfo == ((PropertyInfo) BoundMember).GetGetMethod())
+      if (methodInfo != null && ((PropertyInfo) BoundMember).CanRead && methodInfo == ((PropertyInfo) BoundMember).GetMethod)
         return true;
 
       return false;

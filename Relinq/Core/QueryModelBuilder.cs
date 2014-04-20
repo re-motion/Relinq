@@ -37,12 +37,12 @@ namespace Remotion.Linq
 
     public ReadOnlyCollection<IBodyClause> BodyClauses
     {
-      get { return _bodyClauses.AsReadOnly(); }
+      get { return new ReadOnlyCollection<IBodyClause> (_bodyClauses); }
     }
 
     public ReadOnlyCollection<ResultOperatorBase> ResultOperators
     {
-      get { return _resultOperators.AsReadOnly(); }
+      get { return new ReadOnlyCollection<ResultOperatorBase> (_resultOperators); }
     }
 
     public void AddClause (IClause clause)

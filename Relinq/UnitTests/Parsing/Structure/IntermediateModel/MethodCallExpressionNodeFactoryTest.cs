@@ -61,6 +61,14 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
+    public void CreateExpressionNode_OnlyOnePublicInstanceCtor ()
+    {
+      var result = MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (ExpressionNodeWithOnePublicInstanceCtor), _parseInfo, new object[0]);
+
+      Assert.That (result, Is.InstanceOf (typeof (ExpressionNodeWithOnePublicInstanceCtor)));
+    }
+
+    [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage =
         "Parameter 'nodeType' is a 'Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel.MethodCallExpressionNodeFactoryTest', "
         + "which cannot be assigned to type 'Remotion.Linq.Parsing.Structure.IntermediateModel.IExpressionNode'."
@@ -71,9 +79,10 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Expression node type 'Remotion.Linq.UnitTests.Parsing.Structure."
-        + "IntermediateModel.TestDomain.ExpressionNodeWithTooManyCtors' contains too many constructors. It must only contain a single constructor, allowing null "
-        + "to be passed for any optional arguments.\r\nParameter name: nodeType")]
+    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
+        "Expression node type 'Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel.TestDomain.ExpressionNodeWithTooManyCtors' "
+        + "contains too many constructors. It must only contain a single constructor, allowing null to be passed for any optional arguments."
+        + "\r\nParameter name: nodeType")]
     public void CreateExpressionNode_MoreThanOneCtor ()
     {
       MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (ExpressionNodeWithTooManyCtors), _parseInfo, new object[0]);
@@ -81,8 +90,8 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
 
     [Test]
     [ExpectedException (typeof (ExpressionNodeInstantiationException), ExpectedMessage = 
-        "The constructor of expression node type 'Remotion.Linq.Parsing.Structure."
-        + "IntermediateModel.SelectExpressionNode' only takes 2 parameters, but you specified 3 (including the parse info parameter).")]
+        "The constructor of expression node type 'Remotion.Linq.Parsing.Structure.IntermediateModel.SelectExpressionNode' "
+        + "only takes 2 parameters, but you specified 3 (including the parse info parameter).")]
     public void CreateExpressionNode_TooManyParameters ()
     {
       var selector = ExpressionHelper.CreateLambdaExpression ();
@@ -102,8 +111,8 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
 
     [Test]
     [ExpectedException (typeof (ExpressionNodeInstantiationException), ExpectedMessage = 
-        "Object of type 'System.Linq.Expressions.ConstantExpression' cannot be converted to type 'System.Linq.Expressions.LambdaExpression'. If you "
-        + "tried to pass a delegate instead of a LambdaExpression, this is not supported because delegates are not parsable expressions.")]
+        "Object of type 'System.Linq.Expressions.ConstantExpression' cannot be converted to type 'System.Linq.Expressions.LambdaExpression'. "
+        + "If you tried to pass a delegate instead of a LambdaExpression, this is not supported because delegates are not parsable expressions.")]
     public void CreateExpressionNode_InvalidNodeParameterType_ConstantDelegateInsteadOfLambda ()
     {
       var selector = Expression.Constant ((Func<int, int>) (i => i));
