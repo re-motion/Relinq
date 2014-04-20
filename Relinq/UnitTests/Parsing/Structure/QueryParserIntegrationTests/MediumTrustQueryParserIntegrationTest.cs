@@ -40,7 +40,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
                    select t).ToArray ();
 
       var testFixtureResults = SandboxTestRunner.RunTestFixturesInSandbox (types, mediumTrust, null);
-      var testResults = testFixtureResults.SelectMany (r => r.TestResults);
+      var testResults = testFixtureResults.SelectMany (r => r.TestResults).ToArray();
 
       foreach (var testResult in testResults)
         testResult.EnsureNotFailed ();
