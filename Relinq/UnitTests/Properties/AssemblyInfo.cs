@@ -16,7 +16,6 @@
 // 
 using System;
 using System.Reflection;
-using System.Security;
 
 //
 // General Information about an assembly is controlled through the following 
@@ -26,6 +25,5 @@ using System.Security;
 
 [assembly: AssemblyTitle("Unit Tests for Remotion Linq Library")]
 [assembly: AssemblyDescription("Unit Tests for Remotion Linq Library")]
-[assembly: AssemblyCulture("")]		
+[assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
-[assembly: AllowPartiallyTrustedCallers] // required for sandbox tests

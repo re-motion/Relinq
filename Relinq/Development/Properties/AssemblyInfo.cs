@@ -29,4 +29,4 @@ using System.Security;
 [assembly: AssemblyDescription ("Library for unit testing, building and other development-time activities.")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
-[assembly: AllowPartiallyTrustedCallers] // required for sandboxing
+[assembly: SecurityTransparent] // required to allow assembly to be linked from assemblies having the AllowPartiallyTrustedCallersAttribute applied
