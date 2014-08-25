@@ -102,13 +102,11 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\prereq\Assemblies\NUnit-2.6\net-2.0\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\prereq\Assemblies\Rhino.Mocks-3.6\net-3.5\Rhino.Mocks.dll</HintPath>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -118,41 +116,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\AssertionConditionAttribute.cs">
-      <Link>SharedSource\ResharperAnnotations\AssertionConditionAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\AssertionConditionType.cs">
-      <Link>SharedSource\ResharperAnnotations\AssertionConditionType.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\AssertionMethodAttribute.cs">
-      <Link>SharedSource\ResharperAnnotations\AssertionMethodAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\ImplicitUseKindFlags.cs">
-      <Link>SharedSource\ResharperAnnotations\ImplicitUseKindFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\ImplicitUseTargetFlags.cs">
-      <Link>SharedSource\ResharperAnnotations\ImplicitUseTargetFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\InvokerParameterNameAttribute.cs">
-      <Link>SharedSource\ResharperAnnotations\InvokerParameterNameAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SharedSource\Core\ReSharperAnnotations\MeansImplicitUseAttribute.cs">
-      <Link>SharedSource\ResharperAnnotations\MeansImplicitUseAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\NoEnumerationAttribute.cs">
-      <Link>SharedSource\ResharperAnnotations\NoEnumerationAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SharedSource\Core\ResharperAnnotations\UsedImplicitlyAttribute.cs">
-      <Link>SharedSource\ResharperAnnotations\UsedImplicitlyAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SharedSource\Core\Utilities\ArgumentUtility.cs">
-      <Link>SharedSource\Utilities\ArgumentUtility.cs</Link>
-    </Compile>
     <Compile Include="..\..\sharedsource\core\utilities\ExceptionUtility.cs">
       <Link>SharedSource\Utilities\ExceptionUtility.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SharedSource\Core\Utilities\NullableTypeUtility.cs">
-      <Link>SharedSource\Utilities\NullableTypeUtility.cs</Link>
     </Compile>
     <Compile Include="..\..\sharedsource\development\unittesting\Dev.cs">
       <Link>SharedSource\UnitTesting\Dev.cs</Link>
@@ -166,6 +131,31 @@
     <Compile Include="..\AssemblyInfoShared.cs">
       <Link>Properties\AssemblyInfoShared.cs</Link>
     </Compile>
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\AssertionConditionAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\AssertionConditionType.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\AssertionMethodAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\BaseTypeRequiredAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\CanBeNullAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\CannotApplyEqualityOperatorAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\ContractAnnotationAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\ImplicitUseKindFlags.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\ImplicitUseTargetFlags.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\InstantHandleAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\InvokerParameterNameAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\LinqTunnelAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\LocalizationRequiredAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\MeansImplicitUseAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\NoEnumerationAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\NotifyPropertyChangedInvocatorAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\NotNullAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\PathReferenceAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\PublicAPIAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\PureAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\StringFormatMethodAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\TerminatesProgramAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\UsedImplicitlyAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.Utilities.ArgumentUtility.Sources.1.15.23.0\ArgumentUtility.cs" />
+    <Compile Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\NullableTypeUtility.cs" />
     <Compile Include="Clauses\Expressions\SubQueryExpressionTest.cs" />
     <Compile Include="Clauses\Expressions\VBStringComparisonExpressionTest.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\MultiReplacingExpressionTreeVisitorTest.cs" />
@@ -418,6 +408,8 @@
     <None Include="..\Relinq Apache-2.0.licenseheader">
       <Link>Relinq Apache-2.0.licenseheader</Link>
     </None>
+    <None Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
+    <None Include="packages.config" />
     <None Include="Parsing\ExpressionTrees\ExpressionTree_Grammar.docx" />
   </ItemGroup>
   <ItemGroup>
