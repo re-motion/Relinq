@@ -92,7 +92,7 @@ namespace Remotion.Linq.UnitTests
       Assert.That (
           () => _builder.AddClause (value),
           Throws.ArgumentException.With.Message.EqualTo (
-              "Cannot add clause of type '" + value.GetType().Name
+              "Cannot add clause of type '" + value.GetType().FullName
               + "' to a query model. Only instances of IBodyClause, MainFromClause, or ISelectGroupClause are supported."
               + "\r\nParameter name: clause"));
     }
