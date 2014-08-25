@@ -18,7 +18,6 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
-using Remotion.Development.UnitTesting;
 using Remotion.Linq.Development.UnitTesting;
 
 namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.MemberBindings
@@ -60,9 +59,9 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.MemberBindings
       get { return typeof (MemberBindingTestBase).GetProperty ("Foo"); }
     }
 
-    public int Foo { set { Dev.Null = value; } }
+    public int Foo { set { /* NOP */ } }
 
-      public FieldInfo Field
+    public FieldInfo Field
     {
       get { return _field; }
     }

@@ -43,46 +43,41 @@ namespace Remotion.Linq.UnitTests.Collections
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
-    public void Current_WithoutMoveNext ()
+    public void Current_WithoutMoveNext_ThrowsInvalidOperationException ()
     {
-      Dev.Null = _enumerator.Current;
+      Assert.That (() => _enumerator.Current, Throws.InvalidOperationException);
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
-    public void Current_AfterLastMoveNext ()
+    public void Current_AfterLastMoveNext_ThrowsInvalidOperationException ()
     {
       while (_enumerator.MoveNext())
       {
       }
 
-      Dev.Null = _enumerator.Current;
+      Assert.That (() => _enumerator.Current, Throws.InvalidOperationException);
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
-    public void Current_AfterReset ()
+    public void Current_AfterReset_ThrowsInvalidOperationException ()
     {
       _enumerator.MoveNext();
       _enumerator.Reset();
-      Dev.Null = _enumerator.Current;
+      Assert.That (() => _enumerator.Current, Throws.InvalidOperationException);
     }
 
     [Test]
-    [ExpectedException (typeof (ObjectDisposedException))]
-    public void Current_AfterDispose ()
+    public void Current_AfterDispose_ThrowsObjectDisposedException ()
     {
       _enumerator.Dispose();
-      Dev.Null = _enumerator.Current;
+      Assert.That (() => _enumerator.Current, Throws.Exception.TypeOf<ObjectDisposedException>());
     }
 
     [Test]
-    [ExpectedException (typeof (ObjectDisposedException))]
-    public void Index_AfterDispose ()
+    public void Index_AfterDispose_ThrowsObjectDisposedException ()
     {
       _enumerator.Dispose();
-      Dev.Null = _enumerator.Index;
+      Assert.That (() => _enumerator.Index, Throws.Exception.TypeOf<ObjectDisposedException>());
     }
 
     [Test]
