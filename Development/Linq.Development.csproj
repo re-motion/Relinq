@@ -41,7 +41,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\remotion.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\remotion.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -91,7 +91,7 @@
     <Compile Include="UnitTesting\TestQueryModelVisitor.cs" />
     <Compile Include="UnitTesting\TestQueryProvider.cs" />
     <Compile Include="UnitTesting\Clauses\StreamedData\TestStreamedValueInfo.cs" />
-    <None Include="..\..\remotion.snk">
+    <None Include="..\remotion.snk">
       <Link>remotion.snk</Link>
     </None>
     <None Include="..\Relinq Apache-2.0.licenseheader">

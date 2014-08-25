@@ -18,7 +18,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\remotion.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\remotion.snk</AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -288,7 +288,7 @@
     <None Include="..\Relinq Apache-2.0.licenseheader">
       <Link>Relinq Apache-2.0.licenseheader</Link>
     </None>
-    <None Include="..\..\remotion.snk">
+    <None Include="..\remotion.snk">
       <Link>remotion.snk</Link>
     </None>
     <Compile Include="QueryModel.cs" />

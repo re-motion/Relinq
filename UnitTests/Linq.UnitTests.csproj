@@ -31,7 +31,7 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\remotion.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\remotion.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -412,7 +412,7 @@
     <Compile Include="TestQueryGenerators\WhereTestQueryGenerator.cs" />
     <Compile Include="Transformations\SubQueryFromClauseFlattenerTest.cs" />
     <Compile Include="UniqueIdentifierGeneratorTest.cs" />
-    <None Include="..\..\remotion.snk">
+    <None Include="..\remotion.snk">
       <Link>remotion.snk</Link>
     </None>
     <None Include="..\Relinq Apache-2.0.licenseheader">
