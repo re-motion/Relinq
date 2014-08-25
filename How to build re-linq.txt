@@ -1,0 +1,24 @@
+Creating your own remotion.snk keyfile
+--------------------------------------
+
+We cannot provide the official remotion.snk keyfile, so you will need to 
+create your own.
+To do so, simply run the "Generate-Snk.cmd" script from a Visual Studio Command 
+Prompt. If you do not use a Visual Studio Command Prompt, you will need to make 
+sure the .NET SDK is on your PATH.
+
+cd c:\relinq
+Generate-Snk.cmd
+
+Note that the newly generated key file will not match the original key used 
+by rubicon to sign re-motion assemblies.
+
+
+Building re-linq from Visual Studio
+-------------------------------------
+
+After getting the sources and a remotion.snk, just load Remotion-Linq.sln in 
+Visual Studio and build it. It should work.
+
+
+
