@@ -20,19 +20,10 @@
   <PropertyGroup>
     <MSBuildExtensionPackPath Condition="'$(MSBuildExtensionPackPath)' == ''">$(MSBuildExtensionsPath)\MSBuildExtensionPack\</MSBuildExtensionPackPath>
     <RemotionBuildTasksPath Condition="'$(RemotionBuildTasksPath)' == ''">$(MSBuildExtensionsPath)\Remotion.BuildTools.MSBuildTasks\</RemotionBuildTasksPath>
+    <ExtensionTasksPath>$(MSBuildExtensionPackPath)</ExtensionTasksPath>
   </PropertyGroup>
-  
-  <!-- Use tasks of the MSBuild ExtensionPack library -->
-  <!-- use the extension pack task once NUnit is upgraded to 2.5 -->
-  <UsingTask AssemblyFile="$(MSBuildExtensionPackPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.CodeQuality.NUnit" />
-  <UsingTask AssemblyFile="$(MSBuildExtensionPackPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Compression.DNZip" />
-  <UsingTask AssemblyFile="$(MSBuildExtensionPackPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Framework.AssemblyInfo" />
-  <UsingTask AssemblyFile="$(MSBuildExtensionPackPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Framework.DateAndTime" />
-  <UsingTask AssemblyFile="$(MSBuildExtensionPackPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Framework.MsBuildHelper" />
-  <UsingTask AssemblyFile="$(MSBuildExtensionPackPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Framework.TextString" />
-  <UsingTask AssemblyFile="$(MSBuildExtensionPackPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.FileSystem.File" />
-  <UsingTask AssemblyFile="$(MSBuildExtensionPackPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Science.Maths" />
-  <UsingTask AssemblyFile="$(MSBuildExtensionPackPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Xml.XmlFile" />
+
+  <Import Project="$(MSBuildExtensionPackPath)MSBuild.ExtensionPack.tasks" />
 
   <!-- Use tasks of the re-motion BuildTools MSBuild Tasks library -->
   <UsingTask AssemblyFile="$(RemotionBuildTasksPath)Remotion.BuildTools.MSBuildTasks.dll" TaskName="Remotion.BuildTools.MSBuildTasks.CodeplexCreateRelease" />

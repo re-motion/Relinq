@@ -34,6 +34,36 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{43BF1C
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_build", "_build", "{F855DF99-CCDB-4AD7-A8FB-5EBC37D47914}"
+	ProjectSection(SolutionItems) = preProject
+		build\ContentLayout.content = build\ContentLayout.content
+		build\DependDB.ConfigurationTemplate.xml = build\DependDB.ConfigurationTemplate.xml
+		build\NuGet.ConfigurationTemplate.nuspec = build\NuGet.ConfigurationTemplate.nuspec
+		build\NUnitErrors.xslt = build\NUnitErrors.xslt
+		build\Remotion.AssembleBuildOutput.include.build = build\Remotion.AssembleBuildOutput.include.build
+		build\Remotion.build = build\Remotion.build
+		build\Remotion.BuildTargets.include.build = build\Remotion.BuildTargets.include.build
+		build\Remotion.BuildTargets.Properties.include.build = build\Remotion.BuildTargets.Properties.include.build
+		build\Remotion.BuildTargets.Testing.include.build = build\Remotion.BuildTargets.Testing.include.build
+		build\Remotion.Configurations.include.build = build\Remotion.Configurations.include.build
+		build\Remotion.DebugSymbols.include.build = build\Remotion.DebugSymbols.include.build
+		build\Remotion.DependDB.include.build = build\Remotion.DependDB.include.build
+		build\Remotion.Documentation.include.build = build\Remotion.Documentation.include.build
+		build\Remotion.Documentation.Relinq.build = build\Remotion.Documentation.Relinq.build
+		build\Remotion.Local.build = build\Remotion.Local.build
+		build\Remotion.NuGet.Packaging.include.build = build\Remotion.NuGet.Packaging.include.build
+		build\Remotion.NuGet.Packaging.Relinq.Core.build = build\Remotion.NuGet.Packaging.Relinq.Core.build
+		build\Remotion.Packages.include.build = build\Remotion.Packages.include.build
+		build\Remotion.Packaging.base.build = build\Remotion.Packaging.base.build
+		build\Remotion.Packaging.include.build = build\Remotion.Packaging.include.build
+		build\Remotion.Packaging.Relinq.build = build\Remotion.Packaging.Relinq.build
+		build\Remotion.Projects.include.build = build\Remotion.Projects.include.build
+		build\Remotion.Server.build = build\Remotion.Server.build
+		build\Remotion.Tasks.include.build = build\Remotion.Tasks.include.build
+		build\SandcastleProjectTemplate.shfbproj = build\SandcastleProjectTemplate.shfbproj
+		build\SecureFileLoggerRules.rules = build\SecureFileLoggerRules.rules
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

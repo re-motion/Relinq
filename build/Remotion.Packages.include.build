@@ -32,60 +32,6 @@
       <ProductNameShort>re-linq</ProductNameShort>
     </AllPackages>
 
-    <AllPackages Include="TypePipe">
-      <PackageDeclaration>Remotion.Packaging.TypePipe.build</PackageDeclaration>
-      <DocumentationDeclaration>Remotion.Documentation.TypePipe.build</DocumentationDeclaration>
-      <AssemblyInfoFile>TypePipe\AssemblyInfoShared.*</AssemblyInfoFile>
-      <CompanyName>rubicon IT GmbH</CompanyName>
-      <CompanyUrl>http://www.rubicon.eu</CompanyUrl>
-      <Copyright>Copyright (c) rubicon IT GmbH, www.rubicon.eu - Licensed under Apache License, Version 2.0</Copyright>
-      <ProductName>re-motion code generation library (typepipe.codeplex.com)</ProductName>
-      <ProductNameShort>TypePipe</ProductNameShort>
-    </AllPackages>
-
-    <AllPackages Include="Core">
-      <PackageDeclaration>Remotion.Packaging.Core.build</PackageDeclaration>
-      <DocumentationDeclaration>Remotion.Documentation.Core.build</DocumentationDeclaration>
-      <AssemblyInfoFile>Remotion\AssemblyInfoShared.*</AssemblyInfoFile>
-      <CompanyName>rubicon IT GmbH</CompanyName>
-      <CompanyUrl>http://www.rubicon.eu</CompanyUrl>
-      <Copyright>Copyright (c) rubicon IT GmbH, www.rubicon.eu - Licensed under GNU LGPL 2.1 (or later)</Copyright>
-      <ProductName>re-motion core framework (www.re-motion.org)</ProductName>
-      <ProductNameShort>re-motion</ProductNameShort>
-    </AllPackages>
-    
-    <AllPackages Include="Dms">
-      <PackageDeclaration>Remotion.Packaging.Dms.build</PackageDeclaration>
-      <DocumentationDeclaration>Remotion.Documentation.Dms.build</DocumentationDeclaration>
-      <AssemblyInfoFile>Dms\AssemblyInfoShared.*</AssemblyInfoFile>
-      <CompanyName>rubicon IT GmbH</CompanyName>
-      <CompanyUrl>http://www.rubicon.eu</CompanyUrl>
-      <Copyright>Copyright (c) rubicon IT GmbH, www.rubicon.eu - Licensed under GNU AGPL 3.0</Copyright>
-      <ProductName>re-vision (www.re-motion.org)</ProductName>
-      <ProductNameShort>re-vision</ProductNameShort>
-    </AllPackages>
-
-    <AllPackages Include="SecurityManager">
-      <PackageDeclaration>Remotion.Packaging.SecurityManager.build</PackageDeclaration>
-      <DocumentationDeclaration>Remotion.Documentation.SecurityManager.build</DocumentationDeclaration>
-      <AssemblyInfoFile>SecurityManager\AssemblyInfoShared.*</AssemblyInfoFile>
-      <CompanyName>rubicon IT GmbH</CompanyName>
-      <CompanyUrl>http://www.rubicon.eu</CompanyUrl>
-      <Copyright>Copyright (c) rubicon IT GmbH, www.rubicon.eu - Licensed under GNU AGPL 3.0</Copyright>
-      <ProductName>re-strict (www.re-motion.org)</ProductName>
-      <ProductNameShort>re-strict</ProductNameShort>
-    </AllPackages>
-
-    <AllPackages Include="Remix">
-      <PackageDeclaration>Remotion.Packaging.Remix.build</PackageDeclaration>
-      <DocumentationDeclaration>Remotion.Documentation.Remix.build</DocumentationDeclaration>
-      <AssemblyInfoFile>Remotion\Mixins\AssemblyInfoShared.*</AssemblyInfoFile>
-      <CompanyName>rubicon IT GmbH</CompanyName>
-      <CompanyUrl>http://www.rubicon.eu</CompanyUrl>
-      <Copyright>Copyright (c) rubicon IT GmbH, www.rubicon.eu - Licensed under GNU LGPL 2.1 (or later)</Copyright>
-      <ProductName>re-motion mixins library (remix.codeplex.com)</ProductName>
-      <ProductNameShort>re-mix</ProductNameShort>
-    </AllPackages>
   </ItemGroup>
 
   <ItemGroup>
@@ -100,19 +46,6 @@
       <Description>With re-linq, it's now easier than ever to create full-featured LINQ providers.</Description>
       <Copyright>Copyright (c) rubicon IT GmbH, www.rubicon.eu - Licensed under GNU LGPL 2.1 (or later)</Copyright>
       <Tags>re-motion linq expression trees</Tags>
-    </NuGetPackages>
-
-    <NuGetPackages Include="TypePipe">
-      <PackageDeclaration>Remotion.NuGet.Packaging.TypePipe.build</PackageDeclaration>
-      <ID>Remotion.TypePipe</ID>
-      <Title>TypePipe - re-motion Code Generation Library</Title>
-      <Authors>rubicon IT GmbH</Authors>
-      <Owners>Fabian Schmied</Owners>
-      <LicenseUrl>http://typepipe.codeplex.com/license</LicenseUrl>
-      <ProjectUrl>http://typepipe.codeplex.com</ProjectUrl>
-      <Description>With the TypePipe, it's now easier than ever for multiple parties to collaboratively generate code.</Description>
-      <Copyright>Copyright (c) rubicon IT GmbH, www.rubicon.eu - Licensed under Apache License, Version 2.0</Copyright>
-      <Tags>re-motion TypePipe code generation expression trees msil</Tags>
     </NuGetPackages>
   </ItemGroup>
 

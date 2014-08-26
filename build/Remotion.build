@@ -17,6 +17,13 @@
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <PropertyGroup>
+    <PackagesDirectory>$(MSBuildProjectDirectory)\..\packages\</PackagesDirectory>
+    <NUnitToolPath>$(PackagesDirectory)NUnit.Runners.2.6.3\tools\</NUnitToolPath>
+    <MSBuildExtensionPackPath>$(PackagesDirectory)MSBuild.Extension.Pack.1.5.0\tools\net40\</MSBuildExtensionPackPath>
+    <RemotionBuildTasksPath>$(PackagesDirectory)Remotion.BuildTools.MSBuildTasks.1.0.5351.24435\tools\</RemotionBuildTasksPath>
+  </PropertyGroup>
+
   <Import Project="Remotion.Tasks.include.build" />
   <Import Project="Remotion.Packages.include.build" />
   <Import Project="Remotion.Projects.include.build" />
@@ -26,7 +33,7 @@
   <Import Project="Remotion.BuildTargets.Testing.include.build" />
   <Import Project="Remotion.AssembleBuildOutput.include.build" />
   <Import Project="Remotion.DebugSymbols.include.build" />
-
+  
   <PropertyGroup>
     <Version></Version>
     <ReleaseType></ReleaseType>
@@ -53,13 +60,6 @@
     <DependDBProjectImportNotificationMailAddress></DependDBProjectImportNotificationMailAddress>
     <DependDBProjectImportNotificationMailAddressCc></DependDBProjectImportNotificationMailAddressCc>
     <DependDBUploadPath>$(MSBuildProjectDirectory)\BuildOutput\DependDB\</DependDBUploadPath>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-    <NUnitToolPath>$(SolutionDirectory)prereq\Tools\NUnit-2.6\bin</NUnitToolPath>
-    <MixinXRefToolPath>$(SolutionDirectory)prereq\Tools\DependDB\DependDB.BuildProcessor\ReportGenerators\XRef45\</MixinXRefToolPath>
-    <MSBuildExtensionPackPath>$(SolutionDirectory)prereq\Tools\MSBuildExtensionPack\</MSBuildExtensionPackPath>
-    <RemotionBuildTasksPath>$(SolutionDirectory)prereq\Tools\Remotion.BuildTools.MSBuildTasks\</RemotionBuildTasksPath>
   </PropertyGroup>
 
   <Target Name="DocumentAll">
