@@ -1,0 +1,269 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file is part of the re-motion Core Framework (www.re-motion.org)
+ ! Copyright (c) rubicon IT GmbH, www.rubicon.eu
+ ! 
+ ! The re-motion Core Framework is free software; you can redistribute it 
+ ! and/or modify it under the terms of the GNU Lesser General Public License 
+ ! as published by the Free Software Foundation; either version 2.1 of the 
+ ! License, or (at your option) any later version.
+ ! 
+ ! re-motion is distributed in the hope that it will be useful, 
+ ! but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ ! GNU Lesser General Public License for more details.
+ ! 
+ ! You should have received a copy of the GNU Lesser General Public License
+ ! along with re-motion; if not, see http://www.gnu.org/licenses.
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Project="Remotion.Tasks.include.build" />
+  <Import Project="Remotion.Packages.include.build" />
+  <Import Project="Remotion.Projects.include.build" />
+  <Import Project="Remotion.Configurations.include.build" />
+  <Import Project="Remotion.BuildTargets.include.build" />
+  <Import Project="Remotion.BuildTargets.Properties.include.build" />
+  <Import Project="Remotion.BuildTargets.Testing.include.build" />
+  <Import Project="Remotion.AssembleBuildOutput.include.build" />
+  <Import Project="Remotion.DebugSymbols.include.build" />
+
+  <PropertyGroup>
+    <Version></Version>
+    <ReleaseType></ReleaseType>
+    <AdditionalBuildMetadata></AdditionalBuildMetadata>
+
+    <SolutionDirectory>$(MSBuildProjectDirectory)\..\</SolutionDirectory>
+    <OutputDirectory>$(MSBuildProjectDirectory)\BuildOutput\$(Version)\</OutputDirectory>
+    <LogDirectory>$(OutputDirectory)log\</LogDirectory>
+    <TempDirectory>$(MSBuildProjectDirectory)\BuildOutput\temp\</TempDirectory>
+    <ArchiveDirectory>$(MSBuildProjectDirectory)\BuildOutput\Archive\</ArchiveDirectory>
+    <WebShareDirectory>$(MSBuildProjectDirectory)\BuildOutput\WebShare\</WebShareDirectory>
+    <BinariesDirectory>$(TempDirectory)Binaries\</BinariesDirectory>
+
+    <SolutionKeyFile>$(SolutionDirectory)remotion.snk</SolutionKeyFile>
+
+    <CodePlexUsername></CodePlexUsername>
+    <CodePlexPassword></CodePlexPassword>
+
+    <NuGetApiKey></NuGetApiKey>
+
+    <DependDBProjectBranch></DependDBProjectBranch>
+    <DependDBProjectVersion></DependDBProjectVersion>
+    <DependDBProjectVCSUrlTemplate></DependDBProjectVCSUrlTemplate>
+    <DependDBProjectImportNotificationMailAddress></DependDBProjectImportNotificationMailAddress>
+    <DependDBProjectImportNotificationMailAddressCc></DependDBProjectImportNotificationMailAddressCc>
+    <DependDBUploadPath>$(MSBuildProjectDirectory)\BuildOutput\DependDB\</DependDBUploadPath>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <NUnitToolPath>$(SolutionDirectory)prereq\Tools\NUnit-2.6\bin</NUnitToolPath>
+    <MixinXRefToolPath>$(SolutionDirectory)prereq\Tools\DependDB\DependDB.BuildProcessor\ReportGenerators\XRef45\</MixinXRefToolPath>
+    <MSBuildExtensionPackPath>$(SolutionDirectory)prereq\Tools\MSBuildExtensionPack\</MSBuildExtensionPackPath>
+    <RemotionBuildTasksPath>$(SolutionDirectory)prereq\Tools\Remotion.BuildTools.MSBuildTasks\</RemotionBuildTasksPath>
+  </PropertyGroup>
+
+  <Target Name="DocumentAll">
+    <ItemGroup>
+      <_allDocumentationDeclarations Remove="@(_allDocumentationDeclarations)" />
+      <_allDocumentationDeclarations Include="%(AllPackages.DocumentationDeclaration)" />
+    </ItemGroup>
+
+    <MSBuild Projects="@(_allDocumentationDeclarations)"
+             BuildInParallel="false"
+             StopOnFirstFailure="true"
+             Targets="GenerateDocumentation;CopyChmFilesToBinariesDirectory;"
+             Properties="
+                 SolutionDirectory=$(SolutionDirectory);
+                 BinariesDirectory=$(BinariesDirectory);
+                 TempDirectory=$(TempDirectory);
+                 LogDirectory=$(LogDirectory);
+                 Version=$(Version);"/>
+  </Target>
+
+  <Target Name="PackageAll">
+    <!-- NuGet package must be created before modifying the debug symbols to allow the creation of proper NuGet source packages. -->
+    <MSBuild Projects="%(NuGetPackages.PackageDeclaration)"
+             BuildInParallel="false"
+             Targets="CreateNuGetPackage"
+             Properties="SolutionDirectory=$(SolutionDirectory);
+                         BinariesDirectory=$(BinariesDirectory);
+                         OutputDirectory=$(OutputDirectory);
+                         ArchiveDirectory=$(ArchiveDirectory);
+                         TempDirectory=$(TempDirectory);
+                         Version=$(Version);"/>
+    
+    <MSBuild Projects="$(MSBuildProjectFile)"
+             BuildInParallel="false"
+             Targets="UpdateDebugSymbols"
+             Properties="SolutionDirectory=$(SolutionDirectory);
+                         BinariesDirectory=$(BinariesDirectory);
+                         DebugSymbolsVCSUrl=$(DebugSymbolsVCSUrl);
+                         SvnRevision=$(SvnRevision);"/>
+    
+    <MSBuild Projects="%(AllPackages.PackageDeclaration)"
+             BuildInParallel="false"
+             Targets="CreatePackages"
+             Properties="
+                 SolutionDirectory=$(SolutionDirectory);
+                 BinariesDirectory=$(BinariesDirectory);
+                 OutputDirectory=$(OutputDirectory);
+                 ArchiveDirectory=$(ArchiveDirectory);
+                 TempDirectory=$(TempDirectory);
+                 Version=$(Version);
+                 JiraVersion=$(JiraVersion);
+                 DependDBProjectBranch=$(DependDBProjectBranch);
+                 DependDBProjectVersion=$(Version);
+                 DependDBProjectVCSUrlTemplate=$(DependDBProjectVCSUrlTemplate);
+                 DependDBProjectImportNotificationMailAddress=$(DependDBProjectImportNotificationMailAddress);
+                 DependDBProjectImportNotificationMailAddressCc=$(DependDBProjectImportNotificationMailAddressCc);
+                 DependDBUploadPath=$(DependDBUploadPath);"/>
+  </Target>
+  
+  <Target Name="ZipPackageAll">
+    <MSBuild Projects="%(AllPackages.PackageDeclaration)"
+             BuildInParallel="false"
+             Targets="CreateZipPackages"
+             Properties="
+                 SolutionDirectory=$(SolutionDirectory);
+                 BinariesDirectory=$(BinariesDirectory);
+                 OutputDirectory=$(OutputDirectory);
+                 ArchiveDirectory=$(ArchiveDirectory);
+                 TempDirectory=$(TempDirectory);
+                 Version=$(Version);"/>
+  </Target>
+
+  <Target Name="DeployAll">
+    <MSBuild Projects="%(AllPackages.PackageDeclaration)"
+             BuildInParallel="false"
+             Targets="DeployPackages"
+             Properties="
+                 SolutionDirectory=$(SolutionDirectory);
+                 BinariesDirectory=$(BinariesDirectory);
+                 OutputDirectory=$(OutputDirectory);
+                 ArchiveDirectory=$(ArchiveDirectory);
+                 TempDirectory=$(TempDirectory);
+                 Version=$(Version);
+                 ArchiveDirectory=$(ArchiveDirectory);
+                 WebShareDirectory=$(WebShareDirectory);
+                 CodeplexUserName=$(CodePlexUsername);
+                 CodeplexPassword=$(CodePlexPassword);
+                 DependDBUploadPath=$(DependDBUploadPath);"/>
+
+    <MSBuild Projects="%(NuGetPackages.PackageDeclaration)"
+             BuildInParallel="false"
+             Targets="UploadNuGetPackage"
+             Properties="SolutionDirectory=$(SolutionDirectory);
+                         OutputDirectory=$(OutputDirectory);
+                         ArchiveDirectory=$(ArchiveDirectory);
+                         Version=$(Version);
+                         NuGetApiKey=$(NuGetApiKey)"/>
+  </Target>
+
+  <Target Name="BuildAll" DependsOnTargets="CleanFolders;CheckVersion">
+    <MSBuild Projects="$(MSBuildProjectFile)"
+             BuildInParallel="false"
+             Targets="LogConfiguration;CleanProjects;BuildReleaseProjects;BuildTestProjects;RunTests;AssembleBuildOutput;RunMixinXRefTest"
+             Properties="ConfigurationID=%(AllConfigurations.Identity);
+                         SolutionKeyFile=$(SolutionKeyFile);
+                         SolutionDirectory=$(SolutionDirectory);
+                         OutputDirectory=$(OutputDirectory);
+                         TempDirectory=$(TempDirectory);
+                         LogDirectory=$(LogDirectory);
+                         Version=$(Version);
+                         ArchiveDirectory=$(ArchiveDirectory);
+                         ReleaseType=$(ReleaseType);
+                         AdditionalBuildMetadata=$(AdditionalBuildMetadata);
+                         Platforms=$(Platforms);
+                         DatabaseSystems=$(DatabaseSystems)"/>
+  </Target>
+  
+  <Target Name="TestBuildDebugOnly" DependsOnTargets="CleanFolders">
+    <MSBuild Projects="$(MSBuildProjectFile)"
+             BuildInParallel="false"
+             Targets="BuildReleaseProjects;BuildTestProjects;RunTests;AssembleBuildOutput;RunMixinXRefTest"
+             Properties="
+                  ConfigurationID=Debug;
+                  SolutionKeyFile=$(SolutionKeyFile);
+                  SolutionDirectory=$(SolutionDirectory);
+                  OutputDirectory=$(OutputDirectory);
+                  TempDirectory=$(TempDirectory);
+                  LogDirectory=$(LogDirectory);
+                  Version=$(Version);
+                  ArchiveDirectory=$(ArchiveDirectory);
+                  ReleaseType=$(ReleaseType);
+                  AdditionalBuildMetadata=$(AdditionalBuildMetadata);
+                  Platforms=$(Platforms);
+                  DatabaseSystems=$(DatabaseSystems)"/>
+  </Target>
+  
+  <Target Name="TestBuildAllConfigurations" DependsOnTargets="CleanFolders">
+    <MSBuild Projects="$(MSBuildProjectFile)"
+             BuildInParallel="false"
+             Targets="BuildReleaseProjects;BuildTestProjects;RunTests;AssembleBuildOutput;RunMixinXRefTest"
+             Properties="
+                  ConfigurationID=%(AllConfigurations.Identity);
+                  SolutionKeyFile=$(SolutionKeyFile);
+                  SolutionDirectory=$(SolutionDirectory);
+                  OutputDirectory=$(OutputDirectory);
+                  TempDirectory=$(TempDirectory);
+                  LogDirectory=$(LogDirectory);
+                  Version=$(Version);
+                  ArchiveDirectory=$(ArchiveDirectory);
+                  ReleaseType=$(ReleaseType);
+                  AdditionalBuildMetadata=$(AdditionalBuildMetadata);
+                  Platforms=$(Platforms);
+                  DatabaseSystems=$(DatabaseSystems)"/>
+  </Target>
+
+  <Target Name="DocumentationTestBuild" DependsOnTargets="CleanFolders" >
+    <MSBuild Projects="$(MSBuildProjectFile)"
+             BuildInParallel="false"
+             Targets="BuildReleaseProjects;AssembleBuildOutput;"
+             Properties="
+                 ConfigurationID=Debug;
+                 SolutionKeyFile=$(SolutionKeyFile)"/>
+
+    <ItemGroup>
+      <_allDocumentationDeclarations Remove="@(_allDocumentationDeclarations)" />
+      <_allDocumentationDeclarations Include="%(AllPackages.DocumentationDeclaration)" />
+    </ItemGroup>
+
+    <MSBuild Projects="@(_allDocumentationDeclarations)"
+             BuildInParallel="false"
+             StopOnFirstFailure="true"
+             Targets="GenerateDocumentation;CopyChmFilesToBinariesDirectory;CopyWebsiteFilesToWebsiteDirectory"
+             Properties="
+                 SolutionDirectory=$(SolutionDirectory);
+                 BinariesDirectory=$(BinariesDirectory);
+                 TempDirectory=$(TempDirectory);
+                 LogDirectory=$(LogDirectory);
+                 Version=0.0.0.0;"/>
+  </Target>
+
+  <Target Name="UpdateAssemblyInfosLocalBuild" DependsOnTargets="CheckVersion">
+    <MSBuild Projects="$(MSBuildProjectFile)"
+             BuildInParallel="false"
+             Targets="UpdateAssemblyInfos"
+             Properties="
+                ConfigurationID=Debug;"/>
+  </Target>
+  
+  <Target Name="DependDB" DependsOnTargets="CheckVersion">
+    <MSBuild Projects="%(AllPackages.PackageDeclaration)"
+             BuildInParallel="false"
+             Targets="CreateDependDBPackages;UploadToDependDB"
+             Properties="SolutionDirectory=$(SolutionDirectory);
+                         BinariesDirectory=$(BinariesDirectory);
+                         OutputDirectory=$(OutputDirectory);
+                         ArchiveDirectory=$(ArchiveDirectory);
+                         TempDirectory=$(TempDirectory);
+                         Version=$(Version);
+                         DependDBProjectBranch=$(DependDBProjectBranch);
+                         DependDBProjectVersion=$(DependDBProjectVersion);
+                         DependDBProjectVCSUrlTemplate=$(DependDBProjectVCSUrlTemplate);
+                         DependDBProjectImportNotificationMailAddress=$(DependDBProjectImportNotificationMailAddress);
+                         DependDBProjectImportNotificationMailAddressCc=$(DependDBProjectImportNotificationMailAddressCc);
+                         DependDBUploadPath=$(DependDBUploadPath)"/>
+  </Target>
+  
+</Project>

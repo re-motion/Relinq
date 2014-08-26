@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BuildProcessorConfiguration
+	xsi:schemaLocation="http://rubicon.eu/BuildProcessorConfiguration"
+	xmlns="http://rubicon.eu/BuildProcessorConfiguration"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<Settings>
+		<ProjectName></ProjectName>
+		<ProjectBranch></ProjectBranch>
+		<ProjectVersion></ProjectVersion>
+		<RetentionTime></RetentionTime>
+		<SourceDirectoryRoot></SourceDirectoryRoot>
+		<SourceControlUrlTemplate></SourceControlUrlTemplate>
+		<ProjectAssemblyFiles></ProjectAssemblyFiles>
+		<ReferencedAssemblyDirectories></ReferencedAssemblyDirectories>
+		<NotificationAddresses>
+			<To></To>
+		</NotificationAddresses>
+	</Settings>
+
+	<ReportGenerators>
+		<ReportGenerator name="Analyzer">
+			<ComplexParameter name="trackedReferenceFilter">
+				<TrackedReferenceFilter>
+				</TrackedReferenceFilter>
+			</ComplexParameter>
+		</ReportGenerator>
+		<ReportGenerator name="XReferencer45">
+			<StringParameter name="reflector" value=""/>
+			<ComplexParameter name="ignoredAssemblies">
+				<IgnoredAssemblies>
+				</IgnoredAssemblies>
+			</ComplexParameter>
+		</ReportGenerator>
+	</ReportGenerators>
+
+	<Senders>
+		<Sender name="FileSender">
+			<BoolParameter name="compress" value=""/>
+			<StringParameter name="outputPath" value="C:\watch"/>
+		</Sender>
+	</Senders>
+
+</BuildProcessorConfiguration>

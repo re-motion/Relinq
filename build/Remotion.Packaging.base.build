@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file is part of the re-motion Core Framework (www.re-motion.org)
+ ! Copyright (c) rubicon IT GmbH, www.rubicon.eu
+ ! 
+ ! The re-motion Core Framework is free software; you can redistribute it 
+ ! and/or modify it under the terms of the GNU Lesser General Public License 
+ ! as published by the Free Software Foundation; either version 2.1 of the 
+ ! License, or (at your option) any later version.
+ ! 
+ ! re-motion is distributed in the hope that it will be useful, 
+ ! but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ ! GNU Lesser General Public License for more details.
+ ! 
+ ! You should have received a copy of the GNU Lesser General Public License
+ ! along with re-motion; if not, see http://www.gnu.org/licenses.
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="CreateRequiresUploadProperties">
+    <Error Text="The target 'CreateRequiresUploadProperties' is not implemented." />
+  </Target>
+  
+  <Target Name="CreateRequiresUpload" DependsOnTargets="CreateRequiresUploadProperties">
+    <Error Text="The property 'MasterPackageName' is not set." Condition="'$(MasterPackageName)' == ''" />
+    <Error Text="The property 'OutputDirectory' is not set." Condition="'$(OutputDirectory)' == ''" />
+    <Error Text="The property 'Version' is not set." Condition="'$(Version)' == ''" />
+
+    <PropertyGroup>
+      <_releaseNotesLocalOutputDirectory>$(OutputDirectory)ReleaseNotes\$(MasterPackageName)\</_releaseNotesLocalOutputDirectory>
+      <_releaseNotesFile>$(_releaseNotesLocalOutputDirectory)ReleaseNotes_v$(Version).html</_releaseNotesFile>
+      <_hasResolvedIssues Condition="Exists ($(_releaseNotesFile)) AND $([System.IO.File]::ReadAllText ($(_releaseNotesFile)).Length) &gt; 0">True</_hasResolvedIssues>
+    </PropertyGroup>
+
+    <Message Text="Checking if upload to CodePlex/NuGet is required: $(_hasResolvedIssues) - determined by check of $(_releaseNotesFile)" Importance="High"/>
+
+    <PropertyGroup>
+      <UploadToCodePlex Condition="$(UploadToCodePlex) == 'True' AND $(_hasResolvedIssues) != 'True'">False</UploadToCodePlex>
+
+      <UploadToNuGet>False</UploadToNuGet>
+      <UploadToNuGet Condition="$(_hasResolvedIssues) == 'True'">True</UploadToNuGet>
+    </PropertyGroup>
+  </Target>
+  
+</Project>

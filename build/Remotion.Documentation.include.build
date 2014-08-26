@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file is part of the re-motion Core Framework (www.re-motion.org)
+ ! Copyright (c) rubicon IT GmbH, www.rubicon.eu
+ ! 
+ ! The re-motion Core Framework is free software; you can redistribute it 
+ ! and/or modify it under the terms of the GNU Lesser General Public License 
+ ! as published by the Free Software Foundation; either version 2.1 of the 
+ ! License, or (at your option) any later version.
+ ! 
+ ! re-motion is distributed in the hope that it will be useful, 
+ ! but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ ! GNU Lesser General Public License for more details.
+ ! 
+ ! You should have received a copy of the GNU Lesser General Public License
+ ! along with re-motion; if not, see http://www.gnu.org/licenses.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="CreateDocumentationProperties">
+    <Error Text="The target 'CreateDocumentationProperties' is not implemented." />
+  </Target>
+  
+  <Target Name="CreateBinaryFiles">
+    <Error Text="The target 'CreateBinaryFiles' is not implemented." />
+  </Target>
+
+  <Target Name="CreateNamespaceSummaryFiles">
+    <Error Text="The target 'CreateNamespaceSummaryFiles' is not implemented." />
+  </Target>
+
+  <PropertyGroup>
+    <MSBuildExtensionPackPath>$(SolutionDirectory)prereq\Tools\MSBuildExtensionPack\</MSBuildExtensionPackPath>
+    <RemotionBuildTasksPath>$(SolutionDirectory)prereq\Tools\Remotion.BuildTools.MSBuildTasks\</RemotionBuildTasksPath>
+  </PropertyGroup>
+
+  <Import Project="Remotion.Tasks.include.build" />
+  <Import Project="Remotion.Packages.include.build" />
+
+  <Target Name="GenerateDocumentation"  DependsOnTargets="GenerateDocumentationInternal;" >
+  </Target>
+  
+  <Target Name="GenerateDocumentationInternal"
+        DependsOnTargets="CreateSandcastleProperties;CreateDocumentationProperties;CreateDocumentationRootPage;CreateSandcastleProjectFile">
+
+    <Message Text="Generating public documentation for $(PackageID)" Importance="High"/>
+
+    <PropertyGroup>
+      <_startTime>$([System.DateTime]::Now)</_startTime>
+    </PropertyGroup>
+    
+    <MSBuild Projects="$(DocumentationSandcastleProjectFile)"/>
+
+    <PropertyGroup>
+      <_timeTaken>$( [System.DateTime]::Now.Subtract ( $([System.DateTime]::Parse($(_startTime))) ).TotalSeconds.ToString("N0") )</_timeTaken>
+    </PropertyGroup>
+
+    <Message Text="Done generating documentation for $(PackageID). (Took $(_timeTaken) seconds)" Importance="High"/>
+  </Target>
+
+  <Target Name="CreateSandcastleProperties">
+    <Error Text="The property 'TempDirectory' is not set." Condition="'$(TempDirectory)' == ''" />
+
+    <PropertyGroup>
+      <DocumentationChmOutputDirectory>$(BinariesDirectory)net-4.5\doc\</DocumentationChmOutputDirectory>
+      <DocumentationWebsiteOutputDirectory>$(TempDirectory)web\</DocumentationWebsiteOutputDirectory>
+      <DocumentationBinariesDirectory>$(BinariesDirectory)net-4.5\bin\debug\</DocumentationBinariesDirectory>
+      <DocumentationBaseDirectory>$(TempDirectory)doc\$([System.Guid]::NewGuid())\</DocumentationBaseDirectory>
+      <DocumentationCompilationOutputDirectory>$(DocumentationBaseDirectory)Output\</DocumentationCompilationOutputDirectory>
+      <DocumentationRootPageTarget>$(DocumentationBaseDirectory)GettingStarted.aml</DocumentationRootPageTarget>
+      <DocumentationSandcastleProjectFile>$(DocumentationBaseDirectory)documentation.shfbproj</DocumentationSandcastleProjectFile>
+    </PropertyGroup>
+    <Message Text="$(DocumentationSandcastleProjectFile)"/>
+  </Target>
+
+  <Target Name="CreateSandcastleProjectFile" DependsOnTargets="CheckVersion;CreatePackageProperties;CreateSandcastleProperties;CreateBinaryFiles;CreateNamespaceSummaryFiles;">
+    <Error Text="The property 'DocumentationBaseDirectory' is not set." Condition="'$(DocumentationBaseDirectory)' == ''" />
+    <Error Text="The property 'DocumentationSandcastleProjectFile' is not set." Condition="'$(DocumentationSandcastleProjectFile)' == ''" />
+
+    <PropertyGroup>
+      <_sandcastleProjectTemplate>$(MSBuildProjectDirectory)\SandcastleProjectTemplate.shfbproj</_sandcastleProjectTemplate>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(DocumentationBaseDirectory)" />
+    <Copy SourceFiles="$(_sandcastleProjectTemplate)" DestinationFiles="$(DocumentationSandcastleProjectFile)" />
+
+    <ItemGroup>
+      <_properties Remove="@(_properties)" />
+      <_properties Include="HtmlHelpName">
+        <Value>$(ProductNameShort)</Value>
+      </_properties>
+      <_properties Include="OutputPath">
+        <Value>$(DocumentationCompilationOutputDirectory)</Value>
+      </_properties>
+      <_properties Include="FooterText">
+        <Value><![CDATA[<p>Version: $(Version)</p>]]></Value>
+      </_properties>
+      <_properties Include="HelpTitle">
+        <Value>$(ProductName)</Value>
+      </_properties>
+      <_properties Include="ProductTitle">
+        <Value>$(ProductName)</Value>
+      </_properties>
+      <_properties Include="CopyrightHref">
+        <Value>$(CompanyUrl)</Value>
+      </_properties>
+      <_properties Include="CopyrightText">
+        <Value>$(Copyright)</Value>
+      </_properties>
+      <_properties Include="HelpFileVersion">
+        <Value>$([System.Version]::Parse ($(Version)))</Value>
+      </_properties>
+      <_properties Include="VendorName">
+        <Value>$(CompanyName)</Value>
+      </_properties>
+      <_properties Include="BuildLogFile">
+        <Value>$(LogDirectory)Sandcastle.$(PackageID).log</Value>
+      </_properties>
+      <_properties Include="WorkingPath">
+        <Value>$(DocumentationBaseDirectory)Working\</Value>
+      </_properties>
+
+      <_namespaces Remove="@(_namespaces)" />
+      <_namespaces Include="MSBuild2003">
+        <Prefix>mb</Prefix>
+        <Uri>http://schemas.microsoft.com/developer/msbuild/2003</Uri>
+      </_namespaces>
+    </ItemGroup>
+
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="UpdateElement"
+                                       File="$(DocumentationSandcastleProjectFile)"
+                                       XPath="/mb:Project/mb:PropertyGroup/mb:%(_properties.Identity)"
+                                       InnerText="%(_properties.Value)"
+                                       Namespaces="@(_namespaces)"/>
+
+    <!-- use a different cache location for each project to enable parallelization -->
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="UpdateAttribute"
+                                       File="$(DocumentationSandcastleProjectFile)"
+                                       XPath="/mb:Project/mb:PropertyGroup/mb:ComponentConfigurations/ComponentConfig[@id='Cached MSDN URL References']/component/helpOutput/cache"
+                                       Key="filename"
+                                       Value="{@LocalDataFolder}Cache\$(ProductNameShort)\MsdnUrl.cache"
+                                       Namespaces="@(_namespaces)"/>
+
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="UpdateAttribute"
+                                       File="$(DocumentationSandcastleProjectFile)"
+                                       XPath="/mb:Project/mb:PropertyGroup/mb:ComponentConfigurations/ComponentConfig[@id='Cached Reflection Index Data']/component/index/cache"
+                                       Key="cacheFile"
+                                       Value="{@LocalDataFolder}Cache\$(ProductNameShort)\Reflection.cache"
+                                       Namespaces="@(_namespaces)"/>
+
+    <!-- There's no way to specify the cache location for the Cached Framework Comments component (it is determined by SHFB at runtime), so we have to disable it. -->
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="UpdateAttribute"
+                                       File="$(DocumentationSandcastleProjectFile)"
+                                       XPath="/mb:Project/mb:PropertyGroup/mb:ComponentConfigurations/ComponentConfig[@id='Cached Framework Comments Index Data']"
+                                       Key="enabled"
+                                       Value="false"
+                                       Namespaces="@(_namespaces)"/>
+
+    <Remotion.BuildTools.MSBuildTasks.SandcastleProjectBuilder File="$(DocumentationSandcastleProjectFile)"
+                                                               Assemblies="@(BinaryFiles)"
+                                                               NamespaceSummaryFiles="@(NamespaceSummaryFiles)" />
+  </Target>
+ 
+  <Target Name="CreateDocumentationRootPage" DependsOnTargets="CreateDocumentationProperties;CreatePackageProperties;CreateSandcastleProperties">
+    <Error Text="The property 'SolutionDirectory' is not set." Condition="'$(SolutionDirectory)' == ''" />
+    <Error Text="The property 'DocumentationRootPageSource' is not set." Condition="'$(DocumentationRootPageSource)' == ''" />
+    <Error Text="The property 'DocumentationRootPageTarget' is not set." Condition="'$(DocumentationRootPageTarget)' == ''" />
+
+    <Copy SourceFiles="$(SolutionDirectory)$(DocumentationRootPageSource)" DestinationFiles="$(DocumentationRootPageTarget)" />
+
+    <!-- copy the content file that references the root page -->
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\ContentLayout.content" DestinationFiles="$(DocumentationBaseDirectory)ContentLayout.content" />
+  </Target>
+
+  <Target Name="CreatePackageProperties" DependsOnTargets="CreateDocumentationProperties">
+    <Error Text="The property 'PackageID' is not set." Condition="'$(PackageID)' == ''" />
+    <Error Text="The property 'SolutionDirectory' is not set." Condition="'$(SolutionDirectory)' == ''" />
+
+    <ItemGroup>
+      <_activePackage Include="@(AllPackages)" Condition="%(AllPackages.Identity) == $(PackageID)"/>
+    </ItemGroup>
+
+    <PropertyGroup>
+      <CompanyName>%(_activePackage.CompanyName)</CompanyName>
+      <CompanyUrl>%(_activePackage.CompanyUrl)</CompanyUrl>
+      <Copyright>%(_activePackage.Copyright)</Copyright>
+      <ProductName>%(_activePackage.ProductName)</ProductName>
+      <ProductNameShort>%(_activePackage.ProductNameShort)</ProductNameShort>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="CopyChmFilesToBinariesDirectory" DependsOnTargets="CreateStandardExcludes;">
+    <Error Text="The property 'DocumentationBaseDirectory' is not set." Condition="'$(DocumentationBaseDirectory)' == ''" />
+    <Error Text="The property 'DocumentationChmOutputDirectory' is not set." Condition="'$(DocumentationChmOutputDirectory)' == ''" />
+    <Error Text="The property 'ProductNameShort' is not set." Condition="'$(ProductNameShort)' == ''" />
+
+    <Copy SourceFiles="$(DocumentationCompilationOutputDirectory)$(ProductNameShort).chm" DestinationFolder="$(DocumentationChmOutputDirectory)" />
+  </Target>
+
+  <Target Name="CopyWebsiteFilesToWebsiteDirectory" DependsOnTargets="CreateStandardExcludes;">
+    <Error Text="The property 'DocumentationCompilationOutputDirectory' is not set." Condition="'$(DocumentationCompilationOutputDirectory)' == ''" />
+    <Error Text="The property 'DocumentationWebsiteOutputDirectory' is not set." Condition="'$(DocumentationWebsiteOutputDirectory)' == ''" />
+    <Error Text="The property 'ProductNameShort' is not set." Condition="'$(ProductNameShort)' == ''" />
+
+    <ItemGroup>
+      <WebsiteFiles Include="$(DocumentationCompilationOutputDirectory)**\*.*" Exclude="$(DocumentationCompilationOutputDirectory)$(ProductNameShort).chm"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(WebsiteFiles)" DestinationFolder="$(DocumentationWebsiteOutputDirectory)$(ProductNameShort)\%(RecursiveDir)" />
+  </Target>
+
+  <Target Name="CreateStandardExcludes">
+    <Error Text="The property 'SolutionDirectory' is not set." Condition="'$(SolutionDirectory)' == ''" />
+
+    <ItemGroup>
+      <StandardExcludes Include="$(SolutionDirectory)**\.svn\**"/>
+      <StandardExcludes Include="$(SolutionDirectory)**\_svn\**"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CheckVersion">
+    <Error Text="The property 'Version' is not set." Condition="'$(Version)' == ''" />
+
+    <Error Text="Only 4-part version numbers are supported." Condition="$([System.Version]::Parse ($(Version)).Major) == -1" />
+    <Error Text="Only 4-part version numbers are supported." Condition="$([System.Version]::Parse ($(Version)).Minor) == -1" />
+    <Error Text="Only 4-part version numbers are supported." Condition="$([System.Version]::Parse ($(Version)).Build) == -1" />
+    <Error Text="Only 4-part version numbers are supported." Condition="$([System.Version]::Parse ($(Version)).Revision) == -1" />
+
+  </Target>
+
+</Project>

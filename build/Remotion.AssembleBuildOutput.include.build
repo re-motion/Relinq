@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file is part of the re-motion Core Framework (www.re-motion.org)
+ ! Copyright (c) rubicon IT GmbH, www.rubicon.eu
+ ! 
+ ! The re-motion Core Framework is free software; you can redistribute it 
+ ! and/or modify it under the terms of the GNU Lesser General Public License 
+ ! as published by the Free Software Foundation; either version 2.1 of the 
+ ! License, or (at your option) any later version.
+ ! 
+ ! re-motion is distributed in the hope that it will be useful, 
+ ! but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ ! GNU Lesser General Public License for more details.
+ ! 
+ ! You should have received a copy of the GNU Lesser General Public License
+ ! along with re-motion; if not, see http://www.gnu.org/licenses.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="AssembleBuildOutput" 
+          DependsOnTargets="CopyReleaseProjectsToBinariesDirectory;CopyResourcesToBinariesDirectory;CopySchemasToBinariesDirectory;CopyDocFilesToBinariesDirectory" />
+
+  <Target Name="CopyReleaseProjectsToBinariesDirectory" DependsOnTargets="CreateStandardExcludes;CreateActiveConfiguration;BuildReleaseProjects;">
+    <ItemGroup>
+      <_completeOutputFiles Remove="@(_completeOutputFiles)" />
+      <_completeOutputFiles Include="%(ReleaseOutputFiles.RootDir)%(ReleaseOutputFiles.Directory)**" 
+                            Exclude="@(StandardExcludes)" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(_completeOutputFiles)"
+          DestinationFiles="@(_completeOutputFiles->'$(ActiveConfigurationOutputDirectory)%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+
+  <Target Name="CopyResourcesToBinariesDirectory" DependsOnTargets="CreateStandardExcludes;AddAdditionalMetadataToReleaseOutputFiles">
+    <PropertyGroup>
+      <_resFolder>res\</_resFolder>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_completeOutputFiles Remove="@(_completeOutputFiles)" />
+
+      <_completeOutputFiles Include="%(ReleaseOutputFiles.ProjectDirectory)$(_resFolder)**" 
+                            Exclude="@(StandardExcludes)">
+        <SubDirectory>%(ReleaseOutputFiles.AssemblyName)\</SubDirectory>
+      </_completeOutputFiles>
+
+      <_completeOutputFiles Include="%(ReleaseOutputFiles.ProjectDirectory)**\*.as?x;"
+                            Exclude="%(ReleaseOutputFiles.ProjectDirectory)$(_resFolder)**;@(StandardExcludes)">
+        <SubDirectory>%(ReleaseOutputFiles.AssemblyName)\</SubDirectory>
+      </_completeOutputFiles>
+
+      <_completeOutputFiles Include="%(ReleaseOutputFiles.ProjectDirectory)**\*.master"
+                            Exclude="%(ReleaseOutputFiles.ProjectDirectory)$(_resFolder)**;@(StandardExcludes)">
+        <SubDirectory>%(ReleaseOutputFiles.AssemblyName)\</SubDirectory>
+      </_completeOutputFiles>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(_completeOutputFiles)"
+          DestinationFiles="@(_completeOutputFiles->'$(BinariesDirectory)$(_resFolder)%(SubDirectory)%(RecursiveDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true"/>
+  </Target>
+
+  <Target Name="CopySchemasToBinariesDirectory" DependsOnTargets="CreateStandardExcludes;AddAdditionalMetadataToReleaseOutputFiles">
+    <PropertyGroup>
+      <_schemaFolder>schema\</_schemaFolder>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_completeOutputFiles Remove="@(_completeOutputFiles)" />
+
+      <_completeOutputFiles Include="%(ReleaseOutputFiles.ProjectDirectory)**\*.xsd"
+                            Exclude="%(ReleaseOutputFiles.ProjectDirectory)bin\**;%(ReleaseOutputFiles.ProjectDirectory)obj\**;@(StandardExcludes)">
+        <SubDirectory>%(ReleaseOutputFiles.AssemblyName)\</SubDirectory>
+      </_completeOutputFiles>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(_completeOutputFiles)"
+          DestinationFiles="@(_completeOutputFiles->'$(BinariesDirectory)$(_schemaFolder)%(SubDirectory)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true"/>
+  </Target>
+
+  <Target Name="CopyDocFilesToBinariesDirectory" DependsOnTargets="CreateStandardExcludes;AddAdditionalMetadataToReleaseOutputFiles">
+
+    <PropertyGroup>
+      <_docFolder>doc\</_docFolder>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_completeOutputFiles Remove="@(_completeOutputFiles)" />
+      <_completeOutputFiles Include="%(ReleaseOutputFiles.ProjectDirectory)$(_docFolder)Readme*"
+                            Exclude="@(StandardExcludes)"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(_completeOutputFiles)"
+          DestinationFiles="@(_completeOutputFiles->'$(BinariesDirectory)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true"/>
+  </Target>
+
+  <Target Name="CreateStandardExcludes">
+    <Error Text="The property 'SolutionDirectory' is not set." Condition="'$(SolutionDirectory)' == ''" />
+
+    <ItemGroup>
+      <StandardExcludes Include="$(SolutionDirectory)**\.svn\**"/>
+      <StandardExcludes Include="$(SolutionDirectory)**\_svn\**"/>
+    </ItemGroup>
+  </Target>
+  
+  </Project>

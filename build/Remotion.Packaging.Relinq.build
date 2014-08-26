@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file is part of the re-motion Core Framework (www.re-motion.org)
+ ! Copyright (c) rubicon IT GmbH, www.rubicon.eu
+ ! 
+ ! The re-motion Core Framework is free software; you can redistribute it 
+ ! and/or modify it under the terms of the GNU Lesser General Public License 
+ ! as published by the Free Software Foundation; either version 2.1 of the 
+ ! License, or (at your option) any later version.
+ ! 
+ ! re-motion is distributed in the hope that it will be useful, 
+ ! but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ ! GNU Lesser General Public License for more details.
+ ! 
+ ! You should have received a copy of the GNU Lesser General Public License
+ ! along with re-motion; if not, see http://www.gnu.org/licenses.
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Project="Remotion.Packaging.include.build" />
+
+  <Target Name="CreatePackageProperties">
+    <PropertyGroup>
+      <PackageName>Relinq</PackageName>
+      <ReleaseNotesComponentName>Data.Linq</ReleaseNotesComponentName>
+      <UploadToWebShare>False</UploadToWebShare>
+      <UploadToCodePlex>True</UploadToCodePlex>
+      <CodePlexProjectName>relinq</CodePlexProjectName>
+      <CodePlexReleaseName>"$(Version) (.NET 4.5)"</CodePlexReleaseName>
+      <CodePlexDescription>This is build $(Version) of re-linq for .NET 4.5. Find the complete release notes for the build here: [url:Release Notes|https://www.re-motion.org/jira/secure/IssueNavigator.jspa?reset=true&amp;jqlQuery=project+%3D+RM+AND+component%3D'$(ReleaseNotesComponentName)'+AND+issuetype+in+%28Bug%2C+'New+Feature'%2C+'Breaking+Change'%2C+Performance%2C+Sub-Feature%29+AND+FixVersion%3D'$(Version)'+AND+resolution%3DFixed+ORDER+BY+issuetype%2Ccomponent] To use re-linq with .NET 3.5, use a 1.13.x build.</CodePlexDescription>
+      <UploadToDependDB>True</UploadToDependDB>
+      <DependDBProjectName>re-motion Relinq</DependDBProjectName>
+      <DependDBExecuteXReferencer>False</DependDBExecuteXReferencer>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="CreateSourceFiles" DependsOnTargets="CreateStandardExcludes">
+    <Error Text="The property 'SolutionDirectory' is not set." Condition="'$(SolutionDirectory)' == ''" />
+
+    <ItemGroup>
+      <SourceFiles Remove="@(SourceFiles)"/>
+      <SourceFiles Include="$(SolutionDirectory)Remotion-Linq.*" Exclude="@(StandardExcludes)" />
+      <SourceFiles Include="$(SolutionDirectory)How to build re-linq.txt" Exclude="@(StandardExcludes)" />
+      <SourceFiles Include="$(SolutionDirectory)prereq\Assemblies\Rhino.Mocks-3.6\**" Exclude="@(StandardExcludes)" />
+      <SourceFiles Include="$(SolutionDirectory)prereq\Assemblies\NUnit-2.6\**" Exclude="@(StandardExcludes)" />
+      <SourceFiles Include="$(SolutionDirectory)prereq\Assemblies\ThirdPartyDependencies.txt" Exclude="@(StandardExcludes)" />
+      <SourceFiles Include="$(SolutionDirectory)Generate-Snk.cmd" Exclude="@(StandardExcludes)" />
+      <SourceFiles Include="$(SolutionDirectory)SharedSource\**"
+                   Exclude="$(SolutionDirectory)SharedSource\**\bin\**;$(SolutionDirectory)SharedSource\**\obj\**;$(SolutionDirectory)SharedSource\**\*.zip;@(StandardExcludes)" />
+      <SourceFiles Include="$(SolutionDirectory)Relinq\**"
+                   Exclude="$(SolutionDirectory)Relinq\**\bin\**;$(SolutionDirectory)Relinq\**\obj\**;$(SolutionDirectory)Relinq\**\*.zip;@(StandardExcludes)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CreateBinaryFiles" DependsOnTargets="CreateStandardExcludes">
+    <Error Text="The property 'BinariesDirectory' is not set." Condition="'$(BinariesDirectory)' == ''" />
+    <Error Text="The property 'SolutionDirectory' is not set." Condition="'$(SolutionDirectory)' == ''" />
+
+    <ItemGroup>
+      <BinaryFiles Remove="@(BinaryFiles)"/>
+      <BinaryFiles Include="$(BinariesDirectory)**\Remotion.Linq.*" 
+                   Exclude="@(StandardExcludes)"/>
+      <BinaryFiles Include="$(BinariesDirectory)**\re-linq.chm"
+                   Exclude="@(StandardExcludes);"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CreateLicenseFiles" DependsOnTargets="CreateStandardExcludes">
+    <Error Text="The property 'SolutionDirectory' is not set." Condition="'$(SolutionDirectory)' == ''" />
+
+    <ItemGroup>
+      <LicenseFiles Remove="@(LicenseFiles)"/>
+      <LicenseFiles Include="$(SolutionDirectory)Relinq\license\*.*" Exclude="@(StandardExcludes)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CreateDependDBBinaryFiles" DependsOnTargets="CreateStandardExcludes">
+    <Error Text="The property 'DependDBBinariesDirectory' is not set." Condition="'$(DependDBBinariesDirectory)' == ''" />
+    <Error Text="DependDB requires the debug configuration build - not found at '$(DependDBBinariesDirectory)'." Condition="!Exists($(DependDBBinariesDirectory))"/>
+    <ItemGroup>
+      <DependDBBinaryFiles Remove="@(DependDBBinaryFiles)"/>
+      <DependDBBinaryFiles Include="$(DependDBBinariesDirectory)**\Remotion.Linq.dll"/>
+      <DependDBBinaryFiles Include="$(DependDBBinariesDirectory)**\Remotion.Linq.LinqToSqlAdapter.dll"/>
+      <DependDBBinaryFiles Include="$(DependDBBinariesDirectory)**\Remotion.Linq.SqlBackend.dll"/>
+    </ItemGroup>
+  </Target>
+  
+</Project>

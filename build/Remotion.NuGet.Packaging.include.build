@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file is part of the re-motion Core Framework (www.re-motion.org)
+ ! Copyright (c) rubicon IT GmbH, www.rubicon.eu
+ ! 
+ ! The re-motion Core Framework is free software; you can redistribute it 
+ ! and/or modify it under the terms of the GNU Lesser General Public License 
+ ! as published by the Free Software Foundation; either version 2.1 of the 
+ ! License, or (at your option) any later version.
+ ! 
+ ! re-motion is distributed in the hope that it will be useful, 
+ ! but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ ! GNU Lesser General Public License for more details.
+ ! 
+ ! You should have received a copy of the GNU Lesser General Public License
+ ! along with re-motion; if not, see http://www.gnu.org/licenses.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="CreateNuGetPackageProperties">
+    <Error Text="The target 'CreateNuGetPackageProperties' is not implemented." />
+  </Target>
+
+  <Target Name="CreateNuGetStructureProperties">
+    <Error Text="The target 'CreateNuGetStructureProperties' is not implemented." />
+  </Target>
+
+  <PropertyGroup>
+    <RemotionBuildTasksPath>$(SolutionDirectory)\prereq\Tools\Remotion.BuildTools.MSBuildTasks\</RemotionBuildTasksPath>
+  </PropertyGroup>
+
+  <Import Project="Remotion.Tasks.include.build" />
+  <Import Project="Remotion.Packages.include.build" />
+  <Import Project="Remotion.Packaging.base.build" />
+
+  <!-- Overridden Targets -->
+  <Target Name="CreateRequiresUploadProperties" DependsOnTargets="CreateNuGetPackageProperties">
+    <PropertyGroup>
+      <MasterPackageName>$(BelongsToPackage)</MasterPackageName>
+    </PropertyGroup>
+  </Target>
+
+  <!-- Main Targets -->
+  <Target Name="CreateNuGetProperties" DependsOnTargets="CreateNuGetPackageProperties">
+    <Error Text="The property 'PackageID' is not set." Condition="'$(PackageID)' == ''" />
+    <Error Text="The property 'BelongsToPackage' is not set." Condition="'$(BelongsToPackage)' == ''" />
+    <Error Text="The property 'NuGetLibFolder' is not set." Condition="'$(NuGetLibFolder)' == ''" />
+
+    <PropertyGroup>
+      <NuGetToolPath>$(SolutionDirectory)prereq\Tools\NuGet\</NuGetToolPath>
+
+      <NuGetTempDirectory>$(TempDirectory)$([System.Guid]::NewGuid())\NuGet\package\</NuGetTempDirectory>
+      <!-- http://docs.nuget.org/docs/creating-packages/creating-and-publishing-a-package -->
+      <NuGetTempLibDirectory>$(NuGetTempDirectory)lib\$(NuGetLibFolder)\</NuGetTempLibDirectory>
+      <NuGetTempSrcDirectory>$(NuGetTempDirectory)src\</NuGetTempSrcDirectory>
+      <NuGetOutputDirectory>$(OutputDirectory)NuGet\</NuGetOutputDirectory>
+
+      <NuSpecTemplateFile>$(SolutionDirectory)build\NuGet.ConfigurationTemplate.nuspec</NuSpecTemplateFile>
+      <NuSpecFileName>NuGet.nuspec</NuSpecFileName>
+      <NuSpecFile>$(NuGetTempDirectory)$(NuSpecFileName)</NuSpecFile>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <_activePackage Include="@(NuGetPackages)" Condition="%(NuGetPackages.Identity) == $(PackageID)"/>
+    </ItemGroup>
+
+    <PropertyGroup>
+      <ID>%(_activePackage.ID)</ID>
+      <Title>%(_activePackage.Title)</Title>
+      <Authors>%(_activePackage.Authors)</Authors>
+      <Owners>%(_activePackage.Owners)</Owners>
+      <LicenseUrl>%(_activePackage.LicenseUrl)</LicenseUrl>
+      <ProjectUrl>%(_activePackage.ProjectUrl)</ProjectUrl>
+      <Description>%(_activePackage.Description)</Description>
+      <Copyright>%(_activePackage.Copyright)</Copyright>
+      <Tags>%(_activePackage.Tags)</Tags>
+    </PropertyGroup>
+  </Target>
+  
+  <Target Name="CreateNuGetStructure" DependsOnTargets="CreateNuGetProperties;CreateNuGetStructureProperties">
+    <Error Text="The property 'NuGetLibFiles' is not set." Condition="'@(NuGetLibFiles)' == ''" />
+    <Error Text="The property 'NuGetSrcFiles' is not set." Condition="'@(NuGetSrcFiles)' == ''" />
+
+    <MakeDir Directories="$(NuGetTempDirectory)"/>
+    <Copy SourceFiles="$(NuSpecTemplateFile)" DestinationFiles="$(NuSpecFile)"/>
+
+    <MakeDir Directories="$(NuGetTempLibDirectory)"/>
+    <Copy SourceFiles="@(NuGetLibFiles)" DestinationFolder="$(NuGetTempLibDirectory)"/>
+
+    <MakeDir Directories="$(NuGetTempSrcDirectory)"/>    
+    <Copy SourceFiles="@(NuGetSrcFiles)" DestinationFiles="@(NuGetSrcFiles -> '$(NuGetTempSrcDirectory)%(RecursiveDir)%(Filename)%(Extension)')"/>
+  </Target>
+  
+  <Target Name="CreateNuGetPackage" DependsOnTargets="CreateNuGetPackageProperties;CreateNuGetProperties;CreateNuGetStructure">
+    <Error Text="The property 'Version' is not set." Condition="'$(Version)' == ''" />
+    
+    <Message Text="Creating NuGet package for '$(PackageID)'..." Importance="High"/>
+
+    <MakeDir Directories="$(NuGetOutputDirectory)"/>
+    <NuGetPack ToolPath="$(NuGetToolPath)"
+               NuSpecFile="$(NuSpecFile)"
+               Version="$(Version)"
+               OutputDirectory="$(NuGetOutputDirectory)"
+               Properties="ID=$(ID);
+                           Title=$(Title);
+                           Authors=$(Authors);
+                           Owners=$(Owners);
+                           LicenseUrl=$(LicenseUrl);
+                           ProjectUrl=$(ProjectUrl);
+                           Description=$(Description);
+                           Copyright=$(Copyright);
+                           Tags=$(Tags)"/>
+
+    <Message Text="Done creating NuGet package for '$(PackageID)'." Importance="High"/>
+  </Target>
+
+  <Target Name="UploadNuGetPackage" DependsOnTargets="CreateRequiresUpload;UploadNuGetPackageInternal" />
+  
+  <Target Name="UploadNuGetPackageInternal" DependsOnTargets="CreateNuGetProperties;CreateNuGetPackageProperties" Condition="$(UploadToNuGet) == 'True'">
+    <Error Text="The property 'NuGetApiKey' is not set." Condition="'$(NuGetApiKey)' == ''" />
+    
+    <ItemGroup>
+        <_packageFile Remove="@(_packageFile)"/>
+        <_packageFile Include="$(NuGetOutputDirectory)$(ID)*.nupkg"/>
+    </ItemGroup>
+
+    <Message Text="Uploading NuGet package for '$(PackageID)' (belongs to: '$(BelongsToPackage)')..." Importance="High"/>
+
+    <NuGetPush ToolPath="$(NuGetToolPath)"
+               PackageFile="%(_packageFile.Identity)"
+               ApiKey="$(NuGetApiKey)"/>
+
+    <Message Text="Done uploading NuGet package for '$(PackageID)' (belongs to: '$(BelongsToPackage)')." Importance="High"/>
+  </Target>
+
+</Project>

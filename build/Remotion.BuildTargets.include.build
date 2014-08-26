@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file is part of the re-motion Core Framework (www.re-motion.org)
+ ! Copyright (c) rubicon IT GmbH, www.rubicon.eu
+ ! 
+ ! The re-motion Core Framework is free software; you can redistribute it 
+ ! and/or modify it under the terms of the GNU Lesser General Public License 
+ ! as published by the Free Software Foundation; either version 2.1 of the 
+ ! License, or (at your option) any later version.
+ ! 
+ ! re-motion is distributed in the hope that it will be useful, 
+ ! but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ ! GNU Lesser General Public License for more details.
+ ! 
+ ! You should have received a copy of the GNU Lesser General Public License
+ ! along with re-motion; if not, see http://www.gnu.org/licenses.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="CreateActiveConfiguration">
+    <Error Text="The property 'ConfigurationID' is not set." Condition="'$(ConfigurationID)' == ''" />
+
+    <ItemGroup>
+      <_activeConfiguration Include="@(AllConfigurations)" Condition="%(AllConfigurations.Identity) == $(ConfigurationID)"/>
+    </ItemGroup>
+
+    <PropertyGroup>
+      <ActiveConfigurationName>%(_activeConfiguration.Name)</ActiveConfigurationName>
+      <ActiveConfigurationOutputDirectory>$(BinariesDirectory)%(_activeConfiguration.OutputDirectory)</ActiveConfigurationOutputDirectory>
+      <ActiveConfigurationFramework>%(_activeConfiguration.Framework)</ActiveConfigurationFramework>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="AddAdditionalMetadataToReleaseOutputFiles">
+    <ItemGroup>
+      <_projectFiles Remove="@(_projectFiles)" />
+      <_projectFiles Include="%(ReleaseOutputFiles.MSBuildSourceProjectFile)">
+        <ReleaseOutputFileIdentity>%(Identity)</ReleaseOutputFileIdentity>
+        <MSBuildSourceProjectFile>%(MSBuildSourceProjectFile)</MSBuildSourceProjectFile>
+        <MSBuildSourceTargetName>%(MSBuildSourceTargetName)</MSBuildSourceTargetName>
+        <AssemblyName>%(FileName)</AssemblyName>
+      </_projectFiles>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ReleaseOutputFiles Remove="@(ReleaseOutputFiles)" />
+      <ReleaseOutputFiles Include="%(_projectFiles.ReleaseOutputFileIdentity)">
+        <MSBuildSourceProjectFile>%(MSBuildSourceProjectFile)</MSBuildSourceProjectFile>
+        <MSBuildSourceTargetName>%(MSBuildSourceTargetName)</MSBuildSourceTargetName>
+        <AssemblyName>%(AssemblyName)</AssemblyName>
+        <ProjectDirectory>%(RootDir)%(Directory)</ProjectDirectory>
+      </ReleaseOutputFiles>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CleanFolders">
+    <Error Text="The property 'OutputDirectory' is not set." Condition="'$(OutputDirectory)' == ''" />
+    <Error Text="The property 'LogDirectory' is not set." Condition="'$(LogDirectory)' == ''" />
+    <Error Text="The property 'TempDirectory' is not set." Condition="'$(TempDirectory)' == ''" />
+    <Error Text="The property 'BinariesDirectory' is not set." Condition="'$(BinariesDirectory)' == ''" />
+    
+    <Exec Command="rmdir /Q /S &quot;$(LogDirectory)&quot;" Condition="Exists ($(LogDirectory))" />
+    <Exec Command="rmdir /Q /S &quot;$(TempDirectory)&quot;" Condition="Exists ($(TempDirectory))" />
+    <Exec Command="rmdir /Q /S &quot;$(BinariesDirectory)&quot;" Condition="Exists ($(BinariesDirectory))" />
+    <Exec Command="rmdir /Q /S &quot;$(OutputDirectory)&quot;" Condition="Exists ($(OutputDirectory))" />
+  </Target>
+
+  <Target Name="CreateLogDirectory">
+    <Error Text="The property 'LogDirectory' is not set." Condition="'$(LogDirectory)' == ''" />
+
+    <MakeDir Directories="$(LogDirectory)" />
+  </Target>
+
+  <Target Name="CheckVersion">
+    <Error Text="The property 'Version' is not set." Condition="'$(Version)' == ''" />
+
+    <Error Text="Only 4-part version numbers are supported." Condition="$([System.Version]::Parse ($(Version)).Major) == -1" />
+    <Error Text="Only 4-part version numbers are supported." Condition="$([System.Version]::Parse ($(Version)).Minor) == -1" />
+    <Error Text="Only 4-part version numbers are supported." Condition="$([System.Version]::Parse ($(Version)).Build) == -1" />
+    <Error Text="Only 4-part version numbers are supported." Condition="$([System.Version]::Parse ($(Version)).Revision) == -1" />
+
+  </Target>
+  
+  <Target Name="LogConfiguration" DependsOnTargets="CreateActiveConfiguration">
+    <Message Text="Current configuration: $(ConfigurationID)"/>
+    <Message Text="* Name: $(ActiveConfigurationName)"/>
+  </Target>
+
+  <Target Name="CleanProjects" DependsOnTargets="CreateActiveConfiguration">
+    <Message Text="Cleaning projects, ConfigurationID=$(ConfigurationID)" Importance="High"/>
+
+    <Error Text="The property 'ActiveConfigurationName' is not set." Condition="'$(ActiveConfigurationName)' == ''" />
+
+    <MSBuild Projects="@(ReleaseProjectFiles);@(UnitTestProjectFiles)"
+             Targets="Clean"
+             Properties="Configuration=$(ActiveConfigurationName);"/>
+
+    <Message Text="Done cleaning projects, ConfigurationID=$(ConfigurationID)" Importance="High"/>
+  </Target>
+  
+  <Target Name="BuildReleaseProjects" DependsOnTargets="CreateActiveConfiguration;UpdateAssemblyInfos">
+    <Message Text="Building release projects, ConfigurationID=$(ConfigurationID)" Importance="High"/>
+
+    <Error Text="The property 'ActiveConfigurationName' is not set." Condition="'$(ActiveConfigurationName)' == ''" />
+    <Error Text="The property 'SolutionKeyFile' is not set." Condition="'$(SolutionKeyFile)' == ''" />
+
+    <PropertyGroup>
+      <_startTime>$([System.DateTime]::UtcNow)</_startTime>
+    </PropertyGroup>
+
+    <MSBuild Projects ="@(ReleaseProjectFiles)"
+             ContinueOnError="false"
+             Properties="Configuration=$(ActiveConfigurationName);AssemblyOriginatorKeyFile=$(SolutionKeyFile);">
+      <Output ItemName="ReleaseOutputFiles" TaskParameter="TargetOutputs"/>
+    </MSBuild>
+
+    <PropertyGroup>
+      <_timeTaken>$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::Parse($(_startTime)))).TotalMilliseconds.ToString(0))</_timeTaken>
+    </PropertyGroup>
+
+    <Message Text="##teamcity[buildStatisticValue key='Duration.BuildReleaseProjects.$(ConfigurationID)' value='$(_timeTaken)']"
+             Condition="'$(TEAMCITY_VERSION)' != ''" />
+
+    <Message Text="Done building release projects, ConfigurationID=$(ConfigurationID)" Importance="High"/>
+  </Target>
+
+  <Target Name="BuildTestProjects" DependsOnTargets="CreateActiveConfiguration;UpdateAssemblyInfos">
+    <Message Text="Building test projects, ConfigurationID=$(ConfigurationID)" Importance="High"/>
+
+    <Error Text="The property 'ActiveConfigurationName' is not set." Condition="'$(ActiveConfigurationName)' == ''" />
+
+    <PropertyGroup>
+      <_startTime>$([System.DateTime]::UtcNow)</_startTime>
+    </PropertyGroup>
+
+    <MSBuild Projects ="@(UnitTestProjectFiles);@(IntegrationTestProjectFiles)"
+             ContinueOnError="false"
+             Properties="Configuration=$(ActiveConfigurationName);AssemblyOriginatorKeyFile=$(SolutionKeyFile);">
+      <Output ItemName="TestOutputFiles" TaskParameter="TargetOutputs"/>
+    </MSBuild>
+
+    <PropertyGroup>
+      <_timeTaken>$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::Parse($(_startTime)))).TotalMilliseconds.ToString(0))</_timeTaken>
+    </PropertyGroup>
+
+    <Message Text="##teamcity[buildStatisticValue key='Duration.BuildTestProjects.$(ConfigurationID)' value='$(_timeTaken)']"
+             Condition="'$(TEAMCITY_VERSION)' != ''" />
+
+    <Message Text="Done building test projects, ConfigurationID=$(ConfigurationID)" Importance="High"/>
+  </Target>
+
+  <Target Name="RunMixinXRefTest" Condition="$(ActiveConfigurationOutputDirectory.Contains('debug'))">
+    <Message Text="Check whether the full API required for MixinXRef is available" Importance="High"/>
+
+    <!-- TrimEnd('\') is necessary, otherwise the " afterwards is unintentionally masked by the console and arguments are swallowed -->
+    <PropertyGroup>
+      <_directory>$(ActiveConfigurationOutputDirectory.TrimEnd('\'))</_directory>
+    </PropertyGroup>
+    
+    <Exec Command="$(MixinXRefToolPath)MixinXRefConsole.exe -i &quot;$(_directory)&quot; -o &quot;$(_directory)&quot; -s -f -r &quot;$(MixinXRefToolPath)MixinXRef.Reflectors*.dll&quot;"
+          WorkingDirectory="$(_directory)">
+      <Output TaskParameter="ExitCode" PropertyName="ExitCode"/>
+    </Exec>
+    
+    <Error Text="MixinXRef did not finish correctly - have you made any API changes which have broken MixinXRef?" Condition="$(ExitCode) != 0"/>
+    <Message Text="MixinXRef API check successfully finished" Importance="High"/>
+  </Target>
+
+  <Target Name="UpdateAssemblyInfos" DependsOnTargets="CreateActiveConfiguration" Condition="$(Version) != ''">
+    <Message Text="Updating assembly infos, ConfigurationID=$(ConfigurationID)" Importance="High"/>
+
+    <Error Text="The property 'SolutionDirectory' is not set." Condition="'$(SolutionDirectory)' == ''" />
+    <Error Text="The property 'ConfigurationID' is not set." Condition="'$(ConfigurationID)' == ''" />
+
+    <ItemGroup>
+      <_assemblyInfos Remove="@(_assemblyInfoFiles)"/>
+      <_assemblyInfos Include="$(SolutionDirectory)%(AllPackages.AssemblyInfoFile)">
+        <Copyright>%(Copyright)</Copyright>
+        <CompanyName>%(CompanyName)</CompanyName>
+        <ProductName>%(ProductName)</ProductName>
+      </_assemblyInfos>
+    </ItemGroup>
+
+    <PropertyGroup>
+      <_configuration>.NET Framework: $(ActiveConfigurationFramework), build type: $(ConfigurationID)</_configuration>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$(ReleaseType) != 'LOCAL'">
+      <_assemblyInformationalVersion>$(Version) $(ReleaseType) %(_activeConfiguration.Name); $(AdditionalBuildMetadata)</_assemblyInformationalVersion>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$(ReleaseType) == 'LOCAL'">
+      <_assemblyInformationalVersion>$(Version)</_assemblyInformationalVersion>
+    </PropertyGroup>
+
+    <MSBuild.ExtensionPack.Framework.AssemblyInfo AssemblyInfoFiles="%(_assemblyInfos.Identity)"
+                                                  AssemblyVersion="$(Version)"
+                                                  AssemblyFileVersion="$(Version)"
+                                                  AssemblyConfiguration="$(_configuration)"
+                                                  AssemblyCopyright="%(_assemblyInfos.Copyright)"
+                                                  AssemblyCompany="%(_assemblyInfos.CompanyName)"
+                                                  AssemblyProduct="%(_assemblyInfos.ProductName)"
+                                                  AssemblyInformationalVersion="$(_assemblyInformationalVersion)"
+                                                  UpdateAssemblyInformationalVersion="True" />
+
+    <Message Text="Done updating assembly infos, ConfigurationID=$(ConfigurationID)" Importance="High"/>
+  </Target>
+
+</Project>

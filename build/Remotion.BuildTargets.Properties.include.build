@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file is part of the re-motion Core Framework (www.re-motion.org)
+ ! Copyright (c) rubicon IT GmbH, www.rubicon.eu
+ ! 
+ ! The re-motion Core Framework is free software; you can redistribute it 
+ ! and/or modify it under the terms of the GNU Lesser General Public License 
+ ! as published by the Free Software Foundation; either version 2.1 of the 
+ ! License, or (at your option) any later version.
+ ! 
+ ! re-motion is distributed in the hope that it will be useful, 
+ ! but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ ! GNU Lesser General Public License for more details.
+ ! 
+ ! You should have received a copy of the GNU Lesser General Public License
+ ! along with re-motion; if not, see http://www.gnu.org/licenses.
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="CheckBuildConfigurationProperties" >
+    <Error Text="The property 'SolutionBuildFile' is not set." Condition="'$(SolutionBuildFile)' == ''" />
+    <Error Text="The property 'ReleaseType' is not set." Condition="'$(ReleaseType)' == ''" />
+    <Error Text="The property 'SolutionKeyFile' is not set." Condition="'$(SolutionKeyFile)' == ''" />
+
+    <Message Text="The property 'SolutionBuildFile' is set to '$(SolutionBuildFile)'." />
+    <Message Text="The property 'ReleaseType' is set to '$(ReleaseType)'." />
+    <Message Text="The property 'SolutionKeyFile' is set to '$(SolutionKeyFile)'." />
+  </Target>
+
+  <Target Name="CheckBuildLocationProperties" >
+    <Error Text="The property 'BuildRootDirectory' is not set." Condition="'$(BuildRootDirectory)' == ''" />
+    <Error Text="The property 'LogDirectory' is not set." Condition="'$(LogDirectory)' == ''" />
+    <Error Text="The property 'SolutionDirectory' is not set." Condition="'$(SolutionDirectory)' == ''" />
+    <Error Text="The property 'OutputDirectory' is not set." Condition="'$(OutputDirectory)' == ''" />
+    <Error Text="The property 'TempDirectory' is not set." Condition="'$(TempDirectory)' == ''" />
+    <Error Text="The property 'ArchiveDirectory' is not set." Condition="'$(ArchiveDirectory)' == ''" />
+    <Error Text="The property 'WebShareDirectory' is not set." Condition="'$(WebShareDirectory)' == ''" />
+    <Error Text="The property 'BinariesDirectory' is not set." Condition="'$(BinariesDirectory)' == ''" />
+    <Error Text="The property 'SecureNetworkShare' is not set." Condition="'$(SecureNetworkShare)' == ''" />
+
+    <Message Text="The property 'BuildRootDirectory' is set to '$(BuildRootDirectory)'." />
+    <Message Text="The property 'LogDirectory' is set to '$(LogDirectory)'." />
+    <Message Text="The property 'SolutionDirectory' is set to '$(SolutionDirectory)'." />
+    <Message Text="The property 'OutputDirectory' is set to '$(OutputDirectory)'." />
+    <Message Text="The property 'TempDirectory' is set to '$(TempDirectory)'." />
+    <Message Text="The property 'ArchiveDirectory' is set to '$(ArchiveDirectory)'." />
+    <Message Text="The property 'WebShareDirectory' is set to '$(WebShareDirectory)'." />
+    <Message Text="The property 'BinariesDirectory' is set to '$(BinariesDirectory)'." />
+    <Message Text="The property 'SecureNetworkShare' is set to '$(SecureNetworkShare)'." />
+  </Target>
+
+  <Target Name="CheckJiraProperties" >
+    <Error Text="The property 'JiraUrl' is not set." Condition="'$(JiraUrl)' == ''" />
+    <Error Text="The property 'JiraProject' is not set." Condition="'$(JiraProject)' == ''" />
+    <Error Text="The property 'JiraUsername' is not set." Condition="'$(JiraUsername)' == ''" />
+    <Error Text="The property 'JiraPassword' is not set." Condition="'$(JiraPassword)' == '' AND 'Password' == 'Password'" />
+    <Error Text="The property 'JiraVersionPattern' is not set." Condition="'$(JiraVersionPattern)' == ''" />
+
+    <Message Text="The property 'JiraUrl' is set to '$(JiraUrl)'." />
+    <Message Text="The property 'JiraProject' is set to '$(JiraProject)'." />
+    <Message Text="The property 'JiraUsername' is set to '$(JiraUsername)'." />
+    <Message Text="The property 'JiraVersionPattern' is set to '$(JiraVersionPattern)'." />
+  </Target>
+
+  <Target Name="CheckSvnProperties" >
+    <Error Text="The property 'SvnBaseUri' is not set." Condition="'$(SvnBaseUri)' == ''" />
+    <Error Text="The property 'SvnBranchFolder' is not set." Condition="'$(SvnBranchFolder)' == ''" />
+    <Error Text="The property 'SvnTagsFolder' is not set." Condition="'$(SvnTagsFolder)' == ''" />
+    <Error Text="The property 'SvnUsername' is not set." Condition="'$(SvnUsername)' == ''" />
+    <Error Text="The property 'SvnPassword' is not set." Condition="'$(SvnPassword)' == '' AND 'Password' == 'Password'" />
+    <Error Text="The property 'SvnRevision' is not set." Condition="'$(SvnRevision)' == ''" />
+
+    <Message Text="The property 'SvnBaseUri' is set to '$(SvnBaseUri)'." />
+    <Message Text="The property 'SvnBranchFolder' is set to '$(SvnBranchFolder)'." />
+    <Message Text="The property 'SvnTagsFolder' is set to '$(SvnTagsFolder)'." />
+    <Message Text="The property 'SvnUsername' is set to '$(SvnUsername)'." />
+    <Message Text="The property 'SvnRevision' is set to '$(SvnRevision)'." />
+  </Target>
+
+  <Target Name="CheckDebugSymbolsProperties" >
+    <Error Text="The property 'DebugSymbolsVCSUrl' is not set." Condition="'$(DebugSymbolsVCSUrl)' == ''" />
+
+    <Message Text="The property 'DebugSymbolsVCSUrl' is set to '$(DebugSymbolsVCSUrl)'." />
+  </Target>
+
+  <Target Name="CheckDependDBProperties" >
+    <Error Text="The property 'DependDBUploadPath' is not set." Condition="'$(DependDBUploadPath)' == ''" />
+    <Error Text="The property 'DependDBProjectImportNotificationMailAddress' is not set." Condition="'$(DependDBProjectImportNotificationMailAddress)' == ''" />
+    <Error Text="The property 'DependDBProjectVCSUrlTemplate' is not set." Condition="'$(DependDBProjectVCSUrlTemplate)' == ''" />
+    <Error Text="The property 'DependDBProjectBranch' is not set." Condition="'$(DependDBProjectBranch)' == ''" />
+
+    <Message Text="The property 'DependDBUploadPath' is set to '$(DependDBUploadPath)'." />
+    <Message Text="The property 'DependDBProjectImportNotificationMailAddress' is set to '$(DependDBProjectImportNotificationMailAddress)'." />
+    <Message Text="The property 'DependDBProjectImportNotificationMailAddressCC' is set to '$(DependDBProjectImportNotificationMailAddressCC)'." />
+    <Message Text="The property 'DependDBProjectVCSUrlTemplate' is set to '$(DependDBProjectVCSUrlTemplate)'." />
+    <Message Text="The property 'DependDBProjectBranch' is set to '$(DependDBProjectBranch)'." />
+  </Target>
+
+  <Target Name="CheckCodePlexProperties" >
+    <Error Text="The property 'CodePlexUsername' is not set." Condition="'$(CodePlexUsername)' == ''" />
+    <Error Text="The property 'CodeplexPassword' is not set." Condition="'$(CodeplexPassword)' == '' AND 'Password' == 'Password'" />
+
+    <Message Text="The property 'CodePlexUsername' is set to '$(CodePlexUsername)'." />
+  </Target>
+
+  <Target Name="CheckNuGetProperties" >
+    <Error Text="The property 'NuGetApiKey' is not set." Condition="'$(NuGetApiKey)' == '' AND 'Password' == 'Password'" />
+  </Target>
+  
+</Project>

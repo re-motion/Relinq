@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file is part of the re-motion Core Framework (www.re-motion.org)
+ ! Copyright (c) rubicon IT GmbH, www.rubicon.eu
+ ! 
+ ! The re-motion Core Framework is free software; you can redistribute it 
+ ! and/or modify it under the terms of the GNU Lesser General Public License 
+ ! as published by the Free Software Foundation; either version 2.1 of the 
+ ! License, or (at your option) any later version.
+ ! 
+ ! re-motion is distributed in the hope that it will be useful, 
+ ! but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ ! GNU Lesser General Public License for more details.
+ ! 
+ ! You should have received a copy of the GNU Lesser General Public License
+ ! along with re-motion; if not, see http://www.gnu.org/licenses.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="CreatePackageProperties">
+    <Error Text="The target 'CreatePackageProperties' is not implemented." />
+  </Target>
+
+  <Target Name="CreateSourceFiles" DependsOnTargets="CreateStandardExcludes">
+    <Error Text="The target 'CreateSourceFiles' is not implemented." />
+  </Target>
+
+  <Target Name="CreateBinaryFiles" DependsOnTargets="CreateStandardExcludes">
+    <Error Text="The target 'CreateBinaryFiles' is not implemented." />
+  </Target>
+
+  <Target Name="CreateLicenseFiles" DependsOnTargets="CreateStandardExcludes">
+    <Error Text="The target 'CreateLicenseFiles' is not implemented." />
+  </Target>
+
+  <PropertyGroup>
+    <MSBuildExtensionPackPath>$(SolutionDirectory)prereq\Tools\MSBuildExtensionPack\</MSBuildExtensionPackPath>
+    <RemotionBuildTasksPath>$(SolutionDirectory)prereq\Tools\Remotion.BuildTools.MSBuildTasks\</RemotionBuildTasksPath>
+    <JiraReleaseNoteGeneratorPath>$(SolutionDirectory)prereq\Tools\JiraReleaseNoteGenerator\</JiraReleaseNoteGeneratorPath>
+    <CodeplexReleaseToolPath>$(SolutionDirectory)prereq\Tools\CodeplexReleaseTool\</CodeplexReleaseToolPath>
+  </PropertyGroup>
+
+  <Import Project="Remotion.Tasks.include.build" />
+  <Import Project="Remotion.Packaging.base.build" />
+  <Import Project="Remotion.DependDB.include.build" />
+  
+  <!-- Overridden Targets -->
+  <Target Name="CreateRequiresUploadProperties" DependsOnTargets="CreatePackageProperties">
+    <PropertyGroup>
+      <MasterPackageName>$(PackageName)</MasterPackageName>
+    </PropertyGroup>
+  </Target>
+  
+  <!-- Main Targets -->
+
+  <Target Name="CreatePackages" DependsOnTargets="CreateZipPackages;CreateDependDBPackages;CreateAndAddReleaseNotes"/>
+  <Target Name="CreateZipPackages" DependsOnTargets="CreateSourcePackage;CreateBinaryPackage"/>
+
+  <Target Name="DeployPackages" DependsOnTargets="UploadReleaseNotes;UploadToShares;UploadToCodePlex;UploadToDependDB" />
+    
+  <!-- Source Package -->
+  
+  <Target Name="CreateSourcePackage" DependsOnTargets="CreateSourceZipFileProperty;CreateSourceFiles;CreateOutputDirectory;">
+    <Message Text="Creating source package, PackageName=$(PackageName)" Importance="High"/>
+
+    <Error Text="The property 'SolutionDirectory' is not set." Condition="'$(SolutionDirectory)' == ''" />
+
+    <MSBuild.ExtensionPack.Compression.DNZip TaskAction="Create" 
+                                             ZipFileName="$(SourceZipFile)" 
+                                             RemoveRoot="$(SolutionDirectory)" 
+                                             CompressFiles="@(SourceFiles)" />
+
+    <Message Text="Done creating source package, PackageName=$(PackageName)" Importance="High"/>
+  </Target>
+
+  <Target Name="CreateSourceZipFileProperty" DependsOnTargets="CreatePackageProperties">
+    <Error Text="The property 'OutputDirectory' is not set." Condition="'$(OutputDirectory)' == ''" />
+    <Error Text="The property 'Version' is not set." Condition="'$(Version)' == ''" />
+
+    <PropertyGroup>
+      <SourceZipFile>$(OutputDirectory)$(PackageName)_SourceCode_$(Version).zip</SourceZipFile>
+    </PropertyGroup>
+  </Target>
+
+  <!-- Binary Package -->
+
+  <Target Name="CreateBinaryPackage" DependsOnTargets="CreateBinaryZipFileProperty;CreateBinaryFiles;CreateLicenseFiles;CreateOutputDirectory;">
+    <Message Text="Creating binary package, PackageName=$(PackageName)" Importance="High"/>
+
+    <Error Text="The property 'OutputDirectory' is not set." Condition="'$(OutputDirectory)' == ''" />
+
+    <MSBuild.ExtensionPack.Compression.DNZip TaskAction="Create"
+                                             ZipFileName="$(BinaryZipFile)"
+                                             RemoveRoot="$(BinariesDirectory)"
+                                             CompressFiles="@(BinaryFiles)" />
+
+    <PropertyGroup>
+      <_tempLicenseFilesDirectory>$(TempDirectory)$([System.Guid]::NewGuid())\</_tempLicenseFilesDirectory>
+    </PropertyGroup>
+
+    <Copy DestinationFolder="$(_tempLicenseFilesDirectory)license" SourceFiles="@(LicenseFiles)" />
+
+    <ItemGroup>
+      <_tempLicenseFiles Remove="@(_tempReleaseNoteFiles)"/>
+      <_tempLicenseFiles Include="$(_tempLicenseFilesDirectory)\**" />
+    </ItemGroup>
+
+    <MSBuild.ExtensionPack.Compression.DNZip TaskAction="AddFiles"
+                                             ZipFileName="$(BinaryZipFile)"
+                                             RemoveRoot="$(_tempLicenseFilesDirectory)"
+                                             CompressFiles="@(_tempLicenseFiles)" />
+
+    <Message Text="Done creating binary package, PackageName=$(PackageName)" Importance="High"/>
+  </Target>
+
+  <Target Name="CreateBinaryZipFileProperty" DependsOnTargets="CreatePackageProperties">
+    <Error Text="The property 'OutputDirectory' is not set." Condition="'$(OutputDirectory)' == ''" />
+    <Error Text="The property 'Version' is not set." Condition="'$(Version)' == ''" />
+
+    <PropertyGroup>
+      <BinaryZipFile>$(OutputDirectory)$(PackageName)_$(Version).zip</BinaryZipFile>
+    </PropertyGroup>
+  </Target>
+
+  <!-- Release Notes -->
+  
+  <Target Name="CreateAndAddReleaseNotes" DependsOnTargets="CopyReleaseNotesFromShareToTemp;CreateReleaseNotes;AddReleaseNotesToBinaryPackage;CopyNewReleaseNotesFromTempToOutput"/>
+
+  <Target Name="CopyReleaseNotesFromShareToTemp" DependsOnTargets="CreateReleaseNotesProperties">
+    <Message Text="Copy release notes from share to local temp directory..." Importance="High"/>
+
+    <MakeDir Directories="$(ReleaseNotesRemoteShareDirectory)" />
+    
+    <Error Text="The ReleaseNotesRemoteShareDirectory ('$(ReleaseNotesRemoteShareDirectory)') does not exist - probably remote directory not reachable or new minor version created without creating the corresponding ReleaseNotesRemoteShareDirectory."
+           Condition="!Exists('$(ReleaseNotesRemoteShareDirectory)')"/>
+    
+    <ItemGroup>
+      <_releaseNoteFiles Remove="@(_releaseNoteFiles)"/>
+      <_releaseNoteFiles Include="$(ReleaseNotesRemoteShareDirectory)*.*" />
+    </ItemGroup>
+    
+    <Copy SourceFiles="@(_releaseNoteFiles)" DestinationFolder="$(ReleaseNotesLocalTempDirectory)"/>
+
+    <ItemGroup>
+      <OldReleaseNoteFiles Remove="@(OldReleaseNoteFiles)"/>
+      <OldReleaseNoteFiles Include="$(ReleaseNotesLocalTempDirectory)*.*"/>
+    </ItemGroup>
+
+    <Message Text="Done copy release notes from share to local temp directory." Importance="High"/>
+  </Target>
+
+  <Target Name="CreateReleaseNotes" DependsOnTargets="CreateReleaseNotesProperties">
+    <Message Text="Creating release notes, PackageName=$(PackageName)" Importance="High"/>
+
+    <Error Text="The property 'JiraVersion' is not set." Condition="'$(JiraVersion)' == ''" />
+
+    <PropertyGroup>
+      <_jiraComponent Condition="$(ReleaseNotesComponentName) == ''"></_jiraComponent>
+      <_jiraComponent Condition="$(ReleaseNotesComponentName) != ''">component='$(ReleaseNotesComponentName)'</_jiraComponent>
+      <_htmlTitle Condition="$(PackageName) != 'Remotion'">Release notes for Remotion $(PackageName)</_htmlTitle>
+      <_htmlTitle Condition="$(PackageName) == 'Remotion'">Release notes for Remotion Core</_htmlTitle>
+    </PropertyGroup>
+    
+    <!-- TrimEnd('\') is necessary, otherwise the " afterwards is unintentionally masked by the console and arguments are swallowed -->
+    <PropertyGroup>
+      <_releaseNotesLocalTempDirectory>$(ReleaseNotesLocalTempDirectory.TrimEnd('\'))</_releaseNotesLocalTempDirectory>
+    </PropertyGroup>
+
+    <Exec Command="JiraReleaseNoteGenerator.exe $(JiraVersion) &quot;$(_releaseNotesLocalTempDirectory)&quot; &quot;t:$(_htmlTitle)&quot; $(_jiraComponent)"
+          WorkingDirectory="$(JiraReleaseNoteGeneratorPath)" />
+    
+    <Message Text="Done creating release notes, PackageName=$(PackageName)" Importance="High"/>
+  </Target>
+
+  <Target Name="AddReleaseNotesToBinaryPackage" DependsOnTargets="CreateBinaryZipFileProperty;CreateReleaseNotesProperties">
+    <Error Text="Binary zip-file $(BinaryZipFile) is missing." Condition="!Exists('$(BinaryZipFile)')"  />
+
+    <PropertyGroup>
+      <_regexVersionPatten>v(?&lt;version&gt;\d+\.\d+\.\d+(\.\d+)?)$</_regexVersionPatten>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <_tempReleaseNoteFiles Remove="@(_tempReleaseNoteFiles)"/>
+      <_tempReleaseNoteFiles Include="$(ReleaseNotesLocalTempDirectory)**" />
+      <_tempReleaseNoteFiles>
+        <Version>$([System.Text.RegularExpressions.Regex]::Match (%(FileName), $(_regexVersionPatten)).Groups[&quot;version&quot;].Value)</Version>
+      </_tempReleaseNoteFiles>
+      
+      <_emptyReleaseNoteFiles Remove="@(_emptyReleaseNoteFiles)"/>
+      <_emptyReleaseNoteFiles Include="@(_tempReleaseNoteFiles)"
+                              Condition="$([System.IO.File]::ReadAllText (%(Identity)).Length) == 0"/>
+
+      <_futureReleaseNoteFiles Remove="@(_futureReleaseNoteFiles)"/>
+      <_futureReleaseNoteFiles Include="@(_tempReleaseNoteFiles)"
+                               Condition="$( [System.Version]::Parse ($(Version)).CompareTo ( $([System.Version]::Parse (%(Version))) ) ) &lt; 0"/>
+
+      <_tempReleaseNoteFiles Remove="@(_emptyReleaseNoteFiles)" />
+      <_tempReleaseNoteFiles Remove="@(_futureReleaseNoteFiles)" />
+    </ItemGroup>
+
+	<MSBuild.ExtensionPack.Compression.DNZip TaskAction="AddFiles"
+                                             ZipFileName="$(BinaryZipFile)"
+                                             RemoveRoot="$(ReleaseNotesLocalTempDirectoryZipRoot)"
+                                             CompressFiles="@(_tempReleaseNoteFiles)"
+                                             Condition="@(_tempReleaseNoteFiles) != ''"/>
+  </Target>
+
+  <Target Name="CopyNewReleaseNotesFromTempToOutput" DependsOnTargets="CreateReleaseNotesProperties">
+    <Message Text="Copy new release notes from local temp directory to local output directory..." Importance="High"/>
+    
+    <ItemGroup>
+      <_newReleaseNoteFiles Remove="@(_newReleaseNoteFiles)"/>
+      <_newReleaseNoteFiles Include="$(ReleaseNotesLocalTempDirectory)*.*"/>
+      <_newReleaseNoteFiles Remove="@(OldReleaseNoteFiles)"/>
+    </ItemGroup>
+    
+    <Message Text="New release note files: '@(_newReleaseNoteFiles)'" Importance="High"/>
+    <Copy SourceFiles="@(_newReleaseNoteFiles)" DestinationFolder="$(ReleaseNotesLocalOutputDirectory)"/>
+
+    <Message Text="Done copy new release notes from local temp directory to local output directory." Importance="High"/>
+  </Target>
+  
+  <Target Name="UploadReleaseNotes" DependsOnTargets="CreatePackageProperties;CreateReleaseNotesProperties">
+    <Message Text="Uploading release notes, PackageName=$(PackageName)" Importance="High"/>
+
+    <ItemGroup>
+      <_releaseNoteFiles Remove="@(_releaseNoteFiles)"/>
+      <_releaseNoteFiles Include="$(ReleaseNotesLocalOutputDirectory)**" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(_releaseNoteFiles)" DestinationFolder="$(ReleaseNotesRemoteShareDirectory)"/>
+    
+    <Message Text="Done uploading release notes, PackageName=$(PackageName)" Importance="High"/>
+  </Target>
+
+  <Target Name="CreateReleaseNotesProperties" DependsOnTargets="CreatePackageProperties">
+    <Error Text="The property 'ArchiveDirectory' is not set." Condition="'$(ArchiveDirectory)' == ''" />
+    <Error Text="The property 'PackageName' is not set." Condition="'$(PackageName)' == ''" />
+
+    <PropertyGroup>
+      <_releaseNotesVersionDirectory>$([System.Version]::Parse ($(Version)).ToString (2))</_releaseNotesVersionDirectory>
+
+      <ReleaseNotesLocalTempDirectoryZipRoot>$(TempDirectory)\ReleaseNotes\$([System.Guid]::NewGuid())\</ReleaseNotesLocalTempDirectoryZipRoot>
+      <ReleaseNotesLocalTempDirectory>$(ReleaseNotesLocalTempDirectoryZipRoot)release-notes\</ReleaseNotesLocalTempDirectory>
+      <ReleaseNotesLocalOutputDirectory>$(OutputDirectory)ReleaseNotes\$(PackageName)\</ReleaseNotesLocalOutputDirectory>
+      <ReleaseNotesRemoteShareDirectory>$(ArchiveDirectory)$(PackageName)\release-notes\$(_releaseNotesVersionDirectory)\</ReleaseNotesRemoteShareDirectory>
+    </PropertyGroup>
+
+    <Message Text="CreateReleaseNotesProperties, ReleaseNotesLocalTempDirectoryZipRoot: $(ReleaseNotesLocalTempDirectoryZipRoot)" Importance="High" />
+    <Message Text="CreateReleaseNotesProperties, ReleaseNotesLocalTempDirectory: $(ReleaseNotesLocalTempDirectory)" Importance="High" />
+    <Message Text="CreateReleaseNotesProperties, ReleaseNotesLocalOutputDirectory: $(ReleaseNotesLocalOutputDirectory)" Importance="High" />
+    <Message Text="CreateReleaseNotesProperties, ReleaseNotesRemoteShareDirectory: $(ReleaseNotesRemoteShareDirectory)" Importance="High" />
+  </Target>
+
+  <!-- Publishing -->
+
+  <Target Name="UploadToShares" DependsOnTargets="CreateSourceZipFileProperty;CreateBinaryZipFileProperty">
+    <Message Text="Uploading to shares, PackageName=$(PackageName)" Importance="High"/>
+
+    <Error Text="The property 'ArchiveDirectory' is not set." Condition="'$(ArchiveDirectory)' == ''" />
+    <Error Text="The property 'WebShareDirectory' is not set." Condition="'$(WebShareDirectory)' == ''" />
+
+    <ItemGroup>
+      <_temp Remove="@(_temp)"/>
+      <_temp Include="$(SourceZipFile);$(BinaryZipFile)">
+        <DestinationFolder>$(ArchiveDirectory)$(PackageName)\build\</DestinationFolder>
+      </_temp>
+      <_temp Include="$(SourceZipFile);$(BinaryZipFile)" Condition="($(UploadToWebShare) == 'True')">
+        <DestinationFolder>$(WebShareDirectory)</DestinationFolder>
+      </_temp>
+    </ItemGroup>
+
+    <ItemGroup>
+      <_publishedFiles Remove="@(_publishedFiles)"/>
+      <_publishedFiles Include="@(_temp)">
+        <DestinationFolder>%(DestinationFolder)</DestinationFolder>
+        <DestinationFile>%(DestinationFolder)%(FileName)%(Extension)</DestinationFile>
+      </_publishedFiles>
+    </ItemGroup>
+
+    <Error Text="The file '%(_publishedFiles.FileName)%(_publishedFiles.Extension)' already exists in the destination folder '%(_publishedFiles.DestinationFolder)'."
+           Condition="Exists (%(_publishedFiles.DestinationFile))"/>
+
+    <Copy SourceFiles="%(_publishedFiles.Identity)" DestinationFiles="%(_publishedFiles.DestinationFile)"/>
+
+    <Message Text="Done uploading to shares, PackageName=$(PackageName)" Importance="High"/>
+  </Target>
+
+  <Target Name="UploadToCodePlex" DependsOnTargets="CreatePackageProperties;CreateRequiresUpload;UploadToCodePlexInternal" />
+  
+  <Target Name="UploadToCodePlexInternal"
+          DependsOnTargets="CreateSourceZipFileProperty;CreateBinaryZipFileProperty"
+          Condition="$(UploadToCodePlex) == 'True'">
+
+    <Message Text="Creating CodePlex release, PackageName=$(PackageName)" Importance="High"/>
+
+    <Error Text="The property 'CodePlexProjectName' is not set." Condition="'$(CodePlexProjectName)' == ''" />
+    <Error Text="The property 'CodePlexReleaseName' is not set." Condition="'$(CodePlexReleaseName)' == ''" />
+    <Error Text="The property 'CodePlexDescription' is not set." Condition="'$(CodePlexDescription)' == ''" />
+
+    <PropertyGroup>
+      <_releaseDate>$([System.DateTime]::Now.ToString('yyyy-MM-dd'))</_releaseDate>
+    </PropertyGroup>
+
+    <CodeplexCreateRelease ToolPath="$(CodeplexReleaseToolPath)"
+                           ProjectName="$(CodePlexProjectName)"
+                           ReleaseName="$(CodePlexReleaseName)"
+                           Username="$(CodeplexUsername)"
+                           Password="$(CodeplexPassword)"
+                           Description="$(CodePlexDescription)"
+                           IsDefaultRelease="true"
+                           ReleaseDate="$(_releaseDate)"
+                           ReleaseStatus="Stable"
+                           ShowToPublic="true"/>
+    <Message Text="Done creating CodePlex release, PackageName=$(PackageName)" Importance="High"/>
+
+    <Message Text="Uploading to CodePlex, PackageName=$(PackageName)" Importance="High"/>
+    <ItemGroup>
+      <_uploadFiles Include="$([System.IO.Path]::GetFileName($(BinaryZipFile)))">
+        <File>$(BinaryZipFile)</File>
+        <FileType>RuntimeBinary</FileType>
+      </_uploadFiles>
+      <_uploadFiles Include="$([System.IO.Path]::GetFileName($(SourceZipFile)))">
+        <File>$(SourceZipFile)</File>
+        <FileType>SourceCode</FileType>
+      </_uploadFiles>
+    </ItemGroup>
+    
+    <CodeplexUploadFiles ToolPath="$(CodeplexReleaseToolPath)"
+                         ProjectName="$(CodePlexProjectName)"
+                         ReleaseName="$(CodePlexReleaseName)"
+                         Username="$(CodeplexUsername)"
+                         Password="$(CodeplexPassword)"
+                         FileDisplayName="%(_uploadFiles.Identity)"
+                         File="%(_uploadFiles.File)"
+                         FileType="%(_uploadFiles.FileType)"/>
+
+    <Message Text="Done uploading to CodePlex, PackageName=$(PackageName)" Importance="High"/>
+  </Target>
+
+  <!-- Shared Code -->
+  
+  <Target Name="CreateOutputDirectory">
+    <Error Text="The property 'OutputDirectory' is not set." Condition="'$(OutputDirectory)' == ''" />
+
+    <MakeDir Directories="$(OutputDirectory)" />
+  </Target>
+
+  <Target Name="CreateStandardExcludes">
+    <Error Text="The property 'SolutionDirectory' is not set." Condition="'$(SolutionDirectory)' == ''" />
+
+    <ItemGroup>
+      <StandardExcludes Include="$(SolutionDirectory)**\.svn\**"/>
+      <StandardExcludes Include="$(SolutionDirectory)**\_svn\**"/>
+
+      <StandardExcludes Include="$(SolutionDirectory)**\*.log" />
+      <StandardExcludes Include="$(SolutionDirectory)**\Remotion.snk" />
+      <StandardExcludes Include="$(SolutionDirectory)**\*.suo" />
+      <StandardExcludes Include="$(SolutionDirectory)**\*.user" />
+    </ItemGroup>
+  </Target>
+
+</Project>

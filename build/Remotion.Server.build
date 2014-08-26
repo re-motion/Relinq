@@ -1,0 +1,282 @@
+﻿<?xml version="1.0"  encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+  <Import Project="Remotion.build" />
+  
+  <PropertyGroup>
+    <!-- Empty properties will be passed to MSBuild by TeamCity -->
+
+    <BuildRootDirectory>$(teamcity_build_checkoutdir)\</BuildRootDirectory>
+    <SvnRevision>$(build_vcs_number)</SvnRevision>
+    
+    <LogDirectory>$(BuildRootDirectory)log\</LogDirectory>
+    <SolutionDirectory>$(BuildRootDirectory)working\</SolutionDirectory>
+    <OutputDirectory>$(BuildRootDirectory)output\</OutputDirectory>
+    <TempDirectory>$(BuildRootDirectory)temp\</TempDirectory>
+    <ArchiveDirectory></ArchiveDirectory>
+    <WebShareDirectory></WebShareDirectory>
+    <BinariesDirectory>$(TempDirectory)Binaries\</BinariesDirectory>
+    
+    <SolutionBuildFile>$(SolutionDirectory)build\Remotion.build</SolutionBuildFile>
+
+    <ReleaseType>DEV</ReleaseType>
+    
+    <SecureNetworkShare></SecureNetworkShare>
+    <SolutionKeyFile>$(SecureNetworkShare)\remotion.snk</SolutionKeyFile>
+
+    <CodeplexPassword></CodeplexPassword>
+    <NuGetApiKey></NuGetApiKey>
+    <JiraPassword></JiraPassword>
+    <SvnPassword></SvnPassword>
+  
+    <CodePlexUsername>remotion_buildsvc</CodePlexUsername>
+  
+    <JiraUrl>https://www.re-motion.org/jira/rest/api/2/</JiraUrl>
+    <JiraUsername>build</JiraUsername>
+    <JiraProject>RM</JiraProject>
+    
+    <SvnBaseUri>https://svn.re-motion.org/svn/Remotion</SvnBaseUri>
+    <SvnUsername>build</SvnUsername>
+    <SvnBranchFolder></SvnBranchFolder>
+    <SvnTagsFolder>tags</SvnTagsFolder>
+    
+    <DependDBProjectBranch></DependDBProjectBranch>
+    <DependDBUploadPath></DependDBUploadPath>
+    <DependDBProjectVCSUrlTemplate>$(SvnBaseUri)/!svn/bc/$(SvnRevision)/$(SvnBranchFolder)/{0}</DependDBProjectVCSUrlTemplate>
+    <DependDBProjectImportNotificationMailAddress></DependDBProjectImportNotificationMailAddress>
+
+    <DebugSymbolsVCSUrl>$(SvnBaseUri)/$(SvnBranchFolder)/</DebugSymbolsVCSUrl>
+
+    <JiraVersionPattern></JiraVersionPattern>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <ToolPath>$(SolutionDirectory)prereq\Tools\</ToolPath>
+    <SvnToolPath>$(ToolPath)Subversion\</SvnToolPath>
+    <MSBuildCommunityTasksPath>$(ToolPath)MSBuildCommunityTasks\</MSBuildCommunityTasksPath>
+    <MSBuildExtensionPackPath>$(ToolPath)MSBuildExtensionPack\</MSBuildExtensionPackPath>
+    <MSBuildRemotionTasksPath>$(ToolPath)Remotion.BuildTools.MSBuildTasks\</MSBuildRemotionTasksPath>
+  </PropertyGroup>
+  
+  <UsingTask AssemblyFile="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.dll" TaskName="MSBuild.Community.Tasks.Subversion.SvnCopy" />
+  <UsingTask AssemblyFile="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.dll" TaskName="MSBuild.Community.Tasks.Subversion.SvnCommit" />
+  <UsingTask AssemblyFile="$(MSBuildExtensionPackPath)\MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Science.Maths" />
+  <UsingTask AssemblyFile="$(MSBuildRemotionTasksPath)\Remotion.BuildTools.MSBuildTasks.dll" TaskName="Remotion.BuildTools.MSBuildTasks.Jira.JiraGetEarliestUnreleasedVersion" />
+  <UsingTask AssemblyFile="$(MSBuildRemotionTasksPath)\Remotion.BuildTools.MSBuildTasks.dll" TaskName="Remotion.BuildTools.MSBuildTasks.Jira.JiraGetLatestReleasedVersion" />
+  <UsingTask AssemblyFile="$(MSBuildRemotionTasksPath)\Remotion.BuildTools.MSBuildTasks.dll" TaskName="Remotion.BuildTools.MSBuildTasks.Jira.JiraCreateNewVersion" />
+  <UsingTask AssemblyFile="$(MSBuildRemotionTasksPath)\Remotion.BuildTools.MSBuildTasks.dll" TaskName="Remotion.BuildTools.MSBuildTasks.Jira.JiraReleaseVersion" />
+
+  <!-- SVN Operations -->
+  
+  <Target Name="Tag" DependsOnTargets="GetEarliestUnreleasedVersion;CreateSvnWorkingCopyPath">  
+    <Error Text="The property 'Version' is not set." Condition="'$(Version)' == ''" />
+    <Error Text="The property 'SvnRevision' is not set." Condition="'$(SvnRevision)' == ''" />
+    <Error Text="The property 'SvnWorkingCopyPath' is not set." Condition="'$(SvnWorkingCopyPath)' == ''" />
+    
+    <SvnCopy ToolPath="$(SvnToolPath)"
+             Username="$(SvnUsername)"
+             Password="$(SvnPassword)"
+             SourcePath="$(SvnWorkingCopyPath)"
+             DestinationPath="$(SvnBaseUri)/$(SvnTagsFolder)/$(Version)"
+             Message="Tagging build version $(Version)" />
+
+    <Message Text="Tagged revision '$(SvnRevision)' at '$(SvnBaseUri)/$(SvnTagsFolder)/$(Version)'." Importance="High" />
+  </Target>
+  
+  <!-- JIRA Operations -->
+  
+  <Target Name="GetEarliestUnreleasedVersion">
+    <Error Text="Property 'Version' was already set. Probably caused by: GetLatestReleasedVersion" Condition="'$(Version)' != ''" />
+    
+    <JiraGetEarliestUnreleasedVersion JiraUrl="$(JiraUrl)"
+                                      JiraUsername="$(JiraUsername)"
+                                      JiraPassword="$(JiraPassword)"
+                                      JiraProject="$(JiraProject)"
+                                      VersionPattern="$(JiraVersionPattern)">
+      <Output PropertyName="VersionID" TaskParameter="VersionID"/>
+      <Output PropertyName="Version" TaskParameter="VersionName"/>
+      <Output PropertyName="NextVersionID" TaskParameter="NextVersionID"/>
+      <Output PropertyName="NextVersion" TaskParameter="NextVersionName"/>
+      <Output PropertyName="NumberOfUnreleasedVersions" TaskParameter="NumberOfUnreleasedVersions"/>
+    </JiraGetEarliestUnreleasedVersion>
+
+    <Message Text="Determined version (earliest unreleased): $(Version), next version is going to be $(NextVersion)" Importance="High"/>
+
+    <PropertyGroup>
+      <_firstVersion>1.13.97</_firstVersion>
+    </PropertyGroup>
+
+    <Error Text="Only versions >= $(_firstVersion) are supported." Condition="$([System.Version]::Parse ($(Version)).CompareTo ( $([System.Version]::Parse ($(_firstVersion))) ) ) &lt; 0" />
+  </Target>
+
+  <Target Name="GetLatestReleasedVersion">
+    <Error Text="Property 'Version' was already set. Probably caused by: GetEarliestUnreleasedVersion" Condition="'$(Version)' != ''" />
+    <Error Text="Property 'NextVersion' was already set. Probably caused by: GetEarliestUnreleasedVersion" Condition="'$(NextVersion)' != ''" />
+
+    <JiraGetLatestReleasedVersion JiraUrl="$(JiraUrl)"
+                                  JiraUsername="$(JiraUsername)"
+                                  JiraPassword="$(JiraPassword)"
+                                  JiraProject="$(JiraProject)"
+                                  VersionPattern="$(JiraVersionPattern)">
+      <Output PropertyName="VersionID" TaskParameter="VersionID"/>
+      <Output PropertyName="Version" TaskParameter="VersionName"/>
+      <Output PropertyName="NextVersionID" TaskParameter="NextUnreleasedVersionID"/>
+      <Output PropertyName="NextVersion" TaskParameter="NextUnreleasedVersionName"/>
+    </JiraGetLatestReleasedVersion>
+
+    <Message Text="Determined version (latest relesed): $(Version), next version (earliest unrelesed) is going to be $(NextVersion)" Importance="High"/>
+  </Target>
+  
+  <Target Name="ReleaseJiraVersion" DependsOnTargets="GetEarliestUnreleasedVersion">
+    <Error Text="JIRA problem: no unreleased version available." Condition="'$(VersionID)' == ''"/>
+    <Error Text="JIRA problem: no subsequent unreleased version available." Condition="'$(NextVersionID)' == ''"/>
+    <Error Text="JIRA problem: no number of unreleased versions known." Condition="'$(NumberOfUnreleasedVersions)' == ''"/>
+
+    <Message Text="Creating new JIRA version..." Importance="High" Condition="$(NumberOfUnreleasedVersions) == 2"/>
+    <JiraCreateNewVersion JiraUrl="$(JiraUrl)"
+                          JiraUsername="$(JiraUsername)"
+                          JiraPassword="$(JiraPassword)"
+                          JiraProject="$(JiraProject)"
+                          VersionPattern="$(JiraVersionPattern)"
+                          VersionComponentToIncrement="3"
+                          VersionReleaseWeekday="Friday"
+                          Condition="$(NumberOfUnreleasedVersions) == 2"/>
+    
+    <Message Text="Releasing JIRA version $(Version), moving open issues to next version $(NextVersion)" Importance="High"/>
+    <JiraReleaseVersion JiraUrl="$(JiraUrl)"
+                        JiraUsername="$(JiraUsername)"
+                        JiraPassword="$(JiraPassword)"
+                        VersionID="$(VersionID)"
+                        NextVersionID="$(NextVersionID)"/>
+
+    <Message Text="Done releasing JIRA version." Importance="High"/>
+  </Target>
+  
+  <!-- re-motion build -->
+  <Target Name="CreateAdditionalBuildMetadata">
+    <PropertyGroup>
+      <AdditionalBuildMetadata>SVNRevision=$(SvnRevision)</AdditionalBuildMetadata>
+    </PropertyGroup>
+  </Target>
+  
+  <Target Name="TestBuild_Configuration">
+    <PropertyGroup>
+      <Platforms>x86</Platforms>
+      <DatabaseSystems>SqlServer2008R2</DatabaseSystems>
+    </PropertyGroup>
+  </Target>
+  
+  <Target Name="FullBuild_Configuration">
+    <PropertyGroup>
+      <Platforms>x86+x64</Platforms>
+      <DatabaseSystems>SqlServer2005+SqlServer2008+SqlServer2008R2+SqlServer2012+SqlServer2014</DatabaseSystems>
+    </PropertyGroup>
+  </Target>
+  
+  <Target Name="TestBuild" DependsOnTargets="TestBuild_Configuration;TestBuildDebugOnly;" />
+
+  <Target Name="TestBuildWithPackaging" DependsOnTargets="TestBuild_Configuration;CreateAdditionalBuildMetadata;BuildAll;PackageAll" />
+
+  <Target Name="FullBuild" DependsOnTargets="FullBuild_Configuration;CreateAdditionalBuildMetadata;BuildAll;DocumentAll;PackageAll" />
+  
+  <Target Name="Deploy" DependsOnTargets="CreateAdditionalBuildMetadata;DeployAll">
+    <Message Text="Deployed re-motion, version '$(Version)', revision '$(SvnRevision)'." Importance="High"/>
+  </Target>
+  
+  <!-- Check properties -->
+  
+  <Target Name="CheckProperties" DependsOnTargets="
+          CheckBuildConfigurationProperties;
+          CheckBuildLocationProperties;
+          CheckJiraProperties;
+          CheckSvnProperties;
+          CheckDebugSymbolsProperties;
+          CheckDependDBProperties;
+          CheckCodePlexProperties;
+          CheckNuGetProperties;" >
+  </Target>
+
+  <!-- Create properties -->
+
+  <Target Name="CreateSvnWorkingCopyPath">
+    <!-- Removing the ending backslash is required! Otherwise svn.exe detects
+         the final \" sequence as an escaped double quote. -->
+    <PropertyGroup>
+      <SvnWorkingCopyPath>$(SolutionDirectory.TrimEnd('\'))</SvnWorkingCopyPath>
+    </PropertyGroup>
+  </Target>
+
+  <!-- AssemblyInfo -->
+
+  <Target Name="UpdateAssemblyInfosForLocalBuild" DependsOnTargets="CreateSvnWorkingCopyPath;CheckVersion">
+    <Error Text="The property 'SolutionDirectory' is not set." Condition="'$(SolutionDirectory)' == ''" />
+    <Error Text="The property 'SvnBranchFolder' is not set." Condition="'$(SvnBranchFolder)' == ''" />
+    <Error Text="The property 'SvnWorkingCopyPath' is not set." Condition="'$(SvnWorkingCopyPath)' == ''" />
+
+    <!-- Increase version number -->
+    <PropertyGroup>
+        <_versionMajor>$([System.Version]::Parse ($(Version)).Major)</_versionMajor>
+        <_versionMinor>$([System.Version]::Parse ($(Version)).Minor)</_versionMinor>
+        <_versionBuild>$([System.Version]::Parse ($(Version)).Build)</_versionBuild>
+        <_versionRevision>$([System.Version]::Parse ($(Version)).Revision)</_versionRevision>
+    </PropertyGroup>
+    <MSBuild.ExtensionPack.Science.Maths TaskAction="Add" Numbers="$(_versionRevision);10000">
+      <Output PropertyName="_versionRevision" TaskParameter="Result"/>
+    </MSBuild.ExtensionPack.Science.Maths>
+    <PropertyGroup>
+        <_newVersion>$(_versionMajor).$(_versionMinor).$(_versionBuild).$(_versionRevision)</_newVersion>
+    </PropertyGroup>
+
+    <MSBuild Projects="$(SolutionBuildFile)"
+         BuildInParallel="false"
+         Properties="
+            SolutionDirectory=$(SolutionDirectory);
+            Version=$(_newVersion);"
+         Targets="UpdateAssemblyInfosLocalBuild"/>
+
+    <ItemGroup>
+      <ToCommit Include="$(SvnWorkingCopyPath)" />
+    </ItemGroup>
+    <SvnCommit ToolPath="$(SvnToolPath)"
+               Username="$(SvnUsername)"
+               Password="$(SvnPassword)"
+               Targets="@(ToCommit)"
+               Message="Comitting AssemblyInfos for local build after setting version to '$(_newVersion)'." />
+
+    <Message Text="Updated AssemblyInfos for local build in '$(SvnBaseUri)/$(SvnBranchFolder)': set version to '$(_newVersion)'" Importance="High" />
+  </Target>
+  
+  <!-- Versioning -->
+    
+  <Target Name="SetVersionCiAndNightlyBuild" DependsOnTargets="CheckVersion">
+    <PropertyGroup>
+        <Version-Major>$([System.Version]::Parse ($(Version)).Major)</Version-Major>
+        <Version-Minor>$([System.Version]::Parse ($(Version)).Minor)</Version-Minor>
+        <Version-Build>$([System.Version]::Parse ($(Version)).Build)</Version-Build>
+        <Version-Revision>$(build_number)</Version-Revision>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+      <Version>$(Version-Major).$(Version-Minor).$(Version-Build).$(Version-Revision)</Version>
+      <JiraVersion>$(NextVersion)</JiraVersion>
+    </PropertyGroup>
+    
+    <Message Text="##teamcity[buildNumber '$(Version)']" />
+  </Target>
+  
+  <Target Name="SetVersionFullBuild" DependsOnTargets="CheckVersion">
+    <PropertyGroup>
+      <JiraVersion>$(Version)</JiraVersion>
+    </PropertyGroup>
+
+    <Message Text="##teamcity[buildNumber '$(Version)']" />
+  </Target>
+
+  <!-- Main Build Targets -->  
+  <Target Name="CIBuild" DependsOnTargets="CheckProperties;GetLatestReleasedVersion;SetVersionCiAndNightlyBuild;TestBuild" />
+  <Target Name="ArtifactBuild" DependsOnTargets="CheckProperties;GetLatestReleasedVersion;SetVersionCiAndNightlyBuild;TestBuildWithPackaging" />
+  <Target Name="NightlyBuild" DependsOnTargets="CheckProperties;GetLatestReleasedVersion;SetVersionCiAndNightlyBuild;FullBuild" />
+  <Target Name="Server_FullBuild" DependsOnTargets="CheckProperties;GetEarliestUnreleasedVersion;SetVersionFullBuild;FullBuild;Tag;ReleaseJiraVersion;UpdateAssemblyInfosForLocalBuild" />
+  <Target Name="Server_Deploy" DependsOnTargets="CheckProperties;GetLatestReleasedVersion;SetVersionFullBuild;Deploy" />
+
+</Project>
