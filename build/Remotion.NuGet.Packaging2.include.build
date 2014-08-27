@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file is part of the re-motion Core Framework (www.re-motion.org)
+ ! Copyright (c) rubicon IT GmbH, www.rubicon.eu
+ ! 
+ ! The re-motion Core Framework is free software; you can redistribute it 
+ ! and/or modify it under the terms of the GNU Lesser General Public License 
+ ! as published by the Free Software Foundation; either version 2.1 of the 
+ ! License, or (at your option) any later version.
+ ! 
+ ! re-motion is distributed in the hope that it will be useful, 
+ ! but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ ! GNU Lesser General Public License for more details.
+ ! 
+ ! You should have received a copy of the GNU Lesser General Public License
+ ! along with re-motion; if not, see http://www.gnu.org/licenses.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <NuGetOutputDirectory>$(OutputDirectory)NuGet\$(ConfigurationID)</NuGetOutputDirectory>
+  </PropertyGroup>
+    
+  <Target Name="CreateNuGetPackages" DependsOnTargets="CreateActiveConfiguration;ResolveNuGetPath;AddAdditionalMetadataToOutputFiles">
+    <Message Text="Creating NuGet packages, ConfigurationID=$(ConfigurationID)" Importance="High"/>
+
+    <Error Text="The property 'ActiveConfigurationName' is not set." Condition="'$(ActiveConfigurationName)' == ''" />
+
+    <ItemGroup>
+      <_nugetProjectFiles Remove="@(_nugetProjectFiles)" />
+      <_nugetProjectFiles Include="%(ReleaseOutputFiles.MSBuildSourceProjectFile)" Condition="%(ReleaseOutputFiles.NuSpecFile) != ''" />
+      <_nugetProjectFiles Include="%(TestOutputFiles.MSBuildSourceProjectFile)" Condition="%(ReleaseOutputFiles.NuSpecFile) != ''" />
+    </ItemGroup>
+
+    <MakeDir Directories="$(NuGetOutputDirectory)"/>
+    <NuGet.MSBuild.Tools.Pack
+        ToolPath="$(NuGetToolPath)"
+        Project="%(_nugetProjectFiles.Identity)"
+        OutputDirectory="$(NuGetOutputDirectory)"
+        IncludeReferencedProjects="True"
+        Version="$(Version)"
+        Configuration="$(ActiveConfigurationName)" />
+
+    <Message Text="Done creating NuGet packages, ConfigurationID=$(ConfigurationID)" Importance="High"/>
+  </Target>
+  
+  <Target Name="ResolveNuGetPath" Condition=" '$(NuGetToolPath)' == '' OR !Exists('$(NuGetToolPath)') ">
+    <NuGet.MSBuild.Tools.ResolveNuGetToolPath Solution="$(SolutionPath)" ContinueOnError="true">
+      <Output TaskParameter="ToolPath" PropertyName="NuGetToolPath"/>
+    </NuGet.MSBuild.Tools.ResolveNuGetToolPath>
+
+    <Error Text="The NuGet.exe path could not be resolved, or does not exist." Condition=" '$(NuGetToolPath)' == '' OR !Exists('$(NuGetToolPath)') "/>
+    <Message Text="NuGetToolPath=$(NuGetToolPath)" Importance="Low" />
+  </Target>
+
+</Project>

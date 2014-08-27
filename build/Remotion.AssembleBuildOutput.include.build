@@ -31,7 +31,7 @@
           DestinationFiles="@(_completeOutputFiles->'$(ActiveConfigurationOutputDirectory)%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
-  <Target Name="CopyResourcesToBinariesDirectory" DependsOnTargets="CreateStandardExcludes;AddAdditionalMetadataToReleaseOutputFiles">
+  <Target Name="CopyResourcesToBinariesDirectory" DependsOnTargets="CreateStandardExcludes;AddAdditionalMetadataToOutputFiles">
     <PropertyGroup>
       <_resFolder>res\</_resFolder>
     </PropertyGroup>
@@ -60,7 +60,7 @@
           SkipUnchangedFiles="true"/>
   </Target>
 
-  <Target Name="CopySchemasToBinariesDirectory" DependsOnTargets="CreateStandardExcludes;AddAdditionalMetadataToReleaseOutputFiles">
+  <Target Name="CopySchemasToBinariesDirectory" DependsOnTargets="CreateStandardExcludes;AddAdditionalMetadataToOutputFiles">
     <PropertyGroup>
       <_schemaFolder>schema\</_schemaFolder>
     </PropertyGroup>
@@ -79,7 +79,7 @@
           SkipUnchangedFiles="true"/>
   </Target>
 
-  <Target Name="CopyDocFilesToBinariesDirectory" DependsOnTargets="CreateStandardExcludes;AddAdditionalMetadataToReleaseOutputFiles">
+  <Target Name="CopyDocFilesToBinariesDirectory" DependsOnTargets="CreateStandardExcludes;AddAdditionalMetadataToOutputFiles">
 
     <PropertyGroup>
       <_docFolder>doc\</_docFolder>

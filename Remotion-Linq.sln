@@ -53,6 +53,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_build", "_build", "{F855DF
 		build\Remotion.Local.build = build\Remotion.Local.build
 		build\Remotion.NuGet.Packaging.include.build = build\Remotion.NuGet.Packaging.include.build
 		build\Remotion.NuGet.Packaging.Relinq.Core.build = build\Remotion.NuGet.Packaging.Relinq.Core.build
+		build\Remotion.NuGet.Packaging2.include.build = build\Remotion.NuGet.Packaging2.include.build
 		build\Remotion.Packages.include.build = build\Remotion.Packages.include.build
 		build\Remotion.Packaging.base.build = build\Remotion.Packaging.base.build
 		build\Remotion.Packaging.include.build = build\Remotion.Packaging.include.build

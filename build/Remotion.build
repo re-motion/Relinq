@@ -20,6 +20,8 @@
   <PropertyGroup>
     <PackagesDirectory>$(MSBuildProjectDirectory)\..\packages\</PackagesDirectory>
     <NUnitToolPath>$(PackagesDirectory)NUnit.Runners.2.6.3\tools\</NUnitToolPath>
+    <NuGetToolPath>$(PackagesDirectory)NuGet.CommandLine.2.8.2\tools\</NuGetToolPath>
+    <NuGetForMSBuildPath>$(PackagesDirectory)NuGet.for.MSBuild.1.4.3\build\</NuGetForMSBuildPath>
     <MSBuildExtensionPackPath>$(PackagesDirectory)MSBuild.Extension.Pack.1.5.0\tools\net40\</MSBuildExtensionPackPath>
     <RemotionBuildTasksPath>$(PackagesDirectory)Remotion.BuildTools.MSBuildTasks.1.0.5351.24435\tools\</RemotionBuildTasksPath>
   </PropertyGroup>
@@ -33,6 +35,7 @@
   <Import Project="Remotion.BuildTargets.Testing.include.build" />
   <Import Project="Remotion.AssembleBuildOutput.include.build" />
   <Import Project="Remotion.DebugSymbols.include.build" />
+  <Import Project="Remotion.NuGet.Packaging2.include.build" />
   
   <PropertyGroup>
     <Version></Version>
@@ -160,9 +163,10 @@
   </Target>
 
   <PropertyGroup>
-    <TestBuildTargets>BuildReleaseProjects;BuildTestProjects;RunTests;AssembleBuildOutput;</TestBuildTargets>
+    <TestBuildTargets>BuildReleaseProjects;BuildTestProjects;RunTests;</TestBuildTargets>
     <!-- TODO: include RunMixinXRefTest with the targets -->
-    <FullBuildTargets>LogConfiguration;CleanProjects;$(TestBuildTargets)</FullBuildTargets>
+    <TestBuildTargets>BuildReleaseProjects;BuildTestProjects;CreateNuGetPackages</TestBuildTargets>
+    <FullBuildTargets>LogConfiguration;CleanProjects;$(TestBuildTargets);AssembleBuildOutput</FullBuildTargets>
   </PropertyGroup>
 
   <Target Name="BuildAll" DependsOnTargets="CleanFolders;CheckVersion">

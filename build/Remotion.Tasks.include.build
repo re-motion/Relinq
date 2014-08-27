@@ -24,6 +24,7 @@
   </PropertyGroup>
 
   <Import Project="$(MSBuildExtensionPackPath)MSBuild.ExtensionPack.tasks" />
+  <Import Project="$(NuGetForMSBuildPath)NuGet.For.MSBuild.tasks" />
 
   <!-- Use tasks of the re-motion BuildTools MSBuild Tasks library -->
   <UsingTask AssemblyFile="$(RemotionBuildTasksPath)Remotion.BuildTools.MSBuildTasks.dll" TaskName="Remotion.BuildTools.MSBuildTasks.CodeplexCreateRelease" />

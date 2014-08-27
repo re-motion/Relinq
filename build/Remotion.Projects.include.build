@@ -18,26 +18,26 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <ItemGroup>
-    <ReleaseProjectFiles Include="$(SolutionDirectory)\Core\Linq.Core.csproj" />
-    <ReleaseProjectFiles Include="$(SolutionDirectory)\Development\Linq.Development.csproj" />
-    <ReleaseProjectFiles Include="$(SolutionDirectory)\LinqToSqlAdapter\Linq.LinqToSqlAdapter.csproj" />
-    <ReleaseProjectFiles Include="$(SolutionDirectory)\SqlBackend\Linq.SqlBackend.csproj" />
-    <UnitTestProjectFiles Include="$(SolutionDirectory)\UnitTests\Linq.UnitTests.csproj">
+    <ReleaseProjectFiles Include="$(SolutionDirectory)Core\Linq.Core.csproj" />
+    <ReleaseProjectFiles Include="$(SolutionDirectory)Development\Linq.Development.csproj" />
+    <ReleaseProjectFiles Include="$(SolutionDirectory)LinqToSqlAdapter\Linq.LinqToSqlAdapter.csproj" />
+    <ReleaseProjectFiles Include="$(SolutionDirectory)SqlBackend\Linq.SqlBackend.csproj" />
+    <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests\Linq.UnitTests.csproj">
       <IsDatabaseTest>False</IsDatabaseTest>
     </UnitTestProjectFiles>
-    <UnitTestProjectFiles Include="$(SolutionDirectory)\SqlBackend.UnitTests\Linq.SqlBackend.UnitTests.csproj">
+    <UnitTestProjectFiles Include="$(SolutionDirectory)SqlBackend.UnitTests\Linq.SqlBackend.UnitTests.csproj">
       <IsDatabaseTest>False</IsDatabaseTest>
     </UnitTestProjectFiles>
-    <UnitTestProjectFiles Include="$(SolutionDirectory)\LinqToSqlAdapter.UnitTests\Linq.LinqToSqlAdapter.UnitTests.csproj">
+    <UnitTestProjectFiles Include="$(SolutionDirectory)LinqToSqlAdapter.UnitTests\Linq.LinqToSqlAdapter.UnitTests.csproj">
       <IsDatabaseTest>False</IsDatabaseTest>
     </UnitTestProjectFiles>
-    <IntegrationTestProjectFiles Include="$(SolutionDirectory)\IntegrationTests.Common\Linq.IntegrationTests.Common.csproj">
+    <IntegrationTestProjectFiles Include="$(SolutionDirectory)IntegrationTests.Common\Linq.IntegrationTests.Common.csproj">
       <IsDatabaseTest>False</IsDatabaseTest>
     </IntegrationTestProjectFiles>
-    <IntegrationTestProjectFiles Include="$(SolutionDirectory)\IntegrationTests.CSharp\Linq.IntegrationTests.CSharp.csproj">
+    <IntegrationTestProjectFiles Include="$(SolutionDirectory)IntegrationTests.CSharp\Linq.IntegrationTests.CSharp.csproj">
       <IsDatabaseTest>True</IsDatabaseTest>
     </IntegrationTestProjectFiles>
-    <IntegrationTestProjectFiles Include="$(SolutionDirectory)\IntegrationTests.VisualBasic\Linq.IntegrationTests.VisualBasic.vbproj">
+    <IntegrationTestProjectFiles Include="$(SolutionDirectory)IntegrationTests.VisualBasic\Linq.IntegrationTests.VisualBasic.vbproj">
       <IsDatabaseTest>True</IsDatabaseTest>
     </IntegrationTestProjectFiles>
   </ItemGroup>

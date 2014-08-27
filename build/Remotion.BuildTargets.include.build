@@ -31,7 +31,7 @@
     </PropertyGroup>
   </Target>
 
-  <Target Name="AddAdditionalMetadataToReleaseOutputFiles">
+  <Target Name="AddAdditionalMetadataToOutputFiles">
     <ItemGroup>
       <_projectFiles Remove="@(_projectFiles)" />
       <_projectFiles Include="%(ReleaseOutputFiles.MSBuildSourceProjectFile)">
@@ -39,6 +39,7 @@
         <MSBuildSourceProjectFile>%(MSBuildSourceProjectFile)</MSBuildSourceProjectFile>
         <MSBuildSourceTargetName>%(MSBuildSourceTargetName)</MSBuildSourceTargetName>
         <AssemblyName>%(FileName)</AssemblyName>
+        <NuSpecFile>$([System.IO.Path]::GetDirectoryName (%(MSBuildSourceProjectFile)))\$([System.IO.Path]::GetFileNameWithoutExtension (%(MSBuildSourceProjectFile))).nuspec</NuSpecFile>
       </_projectFiles>
     </ItemGroup>
 
@@ -48,9 +49,33 @@
         <MSBuildSourceProjectFile>%(MSBuildSourceProjectFile)</MSBuildSourceProjectFile>
         <MSBuildSourceTargetName>%(MSBuildSourceTargetName)</MSBuildSourceTargetName>
         <AssemblyName>%(AssemblyName)</AssemblyName>
+        <NuSpecFile Condition="Exists(%(NuSpecFile))">%(NuSpecFile)</NuSpecFile>
         <ProjectDirectory>%(RootDir)%(Directory)</ProjectDirectory>
       </ReleaseOutputFiles>
     </ItemGroup>
+
+    <ItemGroup>
+      <_projectFiles Remove="@(_projectFiles)" />
+      <_projectFiles Include="%(TestOutputFiles.MSBuildSourceProjectFile)">
+        <ReleaseOutputFileIdentity>%(Identity)</ReleaseOutputFileIdentity>
+        <MSBuildSourceProjectFile>%(MSBuildSourceProjectFile)</MSBuildSourceProjectFile>
+        <MSBuildSourceTargetName>%(MSBuildSourceTargetName)</MSBuildSourceTargetName>
+        <AssemblyName>%(FileName)</AssemblyName>
+        <NuSpecFile>$([System.IO.Path]::GetDirectoryName (%(MSBuildSourceProjectFile)))\$([System.IO.Path]::GetFileNameWithoutExtension (%(MSBuildSourceProjectFile))).nuspec</NuSpecFile>
+      </_projectFiles>
+    </ItemGroup>
+
+    <ItemGroup>
+      <TestOutputFiles Remove="@(TestOutputFiles)" />
+      <TestOutputFiles Include="%(_projectFiles.ReleaseOutputFileIdentity)">
+        <MSBuildSourceProjectFile>%(MSBuildSourceProjectFile)</MSBuildSourceProjectFile>
+        <MSBuildSourceTargetName>%(MSBuildSourceTargetName)</MSBuildSourceTargetName>
+        <AssemblyName>%(AssemblyName)</AssemblyName>
+        <NuSpecFile Condition="Exists(%(NuSpecFile))">%(NuSpecFile)</NuSpecFile>
+        <ProjectDirectory>%(RootDir)%(Directory)</ProjectDirectory>
+      </TestOutputFiles>
+    </ItemGroup>
+
   </Target>
 
   <Target Name="CleanFolders">

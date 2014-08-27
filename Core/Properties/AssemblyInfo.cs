@@ -14,18 +14,13 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Reflection;
 using System.Security;
 
-//
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-//
-
-[assembly: AssemblyTitle("Remotion Linq Library")]
-[assembly: AssemblyDescription("Framework for working with linq queries.")]
-[assembly: AssemblyCulture("")]
-[assembly: CLSCompliant(true)]
+[assembly: AssemblyTitle ("re-linq - re-motion Linq Library")]
+[assembly: AssemblyDescription ("With re-linq, it's now easier than ever to create full-featured LINQ providers.")]
+[assembly: AssemblyCulture ("")]
+[assembly: CLSCompliant (true)]
 [assembly: SecurityTransparent] // required to allow assembly to be linked from assemblies having the AllowPartiallyTrustedCallersAttribute applied
