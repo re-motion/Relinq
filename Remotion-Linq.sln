@@ -34,36 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{43BF1C
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_build", "_build", "{F855DF99-CCDB-4AD7-A8FB-5EBC37D47914}"
-	ProjectSection(SolutionItems) = preProject
-		build\ContentLayout.content = build\ContentLayout.content
-		build\DependDB.ConfigurationTemplate.xml = build\DependDB.ConfigurationTemplate.xml
-		build\NuGet.ConfigurationTemplate.nuspec = build\NuGet.ConfigurationTemplate.nuspec
-		build\NUnitErrors.xslt = build\NUnitErrors.xslt
-		build\Remotion.AssembleBuildOutput.include.build = build\Remotion.AssembleBuildOutput.include.build
-		build\Remotion.build = build\Remotion.build
-		build\Remotion.BuildTargets.include.build = build\Remotion.BuildTargets.include.build
-		build\Remotion.BuildTargets.Properties.include.build = build\Remotion.BuildTargets.Properties.include.build
-		build\Remotion.BuildTargets.Testing.include.build = build\Remotion.BuildTargets.Testing.include.build
-		build\Remotion.Configurations.include.build = build\Remotion.Configurations.include.build
-		build\Remotion.DebugSymbols.include.build = build\Remotion.DebugSymbols.include.build
-		build\Remotion.DependDB.include.build = build\Remotion.DependDB.include.build
-		build\Remotion.Documentation.include.build = build\Remotion.Documentation.include.build
-		build\Remotion.Documentation.Relinq.build = build\Remotion.Documentation.Relinq.build
-		build\Remotion.Local.build = build\Remotion.Local.build
-		build\Remotion.NuGet.Packaging.include.build = build\Remotion.NuGet.Packaging.include.build
-		build\Remotion.NuGet.Packaging.Relinq.Core.build = build\Remotion.NuGet.Packaging.Relinq.Core.build
-		build\Remotion.NuGet.Packaging2.include.build = build\Remotion.NuGet.Packaging2.include.build
-		build\Remotion.Packages.include.build = build\Remotion.Packages.include.build
-		build\Remotion.Packaging.base.build = build\Remotion.Packaging.base.build
-		build\Remotion.Packaging.include.build = build\Remotion.Packaging.include.build
-		build\Remotion.Packaging.Relinq.build = build\Remotion.Packaging.Relinq.build
-		build\Remotion.Projects.include.build = build\Remotion.Projects.include.build
-		build\Remotion.Server.build = build\Remotion.Server.build
-		build\Remotion.Tasks.include.build = build\Remotion.Tasks.include.build
-		build\SandcastleProjectTemplate.shfbproj = build\SandcastleProjectTemplate.shfbproj
-		build\SecureFileLoggerRules.rules = build\SecureFileLoggerRules.rules
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Build", "Build\Build.csproj", "{4F156040-84BC-4FEA-97ED-BEE23B63BEDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -139,6 +110,10 @@ Global
 		{0543C43E-D949-478B-AD85-583F3AE2A301}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0543C43E-D949-478B-AD85-583F3AE2A301}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0543C43E-D949-478B-AD85-583F3AE2A301}.Release|x86.ActiveCfg = Release|Any CPU
+		{4F156040-84BC-4FEA-97ED-BEE23B63BEDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F156040-84BC-4FEA-97ED-BEE23B63BEDF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4F156040-84BC-4FEA-97ED-BEE23B63BEDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F156040-84BC-4FEA-97ED-BEE23B63BEDF}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
