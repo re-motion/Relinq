@@ -34,19 +34,4 @@
 
   </ItemGroup>
 
-  <ItemGroup>
-    <NuGetPackages Include="Relinq.Core">
-      <PackageDeclaration>Remotion.NuGet.Packaging.Relinq.Core.build</PackageDeclaration>
-      <ID>Remotion.Linq</ID>
-      <Title>re-linq - re-motion Linq Library</Title>
-      <Authors>rubicon IT GmbH</Authors>
-      <Owners>Fabian Schmied</Owners>
-      <LicenseUrl>http://relinq.codeplex.com/license</LicenseUrl>
-      <ProjectUrl>http://relinq.codeplex.com</ProjectUrl>
-      <Description>With re-linq, it's now easier than ever to create full-featured LINQ providers.</Description>
-      <Copyright>Copyright (c) rubicon IT GmbH, www.rubicon.eu - Licensed under GNU LGPL 2.1 (or later)</Copyright>
-      <Tags>re-motion linq expression trees</Tags>
-    </NuGetPackages>
-  </ItemGroup>
-
 </Project>

@@ -35,7 +35,7 @@
   <Import Project="Remotion.BuildTargets.Testing.include.build" />
   <Import Project="Remotion.AssembleBuildOutput.include.build" />
   <Import Project="Remotion.DebugSymbols.include.build" />
-  <Import Project="Remotion.NuGet.Packaging2.include.build" />
+  <Import Project="Remotion.NuGet.Packaging.include.build" />
   
   <PropertyGroup>
     <Version></Version>
@@ -84,17 +84,7 @@
   </Target>
 
   <Target Name="PackageAll">
-    <!-- NuGet package must be created before modifying the debug symbols to allow the creation of proper NuGet source packages. -->
-    <MSBuild Projects="%(NuGetPackages.PackageDeclaration)"
-             BuildInParallel="false"
-             Targets="CreateNuGetPackage"
-             Properties="SolutionDirectory=$(SolutionDirectory);
-                         BinariesDirectory=$(BinariesDirectory);
-                         OutputDirectory=$(OutputDirectory);
-                         ArchiveDirectory=$(ArchiveDirectory);
-                         TempDirectory=$(TempDirectory);
-                         Version=$(Version);"/>
-    
+
     <MSBuild Projects="$(MSBuildProjectFile)"
              BuildInParallel="false"
              Targets="UpdateDebugSymbols"

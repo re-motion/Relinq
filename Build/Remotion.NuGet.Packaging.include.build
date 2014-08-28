@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <!-- This file is part of the re-motion Core Framework (www.re-motion.org)
  ! Copyright (c) rubicon IT GmbH, www.rubicon.eu
  ! 
@@ -16,121 +16,105 @@
  ! along with re-motion; if not, see http://www.gnu.org/licenses.
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
-  <Target Name="CreateNuGetPackageProperties">
-    <Error Text="The target 'CreateNuGetPackageProperties' is not implemented." />
-  </Target>
-
-  <Target Name="CreateNuGetStructureProperties">
-    <Error Text="The target 'CreateNuGetStructureProperties' is not implemented." />
-  </Target>
-
   <PropertyGroup>
-    <RemotionBuildTasksPath>$(SolutionDirectory)\prereq\Tools\Remotion.BuildTools.MSBuildTasks\</RemotionBuildTasksPath>
+    <NuGetWithDebugSymbolsOutputDirectory>$(OutputDirectory)NuGetWithDebugSymbols\$(ConfigurationID)\</NuGetWithDebugSymbolsOutputDirectory>
+    <NuGetWithSymbolServerSupportDirectory>$(OutputDirectory)NuGetWithSymbolServerSupport\$(ConfigurationID)\</NuGetWithSymbolServerSupportDirectory>
   </PropertyGroup>
 
-  <Import Project="Remotion.Tasks.include.build" />
-  <Import Project="Remotion.Packages.include.build" />
-  <Import Project="Remotion.Packaging.base.build" />
+  <Target Name="CreateNuGetPackagesWithDebugSymbols" DependsOnTargets="CreateActiveConfiguration;ResolveNuGetPath;AddAdditionalMetadataToOutputFiles">
+    <Message Text="Creating NuGet packages with debug-symbols, ConfigurationID=$(ConfigurationID)" Importance="High"/>
 
-  <!-- Overridden Targets -->
-  <Target Name="CreateRequiresUploadProperties" DependsOnTargets="CreateNuGetPackageProperties">
-    <PropertyGroup>
-      <MasterPackageName>$(BelongsToPackage)</MasterPackageName>
-    </PropertyGroup>
+    <Error Text="The property 'ActiveConfigurationName' is not set." Condition="'$(ActiveConfigurationName)' == ''" />
+
+    <ItemGroup>
+      <_nugetProjectFiles Remove="@(_nugetProjectFiles)" />
+      <_nugetProjectFiles Include="%(ReleaseOutputFiles.MSBuildSourceProjectFile)" Condition="%(ReleaseOutputFiles.NuSpecFile) != ''" />
+      <_nugetProjectFiles Include="%(TestOutputFiles.MSBuildSourceProjectFile)" Condition="%(ReleaseOutputFiles.NuSpecFile) != ''" />
+    </ItemGroup>
+
+    <MakeDir Directories="$(NuGetWithDebugSymbolsOutputDirectory)" />
+    <NuGet.MSBuild.Tools.Pack
+        ToolPath="$(NuGetToolPath)"
+        Project="%(_nugetProjectFiles.Identity)"
+        OutputDirectory="$(NuGetWithDebugSymbolsOutputDirectory)"
+        IncludeReferencedProjects="True"
+        Symbols="False"
+        Version="$(Version)"
+        Configuration="$(ActiveConfigurationName)"
+        Condition="@(_nugetProjectFiles) != ''" />
+
+    <Message Text="Done creating NuGet package swith debug-symbols, ConfigurationID=$(ConfigurationID)" Importance="High"/>
   </Target>
 
-  <!-- Main Targets -->
-  <Target Name="CreateNuGetProperties" DependsOnTargets="CreateNuGetPackageProperties">
-    <Error Text="The property 'PackageID' is not set." Condition="'$(PackageID)' == ''" />
-    <Error Text="The property 'BelongsToPackage' is not set." Condition="'$(BelongsToPackage)' == ''" />
-    <Error Text="The property 'NuGetLibFolder' is not set." Condition="'$(NuGetLibFolder)' == ''" />
+  <Target Name="CreateNuGetPackagesWithSymbolServerSupport" DependsOnTargets="CreateActiveConfiguration;ResolveNuGetPath;AddAdditionalMetadataToOutputFiles">
+    <Message Text="Creating NuGet packages with symbol-server support, ConfigurationID=$(ConfigurationID)" Importance="High"/>
 
-    <PropertyGroup>
-      <NuGetToolPath>$(SolutionDirectory)prereq\Tools\NuGet\</NuGetToolPath>
+    <Error Text="The property 'ActiveConfigurationName' is not set." Condition="'$(ActiveConfigurationName)' == ''" />
 
-      <NuGetTempDirectory>$(TempDirectory)$([System.Guid]::NewGuid())\NuGet\package\</NuGetTempDirectory>
-      <!-- http://docs.nuget.org/docs/creating-packages/creating-and-publishing-a-package -->
-      <NuGetTempLibDirectory>$(NuGetTempDirectory)lib\$(NuGetLibFolder)\</NuGetTempLibDirectory>
-      <NuGetTempSrcDirectory>$(NuGetTempDirectory)src\</NuGetTempSrcDirectory>
-      <NuGetOutputDirectory>$(OutputDirectory)NuGet\</NuGetOutputDirectory>
-
-      <NuSpecTemplateFile>$(SolutionDirectory)build\NuGet.ConfigurationTemplate.nuspec</NuSpecTemplateFile>
-      <NuSpecFileName>NuGet.nuspec</NuSpecFileName>
-      <NuSpecFile>$(NuGetTempDirectory)$(NuSpecFileName)</NuSpecFile>
-    </PropertyGroup>
-    
     <ItemGroup>
-      <_activePackage Include="@(NuGetPackages)" Condition="%(NuGetPackages.Identity) == $(PackageID)"/>
+      <_nugetProjectFiles Remove="@(_nugetProjectFiles)" />
+      <_nugetProjectFiles Include="%(ReleaseOutputFiles.MSBuildSourceProjectFile)" Condition="%(ReleaseOutputFiles.NuSpecFile) != '' AND %(CreateNuGetPackageWithSymbolServerSupport) == 'True'" />
     </ItemGroup>
 
     <PropertyGroup>
-      <ID>%(_activePackage.ID)</ID>
-      <Title>%(_activePackage.Title)</Title>
-      <Authors>%(_activePackage.Authors)</Authors>
-      <Owners>%(_activePackage.Owners)</Owners>
-      <LicenseUrl>%(_activePackage.LicenseUrl)</LicenseUrl>
-      <ProjectUrl>%(_activePackage.ProjectUrl)</ProjectUrl>
-      <Description>%(_activePackage.Description)</Description>
-      <Copyright>%(_activePackage.Copyright)</Copyright>
-      <Tags>%(_activePackage.Tags)</Tags>
+      <_nuGetTempDirectory>$(TempDirectory)nuget\$([System.Guid]::NewGuid())\</_nuGetTempDirectory>
     </PropertyGroup>
-  </Target>
-  
-  <Target Name="CreateNuGetStructure" DependsOnTargets="CreateNuGetProperties;CreateNuGetStructureProperties">
-    <Error Text="The property 'NuGetLibFiles' is not set." Condition="'@(NuGetLibFiles)' == ''" />
-    <Error Text="The property 'NuGetSrcFiles' is not set." Condition="'@(NuGetSrcFiles)' == ''" />
 
-    <MakeDir Directories="$(NuGetTempDirectory)"/>
-    <Copy SourceFiles="$(NuSpecTemplateFile)" DestinationFiles="$(NuSpecFile)"/>
+    <MakeDir Directories="$(_nuGetTempDirectory)"/>
+    <MakeDir Directories="$(NuGetWithSymbolServerSupportDirectory)" />
 
-    <MakeDir Directories="$(NuGetTempLibDirectory)"/>
-    <Copy SourceFiles="@(NuGetLibFiles)" DestinationFolder="$(NuGetTempLibDirectory)"/>
+    <NuGet.MSBuild.Tools.Pack
+          ToolPath="$(NuGetToolPath)"
+          Project="%(_nugetProjectFiles.Identity)"
+          OutputDirectory="$(_nuGetTempDirectory)"
+          IncludeReferencedProjects="True"
+          Symbols="True"
+          Version="$(Version)"
+          Configuration="$(ActiveConfigurationName)"
+          Condition="@(_nugetProjectFiles) != ''" />
 
-    <MakeDir Directories="$(NuGetTempSrcDirectory)"/>    
-    <Copy SourceFiles="@(NuGetSrcFiles)" DestinationFiles="@(NuGetSrcFiles -> '$(NuGetTempSrcDirectory)%(RecursiveDir)%(Filename)%(Extension)')"/>
-  </Target>
-  
-  <Target Name="CreateNuGetPackage" DependsOnTargets="CreateNuGetPackageProperties;CreateNuGetProperties;CreateNuGetStructure">
-    <Error Text="The property 'Version' is not set." Condition="'$(Version)' == ''" />
-    
-    <Message Text="Creating NuGet package for '$(PackageID)'..." Importance="High"/>
+    <!-- Extract the NUPKG-files, remove the PDB-files, re-zip the NUPKG-files -->
 
-    <MakeDir Directories="$(NuGetOutputDirectory)"/>
-    <NuGetPack ToolPath="$(NuGetToolPath)"
-               NuSpecFile="$(NuSpecFile)"
-               Version="$(Version)"
-               OutputDirectory="$(NuGetOutputDirectory)"
-               Properties="ID=$(ID);
-                           Title=$(Title);
-                           Authors=$(Authors);
-                           Owners=$(Owners);
-                           LicenseUrl=$(LicenseUrl);
-                           ProjectUrl=$(ProjectUrl);
-                           Description=$(Description);
-                           Copyright=$(Copyright);
-                           Tags=$(Tags)"/>
-
-    <Message Text="Done creating NuGet package for '$(PackageID)'." Importance="High"/>
-  </Target>
-
-  <Target Name="UploadNuGetPackage" DependsOnTargets="CreateRequiresUpload;UploadNuGetPackageInternal" />
-  
-  <Target Name="UploadNuGetPackageInternal" DependsOnTargets="CreateNuGetProperties;CreateNuGetPackageProperties" Condition="$(UploadToNuGet) == 'True'">
-    <Error Text="The property 'NuGetApiKey' is not set." Condition="'$(NuGetApiKey)' == ''" />
-    
     <ItemGroup>
-        <_packageFile Remove="@(_packageFile)"/>
-        <_packageFile Include="$(NuGetOutputDirectory)$(ID)*.nupkg"/>
+      <_nuGetFiles Remove="@(_nuGetFiles)" />
+      <_nuGetFiles Include="$(_nuGetTempDirectory)*.nupkg" Exclude="$(_nuGetTempDirectory)*.Symbols.nupkg">
+        <ExtractionPath>$(TempDirectory)nuget\%(Filename)</ExtractionPath>
+      </_nuGetFiles>
+      <_nuGetSymbolsFiles Include="$(_nuGetTempDirectory)*.Symbols.nupkg" />
     </ItemGroup>
 
-    <Message Text="Uploading NuGet package for '$(PackageID)' (belongs to: '$(BelongsToPackage)')..." Importance="High"/>
+    <MSBuild.ExtensionPack.Compression.Zip
+        TaskAction="Extract"
+        ExtractPath="$(TempDirectory)nuget\%(_nuGetFiles.Filename)" 
+        ZipFileName="%(_nuGetFiles.Identity)" 
+        Condition="@(_nuGetFiles) != ''" />
 
-    <NuGetPush ToolPath="$(NuGetToolPath)"
-               PackageFile="%(_packageFile.Identity)"
-               ApiKey="$(NuGetApiKey)"/>
+    <ItemGroup>
+      <_pdbFiles Remove="@(_pdbFiles)" />
+      <_pdbFiles Include="$(TempDirectory)nuget\%(_nuGetFiles.Filename)\lib\**\*.pdb" />
+    </ItemGroup>
 
-    <Message Text="Done uploading NuGet package for '$(PackageID)' (belongs to: '$(BelongsToPackage)')." Importance="High"/>
+    <Delete Files="@(_pdbFiles)" />
+
+    <MSBuild.ExtensionPack.Compression.Zip
+        TaskAction="Create"
+        CompressPath="$(TempDirectory)nuget\%(_nuGetFiles.Filename)" 
+        RemoveRoot="$(TempDirectory)nuget\%(_nuGetFiles.Filename)"
+        ZipFileName="$(NuGetWithSymbolServerSupportDirectory)%(_nuGetFiles.Filename).nupkg" 
+        Condition="@(_nuGetFiles) != ''" />
+
+    <Copy SourceFiles="@(_nuGetSymbolsFiles)" DestinationFolder="$(NuGetWithSymbolServerSupportDirectory)" />
+
+    <Message Text="Done creating NuGet packages with symbol-server support, ConfigurationID=$(ConfigurationID)" Importance="High"/>
+  </Target>
+
+  <Target Name="ResolveNuGetPath" Condition=" '$(NuGetToolPath)' == '' OR !Exists('$(NuGetToolPath)') ">
+    <NuGet.MSBuild.Tools.ResolveNuGetToolPath Solution="$(SolutionPath)" ContinueOnError="true">
+      <Output TaskParameter="ToolPath" PropertyName="NuGetToolPath"/>
+    </NuGet.MSBuild.Tools.ResolveNuGetToolPath>
+
+    <Error Text="The NuGet.exe path could not be resolved, or does not exist." Condition=" '$(NuGetToolPath)' == '' OR !Exists('$(NuGetToolPath)') "/>
+    <Message Text="NuGetToolPath=$(NuGetToolPath)" Importance="Low" />
   </Target>
 
 </Project>
