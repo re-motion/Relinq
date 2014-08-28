@@ -10,7 +10,7 @@
     <projectUrl>http://relinq.codeplex.com</projectUrl>
     <description>$description$</description>
     <copyright>$copyright$</copyright>
-    <tags>re-motion linq expression trees</tags>
+    <tags>re-motion LiNQ ExpressionTrees $extraTags$</tags>
   </metadata>
   <files>
     <file src="bin\$configuration$\$id$.pdb" target="lib\portable-net45+win+wpa81+wp80" />

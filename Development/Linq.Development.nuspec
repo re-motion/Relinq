@@ -10,7 +10,7 @@
     <projectUrl>http://relinq.codeplex.com</projectUrl>
     <description>$description$</description>
     <copyright>$copyright$</copyright>
-    <tags>re-motion linq testing</tags>
+    <tags>re-motion LiNQ UnitTesting $extraTags$</tags>
   </metadata>
   <files>
     <file src="bin\$configuration$\$id$.pdb" target="lib\net45" />

@@ -41,6 +41,7 @@
         Symbols="False"
         Version="$(Version)"
         Configuration="$(ActiveConfigurationName)"
+        Properties="ExtraTags=$(ActiveConfigurationName)Build Documentation"
         Condition="@(_nugetProjectFiles) != ''" />
 
     <Message Text="Done creating NuGet package swith debug-symbols, ConfigurationID=$(ConfigurationID)" Importance="High"/>
@@ -71,6 +72,7 @@
           Symbols="True"
           Version="$(Version)"
           Configuration="$(ActiveConfigurationName)"
+          Properties="ExtraTags="
           Condition="@(_nugetProjectFiles) != ''" />
 
     <!-- Extract the NUPKG-files, remove the PDB-files, re-zip the NUPKG-files -->
