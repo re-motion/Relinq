@@ -39,7 +39,7 @@
         <MSBuildSourceProjectFile>%(MSBuildSourceProjectFile)</MSBuildSourceProjectFile>
         <MSBuildSourceTargetName>%(MSBuildSourceTargetName)</MSBuildSourceTargetName>
         <AssemblyName>%(FileName)</AssemblyName>
-        <NuSpecFile>$([System.IO.Path]::GetDirectoryName (%(MSBuildSourceProjectFile)))\$([System.IO.Path]::GetFileNameWithoutExtension (%(MSBuildSourceProjectFile))).nuspec</NuSpecFile>
+        <NuSpecFile>$([System.IO.Path]::ChangeExtension(%(MSBuildSourceProjectFile), "nuspec"))</NuSpecFile>
         <CreateNuGetPackageWithSymbolServerSupport Condition="%(ReleaseOutputFiles.CreateNuGetPackageWithSymbolServerSupport) == ''">False</CreateNuGetPackageWithSymbolServerSupport>
         <CreateNuGetPackageWithSymbolServerSupport Condition="%(ReleaseOutputFiles.CreateNuGetPackageWithSymbolServerSupport) != ''">%(ReleaseOutputFiles.CreateNuGetPackageWithSymbolServerSupport)</CreateNuGetPackageWithSymbolServerSupport>
       </_projectFiles>
