@@ -40,6 +40,8 @@
         <MSBuildSourceTargetName>%(MSBuildSourceTargetName)</MSBuildSourceTargetName>
         <AssemblyName>%(FileName)</AssemblyName>
         <NuSpecFile>$([System.IO.Path]::GetDirectoryName (%(MSBuildSourceProjectFile)))\$([System.IO.Path]::GetFileNameWithoutExtension (%(MSBuildSourceProjectFile))).nuspec</NuSpecFile>
+        <CreateNuGetPackageWithSymbolServerSupport Condition="%(ReleaseOutputFiles.CreateNuGetPackageWithSymbolServerSupport) == ''">False</CreateNuGetPackageWithSymbolServerSupport>
+        <CreateNuGetPackageWithSymbolServerSupport Condition="%(ReleaseOutputFiles.CreateNuGetPackageWithSymbolServerSupport) != ''">%(ReleaseOutputFiles.CreateNuGetPackageWithSymbolServerSupport)</CreateNuGetPackageWithSymbolServerSupport>
       </_projectFiles>
     </ItemGroup>
 
@@ -50,6 +52,7 @@
         <MSBuildSourceTargetName>%(MSBuildSourceTargetName)</MSBuildSourceTargetName>
         <AssemblyName>%(AssemblyName)</AssemblyName>
         <NuSpecFile Condition="Exists(%(NuSpecFile))">%(NuSpecFile)</NuSpecFile>
+        <CreateNuGetPackageWithSymbolServerSupport>%(CreateNuGetPackageWithSymbolServerSupport)</CreateNuGetPackageWithSymbolServerSupport>
         <ProjectDirectory>%(RootDir)%(Directory)</ProjectDirectory>
       </ReleaseOutputFiles>
     </ItemGroup>

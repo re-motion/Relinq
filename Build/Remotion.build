@@ -165,7 +165,7 @@
   <PropertyGroup>
     <TestBuildTargets>BuildReleaseProjects;BuildTestProjects;RunTests;</TestBuildTargets>
     <!-- TODO: include RunMixinXRefTest with the targets -->
-    <TestBuildTargets>BuildReleaseProjects;BuildTestProjects;CreateNuGetPackages</TestBuildTargets>
+    <TestBuildTargets>BuildReleaseProjects;BuildTestProjects;CreateNuGetPackagesWithSymbolServerSupport;CreateNuGetPackagesWithDebugSymbols</TestBuildTargets>
     <FullBuildTargets>LogConfiguration;CleanProjects;$(TestBuildTargets);AssembleBuildOutput</FullBuildTargets>
   </PropertyGroup>
 

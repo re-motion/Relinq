@@ -18,10 +18,16 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <ItemGroup>
-    <ReleaseProjectFiles Include="$(SolutionDirectory)Core\Linq.Core.csproj" />
-    <ReleaseProjectFiles Include="$(SolutionDirectory)Development\Linq.Development.csproj" />
+    <ReleaseProjectFiles Include="$(SolutionDirectory)Core\Linq.Core.csproj">
+      <CreateNuGetPackageWithSymbolServerSupport>True</CreateNuGetPackageWithSymbolServerSupport>
+    </ReleaseProjectFiles>
+    <ReleaseProjectFiles Include="$(SolutionDirectory)Development\Linq.Development.csproj">
+      <CreateNuGetPackageWithSymbolServerSupport>True</CreateNuGetPackageWithSymbolServerSupport>
+    </ReleaseProjectFiles>
     <ReleaseProjectFiles Include="$(SolutionDirectory)LinqToSqlAdapter\Linq.LinqToSqlAdapter.csproj" />
-    <ReleaseProjectFiles Include="$(SolutionDirectory)SqlBackend\Linq.SqlBackend.csproj" />
+    <ReleaseProjectFiles Include="$(SolutionDirectory)SqlBackend\Linq.SqlBackend.csproj">
+      <CreateNuGetPackageWithSymbolServerSupport>True</CreateNuGetPackageWithSymbolServerSupport>
+    </ReleaseProjectFiles>
     <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests\Linq.UnitTests.csproj">
       <IsDatabaseTest>False</IsDatabaseTest>
     </UnitTestProjectFiles>
