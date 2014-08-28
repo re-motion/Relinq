@@ -33,5 +33,6 @@
   <UsingTask AssemblyFile="$(RemotionBuildTasksPath)Remotion.BuildTools.MSBuildTasks.dll" TaskName="Remotion.BuildTools.MSBuildTasks.SandcastleProjectBuilder" />
   <UsingTask AssemblyFile="$(RemotionBuildTasksPath)Remotion.BuildTools.MSBuildTasks.dll" TaskName="Remotion.BuildTools.MSBuildTasks.NuGetPack" />
   <UsingTask AssemblyFile="$(RemotionBuildTasksPath)Remotion.BuildTools.MSBuildTasks.dll" TaskName="Remotion.BuildTools.MSBuildTasks.NuGetPush" />
+  <UsingTask AssemblyFile="$(RemotionBuildTasksPath)Remotion.BuildTools.MSBuildTasks.dll" TaskName="Remotion.BuildTools.MSBuildTasks.InsertSourceLinks" />
 
 </Project>

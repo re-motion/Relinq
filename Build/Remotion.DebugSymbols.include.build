@@ -17,22 +17,16 @@
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Target Name="UpdateDebugSymbols">
-    <PropertyGroup>
-      <InsertSvnDataTool>$(SolutionDirectory)prereq\Tools\SymbolServer\InsertSvnData.exe</InsertSvnDataTool>
-    </PropertyGroup>
-    
-    <Error Text="The property 'SvnRevision' is not set." Condition="'$(SvnRevision)' == ''" />
-    <Error Text="The property 'DebugSymbolsVCSUrl' is not set." Condition="'$(DebugSymbolsVCSUrl)' == ''" />
+  <Target Name="InsertSourceLinks">
 
-    <ItemGroup>
-      <PdbFiles Include="$(BinariesDirectory)**\Remotion*.dll" Exclude="$(BinariesDirectory)**\*resources.dll" />
-      <PdbFiles Include="$(BinariesDirectory)**\*.exe" />
-    </ItemGroup>
+    <Error Text="The property 'SolutionDirectory' is not set." Condition="'$(SolutionDirectory)' == ''" />
 
     <Message Text="Starting .pdb file indexing." />
-    <Exec Command="&quot;$(InsertSvnDataTool)&quot; /pdbFile:&quot;%(PdbFiles.Identity)&quot; /revision:$(SvnRevision) /svnRootUrl:&quot;$(DebugSymbolsVCSUrl)&quot; /projectRoot:&quot;$(SolutionDirectory)&quot;" />
+    <Remotion.BuildTools.MSBuildTasks.InsertSourceLinks
+        BuildOutputFile="%(ReleaseOutputFiles.Identity)"
+        ProjectBaseDirectory="$(SolutionDirectory)"
+        VcsUrlTemplate="https://svn.re-motion.org/svn/!svn/bc/29862/Remotion-Linq/trunk/{0}" />
     <Message Text="Finished .pdb file indexing." />
   </Target>
-  
+
 </Project>

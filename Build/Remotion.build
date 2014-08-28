@@ -23,7 +23,7 @@
     <NuGetToolPath>$(PackagesDirectory)NuGet.CommandLine.2.8.2\tools\</NuGetToolPath>
     <NuGetForMSBuildPath>$(PackagesDirectory)NuGet.for.MSBuild.1.4.3\build\</NuGetForMSBuildPath>
     <MSBuildExtensionPackPath>$(PackagesDirectory)MSBuild.Extension.Pack.1.5.0\tools\net40\</MSBuildExtensionPackPath>
-    <RemotionBuildTasksPath>$(PackagesDirectory)Remotion.BuildTools.MSBuildTasks.1.0.5351.24435\tools\</RemotionBuildTasksPath>
+    <RemotionBuildTasksPath>$(PackagesDirectory)Remotion.BuildTools.MSBuildTasks.1.0.5353.34691\tools\</RemotionBuildTasksPath>
   </PropertyGroup>
 
   <Import Project="Remotion.Tasks.include.build" />
@@ -153,10 +153,21 @@
   </Target>
 
   <PropertyGroup>
-    <TestBuildTargets>BuildReleaseProjects;BuildTestProjects;RunTests;</TestBuildTargets>
+    <TestBuildTargets>
+        BuildReleaseProjects;
+        BuildTestProjects;
+        RunTests;
+    </TestBuildTargets>
     <!-- TODO: include RunMixinXRefTest with the targets -->
-    <TestBuildTargets>BuildReleaseProjects;BuildTestProjects;CreateNuGetPackagesWithSymbolServerSupport;CreateNuGetPackagesWithDebugSymbols</TestBuildTargets>
-    <FullBuildTargets>LogConfiguration;CleanProjects;$(TestBuildTargets);AssembleBuildOutput</FullBuildTargets>
+    <TestBuildTargets>BuildReleaseProjects;BuildTestProjects;InsertSourceLinks</TestBuildTargets>
+    <FullBuildTargets>
+        LogConfiguration;
+        CleanProjects;
+        $(TestBuildTargets);
+        AssembleBuildOutput;
+        CreateNuGetPackagesWithSymbolServerSupport;
+        CreateNuGetPackagesWithDebugSymbols;
+    </FullBuildTargets>
   </PropertyGroup>
 
   <Target Name="BuildAll" DependsOnTargets="CleanFolders;CheckVersion">
