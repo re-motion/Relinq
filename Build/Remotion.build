@@ -152,71 +152,50 @@
         RunTests;
     </TestBuildTargets>
     <!-- TODO: include RunMixinXRefTest with the targets -->
-    <TestBuildTargets>BuildReleaseProjects;BuildTestProjects;InsertSourceLinks</TestBuildTargets>
+    <TestBuildTargets>BuildReleaseProjects;BuildTestProjects</TestBuildTargets>
     <FullBuildTargets>
         LogConfiguration;
         CleanProjects;
         $(TestBuildTargets);
         AssembleBuildOutput;
         CreateNuGetPackagesWithSymbolServerSupport;
+        InsertSourceLinks;
         CreateNuGetPackagesWithDebugSymbols;
     </FullBuildTargets>
+    <BuildProperties>
+        SolutionKeyFile=$(SolutionKeyFile);
+        SolutionDirectory=$(SolutionDirectory);
+        OutputDirectory=$(OutputDirectory);
+        TempDirectory=$(TempDirectory);
+        LogDirectory=$(LogDirectory);
+        Version=$(Version);
+        ArchiveDirectory=$(ArchiveDirectory);
+        ReleaseType=$(ReleaseType);
+        AdditionalBuildMetadata=$(AdditionalBuildMetadata);
+        Platforms=$(Platforms);
+        DatabaseSystems=$(DatabaseSystems)
+    </BuildProperties>
   </PropertyGroup>
 
   <Target Name="BuildAll" DependsOnTargets="CleanFolders;CheckVersion">
     <MSBuild Projects="$(MSBuildProjectFile)"
              BuildInParallel="false"
              Targets="$(FullBuildTargets)"
-             Properties="ConfigurationID=%(AllConfigurations.Identity);
-                         SolutionKeyFile=$(SolutionKeyFile);
-                         SolutionDirectory=$(SolutionDirectory);
-                         OutputDirectory=$(OutputDirectory);
-                         TempDirectory=$(TempDirectory);
-                         LogDirectory=$(LogDirectory);
-                         Version=$(Version);
-                         ArchiveDirectory=$(ArchiveDirectory);
-                         ReleaseType=$(ReleaseType);
-                         AdditionalBuildMetadata=$(AdditionalBuildMetadata);
-                         Platforms=$(Platforms);
-                         DatabaseSystems=$(DatabaseSystems)"/>
+             Properties="ConfigurationID=%(AllConfigurations.Identity);$(BuildProperties);"/>
   </Target>
   
   <Target Name="TestBuildDebugOnly" DependsOnTargets="CleanFolders">
     <MSBuild Projects="$(MSBuildProjectFile)"
              BuildInParallel="false"
              Targets="$(TestBuildTargets)"
-             Properties="
-                  ConfigurationID=Debug;
-                  SolutionKeyFile=$(SolutionKeyFile);
-                  SolutionDirectory=$(SolutionDirectory);
-                  OutputDirectory=$(OutputDirectory);
-                  TempDirectory=$(TempDirectory);
-                  LogDirectory=$(LogDirectory);
-                  Version=$(Version);
-                  ArchiveDirectory=$(ArchiveDirectory);
-                  ReleaseType=$(ReleaseType);
-                  AdditionalBuildMetadata=$(AdditionalBuildMetadata);
-                  Platforms=$(Platforms);
-                  DatabaseSystems=$(DatabaseSystems)"/>
+             Properties="ConfigurationID=Debug;$(BuildProperties);"/>
   </Target>
   
   <Target Name="TestBuildAllConfigurations" DependsOnTargets="CleanFolders">
     <MSBuild Projects="$(MSBuildProjectFile)"
              BuildInParallel="false"
              Targets="$(TestBuildTargets)"
-             Properties="
-                  ConfigurationID=%(AllConfigurations.Identity);
-                  SolutionKeyFile=$(SolutionKeyFile);
-                  SolutionDirectory=$(SolutionDirectory);
-                  OutputDirectory=$(OutputDirectory);
-                  TempDirectory=$(TempDirectory);
-                  LogDirectory=$(LogDirectory);
-                  Version=$(Version);
-                  ArchiveDirectory=$(ArchiveDirectory);
-                  ReleaseType=$(ReleaseType);
-                  AdditionalBuildMetadata=$(AdditionalBuildMetadata);
-                  Platforms=$(Platforms);
-                  DatabaseSystems=$(DatabaseSystems)"/>
+             Properties="ConfigurationID=%(AllConfigurations.Identity);$(BuildProperties);"/>
   </Target>
 
   <Target Name="DocumentationTestBuild" DependsOnTargets="CleanFolders" >
