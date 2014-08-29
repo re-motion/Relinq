@@ -39,13 +39,12 @@
     <SvnUsername>build</SvnUsername>
     <SvnBranchFolder></SvnBranchFolder>
     <SvnTagsFolder>tags</SvnTagsFolder>
-    
+
+    <VcsUrlTemplate>$(SvnBaseUri)/!svn/bc/$(SvnRevision)/$(SvnBranchFolder)/{0}</VcsUrlTemplate>
+
     <DependDBProjectBranch></DependDBProjectBranch>
     <DependDBUploadPath></DependDBUploadPath>
-    <DependDBProjectVCSUrlTemplate>$(SvnBaseUri)/!svn/bc/$(SvnRevision)/$(SvnBranchFolder)/{0}</DependDBProjectVCSUrlTemplate>
     <DependDBProjectImportNotificationMailAddress></DependDBProjectImportNotificationMailAddress>
-
-    <DebugSymbolsVCSUrl>$(SvnBaseUri)/$(SvnBranchFolder)/</DebugSymbolsVCSUrl>
 
     <JiraVersionPattern></JiraVersionPattern>
   </PropertyGroup>

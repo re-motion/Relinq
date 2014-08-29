@@ -23,7 +23,7 @@
     <NuGetToolPath>$(PackagesDirectory)NuGet.CommandLine.2.8.2\tools\</NuGetToolPath>
     <NuGetForMSBuildPath>$(PackagesDirectory)NuGet.for.MSBuild.1.4.3\build\</NuGetForMSBuildPath>
     <MSBuildExtensionPackPath>$(PackagesDirectory)MSBuild.Extension.Pack.1.5.0\tools\net40\</MSBuildExtensionPackPath>
-    <RemotionBuildTasksPath>$(PackagesDirectory)Remotion.BuildTools.MSBuildTasks.1.0.5353.34691\tools\</RemotionBuildTasksPath>
+    <RemotionBuildTasksPath>$(PackagesDirectory)Remotion.BuildTools.MSBuildTasks.1.0.5354.20249\tools\</RemotionBuildTasksPath>
   </PropertyGroup>
 
   <Import Project="Remotion.Tasks.include.build" />
@@ -57,9 +57,10 @@
 
     <NuGetApiKey></NuGetApiKey>
 
+    <VcsUrlTemplate></VcsUrlTemplate>
+
     <DependDBProjectBranch></DependDBProjectBranch>
     <DependDBProjectVersion></DependDBProjectVersion>
-    <DependDBProjectVCSUrlTemplate></DependDBProjectVCSUrlTemplate>
     <DependDBProjectImportNotificationMailAddress></DependDBProjectImportNotificationMailAddress>
     <DependDBProjectImportNotificationMailAddressCc></DependDBProjectImportNotificationMailAddressCc>
     <DependDBUploadPath>$(MSBuildProjectDirectory)\BuildOutput\DependDB\</DependDBUploadPath>
@@ -85,14 +86,6 @@
 
   <Target Name="PackageAll">
 
-    <MSBuild Projects="$(MSBuildProjectFile)"
-             BuildInParallel="false"
-             Targets="UpdateDebugSymbols"
-             Properties="SolutionDirectory=$(SolutionDirectory);
-                         BinariesDirectory=$(BinariesDirectory);
-                         DebugSymbolsVCSUrl=$(DebugSymbolsVCSUrl);
-                         SvnRevision=$(SvnRevision);"/>
-    
     <MSBuild Projects="%(AllPackages.PackageDeclaration)"
              BuildInParallel="false"
              Targets="CreatePackages"

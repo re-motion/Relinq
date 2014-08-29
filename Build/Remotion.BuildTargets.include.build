@@ -40,8 +40,8 @@
         <MSBuildSourceTargetName>%(MSBuildSourceTargetName)</MSBuildSourceTargetName>
         <AssemblyName>%(FileName)</AssemblyName>
         <NuSpecFile>$([System.IO.Path]::ChangeExtension(%(MSBuildSourceProjectFile), "nuspec"))</NuSpecFile>
-        <CreateNuGetPackageWithSymbolServerSupport Condition="%(ReleaseOutputFiles.CreateNuGetPackageWithSymbolServerSupport) == ''">False</CreateNuGetPackageWithSymbolServerSupport>
-        <CreateNuGetPackageWithSymbolServerSupport Condition="%(ReleaseOutputFiles.CreateNuGetPackageWithSymbolServerSupport) != ''">%(ReleaseOutputFiles.CreateNuGetPackageWithSymbolServerSupport)</CreateNuGetPackageWithSymbolServerSupport>
+        <CreateNuGetPackageWithSymbolServerSupport Condition="'%(ReleaseOutputFiles.CreateNuGetPackageWithSymbolServerSupport)' == ''">False</CreateNuGetPackageWithSymbolServerSupport>
+        <CreateNuGetPackageWithSymbolServerSupport Condition="'%(ReleaseOutputFiles.CreateNuGetPackageWithSymbolServerSupport)' != ''">%(ReleaseOutputFiles.CreateNuGetPackageWithSymbolServerSupport)</CreateNuGetPackageWithSymbolServerSupport>
       </_projectFiles>
     </ItemGroup>
 

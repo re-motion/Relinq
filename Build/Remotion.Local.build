@@ -25,7 +25,6 @@
     <SvnBranchFolder>local</SvnBranchFolder>  
     <SvnRevision>0</SvnRevision>
 
-    <DependDBProjectVCSUrlTemplate>http://localost/svn/!svn/bc/$(SvnRevision)/$(SvnBranchFolder)/{0}</DependDBProjectVCSUrlTemplate>
     <DependDBProjectImportNotificationMailAddress>noreply@localhost</DependDBProjectImportNotificationMailAddress>
   </PropertyGroup>
   

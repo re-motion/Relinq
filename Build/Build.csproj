@@ -44,12 +44,16 @@
     <None Include="NuGet.ConfigurationTemplate.nuspec" />
     <None Include="packages.config" />
     <None Include="Remotion.AssembleBuildOutput.include.build" />
-    <None Include="Remotion.build" />
+    <None Include="Remotion.build">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Remotion.BuildTargets.include.build" />
     <None Include="Remotion.BuildTargets.Properties.include.build" />
     <None Include="Remotion.BuildTargets.Testing.include.build" />
     <None Include="Remotion.Configurations.include.build" />
-    <None Include="Remotion.DebugSymbols.include.build" />
+    <None Include="Remotion.DebugSymbols.include.build">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Remotion.DependDB.include.build" />
     <None Include="Remotion.Documentation.include.build" />
     <None Include="Remotion.Documentation.Relinq.build" />
@@ -62,7 +66,9 @@
     <None Include="Remotion.Packaging.include.build" />
     <None Include="Remotion.Packaging.Relinq.build" />
     <None Include="Remotion.Projects.include.build" />
-    <None Include="Remotion.Server.build" />
+    <None Include="Remotion.Server.build">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Remotion.Tasks.include.build" />
   </ItemGroup>
   <ItemGroup>

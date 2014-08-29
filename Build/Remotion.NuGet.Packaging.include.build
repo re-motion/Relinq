@@ -44,7 +44,7 @@
         Properties="ExtraTags=$(ActiveConfigurationName)Build Documentation"
         Condition="@(_nugetProjectFiles) != ''" />
 
-    <Message Text="Done creating NuGet package swith debug-symbols, ConfigurationID=$(ConfigurationID)" Importance="High"/>
+    <Message Text="Done creating NuGet packages with debug-symbols, ConfigurationID=$(ConfigurationID)" Importance="High"/>
   </Target>
 
   <Target Name="CreateNuGetPackagesWithSymbolServerSupport" DependsOnTargets="CreateActiveConfiguration;ResolveNuGetPath;AddAdditionalMetadataToOutputFiles">

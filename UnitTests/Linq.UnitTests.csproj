@@ -106,6 +106,14 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Remotion.Linq, Version=1.15.22.10000, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Core\bin\Debug\Remotion.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Linq.Development, Version=1.15.22.10000, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Development\bin\Debug\Remotion.Linq.Development.dll</HintPath>
+    </Reference>
     <Reference Include="Rhino.Mocks">
       <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
     </Reference>
@@ -431,16 +439,6 @@
     <Content Include="Parsing\ExpressionTrees\threeFromQuery.jpg" />
     <Content Include="Parsing\ExpressionTrees\threeFromWhereQuery.jpg" />
     <Content Include="Parsing\ExpressionTrees\whereFromWhereQuery.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Core\Linq.Core.csproj">
-      <Project>{028E7899-0D5F-49C8-9EB6-8B051E02F1E0}</Project>
-      <Name>Linq.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Development\Linq.Development.csproj">
-      <Project>{31A1AE30-079F-489E-9757-4EFB4C457E43}</Project>
-      <Name>Linq.Development</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -75,7 +75,7 @@
     <Error Text="The property 'DependDBExecuteXReferencer' is not set." Condition="'$(DependDBExecuteXReferencer)' == ''" />
     <Error Text="The property 'DependDBProjectBranch' is not set." Condition="'$(DependDBProjectBranch)' == ''" />
     <Error Text="The property 'DependDBProjectVersion' is not set." Condition="'$(DependDBProjectVersion)' == ''" />
-    <Error Text="The property 'DependDBProjectVCSUrlTemplate' is not set." Condition="'$(DependDBProjectVCSUrlTemplate)' == ''" />
+    <Error Text="The property 'VcsUrlTemplate' is not set." Condition="'$(VcsUrlTemplate)' == ''" />
     <Error Text="The property 'DependDBProjectImportNotificationMailAddress' is not set." Condition="'$(DependDBProjectImportNotificationMailAddress)' == ''" />
     <Error Text="The property 'DependDBProjectDirectory' is not set." Condition="'$(DependDBProjectDirectory)' == ''" />
 
@@ -108,7 +108,7 @@
       </_config>
       <_config Include="DependDBProjectVCSUrlTemplate">
         <XPath>$(SettingsXPath)/c:SourceControlUrlTemplate</XPath>
-        <Value>$(DependDBProjectVCSUrlTemplate)</Value>
+        <Value>$(VcsUrlTemplate)</Value>
       </_config>
       <_config Include="DependDBProjectRetentionTime">
         <XPath>$(SettingsXPath)/c:RetentionTime</XPath>

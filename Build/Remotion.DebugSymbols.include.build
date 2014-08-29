@@ -17,16 +17,21 @@
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Target Name="InsertSourceLinks">
+  <Target Name="InsertSourceLinks" DependsOnTargets="InsertSourceLinksInternal">
+    <Message Text="Inserting source links skipped because property 'VcsUrlTemplate' is not set." Condition="'$(VcsUrlTemplate)' == ''" Importance="High"/>
+  </Target>
+
+  <Target Name="InsertSourceLinksInternal" Condition="'$(VcsUrlTemplate)' != ''">
+    <Message Text="Inserting source links into debug-symbols, ConfigurationID=$(ConfigurationID)" Importance="High"/>
 
     <Error Text="The property 'SolutionDirectory' is not set." Condition="'$(SolutionDirectory)' == ''" />
 
-    <Message Text="Starting .pdb file indexing." />
     <Remotion.BuildTools.MSBuildTasks.InsertSourceLinks
         BuildOutputFile="%(ReleaseOutputFiles.Identity)"
         ProjectBaseDirectory="$(SolutionDirectory)"
-        VcsUrlTemplate="https://svn.re-motion.org/svn/!svn/bc/29862/Remotion-Linq/trunk/{0}" />
-    <Message Text="Finished .pdb file indexing." />
+        VcsUrlTemplate="$(VcsUrlTemplate)" />
+
+    <Message Text="Done inserting source links into debug-symbols, ConfigurationID=$(ConfigurationID)" Importance="High"/>
   </Target>
 
 </Project>
