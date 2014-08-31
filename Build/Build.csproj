@@ -58,7 +58,7 @@
     <None Include="Remotion.Documentation.include.build" />
     <None Include="Remotion.Documentation.Relinq.build" />
     <None Include="Remotion.Local.build" />
-    <None Include="Remotion.NuGet.Packaging.include.build">
+    <None Include="Remotion.NuGet.include.build">
       <SubType>Designer</SubType>
     </None>
     <None Include="Remotion.Packages.include.build" />

@@ -22,7 +22,7 @@
   <Target Name="CreateDocumentationProperties">
     <PropertyGroup>
       <PackageID>Relinq</PackageID>
-      <DocumentationRootPageSource>Relinq\Core\Doc\include\GettingStartedWithRelinq.aml</DocumentationRootPageSource>
+      <DocumentationRootPageSource>Core\Doc\include\GettingStartedWithRelinq.aml</DocumentationRootPageSource>
     </PropertyGroup>
   </Target>
 
@@ -31,8 +31,9 @@
 
     <ItemGroup>
       <BinaryFiles Remove="@(BinaryFiles)"/>
-      <BinaryFiles Include="$(DocumentationBinariesDirectory)Remotion.Linq.dll" />
-      <BinaryFiles Include="$(DocumentationBinariesDirectory)Remotion.Linq.*.dll" />
+      <BinaryFiles Include="@(ReleaseOutputFiles)" />
+      <!--<BinaryFiles Include="$(DocumentationBinariesDirectory)Remotion.Linq.dll" />
+      <BinaryFiles Include="$(DocumentationBinariesDirectory)Remotion.Linq.*.dll" />-->
     </ItemGroup>
   </Target>
 
@@ -41,7 +42,7 @@
 
     <ItemGroup>
       <NamespaceSummaryFiles Remove="@(NamespaceSummaryFiles)"/>
-      <NamespaceSummaryFiles Include="$(SolutionDirectory)Relinq\**\doc\include\*.NamespaceDoc.xml" Exclude="@(StandardExcludes)"/>
+      <NamespaceSummaryFiles Include="$(SolutionDirectory)**\doc\include\*.NamespaceDoc.xml" Exclude="@(StandardExcludes)"/>
     </ItemGroup>
   </Target>
   

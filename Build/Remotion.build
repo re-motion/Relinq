@@ -36,7 +36,8 @@
   <Import Project="Remotion.AssembleBuildOutput.include.build" />
   <Import Project="Remotion.DebugSymbols.include.build" />
   <Import Project="Remotion.NuGet.Packaging.include.build" />
-  
+    <Import Project="Remotion.Documentation.Relinq.build" />
+
   <PropertyGroup>
     <Version></Version>
     <ReleaseType></ReleaseType>
@@ -152,7 +153,7 @@
         RunTests;
     </TestBuildTargets>
     <!-- TODO: include RunMixinXRefTest with the targets -->
-    <TestBuildTargets>BuildReleaseProjects;BuildTestProjects</TestBuildTargets>
+    <TestBuildTargets>BuildReleaseProjects;BuildTestProjects;GenerateDocumentation;</TestBuildTargets>
     <FullBuildTargets>
         LogConfiguration;
         CleanProjects;
@@ -188,7 +189,7 @@
     <MSBuild Projects="$(MSBuildProjectFile)"
              BuildInParallel="false"
              Targets="$(TestBuildTargets)"
-             Properties="ConfigurationID=Debug;$(BuildProperties);"/>
+             Properties="ConfigurationID=%(AllConfigurations.Identity);$(BuildProperties);"/>
   </Target>
   
   <Target Name="TestBuildAllConfigurations" DependsOnTargets="CleanFolders">

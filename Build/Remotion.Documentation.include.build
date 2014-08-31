@@ -29,19 +29,19 @@
     <Error Text="The target 'CreateNamespaceSummaryFiles' is not implemented." />
   </Target>
 
-  <PropertyGroup>
+  <!--<PropertyGroup>
     <MSBuildExtensionPackPath>$(SolutionDirectory)prereq\Tools\MSBuildExtensionPack\</MSBuildExtensionPackPath>
     <RemotionBuildTasksPath>$(SolutionDirectory)prereq\Tools\Remotion.BuildTools.MSBuildTasks\</RemotionBuildTasksPath>
   </PropertyGroup>
 
-  <Import Project="Remotion.Tasks.include.build" />
+  <Import Project="Remotion.Tasks.include.build" />-->
   <Import Project="Remotion.Packages.include.build" />
 
   <Target Name="GenerateDocumentation"  DependsOnTargets="GenerateDocumentationInternal;" >
   </Target>
   
   <Target Name="GenerateDocumentationInternal"
-        DependsOnTargets="CreateSandcastleProperties;CreateDocumentationProperties;CreateDocumentationRootPage;CreateSandcastleProjectFile">
+        DependsOnTargets="CreateDocumentationProperties;CreateSandcastleProperties;CreateDocumentationRootPage;CreateSandcastleProjectFile">
 
     <Message Text="Generating public documentation for $(PackageID)" Importance="High"/>
 
@@ -65,7 +65,8 @@
       <DocumentationChmOutputDirectory>$(BinariesDirectory)net-4.5\doc\</DocumentationChmOutputDirectory>
       <DocumentationWebsiteOutputDirectory>$(TempDirectory)web\</DocumentationWebsiteOutputDirectory>
       <DocumentationBinariesDirectory>$(BinariesDirectory)net-4.5\bin\debug\</DocumentationBinariesDirectory>
-      <DocumentationBaseDirectory>$(TempDirectory)doc\$([System.Guid]::NewGuid())\</DocumentationBaseDirectory>
+      <!--<DocumentationBaseDirectory>$(TempDirectory)doc\$([System.Guid]::NewGuid())\</DocumentationBaseDirectory>-->
+      <DocumentationBaseDirectory>$(TempDirectory)doc\$(PackageID)\</DocumentationBaseDirectory>
       <DocumentationCompilationOutputDirectory>$(DocumentationBaseDirectory)Output\</DocumentationCompilationOutputDirectory>
       <DocumentationRootPageTarget>$(DocumentationBaseDirectory)GettingStarted.aml</DocumentationRootPageTarget>
       <DocumentationSandcastleProjectFile>$(DocumentationBaseDirectory)documentation.shfbproj</DocumentationSandcastleProjectFile>
