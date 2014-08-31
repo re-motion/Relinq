@@ -103,13 +103,13 @@
       <Link>Relinq Apache-2.0.licenseheader</Link>
     </None>
     <None Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
-    <None Include="Linq.Development.nuspec" />
+    <None Include="Development.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Linq.Core.csproj">
+    <ProjectReference Include="..\Core\Core.csproj">
       <Project>{028E7899-0D5F-49C8-9EB6-8B051E02F1E0}</Project>
-      <Name>Linq.Core</Name>
+      <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

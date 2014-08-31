@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{028E7899-0D5F-49C8-9EB6-8B051E02F1E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{17484781-E537-4442-9915-CA47AC5F6858}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FE400287-3335-4C00-845C-D7A56196FB1D}"
+	ProjectSection(SolutionItems) = preProject
+		How to build re-linq.txt = How to build re-linq.txt
+		How to Contribute.txt = How to Contribute.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Development", "Development\Development.csproj", "{31A1AE30-079F-489E-9757-4EFB4C457E43}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{43BF1CA2-F1CA-42E2-B949-7F379CE928E3}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Build", "Build\Build.csproj", "{4F156040-84BC-4FEA-97ED-BEE23B63BEDF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{028E7899-0D5F-49C8-9EB6-8B051E02F1E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{028E7899-0D5F-49C8-9EB6-8B051E02F1E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{028E7899-0D5F-49C8-9EB6-8B051E02F1E0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{028E7899-0D5F-49C8-9EB6-8B051E02F1E0}.Debug|x86.Build.0 = Debug|Any CPU
+		{028E7899-0D5F-49C8-9EB6-8B051E02F1E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{028E7899-0D5F-49C8-9EB6-8B051E02F1E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{028E7899-0D5F-49C8-9EB6-8B051E02F1E0}.Release|x86.ActiveCfg = Release|Any CPU
+		{17484781-E537-4442-9915-CA47AC5F6858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17484781-E537-4442-9915-CA47AC5F6858}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17484781-E537-4442-9915-CA47AC5F6858}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{17484781-E537-4442-9915-CA47AC5F6858}.Debug|x86.Build.0 = Debug|Any CPU
+		{17484781-E537-4442-9915-CA47AC5F6858}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17484781-E537-4442-9915-CA47AC5F6858}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17484781-E537-4442-9915-CA47AC5F6858}.Release|x86.ActiveCfg = Release|Any CPU
+		{31A1AE30-079F-489E-9757-4EFB4C457E43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31A1AE30-079F-489E-9757-4EFB4C457E43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31A1AE30-079F-489E-9757-4EFB4C457E43}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{31A1AE30-079F-489E-9757-4EFB4C457E43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31A1AE30-079F-489E-9757-4EFB4C457E43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31A1AE30-079F-489E-9757-4EFB4C457E43}.Release|x86.ActiveCfg = Release|Any CPU
+		{4F156040-84BC-4FEA-97ED-BEE23B63BEDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F156040-84BC-4FEA-97ED-BEE23B63BEDF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4F156040-84BC-4FEA-97ED-BEE23B63BEDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F156040-84BC-4FEA-97ED-BEE23B63BEDF}.Release|x86.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

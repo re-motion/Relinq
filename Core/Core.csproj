@@ -302,7 +302,7 @@
     <None Include="App_Packages\Remotion.Utilities.Assertion.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
     <None Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
     <None Include="Doc\include\GettingStartedWithRelinq.aml" />
-    <None Include="Linq.Core.nuspec" />
+    <None Include="Core.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
