@@ -28,6 +28,9 @@
     <ReleaseProjectFiles Include="$(SolutionDirectory)SqlBackend\Linq.SqlBackend.csproj">
       <CreateNuGetPackageWithSymbolServerSupport>True</CreateNuGetPackageWithSymbolServerSupport>
     </ReleaseProjectFiles>
+    <ReleaseProjectFiles Include="$(SolutionDirectory)SqlBackend.Development\Linq.SqlBackend.Development.csproj">
+      <CreateNuGetPackageWithSymbolServerSupport>True</CreateNuGetPackageWithSymbolServerSupport>
+    </ReleaseProjectFiles>
     <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests\Linq.UnitTests.csproj">
       <IsDatabaseTest>False</IsDatabaseTest>
     </UnitTestProjectFiles>

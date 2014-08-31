@@ -81,6 +81,7 @@
     <Compile Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\NullableTypeUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTesting\ExpressionHelper.cs" />
+    <Compile Include="UnitTesting\ExpressionTreeComparerBase.cs" />
     <Compile Include="UnitTesting\ExpressionTreeComparer.cs" />
     <Compile Include="UnitTesting\Sandboxing\PermissionSets.cs" />
     <Compile Include="UnitTesting\Sandboxing\Sandbox.cs" />
@@ -109,10 +110,6 @@
     <ProjectReference Include="..\Core\Linq.Core.csproj">
       <Project>{028E7899-0D5F-49C8-9EB6-8B051E02F1E0}</Project>
       <Name>Linq.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SqlBackend\Linq.SqlBackend.csproj">
-      <Project>{EBA04D26-8D5B-4EF5-9898-C2D90373149C}</Project>
-      <Name>Linq.SqlBackend</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
