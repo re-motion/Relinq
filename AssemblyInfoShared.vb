@@ -12,7 +12,7 @@ Imports System.Security
 <Assembly: AssemblyConfiguration(".NET Framework: net-4.5, build type: Debug")> 
 <Assembly: AssemblyCompany("rubicon IT GmbH")> 
 <Assembly: AssemblyProduct("re-linq project (relinq.codeplex.com)")> 
-<Assembly: AssemblyCopyright("Copyright (c) rubicon IT GmbH, www.rubicon.eu - Licensed under GNU LGPL 2.1 (or later)")> 
+<Assembly: AssemblyCopyright("Copyright (c) rubicon IT GmbH, www.rubicon.eu - Licensed under Apache License, Version 2.0")> 
 <Assembly: AssemblyTrademark("")> 
 <Assembly: AssemblyInformationalVersion("1.15.22.10000  Debug; ")> 
 
