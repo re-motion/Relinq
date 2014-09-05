@@ -6,7 +6,7 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <licenseUrl>http://relinq.codeplex.com/license</licenseUrl>
+    <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
     <projectUrl>http://relinq.codeplex.com</projectUrl>
     <description>$description$</description>
     <copyright>$copyright$</copyright>
