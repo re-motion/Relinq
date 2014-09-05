@@ -99,8 +99,8 @@
     <None Include="..\remotion.snk">
       <Link>remotion.snk</Link>
     </None>
-    <None Include="..\Relinq Apache-2.0.licenseheader">
-      <Link>Relinq Apache-2.0.licenseheader</Link>
+    <None Include="..\Apache-2.0.licenseheader">
+      <Link>Apache-2.0.licenseheader</Link>
     </None>
     <None Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
     <None Include="Development.nuspec" />
