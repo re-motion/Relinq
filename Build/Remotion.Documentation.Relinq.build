@@ -22,7 +22,7 @@
   <Target Name="CreateDocumentationProperties">
     <PropertyGroup>
       <PackageID>Relinq</PackageID>
-      <DocumentationRootPageSource>Core\Doc\include\GettingStartedWithRelinq.aml</DocumentationRootPageSource>
+      <DocumentationRootPageSource>Doc\include\GettingStarted.aml</DocumentationRootPageSource>
     </PropertyGroup>
   </Target>
 
@@ -42,7 +42,7 @@
 
     <ItemGroup>
       <NamespaceSummaryFiles Remove="@(NamespaceSummaryFiles)"/>
-      <NamespaceSummaryFiles Include="$(SolutionDirectory)**\doc\include\*.NamespaceDoc.xml" Exclude="@(StandardExcludes)"/>
+      <NamespaceSummaryFiles Include="$(SolutionDirectory)**\Doc\include\NamespaceDoc.xml" Exclude="@(StandardExcludes)"/>
     </ItemGroup>
   </Target>
   

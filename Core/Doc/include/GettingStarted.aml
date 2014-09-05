@@ -6,10 +6,10 @@
     </introduction>
 
 
-	<section>
+  <section>
         <title>
             Remotion.Linq
-       	</title>
+        </title>
         <content>
           <para>
             The <legacyBold>Remotion.Linq</legacyBold> namespace and its sub namespaces contain interfaces and classes to be used for building a Linq provider.
@@ -20,22 +20,8 @@
           </para>
         </content>
     </section>
-    
-    <section>
-        <title>
-            Remotion.Linq.SqlBackend
-        </title>
-        <content>
-          <para>
-            The <legacyBold>Remotion.Linq.SqlBackend</legacyBold> namespace and its sub namespaces contain interfaces and classes to be used for building a Linq provider that targets SQL based databases.
-          </para>
-          <para>
-            See the <codeEntityReference qualifyhint="true">N:Remotion.Linq.SqlBackend</codeEntityReference> namespace documentation for the starting points for working with the Linq framework's SQL provider.
-          </para>
-        </content>
-	</section>
-    
-        <!--<alert class="note">
+
+    <!--<alert class="note">
           	<para>
                 In case of the .NET Framework SDK links being broken, they can be fixed by supplying the correct Help2 namespace. Look in the help files's 
                 index and you will find a topic called 'SDK Link Manager'. Open this topic and correct the namespace in the input field provided, and then 
