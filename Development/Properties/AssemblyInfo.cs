@@ -25,7 +25,7 @@ using System.Security;
 // associated with an assembly.
 //
 
-[assembly: AssemblyTitle ("Remotion Development Support Library for Remotion.Linq")]
+[assembly: AssemblyTitle ("Development Support Library for Remotion.Linq")]
 [assembly: AssemblyDescription ("Library for unit testing, building and other development-time activities.")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]

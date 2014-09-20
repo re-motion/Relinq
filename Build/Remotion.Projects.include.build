@@ -27,6 +27,9 @@
     <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests\UnitTests.csproj">
       <IsDatabaseTest>False</IsDatabaseTest>
     </UnitTestProjectFiles>
+    <UnitTestProjectFiles Include="$(SolutionDirectory)Development.UnitTests\Development.UnitTests.csproj">
+      <IsDatabaseTest>False</IsDatabaseTest>
+    </UnitTestProjectFiles>
     <!--
     <IntegrationTestProjectFiles Include="$(SolutionDirectory)IntegrationTests\IntegrationTests.csproj">
       <IsDatabaseTest>False</IsDatabaseTest>
