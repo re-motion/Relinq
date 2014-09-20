@@ -77,9 +77,10 @@ namespace Remotion.Linq.Development.UnitTesting
 
       foreach (PropertyInfo property in expected.GetType().GetProperties (BindingFlags.Instance | BindingFlags.Public))
       {
-        object value1 = property.GetValue (expected, null);
-        object value2 = property.GetValue (actual, null);
-        CheckAreEqualProperties (property, property.PropertyType, value1, value2, expected, actual);
+        object expectedValue = property.GetValue (expected, null);
+        object actualValue = property.GetValue (actual, null);
+        var valueType = expectedValue != null ? expectedValue.GetType() : property.PropertyType;
+        CheckAreEqualProperties (property, valueType, expectedValue, actualValue, expected, actual);
       }
     }
 
@@ -102,11 +103,11 @@ namespace Remotion.Linq.Development.UnitTesting
         IList list2 = (IList) value2;
         if (list1 == null || list2 == null)
         {
-          Assert.AreEqual (list1, list2, "One of the lists in " + property.Name + " is null.");
+          Assert.AreEqual (list1, list2, "One of the lists in property '" + property.Name + "' is null.");
         }
         else
         {
-          Assert.AreEqual (list1.Count, list2.Count, GetMessage (list1.Count, list2.Count, "Number of elements in " + property.Name));
+          Assert.AreEqual (list1.Count, list2.Count, GetMessage (list1.Count, list2.Count, "Number of elements in property '" + property.Name + "'"));
           for (int i = 0; i < list1.Count; ++i)
           {
             var elementType1 = list1[i] != null ? list1[i].GetType () : typeof (object);
@@ -115,7 +116,7 @@ namespace Remotion.Linq.Development.UnitTesting
                 elementType1, 
                 elementType2, 
                 string.Format (
-                    "The item types of the items in the lists in {0} differ: One is '{1}', the other is '{2}'.\nTree 1: {3}\nTree 2: {4}", 
+                    "The item types of the items in the lists in property '{0}' differ: One is '{1}', the other is '{2}'.\nTree 1: {3}\nTree 2: {4}", 
                     property.Name, 
                     elementType1, 
                     elementType2,
@@ -127,7 +128,7 @@ namespace Remotion.Linq.Development.UnitTesting
         }
       }
       else
-        Assert.AreEqual (value1, value2, GetMessage (e1, e2, "Property " + property.Name));
+        Assert.AreEqual (value1, value2, GetMessage (e1, e2, "Property '" + property.Name + "'"));
     }
 
     private string GetMessage (object e1, object e2, string context)

@@ -16,6 +16,7 @@
 // 
 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Development.UnitTesting;
@@ -25,6 +26,19 @@ namespace Remotion.Linq.Development.UnitTests.UnitTesting
   [TestFixture]
   public class ExpressionTreeComparerTest
   {
+    private class TestableExpressionTreeComparer : ExpressionTreeComparerBase
+    {
+      public TestableExpressionTreeComparer (string expectedInitial, string actualInitial, params Type[] additionalStructurallyComparedTypes)
+          : base(expectedInitial, actualInitial, additionalStructurallyComparedTypes)
+      {
+      }
+
+      public new void CheckAreEqualNodes (Expression expected, Expression actual)
+      {
+        base.CheckAreEqualNodes (expected, actual);
+      }
+    }
+
     [Test]
     public void CheckAreEqualTrees_WithSimpleExpressionAndEqualValues_DoesNotThrow ()
     {
@@ -42,6 +56,23 @@ namespace Remotion.Linq.Development.UnitTests.UnitTesting
     }
 
     [Test]
+    public void CheckAreEqualTrees_WithListValueAndEqualValues_DoesNotThrow ()
+    {
+      Expression expected = Expression.Constant (new[] { "a" }, typeof (string[]));
+      Expression actual = Expression.Constant (new[] { "a" }, typeof (string[]));
+      Assert.That (() => ExpressionTreeComparer.CheckAreEqualTrees (expected, actual), Throws.Nothing);
+    }
+
+    [Test]
+    public void CheckAreEqualTrees_WithStructurallyComparedTypesAndEqualValues_DoesNotThrow ()
+    {
+      Expression expected = Expression.Constant (Tuple.Create ("a"));
+      Expression actual = Expression.Constant (Tuple.Create ("a"));
+      var expressionTreeComparer = new TestableExpressionTreeComparer ("expected", "actual", typeof (Tuple<string>));
+      Assert.That (() => expressionTreeComparer.CheckAreEqualNodes (expected, actual), Throws.Nothing);
+    }
+
+    [Test]
     public void CheckAreEqualTrees_WithSimpleExpressionAndValuesNotEqual_Throws ()
     {
       Expression expected = Expression.Constant ("a");
@@ -49,7 +80,8 @@ namespace Remotion.Linq.Development.UnitTests.UnitTesting
       Assert.That (
           () => ExpressionTreeComparer.CheckAreEqualTrees (expected, actual),
           Throws.InvalidOperationException.With.Message.EqualTo (
-              "Trees are not equal: Property Value\nNode 1: \"a\"\nNode 2: \"b\"\nTree 1: \"a\"\nTree 2: \"b\""));
+              "Trees are not equal: Property 'Value'\nNode 1: \"a\"\nNode 2: \"b\"\n"
+              + "Tree 1: \"a\"\nTree 2: \"b\""));
     }
 
     [Test]
@@ -60,11 +92,71 @@ namespace Remotion.Linq.Development.UnitTests.UnitTesting
       Assert.That (
           () => ExpressionTreeComparer.CheckAreEqualTrees (expected, actual),
           Throws.InvalidOperationException.With.Message.EqualTo (
-              "Trees are not equal: Property Value\nNode 1: \"b\"\nNode 2: \"a\"\nTree 1: (\"a\" == \"b\")\nTree 2: (\"b\" == \"a\")"));
+              "Trees are not equal: Property 'Value'\nNode 1: \"b\"\nNode 2: \"a\"\n"
+              + "Tree 1: (\"a\" == \"b\")\nTree 2: (\"b\" == \"a\")"));
     }
 
     [Test]
-    public void CheckAreEqualTrees_WithDerivedExpressionAndBaseClassIsEqual_DoesNotThrow()
+    public void CheckAreEqualTrees_WithListValueAndLengthNotEqual_Throws ()
+    {
+      Expression expected = Expression.Constant (new[] { "a", "b", "c", "d" }, typeof (string[]));
+      Expression actual = Expression.Constant (new[] { "a", "b", "c" }, typeof (string[]));
+      Assert.That (
+          () => ExpressionTreeComparer.CheckAreEqualTrees (expected, actual),
+          Throws.InvalidOperationException.With.Message.EqualTo (
+              "Trees are not equal: Number of elements in property 'Value'\nNode 1: 4\nNode 2: 3\n"
+              + "Tree 1: value(System.String[])\nTree 2: value(System.String[])"));
+    }
+
+    [Test]
+    public void CheckAreEqualTrees_WithListValueAndValueNotEqual_Throws ()
+    {
+      Expression expected = Expression.Constant (new[] { "a", "c" }, typeof (string[]));
+      Expression actual = Expression.Constant (new[] { "a", "b" }, typeof (string[]));
+      Assert.That (
+          () => ExpressionTreeComparer.CheckAreEqualTrees (expected, actual),
+          Throws.InvalidOperationException.With.Message.EqualTo (
+              "Trees are not equal: Property 'Value'\nNode 1: value(System.String[])\nNode 2: value(System.String[])\n"
+              + "Tree 1: value(System.String[])\nTree 2: value(System.String[])"));
+    }
+
+    [Test]
+    public void CheckAreEqualTrees_WithListValueAndItemTypesNotEqual_Throws ()
+    {
+      Expression expected = Expression.Constant (new object[] { "a" }, typeof (object[]));
+      Expression actual = Expression.Constant (new object[] { 6 }, typeof (object[]));
+      Assert.That (
+          () => ExpressionTreeComparer.CheckAreEqualTrees (expected, actual),
+          Throws.InvalidOperationException.With.Message.EqualTo (
+              "The item types of the items in the lists in property 'Value' differ: One is 'System.String', the other is 'System.Int32'.\n"
+              + "Tree 1: value(System.Object[])\nTree 2: value(System.Object[])"));
+    }
+
+    [Test]
+    public void CheckAreEqualTrees_WithListValueAndOneListIsNull_Throws ()
+    {
+      Expression expected = Expression.Constant (new[] { "a" }, typeof (string[]));
+      Expression actual = Expression.Constant (null, typeof (string[]));
+      Assert.That (
+          () => ExpressionTreeComparer.CheckAreEqualTrees (expected, actual),
+          Throws.InvalidOperationException.With.Message.EqualTo ("One of the lists in property 'Value' is null."));
+    }
+
+    [Test]
+    public void CheckAreEqualTrees_WithStructurallyComparedTypesAndNotEqualValues_Throws ()
+    {
+      Expression expected = Expression.Constant (Tuple.Create ("a"));
+      Expression actual = Expression.Constant (Tuple.Create ("b"));
+      var expressionTreeComparer = new TestableExpressionTreeComparer ("expected", "actual", typeof (Tuple<string>));
+      Assert.That (
+          () => expressionTreeComparer.CheckAreEqualNodes (expected, actual),
+          Throws.InvalidOperationException.With.Message.EqualTo (
+              "Trees are not equal: Property 'Item1'\nNode 1: (a)\nNode 2: (b)\n"
+              + "Tree 1: expected\nTree 2: actual"));
+    }
+
+    [Test]
+    public void CheckAreEqualTrees_WithDerivedExpressionAndBaseClassIsEqual_DoesNotThrow ()
     {
       Expression expected = Expression.Call (Expression.Parameter (typeof (object), "o"), typeof (object).GetMethod ("ToString"));
       Expression<Func<object, string>> actualLamba = o => o.ToString();
