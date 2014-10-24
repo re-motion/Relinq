@@ -28,7 +28,7 @@ using System.Reflection;
 [assembly: AssemblyProduct ("re-linq project (relinq.codeplex.com)")]
 [assembly: AssemblyCopyright ("Copyright (c) rubicon IT GmbH, www.rubicon.eu - Licensed under Apache License, Version 2.0")]
 [assembly: AssemblyTrademark ("")]
-[assembly: AssemblyInformationalVersion ("1.15.22.10000  Debug; ")]
+[assembly: AssemblyInformationalVersion ("2.0.0-x0 Debug; ")]
 
 //
 // Version information for an assembly consists of the following four values:
@@ -41,5 +41,5 @@ using System.Reflection;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.15.22.10000")]
-[assembly: AssemblyFileVersion ("1.15.22.10000")]
+[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyFileVersion ("2.0.0.24000")]
