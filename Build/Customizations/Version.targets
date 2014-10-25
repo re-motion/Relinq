@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!-- 
+      major.minor.patch
+        -alphaddd...pre-release
+        -betaddd....pre-release
+        -rcddd......release-branch
+        -x0.........CI, nightly (will be suffixed by '-buildnumber')
+                    local (will be suffixed by '-yymmdd-hhMMss')
+    -->
+    <Version Condition="'$(Version)' == ''">2.0.0-x0</Version>
+  </PropertyGroup>
+</Project>

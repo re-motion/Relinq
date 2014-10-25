@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- Copyright (c) rubicon IT GmbH, www.rubicon.eu
+ !
+ ! See the NOTICE file distributed with this work for additional information
+ ! regarding copyright ownership.  rubicon licenses this file to you under 
+ ! the Apache License, Version 2.0 (the "License"); you may not use this 
+ ! file except in compliance with the License.  You may obtain a copy of the 
+ ! License at
+ !
+ !   http://www.apache.org/licenses/LICENSE-2.0
+ !
+ ! Unless required by applicable law or agreed to in writing, software 
+ ! distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
+ ! WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the 
+ ! License for the specific language governing permissions and limitations
+ ! under the License.
+-->
+
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <PackagesDirectory Condition="'$(PackagesDirectory)' == ''">$(MSBuildProjectDirectory)\..\packages\</PackagesDirectory>
+    <MSBuildExtensionPackPath Condition="'$(MSBuildExtensionPackPath)' == ''">$(PackagesDirectory)MSBuild.Extension.Pack.1.5.0\tools\net40\</MSBuildExtensionPackPath>
+    <ExtensionTasksPath>$(MSBuildExtensionPackPath)</ExtensionTasksPath>
+    <NUnitToolPath Condition="'$(NUnitToolPath)' == ''">$(PackagesDirectory)NUnit.Runners.2.6.3\tools\</NUnitToolPath>
+    <NuGetToolPath Condition="'$(NuGetToolPath)' == ''">$(PackagesDirectory)NuGet.CommandLine.2.8.2\tools\</NuGetToolPath>
+    <NuGetForMSBuildPath Condition="'$(NuGetForMSBuildPath)' == ''">$(PackagesDirectory)NuGet.for.MSBuild.1.4.3\build\</NuGetForMSBuildPath>
+    <RemotionBuildTasksPath Condition="'$(RemotionBuildTasksPath)' == ''">$(PackagesDirectory)Remotion.BuildTools.MSBuildTasks.1.0.5412.36795\tools\</RemotionBuildTasksPath>
+    <RemotionBuildScriptPath Condition="'$(RemotionBuildScriptPath)' == ''">$(PackagesDirectory)Remotion.BuildScript.*\BuildTargets\</RemotionBuildScriptPath>
+  </PropertyGroup>
+
+  <Import Project="$(RemotionBuildScriptPath)*.targets" />
+  <Import Project="$(MSBuildExtensionPackPath)MSBuild.ExtensionPack.tasks" />
+  <Import Project="$(NuGetForMSBuildPath)NuGet.For.MSBuild.tasks" />
+  <Import Project="$(RemotionBuildTasksPath)Remotion.BuildTools.MSBuildTasks.tasks"/>
+
+  <PropertyGroup>
+    <!-- Define settings that can be overridden in Customizations.build script. -->
+    <Version></Version>
+    <AdditionalBuildMetadata></AdditionalBuildMetadata>
+    <SkipTests>False</SkipTests>
+    <SkipDocumentation>False</SkipDocumentation>
+    <SkipNuGetOrg>False</SkipNuGetOrg>
+    <SkipSourceLinks>False</SkipSourceLinks>
+    <SkipNuGet>False</SkipNuGet>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CustomizationsDirectory Condition="'$(CustomizationsDirectory)' == ''">$(MSBuildProjectDirectory)\Customizations\</CustomizationsDirectory>
+  </PropertyGroup>
+
+  <Import Project="$(CustomizationsDirectory)*.targets" />
+
+  <PropertyGroup>
+    <!-- Define settings that use previously defined properties. -->
+    <SolutionDirectory>$(MSBuildProjectDirectory)\..\</SolutionDirectory>
+    <OutputDirectory>$(MSBuildProjectDirectory)\BuildOutput\</OutputDirectory>
+    <LogDirectory>$(OutputDirectory)log\</LogDirectory>
+    <TempDirectory>$(OutputDirectory)temp\</TempDirectory>
+
+    <SolutionKeyFile>$(SolutionDirectory)remotion.snk</SolutionKeyFile>
+
+    <VcsUrlTemplate></VcsUrlTemplate>
+  </PropertyGroup>
+
+  <Target Name="PrepareBuildProperties">
+    <PropertyGroup>
+      <BuildProperties>
+          SolutionKeyFile=$(SolutionKeyFile);
+          SolutionDirectory=$(SolutionDirectory);
+          OutputDirectory=$(OutputDirectory);
+          TempDirectory=$(TempDirectory);
+          LogDirectory=$(LogDirectory);
+          Version=$(Version);
+          AdditionalBuildMetadata=$(AdditionalBuildMetadata);
+          Platforms=$(Platforms);
+          DatabaseSystems=$(DatabaseSystems);
+          Browsers=$(Browsers)
+      </BuildProperties>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="PrepareBuildTargets">
+    <PropertyGroup>
+
+      <RunTestsTarget Condition="'$(SkipTests)' != 'True'">RunTests</RunTestsTarget>
+
+      <GenerateDocumentationTarget Condition="'$(SkipDocumentation)' != 'True'">GenerateDocumentation</GenerateDocumentationTarget>
+
+      <PackageNuGetOrgTarget Condition="'$(SkipNuGetOrg)' != 'True'">CreateNuGetPackagesWithSymbolServerSupport</PackageNuGetOrgTarget>
+
+      <SourceLinkTarget Condition="'$(SkipSourceLinks)' != 'True'">InsertSourceLinks</SourceLinkTarget>
+
+      <PackageNuGetTarget Condition="'$(SkipNuGet)' != 'True'">CreateNuGetPackagesWithDebugSymbols</PackageNuGetTarget>
+
+      <TestBuildTargets>
+          BuildReleaseProjects;
+          BuildTestProjects;
+          $(RunTestsTarget);
+      </TestBuildTargets>
+
+      <!-- TODO: include RunMixinXRefTest with the targets -->
+
+      <FullBuildTargets>
+          LogConfiguration;
+          CleanProjects;
+          BuildReleaseProjects;
+          BuildTestProjects;
+          $(RunTestsTarget);
+          $(GenerateDocumentationTarget);
+          $(PackageNuGetOrgTarget);
+          $(SourceLinkTarget);
+          $(PackageNuGetTarget);
+      </FullBuildTargets>
+
+    </PropertyGroup>
+    
+    <Message Text="Selected build targets for test builds: $(TestBuildTargets)" />
+    <Message Text="Selected build targets for full builds: $(FullBuildTargets)" />
+  </Target>
+
+  <Target Name="BuildAll" DependsOnTargets="CleanFolders;PrepareBuildProperties;PrepareBuildTargets;">
+
+    <ItemGroup>
+      <_allConfigurations Remove="@(_allConfigurations)" />
+      <!-- By listing the debug-build first, the documentation will be generated based on the debug output. -->
+      <_allConfigurations Include="Debug" />
+      <_allConfigurations Include="Release" />
+    </ItemGroup>
+
+    <MSBuild Projects="$(MSBuildProjectFile)"
+             BuildInParallel="false"
+             Targets="$(FullBuildTargets)"
+             Properties="ConfigurationID=%(_allConfigurations.Identity);$(BuildProperties);"/>
+  </Target>
+  
+  <Target Name="TestBuildDebugOnly" DependsOnTargets="CleanFolders;PrepareBuildProperties;PrepareBuildTargets;">
+    <MSBuild Projects="$(MSBuildProjectFile)"
+             BuildInParallel="false"
+             Targets="$(TestBuildTargets)"
+             Properties="ConfigurationID=Debug;$(BuildProperties);"/>
+  </Target>
+
+  <Target Name="UpdateAssemblyInfosLocalBuild" DependsOnTargets="CheckVersion;PrepareBuildProperties">
+    <MSBuild Projects="$(MSBuildProjectFile)"
+             BuildInParallel="false"
+             Targets="UpdateAssemblyInfos"
+             Properties="ConfigurationID=Debug;"/>
+  </Target>
+
+</Project>

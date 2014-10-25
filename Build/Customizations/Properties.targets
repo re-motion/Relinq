@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AssemblyInfoFile>AssemblyInfoShared.*</AssemblyInfoFile>
+    <CompanyName>rubicon IT GmbH</CompanyName>
+    <CompanyUrl>http://www.rubicon.eu</CompanyUrl>
+    <Copyright>Copyright (c) rubicon IT GmbH, www.rubicon.eu - Licensed under Apache License, Version 2.0</Copyright>
+    <ProductName>re-linq project (relinq.codeplex.com)</ProductName>
+    <DocumentationRootPage>$(SolutionDirectory)Core\Doc\include\GettingStarted.aml</DocumentationRootPage>
+    <DocumentationNamespaceSummaryFiles>$(SolutionDirectory)**\Doc\include\NamespaceDoc.xml</DocumentationNamespaceSummaryFiles> 
+  </PropertyGroup>
+</Project>

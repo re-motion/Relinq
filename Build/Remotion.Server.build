@@ -1,0 +1,100 @@
+﻿<?xml version="1.0"  encoding="utf-8"?>
+
+<!-- Copyright (c) rubicon IT GmbH, www.rubicon.eu
+ !
+ ! See the NOTICE file distributed with this work for additional information
+ ! regarding copyright ownership.  rubicon licenses this file to you under 
+ ! the Apache License, Version 2.0 (the "License"); you may not use this 
+ ! file except in compliance with the License.  You may obtain a copy of the 
+ ! License at
+ !
+ !   http://www.apache.org/licenses/LICENSE-2.0
+ !
+ ! Unless required by applicable law or agreed to in writing, software 
+ ! distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
+ ! WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the 
+ ! License for the specific language governing permissions and limitations
+ ! under the License.
+-->
+
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+  <Import Project="Remotion.build" />
+  
+  <PropertyGroup>
+    <!-- Empty properties will be passed to MSBuild by TeamCity -->
+
+    <BuildRootDirectory>$(teamcity_build_checkoutdir)\</BuildRootDirectory>
+    <CommitID>$(build_vcs_number)</CommitID>
+    <BuildNumber>$(build_number)</BuildNumber>
+
+    <LogDirectory>$(BuildRootDirectory)log\</LogDirectory>
+    <SolutionDirectory>$(BuildRootDirectory)working\</SolutionDirectory>
+    <OutputDirectory>$(BuildRootDirectory)output\</OutputDirectory>
+    <TempDirectory>$(BuildRootDirectory)temp\</TempDirectory>
+
+    <SolutionBuildFile>$(SolutionDirectory)build\Remotion.build</SolutionBuildFile>
+
+    <SolutionKeyFile>$(SecureNetworkShare)\remotion.snk</SolutionKeyFile>
+
+    <VcsUrlTemplate></VcsUrlTemplate>
+  </PropertyGroup>
+
+  <!-- re-motion build -->
+  <Target Name="CreateAdditionalBuildMetadata">
+    <PropertyGroup>
+      <AdditionalBuildMetadata>Commit=$(CommitID)</AdditionalBuildMetadata>
+    </PropertyGroup>
+  </Target>
+  
+  <Target Name="TestBuild_Configuration">
+    <PropertyGroup>
+      <Platforms>x86</Platforms>
+      <DatabaseSystems>SqlServer2008R2</DatabaseSystems>
+      <Browsers>Chrome</Browsers>
+    </PropertyGroup>
+  </Target>
+  
+  <Target Name="FullBuild_Configuration">
+    <PropertyGroup>
+      <Platforms>x86+x64</Platforms>
+      <DatabaseSystems>SqlServer2005+SqlServer2008+SqlServer2008R2+SqlServer2012+SqlServer2014</DatabaseSystems>
+      <Browsers>Chrome+InternetExplorer</Browsers>
+    </PropertyGroup>
+  </Target>
+  
+  <Target Name="TestBuild" DependsOnTargets="TestBuild_Configuration;TestBuildDebugOnly;" />
+
+  <Target Name="FullBuild" DependsOnTargets="FullBuild_Configuration;CreateAdditionalBuildMetadata;BuildAll;" />
+
+  <!-- Check properties -->
+  
+  <Target Name="CheckProperties" DependsOnTargets="
+          CheckBuildConfigurationProperties;
+          CheckBuildLocationProperties;" />
+
+  <!-- Versioning -->
+    
+  <Target Name="SetVersionCiAndNightlyBuild" DependsOnTargets="CheckVersion">
+   <MSBuild.ExtensionPack.Framework.TextString TaskAction="PadLeft" OldString="$(BuildNumber)" String1="0" Count="6"> 
+      <Output PropertyName="_formattedVersionSuffix" TaskParameter="NewString"/> 
+    </MSBuild.ExtensionPack.Framework.TextString> 
+
+    <PropertyGroup>
+      <Version>$(Version)-0-$(_formattedVersionSuffix)</Version>
+    </PropertyGroup>
+    
+    <Message Text="##teamcity[buildNumber '$(Version)']" />
+  </Target>
+  
+  <Target Name="SetVersionFullBuild" DependsOnTargets="CheckVersion">
+    <Message Text="##teamcity[buildNumber '$(Version)']" />
+  </Target>
+
+  <!-- Main Build Targets -->  
+
+  <Target Name="Server_CIBuild" DependsOnTargets="CheckProperties;SetVersionCiAndNightlyBuild;TestBuild" />
+  <Target Name="Server_NightlyBuild" DependsOnTargets="CheckProperties;SetVersionCiAndNightlyBuild;FullBuild" />
+  <Target Name="Server_FullBuild" DependsOnTargets="CheckProperties;SetVersionFullBuild;FullBuild;" />
+
+</Project>
