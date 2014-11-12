@@ -167,6 +167,11 @@ namespace Remotion.Linq.Development.UnitTesting
       return new UnionResultOperator ("union", typeof (int), Expression.Constant (new[] { 1, 2 }));
     }
 
+    public static UnionResultOperator CreateConcatResultOperator ()
+    {
+      return new UnionResultOperator ("concat", typeof (int), Expression.Constant (new[] { 1, 2 }));
+    }
+
     public static Ordering CreateOrdering ()
     {
       return new Ordering (CreateExpression(), OrderingDirection.Asc);
