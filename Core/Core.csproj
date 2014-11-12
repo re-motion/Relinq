@@ -178,6 +178,7 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ConcatExpressionNode.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\QuerySourceSetOperationExpressionNodeBase.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\CompoundNodeTypeProvider.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\CompoundExpressionTreeProcessor.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\NullExpressionTreeProcessor.cs" />
