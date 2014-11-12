@@ -460,6 +460,52 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
     }
 
     [Test]
+    public void Concat ()
+    {
+      IEnumerable<Cook> students = new[] { new Cook () };
+      var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource
+                                                               select s).Concat (students));
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      var mainFromClause = queryModel.MainFromClause;
+
+      var selectClause = queryModel.SelectClause;
+      Assert.That (((QuerySourceReferenceExpression) selectClause.Selector).ReferencedQuerySource, Is.SameAs (mainFromClause));
+
+      Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
+      Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (ConcatResultOperator)));
+      var ConcatResultOperator = ((ConcatResultOperator) queryModel.ResultOperators[0]);
+      Assert.That (ConcatResultOperator.GetConstantSource2 (), Is.SameAs (students));
+      
+      var outputDataInfo = (StreamedSequenceInfo) queryModel.GetOutputDataInfo();
+      Assert.That (outputDataInfo.DataType, Is.SameAs (typeof (IQueryable<Cook>)));
+      CheckResolvedExpression<Cook, Cook> (outputDataInfo.ItemExpression, ConcatResultOperator, c => c);
+    }
+
+    [Test]
+    public void Concat_FollowedByAll ()
+    {
+      IEnumerable<Cook> cooks = new[] { new Cook () };
+      var expression = ExpressionHelper.MakeExpression (() => (from c in QuerySource
+                                                               select c)
+                                                               .Concat (cooks)
+                                                               .All (c => c.IsFullTimeCook));
+
+
+      var queryModel = QueryParser.GetParsedQuery (expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
+
+      Assert.That (queryModel.ResultOperators, Has.Count.EqualTo (2));
+      Assert.That (queryModel.ResultOperators[0], Is.TypeOf<ConcatResultOperator> ());
+      Assert.That (queryModel.ResultOperators[1], Is.TypeOf<AllResultOperator> ());
+
+      var ConcatResultOperator = (ConcatResultOperator) queryModel.ResultOperators[0];
+      var allResultOperator = (AllResultOperator) queryModel.ResultOperators[1];
+
+      CheckResolvedExpression<Cook, bool> (allResultOperator.Predicate, ConcatResultOperator, c => c.IsFullTimeCook);
+    }
+
+    [Test]
     public void DefaultIfEmpty ()
     {
       var student = new Cook ();

@@ -118,6 +118,7 @@
     <Compile Include="Clauses\ResultOperators\AggregateFromSeedResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\SequenceTypePreservingResultOperatorBase.cs" />
     <Compile Include="Clauses\ResultOperators\SequenceFromSequenceResultOperatorBase.cs" />
+    <Compile Include="Clauses\ResultOperators\ConcatResultOperator.cs" />
     <Compile Include="Clauses\ResultOperators\ValueFromSequenceResultOperatorBase.cs" />
     <Compile Include="Clauses\StreamedData\IStreamedDataInfo.cs" />
     <Compile Include="Clauses\StreamedData\StreamedScalarValueInfo.cs" />
@@ -176,6 +177,8 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBInformationIsNothingExpressionTransformer.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\ConcatExpressionNode.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\QuerySourceSetOperationExpressionNodeBase.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\CompoundNodeTypeProvider.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\CompoundExpressionTreeProcessor.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\NullExpressionTreeProcessor.cs" />

@@ -150,6 +150,7 @@
     <Compile Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\NullableTypeUtility.cs" />
     <Compile Include="Clauses\Expressions\SubQueryExpressionTest.cs" />
     <Compile Include="Clauses\Expressions\VBStringComparisonExpressionTest.cs" />
+    <Compile Include="Clauses\ResultOperators\ConcatResultOperatorTest.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\MultiReplacingExpressionTreeVisitorTest.cs" />
     <Compile Include="Clauses\Expressions\PartialEvaluationExceptionExpressionTest.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformerRegistryTest.cs" />
@@ -167,6 +168,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Parsing\Structure\IntermediateModel\TestDomain\ExpressionNodeWithOnePublicInstanceCtor.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\ConcatExpressionNodeTest.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\CompoundNodeTypeProviderTest.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\CompoundExpressionTreeProcessorTest.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\NullExpressionTreeProcessorTest.cs" />
