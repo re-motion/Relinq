@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+
+    <ReleaseProjectFiles Include="$(SolutionDirectory)Core\Core.csproj">
+      <CreateNuGetPackageWithSymbolServerSupport>True</CreateNuGetPackageWithSymbolServerSupport>
+      <CreateDocumentationFile>True</CreateDocumentationFile>
+    </ReleaseProjectFiles>
+
+    <ReleaseProjectFiles Include="$(SolutionDirectory)Development\Development.csproj">
+      <CreateNuGetPackageWithSymbolServerSupport>True</CreateNuGetPackageWithSymbolServerSupport>
+    </ReleaseProjectFiles>
+
+    <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests\UnitTests.csproj"/>
+
+    <UnitTestProjectFiles Include="$(SolutionDirectory)Development.UnitTests\Development.UnitTests.csproj"/>
+
+    <!--
+    <IntegrationTestProjectFiles Include="$(SolutionDirectory)IntegrationTests\IntegrationTests.csproj">
+      <IsDatabaseTest>False</IsDatabaseTest>
+    </IntegrationTestProjectFiles>
+    -->
+
+  </ItemGroup>
+</Project>
