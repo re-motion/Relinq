@@ -43,7 +43,7 @@
   <!-- re-motion build -->
   <Target Name="CreateAdditionalBuildMetadata">
     <PropertyGroup>
-      <AdditionalBuildMetadata>Commit=$(CommitID)</AdditionalBuildMetadata>
+      <AdditionalBuildMetadata>Commit-$(CommitID)</AdditionalBuildMetadata>
     </PropertyGroup>
   </Target>
   
@@ -75,18 +75,18 @@
 
   <!-- Versioning -->
     
-  <Target Name="SetVersionCiAndNightlyBuild" DependsOnTargets="CheckVersion">
-   <MSBuild.ExtensionPack.Framework.TextString TaskAction="PadLeft" OldString="$(BuildNumber)" String1="0" Count="6"> 
-      <Output PropertyName="_formattedVersionSuffix" TaskParameter="NewString"/> 
-    </MSBuild.ExtensionPack.Framework.TextString> 
-
-    <PropertyGroup>
-      <Version>$(Version)-0-$(_formattedVersionSuffix)</Version>
-    </PropertyGroup>
-    
+  <Target Name="SetVersionCiAndNightlyBuild" DependsOnTargets="PrepareVersionCiAndNightlyBuild;CheckVersion">
     <Message Text="##teamcity[buildNumber '$(Version)']" />
   </Target>
-  
+
+  <Target Name="PrepareVersionCiAndNightlyBuild" Condition="'$(Version)' != ''">
+    <Error Text="The property 'BuildNumber' is not set." Condition="'$(BuildNumber)' == ''" />
+
+    <PropertyGroup>
+      <Version>$(Version).1.$(BuildNumber)</Version>
+    </PropertyGroup>
+  </Target>
+
   <Target Name="SetVersionFullBuild" DependsOnTargets="CheckVersion">
     <Message Text="##teamcity[buildNumber '$(Version)']" />
   </Target>

@@ -69,19 +69,26 @@
     </PropertyGroup>
   </Target>
 
-  <Target Name="SetVersion" DependsOnTargets="CheckVersion">
+  <Target Name="SetVersion" DependsOnTargets="PrepareVersion;CheckVersion" />
+
+  <Target Name="PrepareVersion" Condition="'$(Version)' != ''">
     <MSBuild.ExtensionPack.Framework.DateAndTime TaskAction="Get" Format="yyMMdd-HHmmss"> 
       <Output TaskParameter="Result" PropertyName="_formattedDateTime"/> 
     </MSBuild.ExtensionPack.Framework.DateAndTime>
 
     <PropertyGroup>
-      <Version>$(Version)-9-$(_formattedDateTime)</Version>
+      <Version>$(Version).9.$(_formattedDateTime)</Version>
     </PropertyGroup>
-
-    <Message Text="##teamcity[buildNumber '$(Version)']" />
   </Target>
-  
-  <Target Name="TestBuild" DependsOnTargets="TestBuild_Configuration;TestBuildDebugOnly;" />
+
+  <Target Name="SetVersionTestBuild">
+    <PropertyGroup>
+      <!-- With local test builds, no version update is needed. -->
+      <Version></Version>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="TestBuild" DependsOnTargets="TestBuild_Configuration;SetVersionTestBuild;TestBuildDebugOnly;" />
   <Target Name="FullBuildWithoutDocumentation" DependsOnTargets="FullBuild_Configuration;SetVersion;BuildAll;" />
   <Target Name="DocumentationBuild" DependsOnTargets="DocumentationBuild_Configuration;SetVersion;BuildAll;" />
   <Target Name="PackageBuild" DependsOnTargets="PackageBuild_Configuration;SetVersion;BuildAll;" />
