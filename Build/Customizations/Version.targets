@@ -3,12 +3,12 @@
   <PropertyGroup>
     <!-- 
       major.minor.patch
-        -alphaddd...pre-release
-        -betaddd....pre-release
-        -rcddd......release-branch
-        -x0.........CI, nightly (will be suffixed by '-buildnumber')
-                    local (will be suffixed by '-yymmdd-hhMMss')
+                       -alpha.d ... pre-release
+                       -beta.d .... pre-release
+                       -rc.d+ ..... release-branch
+                       -x ......... CI, nightly (will be suffixed by '.1.buildnumber')
+                       -x ......... local (will be suffixed by '.9.yymmdd-hhMMss')
     -->
-    <Version Condition="'$(Version)' == ''">2.0.0-x0</Version>
+    <Version Condition="'$(Version)' == ''">2.0.0-x</Version>
   </PropertyGroup>
 </Project>
