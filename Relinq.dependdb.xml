@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VisualStudioIntegrationConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" IsActive="true" xmlns="http://rubicon.eu/1.6/DepXML">
+  <ServerUrl>http://dependdb/WebService/</ServerUrl>
+  <Level2ProjectThreshold>5</Level2ProjectThreshold>
+  <Level3ProjectThreshold>10</Level3ProjectThreshold>
+  <Level2DependencyThreshold>25</Level2DependencyThreshold>
+  <Level3DependencyThreshold>50</Level3DependencyThreshold>
+  <MaxProjectsInSummary>5</MaxProjectsInSummary>
+  <MaxBranchesPerProjectInSummary>3</MaxBranchesPerProjectInSummary>
+  <ImportantBranchesInSummary>trunk, master, default</ImportantBranchesInSummary>
+</VisualStudioIntegrationConfig>
