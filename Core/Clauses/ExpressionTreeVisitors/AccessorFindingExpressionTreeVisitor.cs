@@ -65,7 +65,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       if (inputParameter.Type != fullExpression.Type)
       {
         throw new ArgumentException (
-            string.Format ("The inputParameter's type '{0}' must match the fullExpression's type '{1}'.", fullExpression.Type, inputParameter.Type),
+            string.Format ("The inputParameter's type '{0}' must match the fullExpression's type '{1}'.", inputParameter.Type, fullExpression.Type),
             "inputParameter");
       }
 
