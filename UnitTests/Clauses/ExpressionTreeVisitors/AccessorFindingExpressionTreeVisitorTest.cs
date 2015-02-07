@@ -192,6 +192,30 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     }
 
     [Test]
+    public void NestedMemberBindingExpressionWithDerivedType ()
+    {
+      var outerTypeCtor =  typeof (Result<BaseValue>).GetConstructor (Type.EmptyTypes);
+      var outerTypeValueProperty =  typeof (Result<BaseValue>).GetProperty ("Value");
+      var innerTypeCtor = typeof (DerivedValue).GetConstructor (Type.EmptyTypes);
+      var innerTypeStringValueProperty = typeof (DerivedValue).GetProperty ("StringValue");
+      var searchedExpression = Expression.Constant ("a");
+      var nestedInputParameter = Expression.Parameter (typeof (Result<BaseValue>), "input");
+
+      // new Result<BaseValue>() { Value = new DerivedValue() { StringValue = _searchedExpression } }
+      var innerExpression = Expression.MemberInit (
+          Expression.New (innerTypeCtor),
+          Expression.Bind (innerTypeStringValueProperty, searchedExpression));
+      var fullExpression = Expression.MemberInit (
+          Expression.New (outerTypeCtor),
+          Expression.Bind (outerTypeValueProperty, innerExpression));
+
+      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (searchedExpression, fullExpression, nestedInputParameter);
+
+      Expression<Func<Result<BaseValue>, string>> expectedResult = input => ((DerivedValue) input.Value).StringValue;
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
     [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The given expression 'new AnonymousType() {a = 3, b = 1}' does not contain the "
         + "searched expression '0' in a nested NewExpression with member assignments or a MemberBindingExpression.\r\nParameter name: fullExpression")]
     public void SearchedExpressionNotFound ()
