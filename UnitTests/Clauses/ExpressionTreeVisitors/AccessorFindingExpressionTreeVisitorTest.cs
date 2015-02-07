@@ -119,8 +119,8 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 
       var inputParameter = Expression.Parameter (typeof (AnonymousType), "input");
       var expectedResult = Expression.Lambda (
-
-      Expression.MakeMemberAccess (inputParameter, _anonymousTypeAProperty), inputParameter);
+          Expression.MakeMemberAccess (inputParameter, _anonymousTypeAProperty),
+          inputParameter);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
@@ -160,9 +160,10 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
       var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _nestedInputParameter);
 
       var inputParameter = Expression.Parameter (typeof (AnonymousType<int, AnonymousType>), "input");
+       // input => input.get_b().get_a()
       var expectedResult = Expression.Lambda (
-      Expression.MakeMemberAccess (Expression.MakeMemberAccess (inputParameter, outerAnonymousTypeBProperty), _anonymousTypeAProperty),
-      inputParameter);  // input => input.get_b().get_a()
+          Expression.MakeMemberAccess (Expression.MakeMemberAccess (inputParameter, outerAnonymousTypeBProperty), _anonymousTypeAProperty),
+          inputParameter);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
