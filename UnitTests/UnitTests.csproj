@@ -150,6 +150,7 @@
     <Compile Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\NullableTypeUtility.cs" />
     <Compile Include="Clauses\Expressions\SubQueryExpressionTest.cs" />
     <Compile Include="Clauses\Expressions\VBStringComparisonExpressionTest.cs" />
+    <Compile Include="Clauses\ExpressionTreeVisitors\IntegrationTests\AccessorFindingExpressionTreeVisitorIntegrationTest.cs" />
     <Compile Include="Clauses\ResultOperators\ConcatResultOperatorTest.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\MultiReplacingExpressionTreeVisitorTest.cs" />
     <Compile Include="Clauses\Expressions\PartialEvaluationExceptionExpressionTest.cs" />
@@ -194,10 +195,13 @@
     <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\TestDomain\GenericClass2.cs" />
     <Compile Include="Parsing\TestThrowingConstantExpressionTreeVisitor.cs" />
     <Compile Include="Parsing\TupleExpressionBuilderTest.cs" />
+    <Compile Include="TestDomain\BaseValue.cs" />
     <Compile Include="TestDomain\Course.cs" />
+    <Compile Include="TestDomain\DerivedValue.cs" />
     <Compile Include="TestDomain\Knife.cs" />
     <Compile Include="TestDomain\ISpecificCook.cs" />
     <Compile Include="TestDomain\MetaID.cs" />
+    <Compile Include="TestDomain\Result.cs" />
     <Compile Include="TestUtilities\NonTransformedTuple.cs" />
     <Compile Include="Clauses\AdditionalFromClauseTest.cs" />
     <Compile Include="Clauses\Expressions\ExtensionExpressionIntegrationTest.cs" />

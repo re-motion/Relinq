@@ -65,7 +65,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       if (inputParameter.Type != fullExpression.Type)
       {
         throw new ArgumentException (
-            string.Format ("The inputParameter's type '{0}' must match the fullExpression's type '{1}'.", fullExpression.Type, inputParameter.Type),
+            string.Format ("The inputParameter's type '{0}' must match the fullExpression's type '{1}'.", inputParameter.Type, fullExpression.Type),
             "inputParameter");
       }
 
@@ -169,11 +169,32 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
 
     private Expression GetMemberAccessExpression (Expression input, MemberInfo member)
     {
+      var normalizedInput = EnsureMemberIsAccessibleFromInput (input, member);
+
       var methodInfo = member as MethodInfo;
       if (methodInfo != null)
-        return Expression.Call (input, methodInfo);
+        return Expression.Call (normalizedInput, methodInfo);
       else
-        return Expression.MakeMemberAccess (input, member);
+        return Expression.MakeMemberAccess (normalizedInput, member);
+    }
+
+    private Expression EnsureMemberIsAccessibleFromInput (Expression input, MemberInfo member)
+    {
+      var memberDeclaringType = member.DeclaringType.GetTypeInfo();
+      var inputType = input.Type.GetTypeInfo();
+
+      var isMemberDeclaredOnInputType = memberDeclaringType.IsAssignableFrom (inputType);
+      if (isMemberDeclaredOnInputType)
+        return input;
+
+      Assertion.IsTrue (
+          inputType.IsAssignableFrom (memberDeclaringType),
+          "Input expression of type '{0}' cannot be converted to declaring type '{1}' of member '{2}'.",
+          inputType.FullName,
+          memberDeclaringType.FullName,
+          member.Name);
+
+      return Expression.Convert (input, member.DeclaringType);
     }
   }
 }

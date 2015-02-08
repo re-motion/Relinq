@@ -119,8 +119,8 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 
       var inputParameter = Expression.Parameter (typeof (AnonymousType), "input");
       var expectedResult = Expression.Lambda (
-
-      Expression.MakeMemberAccess (inputParameter, _anonymousTypeAProperty), inputParameter);
+          Expression.MakeMemberAccess (inputParameter, _anonymousTypeAProperty),
+          inputParameter);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
@@ -160,9 +160,10 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
       var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _nestedInputParameter);
 
       var inputParameter = Expression.Parameter (typeof (AnonymousType<int, AnonymousType>), "input");
+       // input => input.get_b().get_a()
       var expectedResult = Expression.Lambda (
-      Expression.MakeMemberAccess (Expression.MakeMemberAccess (inputParameter, outerAnonymousTypeBProperty), _anonymousTypeAProperty),
-      inputParameter);  // input => input.get_b().get_a()
+          Expression.MakeMemberAccess (Expression.MakeMemberAccess (inputParameter, outerAnonymousTypeBProperty), _anonymousTypeAProperty),
+          inputParameter);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
@@ -187,6 +188,30 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
       var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _nestedInputParameter);
 
       Expression<Func<AnonymousType<int, AnonymousType>, int>> expectedResult = input => input.b.a;
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
+    }
+
+    [Test]
+    public void NestedMemberBindingExpressionWithDerivedType ()
+    {
+      var outerTypeCtor =  typeof (Result<BaseValue>).GetConstructor (Type.EmptyTypes);
+      var outerTypeValueProperty =  typeof (Result<BaseValue>).GetProperty ("Value");
+      var innerTypeCtor = typeof (DerivedValue).GetConstructor (Type.EmptyTypes);
+      var innerTypeStringValueProperty = typeof (DerivedValue).GetProperty ("StringValue");
+      var searchedExpression = Expression.Constant ("a");
+      var nestedInputParameter = Expression.Parameter (typeof (Result<BaseValue>), "input");
+
+      // new Result<BaseValue>() { Value = new DerivedValue() { StringValue = _searchedExpression } }
+      var innerExpression = Expression.MemberInit (
+          Expression.New (innerTypeCtor),
+          Expression.Bind (innerTypeStringValueProperty, searchedExpression));
+      var fullExpression = Expression.MemberInit (
+          Expression.New (outerTypeCtor),
+          Expression.Bind (outerTypeValueProperty, innerExpression));
+
+      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (searchedExpression, fullExpression, nestedInputParameter);
+
+      Expression<Func<Result<BaseValue>, string>> expectedResult = input => ((DerivedValue) input.Value).StringValue;
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
