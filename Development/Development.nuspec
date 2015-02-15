@@ -14,5 +14,6 @@
   </metadata>
   <files>
     <file src="bin\$configuration$\$id$.pdb" target="lib\net45" />
+    <file src="..\Development.Net_4_0\bin\$configuration$\$id$.*" target="lib\net40" />
   </files>
 </package>
