@@ -51,8 +51,7 @@
     <Compile Include="..\AssemblyInfoShared.cs">
       <Link>Properties\AssemblyInfoShared.cs</Link>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\Development.UnitTests\**\*.cs" Exclude="..\Development.UnitTests\Properties\**\*.*;..\Development.UnitTests\App_Packages\**\*.*;..\Development.UnitTests\bin\**\*.*;..\Development.UnitTests\obj\**\*.*">
+    <Compile Include="..\Development.UnitTests\**\*.cs" Exclude="..\Development.UnitTests\App_Packages\**\*.*;..\Development.UnitTests\bin\**\*.*;..\Development.UnitTests\obj\**\*.*">
       <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
     </Compile>
   </ItemGroup>

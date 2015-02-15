@@ -159,11 +159,8 @@
     <Compile Include="App_Packages\Remotion.Utilities.ArgumentUtility.Sources.1.15.23.0\ArgumentUtility.cs" />
     <Compile Include="App_Packages\Remotion.Utilities.ExceptionUtility.Sources.1.15.23.0\ExceptionUtility.cs" />
     <Compile Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\NullableTypeUtility.cs" />
-    <Compile Include="..\UnitTests\**\*.cs" Exclude="..\UnitTests\Properties\**\*.*;..\UnitTests\App_Packages\**\*.*;..\UnitTests\bin\**\*.*;..\UnitTests\obj\**\*.*">
+    <Compile Include="..\UnitTests\**\*.cs" Exclude="..\UnitTests\App_Packages\**\*.*;..\UnitTests\bin\**\*.*;..\UnitTests\obj\**\*.*">
       <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utilities\TypeInfoTest.cs" />
     <None Include="..\remotion.snk">
