@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Target Name="After_TestBuild_Configuration" AfterTargets="TestBuild_Configuration">
+		<PropertyGroup>
+		</PropertyGroup>
+	</Target>
+	<Target Name="After_FullBuild_Configuration" AfterTargets="FullBuild_Configuration">
+		<PropertyGroup>
+		</PropertyGroup>
+	</Target>
+	<Target Name="After_DocumentationBuild_Configuration" AfterTargets="DocumentationBuild_Configuration">
+		<PropertyGroup>
+		</PropertyGroup>
+	</Target>
+	<Target Name="After_PackageBuild_Configuration" AfterTargets="PackageBuild_Configuration">
+		<PropertyGroup>
+		</PropertyGroup>
+	</Target>
+</Project>

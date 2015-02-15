@@ -23,11 +23,13 @@
     <PackagesDirectory Condition="'$(PackagesDirectory)' == ''">$(MSBuildProjectDirectory)\..\packages\</PackagesDirectory>
     <MSBuildExtensionPackPath Condition="'$(MSBuildExtensionPackPath)' == ''">$(PackagesDirectory)MSBuild.Extension.Pack.1.5.0\tools\net40\</MSBuildExtensionPackPath>
     <ExtensionTasksPath>$(MSBuildExtensionPackPath)</ExtensionTasksPath>
+    <DependDBBuildProcessorToolPath Condition="'$(NuGetToolPath)' == ''">$(PackagesDirectory)DependDB.BuildProcessor.1.7.2.0\tools\</DependDBBuildProcessorToolPath>
+    <DependDBNuGetPreProcessorToolPath Condition="'$(NuGetToolPath)' == ''">$(PackagesDirectory)DependDB.BuildProcessor.NuGetPreProcessor.1.7.2.0\tools\</DependDBNuGetPreProcessorToolPath>
     <NUnitToolPath Condition="'$(NUnitToolPath)' == ''">$(PackagesDirectory)NUnit.Runners.2.6.3\tools\</NUnitToolPath>
     <NuGetToolPath Condition="'$(NuGetToolPath)' == ''">$(PackagesDirectory)NuGet.CommandLine.2.8.2\tools\</NuGetToolPath>
     <NuGetForMSBuildPath Condition="'$(NuGetForMSBuildPath)' == ''">$(PackagesDirectory)NuGet.for.MSBuild.1.4.3\build\</NuGetForMSBuildPath>
     <RemotionBuildTasksPath Condition="'$(RemotionBuildTasksPath)' == ''">$(PackagesDirectory)Remotion.BuildTools.MSBuildTasks.1.0.5412.36795\tools\</RemotionBuildTasksPath>
-    <RemotionBuildScriptPath Condition="'$(RemotionBuildScriptPath)' == ''">$(PackagesDirectory)Remotion.BuildScript.*\BuildTargets\</RemotionBuildScriptPath>
+    <RemotionBuildScriptPath Condition="'$(RemotionBuildScriptPath)' == ''">$(PackagesDirectory)Remotion.BuildScript.2.0.0-alpha006\BuildTargets\</RemotionBuildScriptPath>
   </PropertyGroup>
 
   <Import Project="$(RemotionBuildScriptPath)*.targets" />
@@ -44,13 +46,14 @@
     <SkipNuGetOrg>False</SkipNuGetOrg>
     <SkipSourceLinks>False</SkipSourceLinks>
     <SkipNuGet>False</SkipNuGet>
+    <SkipDependDB>False</SkipDependDB>
   </PropertyGroup>
 
   <PropertyGroup>
     <CustomizationsDirectory Condition="'$(CustomizationsDirectory)' == ''">$(MSBuildProjectDirectory)\Customizations\</CustomizationsDirectory>
   </PropertyGroup>
 
-  <Import Project="$(CustomizationsDirectory)*.targets" />
+  <Import Project="$(CustomizationsDirectory)*.props" />
 
   <PropertyGroup>
     <!-- Define settings that use previously defined properties. -->
@@ -74,11 +77,15 @@
           LogDirectory=$(LogDirectory);
           Version=$(Version);
           AdditionalBuildMetadata=$(AdditionalBuildMetadata);
+          VcsUrlTemplate=$(VcsUrlTemplate);
           Platforms=$(Platforms);
           DatabaseSystems=$(DatabaseSystems);
-          Browsers=$(Browsers)
+          Browsers=$(Browsers);
+          TestCategoriesToExclude=$(TestCategoriesToExclude);
       </BuildProperties>
     </PropertyGroup>
+
+    <Message Text="Configured build properties: $(BuildProperties)" />
   </Target>
 
   <Target Name="PrepareBuildTargets">
@@ -93,6 +100,8 @@
       <SourceLinkTarget Condition="'$(SkipSourceLinks)' != 'True'">InsertSourceLinks</SourceLinkTarget>
 
       <PackageNuGetTarget Condition="'$(SkipNuGet)' != 'True'">CreateNuGetPackagesWithDebugSymbols</PackageNuGetTarget>
+
+      <DependDBTarget Condition="'$(SkipDependDB)' != 'True'">ProcessForDependDB</DependDBTarget>
 
       <TestBuildTargets>
           BuildReleaseProjects;
@@ -113,6 +122,7 @@
           $(PackageNuGetOrgTarget);
           $(SourceLinkTarget);
           $(PackageNuGetTarget);
+          $(DependDBTarget);
           RestoreBackupFiles;
       </FullBuildTargets>
 
@@ -150,5 +160,9 @@
              Targets="UpdateAssemblyInfos"
              Properties="ConfigurationID=Debug;"/>
   </Target>
+
+  <!-- Customization Targets -->
+
+  <Import Project="$(CustomizationsDirectory)*.targets" />
 
 </Project>

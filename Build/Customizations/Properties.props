@@ -8,5 +8,12 @@
     <ProductName>re-linq project (relinq.codeplex.com)</ProductName>
     <DocumentationRootPage>$(SolutionDirectory)Core\Doc\include\GettingStarted.aml</DocumentationRootPage>
     <DocumentationNamespaceSummaryFiles>$(SolutionDirectory)**\Doc\include\NamespaceDoc.xml</DocumentationNamespaceSummaryFiles> 
+    <DependDBProjectName>Remotion.Linq</DependDBProjectName>
+    <DependDBRetentionTime>10</DependDBRetentionTime>
+    <DependDBProjectBranch>Main</DependDBProjectBranch>
+    <!-- Required, but can be supplied via commandline parameter in server build and uses a fallback in local build -->
+    <DependDBProjectImportNotificationMailAddress/>
+    <DependDBTrackedReferences>Remotion.*</DependDBTrackedReferences>
+    <DependDBNuGetSources>$(SolutionDirectory)packages</DependDBNuGetSources>
   </PropertyGroup>
 </Project>

@@ -20,7 +20,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   
   <Import Project="Remotion.build" />
-  
+
+  <Import Project="$(CustomizationsDirectory)Server\*.props" />
+
   <PropertyGroup>
     <!-- Empty properties will be passed to MSBuild by TeamCity -->
 
@@ -32,8 +34,6 @@
     <SolutionDirectory>$(BuildRootDirectory)working\</SolutionDirectory>
     <OutputDirectory>$(BuildRootDirectory)output\</OutputDirectory>
     <TempDirectory>$(BuildRootDirectory)temp\</TempDirectory>
-
-    <SolutionBuildFile>$(SolutionDirectory)build\Remotion.build</SolutionBuildFile>
 
     <SolutionKeyFile>$(SecureNetworkShare)\remotion.snk</SolutionKeyFile>
 
@@ -52,6 +52,7 @@
       <Platforms>x86</Platforms>
       <DatabaseSystems>SqlServer2008R2</DatabaseSystems>
       <Browsers>Chrome</Browsers>
+      <TestCategoriesToExclude></TestCategoriesToExclude>
     </PropertyGroup>
   </Target>
   
@@ -60,6 +61,7 @@
       <Platforms>x86+x64</Platforms>
       <DatabaseSystems>SqlServer2005+SqlServer2008+SqlServer2008R2+SqlServer2012+SqlServer2014</DatabaseSystems>
       <Browsers>Chrome+InternetExplorer</Browsers>
+      <TestCategoriesToExclude></TestCategoriesToExclude>
     </PropertyGroup>
   </Target>
   
@@ -96,5 +98,9 @@
   <Target Name="Server_CIBuild" DependsOnTargets="CheckProperties;SetVersionCiAndNightlyBuild;TestBuild" />
   <Target Name="Server_NightlyBuild" DependsOnTargets="CheckProperties;SetVersionCiAndNightlyBuild;FullBuild" />
   <Target Name="Server_FullBuild" DependsOnTargets="CheckProperties;SetVersionFullBuild;FullBuild;" />
+
+  <!-- Customization Targets -->
+
+  <Import Project="$(CustomizationsDirectory)Server\*.targets" />
 
 </Project>

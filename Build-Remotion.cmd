@@ -13,12 +13,13 @@ if not [%1]==[] goto %1
 echo Welcome to the re-motion build tool!
 echo.
 echo Choose your desired build:
-echo [1] ... Test build ^(tests for x86-debug^)
-echo [2] ... Full build ^(tests for x64-debug/release; creates NuGet package^)
-echo [3] ... Docs build ^(only docs^)
+echo [1] ... Test build ^(x86-debug^)
+echo [2] ... Full build ^(x86-debug/release, x64-debug/release^)
+echo [3] ... Docs build ^(x86-debug if not present, docs^)
 echo           Requires Sandcastle Help File Builder to be installed!
-echo [4] ... Package ^(creates NuGet package^)
-echo [5] ... Oops, nothing please - exit.
+echo [4] ... Package ^(create zip package from pre-existent build^)
+echo [5] ... Run DependDB
+echo [6] ... Oops, nothing please - exit.
 echo.
 
 choice /c:123456 /n /m "Your choice: "
@@ -27,7 +28,8 @@ if %ERRORLEVEL%==1 goto run_test_build
 if %ERRORLEVEL%==2 goto run_full_build
 if %ERRORLEVEL%==3 goto run_docs_build
 if %ERRORLEVEL%==4 goto run_pkg_build
-if %ERRORLEVEL%==5 goto run_exit
+if %ERRORLEVEL%==5 goto run_dependdb
+if %ERRORLEVEL%==6 goto run_exit
 goto build_succeeded
 
 :run_test_build
@@ -63,6 +65,15 @@ mkdir %nuget-bin%
 %nuget-download%
 %nuget% restore . -NonInteractive
 %msbuild% build\Remotion.Local.build /t:PackageBuild /maxcpucount /verbosity:minimal /flp:verbosity=normal;logfile=build\BuildOutput\log\build.log
+if not %ERRORLEVEL%==0 goto build_failed
+goto build_succeeded
+
+:run_dependdb
+mkdir %log-dir%
+mkdir %nuget-bin%
+%nuget-download%
+%nuget% restore . -NonInteractive
+%msbuild% build\Remotion.Local.build /t:DependDBBuild /maxcpucount /verbosity:normal /flp:verbosity=detailed;logfile=build\BuildOutput\log\build.log
 if not %ERRORLEVEL%==0 goto build_failed
 goto build_succeeded
 

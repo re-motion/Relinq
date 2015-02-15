@@ -20,14 +20,21 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   
   <Import Project="Remotion.build" />
-  
+
+  <Import Project="$(CustomizationsDirectory)Local\*.props" />
+
   <PropertyGroup>
-    <SolutionBuildFile>Remotion.build</SolutionBuildFile>
+    <DependDBProjectImportNotificationMailAddress Condition="'$(DependDBProjectImportNotificationMailAddress)' == ''">noreply@localhost.net</DependDBProjectImportNotificationMailAddress>
+    <VcsUrlTemplate Condition="'$(VcsUrlTemplate)' == ''">http://localost/{0}</VcsUrlTemplate>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <SkipTests>True</SkipTests>
     <SkipDocumentation>True</SkipDocumentation>
     <SkipNuGetOrg>True</SkipNuGetOrg>
     <SkipSourceLinks>True</SkipSourceLinks>
     <SkipNuGet>True</SkipNuGet>
+    <SkipDependDB>True</SkipDependDB>
   </PropertyGroup>
   
   <Target Name="TestBuild_Configuration">
@@ -35,6 +42,7 @@
       <Platforms>x86</Platforms>
       <DatabaseSystems>SqlServerDefault</DatabaseSystems>
       <Browsers></Browsers>
+      <TestCategoriesToExclude></TestCategoriesToExclude>
       <SkipTests>False</SkipTests>
     </PropertyGroup>
   </Target>
@@ -46,26 +54,29 @@
       <DatabaseSystems>SqlServerDefault</DatabaseSystems>
       <!-- Skip Internet Explorer -->
       <Browsers>Chrome</Browsers>
+      <TestCategoriesToExclude></TestCategoriesToExclude>
       <SkipTests>False</SkipTests>
       <SkipNuGet>False</SkipNuGet>
+      <SkipDependDB>False</SkipDependDB>
     </PropertyGroup>
   </Target>
   
   <Target Name="DocumentationBuild_Configuration">
     <PropertyGroup>
-      <Platforms>x86</Platforms>
-      <DatabaseSystems>SqlServerDefault</DatabaseSystems>
-      <Browsers></Browsers>
       <SkipDocumentation>False</SkipDocumentation>
     </PropertyGroup>
   </Target>
 
   <Target Name="PackageBuild_Configuration">
     <PropertyGroup>
-      <Platforms>x86</Platforms>
-      <DatabaseSystems>SqlServerDefault</DatabaseSystems>
-      <Browsers></Browsers>
       <SkipNuGet>False</SkipNuGet>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="DependDBBuild_Configuration">
+    <PropertyGroup>
+      <SkipNuGet>False</SkipNuGet>
+      <SkipDependDB>False</SkipDependDB>
     </PropertyGroup>
   </Target>
 
@@ -92,5 +103,10 @@
   <Target Name="FullBuildWithoutDocumentation" DependsOnTargets="FullBuild_Configuration;SetVersion;BuildAll;" />
   <Target Name="DocumentationBuild" DependsOnTargets="DocumentationBuild_Configuration;SetVersion;BuildAll;" />
   <Target Name="PackageBuild" DependsOnTargets="PackageBuild_Configuration;SetVersion;BuildAll;" />
+  <Target Name="DependDBBuild" DependsOnTargets="DependDBBuild_Configuration;SetVersion;BuildAll;" />
+
+  <!-- Customization Targets -->
+
+  <Import Project="$(CustomizationsDirectory)Local\*.targets" />
 
 </Project>
