@@ -2,21 +2,29 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
 
-    <ReleaseProjectFiles Include="$(SolutionDirectory)Core.Net_4_0\Core.Net_4_0.csproj"/>
+    <ReleaseProjectFiles Include="$(SolutionDirectory)Core.Net_4_0\Core.Net_4_0.csproj">
+      <ExcludeFromDocumentation>True</ExcludeFromDocumentation>
+    </ReleaseProjectFiles>
+
     <ReleaseProjectFiles Include="$(SolutionDirectory)Core\Core.csproj">
       <CreateNuGetPackageWithSymbolServerSupport>True</CreateNuGetPackageWithSymbolServerSupport>
       <CreateDocumentationFile>True</CreateDocumentationFile>
     </ReleaseProjectFiles>
 
-    <ReleaseProjectFiles Include="$(SolutionDirectory)Development.Net_4_0\Development.Net_4_0.csproj"/>
+    <ReleaseProjectFiles Include="$(SolutionDirectory)Development.Net_4_0\Development.Net_4_0.csproj">
+      <ExcludeFromDocumentation>True</ExcludeFromDocumentation>
+    </ReleaseProjectFiles>
+
     <ReleaseProjectFiles Include="$(SolutionDirectory)Development\Development.csproj">
       <CreateNuGetPackageWithSymbolServerSupport>True</CreateNuGetPackageWithSymbolServerSupport>
     </ReleaseProjectFiles>
 
     <UnitTestProjectFiles Include="$(SolutionDirectory)Development.Net_4_0.UnitTests\Development.Net_4_0.UnitTests.csproj"/>
+
     <UnitTestProjectFiles Include="$(SolutionDirectory)Development.UnitTests\Development.UnitTests.csproj"/>
 
     <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests.Net_4_0\UnitTests.Net_4_0.csproj"/>
+
     <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests\UnitTests.csproj"/>
 
     <!--
