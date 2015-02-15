@@ -165,6 +165,7 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\TypeInfoTest.cs" />
     <None Include="..\remotion.snk">
       <Link>remotion.snk</Link>
     </None>

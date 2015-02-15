@@ -15,6 +15,7 @@
 // under the License.
 // 
 using System;
+using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
 namespace System.Reflection
@@ -23,66 +24,9 @@ namespace System.Reflection
   {
     private readonly Type _type;
 
-    public TypeInfo (Type type)
+    public TypeInfo ([NotNull]Type type)
     {
       _type = type;
-    }
-
-    public bool IsArray
-    {
-      get { return _type.IsArray; }
-    }
-
-    public bool IsGenericTypeDefinition
-    {
-      get { return _type.IsGenericTypeDefinition; }
-    }
-
-    public bool IsGenericType
-    {
-      get { return _type.IsGenericType; }
-    }
-
-    public Type[] GenericTypeArguments
-    {
-      get { return _type.GetGenericArguments(); }
-    }
-
-    public Type[] ImplementedInterfaces
-    {
-      get { return _type.GetInterfaces(); }
-    }
-
-    public bool ContainsGenericParameters
-    {
-      get { return _type.ContainsGenericParameters; }
-    }
-
-    public bool IsValueType
-    {
-      get { return _type.IsValueType; }
-    }
-
-    public ConstructorInfo[] DeclaredConstructors
-    {
-      //TODO 
-      get { return _type.GetConstructors(); }
-    }
-
-    public Type[] GenericTypeParameters
-    {
-      //TODO 
-      get { return _type.GetGenericArguments(); }
-    }
-
-    public Type GetGenericTypeDefinition ()
-    {
-      return _type.GetGenericTypeDefinition();
-    }
-
-    public Type GetElementType ()
-    {
-      return _type.GetElementType();
     }
 
     public bool IsAssignableFrom (TypeInfo type)
@@ -93,6 +37,73 @@ namespace System.Reflection
     public Assembly Assembly
     {
       get { return _type.Assembly; }
+    }
+
+    public bool IsValueType
+    {
+      get { return _type.IsValueType; }
+    }
+
+    public bool IsArray
+    {
+      get { return _type.IsArray; }
+    }
+
+    public Type GetElementType ()
+    {
+      return _type.GetElementType();
+    }
+
+    public ConstructorInfo[] DeclaredConstructors
+    {
+      get { return _type.GetConstructors (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic); }
+    }
+
+    public Type[] ImplementedInterfaces
+    {
+      get { return _type.GetInterfaces(); }
+    }
+
+    public bool IsGenericType
+    {
+      get { return _type.IsGenericType; }
+    }
+
+    public bool IsGenericTypeDefinition
+    {
+      get { return _type.IsGenericTypeDefinition; }
+    }
+
+    public Type GetGenericTypeDefinition ()
+    {
+      return _type.GetGenericTypeDefinition();
+    }
+
+    public bool ContainsGenericParameters
+    {
+      get { return _type.ContainsGenericParameters; }
+    }
+
+    public Type[] GenericTypeParameters
+    {
+      get
+      {
+        if (!_type.IsGenericTypeDefinition)
+          return new Type[0];
+
+        return _type.GetGenericArguments();
+      }
+    }
+
+    public Type[] GenericTypeArguments
+    {
+      get
+      {
+        if (_type.IsGenericTypeDefinition)
+          return new Type[0];
+
+        return _type.GetGenericArguments();
+      }
     }
   }
 }
