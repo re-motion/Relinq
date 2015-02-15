@@ -1,4 +1,4 @@
-﻿// Copyright (c) rubicon IT GmbH, www.rubicon.eu
+// Copyright (c) rubicon IT GmbH, www.rubicon.eu
 //
 // See the NOTICE file distributed with this work for additional information
 // regarding copyright ownership.  rubicon licenses this file to you under 
@@ -14,30 +14,26 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
-using JetBrains.Annotations;
 
+#pragma warning disable 1591
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable IntroduceOptionalParameters.Global
+// ReSharper disable MemberCanBeProtected.Global
+// ReSharper disable InconsistentNaming
 // ReSharper disable once CheckNamespace
-namespace System.Reflection
+
+namespace JetBrains.Annotations
 {
-  internal static class MethodInfoExtensions
+  /// <summary>
+  /// Indicates that IEnumarable, passed as parameter, is not enumerated.
+  /// 
+  /// </summary>
+  [AttributeUsage(AttributeTargets.Parameter)]
+  sealed partial class NoEnumerationAttribute : Attribute
   {
-    [NotNull]
-    public static Delegate CreateDelegate ([NotNull] this MethodInfo methodInfo, [NotNull] Type delegateType, [NotNull] object target)
-    {
-      return Delegate.CreateDelegate (delegateType, target, methodInfo);
-    }
-
-    [NotNull]
-    public static Delegate CreateDelegate ([NotNull] this MethodInfo methodInfo, [NotNull] Type delegateType)
-    {
-      return Delegate.CreateDelegate (delegateType, methodInfo);
-    }
-
-    [NotNull] 
-    public static MethodInfo GetMethodInfo ([NotNull] this Delegate @delegate)
-    {
-      return @delegate.Method;
-    }
   }
 }

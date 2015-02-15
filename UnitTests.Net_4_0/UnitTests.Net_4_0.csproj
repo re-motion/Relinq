@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{579ACAE7-7152-4A1A-9201-409C355408FD}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>Remotion.Linq.UnitTests</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Remotion.Linq.UnitTests</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\remotion.snk</AssemblyOriginatorKeyFile>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>773f98fc</NuGetPackageImportStamp>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE;</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <WarningsAsErrors>
+    </WarningsAsErrors>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>4.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\AssemblyInfoShared.cs">
+      <Link>Properties\AssemblyInfoShared.cs</Link>
+    </Compile>
+    <Compile Include="..\Core.Net_4_0\Utilities\MethodInfoExtensions.cs">
+      <Link>Utilities\MethodInfoExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Core.Net_4_0\Utilities\TypeExtensions.cs">
+      <Link>Utilities\TypeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Core.Net_4_0\Utilities\TypeInfo.cs">
+      <Link>Utilities\TypeInfo.cs</Link>
+    </Compile>
+    <Compile Include="App_Packages\Remotion.Development.UnitTesting.PrivateInvoke.Sources.1.15.23.0\PrivateInvoke.cs" />
+    <Compile Include="App_Packages\Remotion.Development.UnitTesting.Serializer.Sources.1.15.23.0\Serializer.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\AssertionConditionAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\AssertionConditionType.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\AssertionMethodAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\BaseTypeRequiredAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\CanBeNullAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\CannotApplyEqualityOperatorAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\ContractAnnotationAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\ImplicitUseKindFlags.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\ImplicitUseTargetFlags.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\InstantHandleAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\InvokerParameterNameAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\LinqTunnelAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\LocalizationRequiredAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\MeansImplicitUseAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\NoEnumerationAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\NotifyPropertyChangedInvocatorAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\NotNullAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\PathReferenceAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\PublicAPIAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\PureAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\StringFormatMethodAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\TerminatesProgramAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\UsedImplicitlyAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.Utilities.ArgumentUtility.Sources.1.15.23.0\ArgumentUtility.cs" />
+    <Compile Include="App_Packages\Remotion.Utilities.ExceptionUtility.Sources.1.15.23.0\ExceptionUtility.cs" />
+    <Compile Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\NullableTypeUtility.cs" />
+    <Compile Include="..\UnitTests\**\*.cs" Exclude="..\UnitTests\Properties\**\*.*;..\UnitTests\App_Packages\**\*.*;..\UnitTests\bin\**\*.*;..\UnitTests\obj\**\*.*">
+      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="..\remotion.snk">
+      <Link>remotion.snk</Link>
+    </None>
+    <None Include="..\Apache-2.0.licenseheader">
+      <Link>Apache-2.0.licenseheader</Link>
+    </None>
+    <None Include="App_Packages\Remotion.Development.UnitTesting.PrivateInvoke.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
+    <None Include="App_Packages\Remotion.Development.UnitTesting.Serializer.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
+    <None Include="App_Packages\Remotion.Utilities.ExceptionUtility.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
+    <None Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core.Net_4_0\Core.Net_4_0.csproj">
+      <Project>{aa6d28ca-a313-4eab-a21c-961ce7cd7f88}</Project>
+      <Name>Core.Net_4_0</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Development.Net_4_0\Development.Net_4_0.csproj">
+      <Project>{dfe82ea1-3a1e-4f6a-999a-5b9e0d18abf5}</Project>
+      <Name>Development.Net_4_0</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  -->
+  <Target Name="AfterBuild">
+    <Delete Files="@(TestDomain->'$(MSBuildProjectDirectory)\$(OutputPath)\%(Directory)')" />
+    <Copy SourceFiles="@(TestDomain->'%(Fullpath)')" DestinationFiles="@(TestDomain->'$(MSBuildProjectDirectory)\$(OutputPath)\%(Identity)')" />
+  </Target>
+</Project>
