@@ -190,8 +190,8 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       Assertion.IsTrue (
           inputType.IsAssignableFrom (memberDeclaringType),
           "Input expression of type '{0}' cannot be converted to declaring type '{1}' of member '{2}'.",
-          inputType.FullName,
-          memberDeclaringType.FullName,
+          input.Type.FullName,
+          member.DeclaringType.FullName,
           member.Name);
 
       return Expression.Convert (input, member.DeclaringType);

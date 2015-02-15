@@ -37,7 +37,7 @@ namespace Remotion.Linq.Utilities
         case ExpressionType.MemberAccess:
           var memberExpression = (MemberExpression) wrappedCall.Body;
           var property = memberExpression.Member as PropertyInfo;
-          var method = property != null ? property.GetMethod : null;
+          var method = property != null ? property.GetGetMethod (true) : null;
           if (method != null)
             return method;
           break;

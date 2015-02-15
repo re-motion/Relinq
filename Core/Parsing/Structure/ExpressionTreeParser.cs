@@ -25,6 +25,7 @@ using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure
@@ -35,7 +36,7 @@ namespace Remotion.Linq.Parsing.Structure
   /// </summary>
   public sealed class ExpressionTreeParser
   {
-    private static readonly MethodInfo s_getArrayLengthMethod = typeof (Array).GetRuntimeProperty ("Length").GetMethod;
+    private static readonly MethodInfo s_getArrayLengthMethod = typeof (Array).GetRuntimeProperty ("Length").GetGetMethod (true);
 
     [Obsolete (
         "This method has been removed. Use QueryParser.CreateDefault, or create a customized ExpressionTreeParser using the constructor. (1.13.93)", 
@@ -53,7 +54,7 @@ namespace Remotion.Linq.Parsing.Structure
     /// registered.</returns>
     public static CompoundNodeTypeProvider CreateDefaultNodeTypeProvider ()
     {
-      var searchedTypes = typeof (MethodInfoBasedNodeTypeRegistry).GetTypeInfo().Assembly.DefinedTypes.Select (ti => ti.AsType()).ToList();
+      var searchedTypes = typeof (MethodInfoBasedNodeTypeRegistry).GetTypeInfo().Assembly.GetDefinedTypes();
       var innerProviders = new INodeTypeProvider[]
                            {
                                MethodInfoBasedNodeTypeRegistry.CreateFromTypes (searchedTypes),
@@ -175,7 +176,7 @@ namespace Remotion.Linq.Parsing.Structure
         if (propertyInfo == null)
           return null;
 
-        var getterMethod = propertyInfo.GetMethod;
+        var getterMethod = propertyInfo.GetGetMethod (true);
         if (getterMethod == null || !_nodeTypeProvider.IsRegistered (getterMethod))
           return null;
 
