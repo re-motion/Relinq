@@ -19,11 +19,15 @@
       <CreateNuGetPackageWithSymbolServerSupport>True</CreateNuGetPackageWithSymbolServerSupport>
     </ReleaseProjectFiles>
 
-    <UnitTestProjectFiles Include="$(SolutionDirectory)Development.Net_4_0.UnitTests\Development.Net_4_0.UnitTests.csproj"/>
+    <UnitTestProjectFiles Include="$(SolutionDirectory)Development.Net_4_0.UnitTests\Development.Net_4_0.UnitTests.csproj">
+      <ExecutionRuntime>net-4.0</ExecutionRuntime>
+    </UnitTestProjectFiles>
 
     <UnitTestProjectFiles Include="$(SolutionDirectory)Development.UnitTests\Development.UnitTests.csproj"/>
 
-    <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests.Net_4_0\UnitTests.Net_4_0.csproj"/>
+    <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests.Net_4_0\UnitTests.Net_4_0.csproj">
+      <ExecutionRuntime>net-4.0</ExecutionRuntime>
+    </UnitTestProjectFiles>
 
     <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests\UnitTests.csproj"/>
 
