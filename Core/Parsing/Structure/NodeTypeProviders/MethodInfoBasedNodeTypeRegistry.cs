@@ -32,8 +32,8 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
   /// </summary>
   public sealed class MethodInfoBasedNodeTypeRegistry : INodeTypeProvider
   {
-    private static readonly Dictionary<MethodInfo, Lazy<IReadOnlyCollection<MethodInfo>>> s_genericMethodDefinitionCandidates = 
-        new Dictionary<MethodInfo, Lazy<IReadOnlyCollection<MethodInfo>>>();
+    private static readonly Dictionary<MethodInfo, Lazy<MethodInfo[]>> s_genericMethodDefinitionCandidates = 
+        new Dictionary<MethodInfo, Lazy<MethodInfo[]>>();
 
     /// <summary>
     /// Creates a <see cref="MethodInfoBasedNodeTypeRegistry"/> and automatically registers all types implementing <see cref="IExpressionNode"/> 
@@ -105,19 +105,19 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       // var declaringTypeDefinition = genericMethodDefinition.DeclaringType.GetGenericTypeDefinition();
       // return (MethodInfo) MethodBase.GetMethodFromHandle (genericMethodDefinition.MethodHandle, declaringTypeDefinition.TypeHandle);
 
-      Lazy<IReadOnlyCollection<MethodInfo>> candidates;
+      Lazy<MethodInfo[]> candidates;
       lock (s_genericMethodDefinitionCandidates)
       {
         if (!s_genericMethodDefinitionCandidates.TryGetValue (method, out candidates))
         {
-          candidates = new Lazy<IReadOnlyCollection<MethodInfo>> (
+          candidates = new Lazy<MethodInfo[]> (
               () => GetGenericMethodDefinitionCandidates (genericMethodDefinition),
               LazyThreadSafetyMode.ExecutionAndPublication);
           s_genericMethodDefinitionCandidates.Add (method, candidates);
         }
       }
 
-      if (candidates.Value.Count == 1)
+      if (candidates.Value.Length == 1)
         return candidates.Value.Single();
 
       if (!throwOnAmbiguousMatch)

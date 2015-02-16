@@ -60,8 +60,8 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
       if (memberExpression != null && memberExpression.Member is PropertyInfo)
       {
         var property = (PropertyInfo) memberExpression.Member;
-        var getter = property.GetMethod;
-        Assertion.IsNotNull (getter);
+        var getter = property.GetGetMethod (true);
+        Assertion.IsNotNull (getter, "No get-method was found for property '{0}' declared on type '{1}'.", property.Name, property.DeclaringType);
 
         var methodCallExpressionTransformerProvider = GetTransformerProvider (getter);
         if (methodCallExpressionTransformerProvider != null)

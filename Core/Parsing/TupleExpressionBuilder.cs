@@ -65,7 +65,7 @@ namespace Remotion.Linq.Parsing
           Expression.New (
               tupleType.GetTypeInfo().DeclaredConstructors.Single(),
               new[] { left, right },
-              new MemberInfo[] { tupleType.GetRuntimeProperty ("Key").GetMethod, tupleType.GetRuntimeProperty ("Value").GetMethod });
+              new MemberInfo[] { tupleType.GetRuntimeProperty ("Key").GetGetMethod (true), tupleType.GetRuntimeProperty ("Value").GetGetMethod (true) });
       return newTupleExpression;
     }
   }
