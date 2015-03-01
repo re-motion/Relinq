@@ -91,8 +91,18 @@ namespace Remotion.Linq.Development.UnitTests.UnitTesting
       Assert.That (
           () => ExpressionTreeComparer.CheckAreEqualTrees (expected, actual),
           Throws.InvalidOperationException.With.Message.EqualTo (
-              "Trees are not equal: Property 'Value'\nNode 1: \"b\"\nNode 2: \"a\"\n"
-              + "Tree 1: (\"a\" == \"b\")\nTree 2: (\"b\" == \"a\")"));
+              "Trees are not equal: Property 'Value'\n"
+#if !NET_3_5
+              + "Node 1: \"b\"\nNode 2: \"a\"\n"
+#else
+              + "Node 1: \"a\"\nNode 2: \"b\"\n"
+#endif
+#if !NET_3_5
+              + "Tree 1: (\"a\" == \"b\")\nTree 2: (\"b\" == \"a\")"
+#else
+              + "Tree 1: (\"a\" = \"b\")\nTree 2: (\"b\" = \"a\")"
+#endif
+              ));
     }
 
     [Test]
@@ -150,7 +160,12 @@ namespace Remotion.Linq.Development.UnitTests.UnitTesting
       Assert.That (
           () => expressionTreeComparer.CheckAreEqualNodes (expected, actual),
           Throws.InvalidOperationException.With.Message.EqualTo (
-              "Trees are not equal: Property 'Item1'\nNode 1: (a)\nNode 2: (b)\n"
+              "Trees are not equal: Property 'Item1'\n"
+#if !NET_3_5
+              + "Node 1: (a)\nNode 2: (b)\n"
+#else
+              + "Node 1: <a>\nNode 2: <b>\n"
+#endif
               + "Tree 1: expected\nTree 2: actual"));
     }
 
