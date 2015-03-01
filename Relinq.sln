@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Development.Net_4_0.UnitTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Net_3_5", "Core.Net_3_5\Core.Net_3_5.csproj", "{0A45F945-D79B-4898-BCE7-67B0AD481C5D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Development.Net_3_5", "Development.Net_3_5\Development.Net_3_5.csproj", "{7D45C701-CF64-4D56-87B8-E9CE64F9A0D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,6 +104,12 @@ Global
 		{0A45F945-D79B-4898-BCE7-67B0AD481C5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A45F945-D79B-4898-BCE7-67B0AD481C5D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0A45F945-D79B-4898-BCE7-67B0AD481C5D}.Release|x86.ActiveCfg = Release|Any CPU
+		{7D45C701-CF64-4D56-87B8-E9CE64F9A0D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D45C701-CF64-4D56-87B8-E9CE64F9A0D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D45C701-CF64-4D56-87B8-E9CE64F9A0D8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7D45C701-CF64-4D56-87B8-E9CE64F9A0D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D45C701-CF64-4D56-87B8-E9CE64F9A0D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D45C701-CF64-4D56-87B8-E9CE64F9A0D8}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

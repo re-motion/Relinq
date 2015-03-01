@@ -16,8 +16,13 @@
 // 
 
 using System;
+#if !NET_3_5
 using System.Collections.ObjectModel;
+#endif
 using Remotion.Linq.Clauses;
+#if NET_3_5
+using Remotion.Linq.Collections;
+#endif
 
 namespace Remotion.Linq.Development.UnitTesting
 {
