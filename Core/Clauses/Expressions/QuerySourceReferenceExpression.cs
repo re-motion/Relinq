@@ -31,17 +31,26 @@ namespace Remotion.Linq.Clauses.Expressions
   /// </remarks>
   public class QuerySourceReferenceExpression : Expression
   {
-    private readonly Type _type;
     public const ExpressionType ExpressionType = (ExpressionType) 100001;
 
+#if !NET_3_5
+    private readonly Type _type;
+#endif
+
     public QuerySourceReferenceExpression (IQuerySource querySource)
+#if NET_3_5
+        : base (ExpressionType, ArgumentUtility.CheckNotNull ("querySource", querySource).ItemType)
+#endif
     {
       ArgumentUtility.CheckNotNull ("querySource", querySource);
 
+#if !NET_3_5
       _type = querySource.ItemType;
+#endif
       ReferencedQuerySource = querySource;
     }
 
+#if !NET_3_5
     public override ExpressionType NodeType
     {
       get { return ExpressionType; }
@@ -51,7 +60,8 @@ namespace Remotion.Linq.Clauses.Expressions
     {
       get { return _type; }
     }
-    
+#endif
+
     /// <summary>
     /// Gets the query source referenced by this expression.
     /// </summary>

@@ -25,17 +25,26 @@ namespace Remotion.Linq.Clauses.Expressions
   /// </summary>
   public class SubQueryExpression : Expression
   {
-    private readonly Type _type;
     public const ExpressionType ExpressionType = (ExpressionType) 100002;
-    
+
+#if !NET_3_5
+    private readonly Type _type;
+#endif
+
     public SubQueryExpression (QueryModel queryModel)
+#if NET_3_5
+        : base (ExpressionType, queryModel.GetOutputDataInfo().DataType)
+#endif
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      QueryModel = queryModel;
+#if !NET_3_5
       _type = queryModel.GetOutputDataInfo().DataType;
+#endif
+      QueryModel = queryModel;
     }
 
+#if !NET_3_5
     public override ExpressionType NodeType
     {
       get { return ExpressionType; }
@@ -45,6 +54,7 @@ namespace Remotion.Linq.Clauses.Expressions
     {
       get { return _type; }
     }
+#endif
 
     public QueryModel QueryModel { get; private set; }
   }
