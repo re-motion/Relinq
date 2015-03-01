@@ -24,14 +24,4 @@ namespace System
       return new Tuple<T> (item1);
     }
   }
-
-  public class Tuple<T>
-  {
-    public Tuple (T item1)
-    {
-      Item1 = item1;
-    }
-
-    public T Item1 { get; private set; }
-  }
 }
