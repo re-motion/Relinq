@@ -131,6 +131,9 @@
     <Compile Include="..\Core.Net_4_0\Utilities\TypeInfo.cs">
       <Link>Utilities\TypeInfo.cs</Link>
     </Compile>
+    <Compile Include="..\Core\Utilities\StringUtility.cs">
+      <Link>Utilities\StringUtility.cs</Link>
+    </Compile>
     <Compile Include="App_Packages\Remotion.Development.UnitTesting.PrivateInvoke.Sources.1.15.23.0\PrivateInvoke.cs" />
     <Compile Include="App_Packages\Remotion.Development.UnitTesting.Serializer.Sources.1.15.23.0\Serializer.cs" />
     <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\AssertionConditionAttribute.cs" />

@@ -22,6 +22,7 @@ using NUnit.Framework;
 using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing;
+using Remotion.Linq.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Clauses.Expressions
@@ -90,7 +91,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
           Is.Empty, 
           "'{0}' declares the same node type as {1}.", 
           expressionType.Name, 
-          string.Join (", ", matches.Select (field => string.Format ("{0} ({1})", field.Field.DeclaringType.Name, field.Field.Name))));
+          StringUtility.Join (", ", matches.Select (field => string.Format ("{0} ({1})", field.Field.DeclaringType.Name, field.Field.Name))));
     }
   }
 }
