@@ -431,7 +431,11 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.NewArrayBounds));
       Assert.That (result.Expressions, Is.EqualTo (newExpressions));
+#if !NET_3_5
       Assert.That (result.Type, Is.EqualTo (typeof (int).MakeArrayType()));
+#else
+      Assert.That (result.Type, Is.EqualTo (typeof (int).MakeArrayType (1)));
+#endif
     }
 
     [Test]
