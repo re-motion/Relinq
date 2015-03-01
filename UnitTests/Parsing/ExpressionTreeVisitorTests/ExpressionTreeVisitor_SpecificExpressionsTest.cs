@@ -155,6 +155,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       Assert.That (result.IfFalse, Is.SameAs (expression.IfFalse));
     }
 
+#if !NET_3_5
     [Test]
     public void VisitConditionalExpression_WithType_AndChanges ()
     {
@@ -177,6 +178,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       Assert.That (result.IfTrue, Is.SameAs (ifTrue));
       Assert.That (result.IfFalse, Is.SameAs (newIfFalse));
     }
+#endif
 
     [Test]
     public void VisitParameterExpression ()
