@@ -171,6 +171,7 @@
     <Compile Include="..\UnitTests\**\*.cs" Exclude="..\UnitTests\App_Packages\**\*.*;..\UnitTests\bin\**\*.*;..\UnitTests\obj\**\*.*">
       <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
     </Compile>
+    <Compile Include="Collections\ObservableCollectionTest.cs" />
     <Compile Include="Utilities\Tuple.cs" />
     <Compile Include="Utilities\Tuple2.cs" />
     <Compile Include="Utilities\Tuple3.cs" />
