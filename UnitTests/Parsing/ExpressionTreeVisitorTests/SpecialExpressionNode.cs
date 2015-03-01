@@ -14,6 +14,7 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Linq.Expressions;
 
@@ -21,6 +22,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 {
   public class SpecialExpressionNode : Expression
   {
+#if !NET_3_5
     private readonly ExpressionType _nodeType;
     private readonly Type _type;
 
@@ -39,5 +41,11 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       get { return _type; }
     }
+#else
+    public SpecialExpressionNode (ExpressionType nodeType, Type type)
+        : base (nodeType, type)
+    {
+    }
+#endif
   }
 }
