@@ -119,8 +119,13 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 
       var inputParameter = Expression.Parameter (typeof (AnonymousType), "input");
       var expectedResult = Expression.Lambda (
+#if !NET_3_5
           Expression.MakeMemberAccess (inputParameter, _anonymousTypeAProperty),
+#else
+          Expression.Call (inputParameter, _anonymousTypeAGetter),
+#endif
           inputParameter);
+
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
@@ -144,7 +149,9 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
       var outerAnonymousTypeCtor = typeof (AnonymousType<int, AnonymousType>).GetConstructor (new[] { typeof (int), typeof (AnonymousType) });
       var outerAnonymousTypeAGetter = typeof (AnonymousType<int, AnonymousType>).GetMethod ("get_a");
       var outerAnonymousTypeBGetter = typeof (AnonymousType<int, AnonymousType>).GetMethod ("get_b");
+#if !NET_3_5
       var outerAnonymousTypeBProperty = typeof (AnonymousType<int, AnonymousType>).GetProperty ("b");
+#endif
 
       // new AnonymousType (get_a = 2, get_b = new AnonymousType (get_a = _searchedExpression, get_b = 1))
       var innerExpression = Expression.New (
@@ -162,7 +169,11 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
       var inputParameter = Expression.Parameter (typeof (AnonymousType<int, AnonymousType>), "input");
        // input => input.get_b().get_a()
       var expectedResult = Expression.Lambda (
+#if !NET_3_5
           Expression.MakeMemberAccess (Expression.MakeMemberAccess (inputParameter, outerAnonymousTypeBProperty), _anonymousTypeAProperty),
+#else
+          Expression.Call (Expression.Call (inputParameter, outerAnonymousTypeBGetter), _anonymousTypeAGetter),
+#endif
           inputParameter);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
