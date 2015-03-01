@@ -17,8 +17,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+#if !NET_3_5
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+#endif
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Collections
@@ -125,9 +127,11 @@ namespace Remotion.Linq.Collections
         case NotifyCollectionChangedAction.Replace:
           // NOP
           break;
+#if !NET_3_5
         case NotifyCollectionChangedAction.Move:
           // NOP
           break;
+#endif
         case NotifyCollectionChangedAction.Reset:
           _index = 0;
           break;
