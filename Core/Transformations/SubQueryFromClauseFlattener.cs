@@ -15,12 +15,17 @@
 // under the License.
 // 
 using System;
+#if !NET_3_5
 using System.Collections.ObjectModel;
+#endif
 using System.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses.ResultOperators;
+#if NET_3_5
+using Remotion.Linq.Collections;
+#endif
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Utilities;
 

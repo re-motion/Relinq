@@ -158,7 +158,6 @@
     <Compile Include="Collections\IndexValuePair.cs" />
     <Compile Include="Collections\MultiDictionaryExtensions.cs" />
     <Compile Include="Collections\ObservableCollectionExtensions.cs" />
-    <Compile Include="Collections\ObservableCollectionChangedEventArgs.cs" />
     <Compile Include="DefaultQueryProvider.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\MultiReplacingExpressionTreeVisitor.cs" />
     <Compile Include="Clauses\Expressions\PartialEvaluationExceptionExpression.cs" />
@@ -274,6 +273,7 @@
     <Compile Include="Parsing\Structure\QueryParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Clauses\MainFromClause.cs" />
+    <Compile Include="Utilities\StringUtility.cs" />
     <None Include="..\Apache-2.0.licenseheader">
       <Link>Apache-2.0.licenseheader</Link>
     </None>

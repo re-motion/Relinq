@@ -127,7 +127,11 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     {
       var result = _expression.ToString();
 
+#if !NET_3_5
       Assert.That (result, Is.EqualTo ("VBCompareString((\"string1\" == \"string2\"), True)"));
+#else
+      Assert.That (result, Is.EqualTo ("VBCompareString((\"string1\" = \"string2\"), True)"));
+#endif
     }
 
   }

@@ -21,20 +21,27 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
 {
   public class UnknownExpression : Expression
   {
+#if !NET_3_5
     private readonly Type _type;
     private readonly ExpressionType _nodeType;
-
+#endif
     public UnknownExpression (Type type)
       : this (type, (ExpressionType) (-1))
     {
     }
 
     public UnknownExpression (Type type, ExpressionType nodeType)
+#if NET_3_5
+        : base (nodeType, type)
+#endif
     {
+#if !NET_3_5
       _type = type;
       _nodeType = nodeType;
+#endif
     }
 
+#if !NET_3_5
     public override ExpressionType NodeType
     {
       get { return _nodeType; }
@@ -44,5 +51,6 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     {
       get { return _type; }
     }
+#endif
   }
 }

@@ -57,7 +57,7 @@ namespace Remotion.Linq.Utilities
           methodInfo,
           "Method '{0} ({1})' was not found on type '{2}'",
           methodName,
-          string.Join (", ", parameterTypes.Select (t => t.Name)),
+          StringUtility.Join (", ", parameterTypes.Select (t => t.Name)),
           type.FullName);
 
       return methodInfo;

@@ -14,6 +14,7 @@
   </metadata>
   <files>
     <file src="bin\$configuration$\$id$.pdb" target="lib\portable-net45+win+wpa81+wp80" />
+    <file src="..\Core.Net_3_5\bin\$configuration$\$id$.*" target="lib\net35" />
     <file src="..\Core.Net_4_0\bin\$configuration$\$id$.*" target="lib\net40" />
     <!-- By using a wildcard, the file-inclusion does not fail if no documentation file was found. -->
     <file src="$documentationFile$" target="doc" />

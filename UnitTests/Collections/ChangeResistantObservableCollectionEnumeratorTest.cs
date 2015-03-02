@@ -15,7 +15,9 @@
 // under the License.
 // 
 using System;
+#if !NET_3_5
 using System.Collections.ObjectModel;
+#endif
 using NUnit.Framework;
 using Remotion.Development.UnitTesting;
 using Remotion.Linq.Collections;
@@ -231,6 +233,7 @@ namespace Remotion.Linq.UnitTests.Collections
       Assert.That (_enumerator.Index, Is.EqualTo (1));
     }
 
+#if !NET_3_5
     [Test]
     public void CollectionMove_AfterCurrentToBeforeCurrent_LeavesIndex ()
     {
@@ -274,6 +277,7 @@ namespace Remotion.Linq.UnitTests.Collections
       _collection.Move (0, 1);
       Assert.That (_enumerator.Index, Is.EqualTo (1));
     }
+#endif
 
     [Test]
     public void CollectionClear_ResetsIndex ()

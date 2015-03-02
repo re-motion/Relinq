@@ -107,18 +107,30 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException))]
     public void Reduce_Reducible_ThrowsIfNotOverridden ()
     {
       var expression = new ReducibleExtensionExpressionNotOverridingReduce (typeof (int));
-      expression.Reduce ();
+      Assert.That (
+          () => expression.Reduce(),
+#if !NET_3_5
+          Throws.ArgumentException
+#else
+          Throws.InvalidOperationException.With.Message.EqualTo ("Reducible nodes must override the Reduce method.")
+#endif
+          );
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException))]
     public void ReduceAndCheck_ThrowsIfNotReducible ()
     {
-      _expression.ReduceAndCheck ();
+      Assert.That (
+          () => _expression.ReduceAndCheck(),
+#if !NET_3_5
+          Throws.ArgumentException
+#else
+          Throws.InvalidOperationException.With.Message.EqualTo ("Reduce and check can only be called on reducible nodes.")
+#endif
+          );
     }
 
     [Test]
@@ -133,29 +145,40 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException))]
     public void ReduceAndCheck_ThrowsIfReducesToNull ()
     {
       var expressionPartialMock = CreateReduciblePartialMock(typeof (int));
       expressionPartialMock.Expect (mock => mock.Reduce ()).Return (null);
-      expressionPartialMock.Replay (); 
-      
-      expressionPartialMock.ReduceAndCheck ();
+      expressionPartialMock.Replay ();
+
+      Assert.That (
+          () => expressionPartialMock.ReduceAndCheck(),
+#if !NET_3_5
+          Throws.ArgumentException
+#else
+          Throws.InvalidOperationException.With.Message.EqualTo ("Reduce cannot return null.")
+#endif
+          );
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException))]
     public void ReduceAndCheck_ThrowsIfReducesToSame ()
     {
       var expressionPartialMock = CreateReduciblePartialMock (typeof (int));
       expressionPartialMock.Expect (mock => mock.Reduce ()).Return (expressionPartialMock);
       expressionPartialMock.Replay ();
 
-      expressionPartialMock.ReduceAndCheck ();
+      Assert.That (
+          () => expressionPartialMock.ReduceAndCheck(),
+#if !NET_3_5
+          Throws.ArgumentException
+#else
+          Throws.InvalidOperationException.With.Message.EqualTo ("Reduce cannot return the original expression.")
+#endif
+          );
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException))]
     public void ReduceAndCheck_ThrowsIfReducesToDifferentType ()
     {
       var expressionOfDifferentType = Expression.Constant ("string");
@@ -164,7 +187,14 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       expressionPartialMock.Expect (mock => mock.Reduce ()).Return (expressionOfDifferentType);
       expressionPartialMock.Replay ();
 
-      expressionPartialMock.ReduceAndCheck ();
+      Assert.That (
+          () => expressionPartialMock.ReduceAndCheck(),
+#if !NET_3_5
+          Throws.ArgumentException
+#else
+          Throws.InvalidOperationException.With.Message.EqualTo ("Reduce must produce an expression of a compatible type.")
+#endif
+          );
     }
 
     [Test]

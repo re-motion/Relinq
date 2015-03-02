@@ -56,12 +56,19 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "The source2 expression ('ss') is no ConstantExpression, it is a TypedParameterExpression.\r\nParameter name: expression")]
     public void GetConstantSource2_NoConstantExpression ()
     {
       var resultOperator = new UnionResultOperator ("i", typeof (string), Expression.Parameter (typeof (IEnumerable<string>), "ss"));
-      resultOperator.GetConstantSource2 ();
+      Assert.That (
+          () => resultOperator.GetConstantSource2(),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+#if !NET_3_5
+                  "The source2 expression ('ss') is no ConstantExpression, it is a TypedParameterExpression.\r\nParameter name: expression"
+#else
+                  "The source2 expression ('ss') is no ConstantExpression, it is a ParameterExpression.\r\nParameter name: expression"
+#endif
+                  ));
     }
 
     [Test]

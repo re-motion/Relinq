@@ -14,6 +14,7 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+#if !NET_3_5
 using System;
 using System.Linq;
 using NUnit.Framework;
@@ -95,3 +96,4 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
     }
   }
 }
+#endif

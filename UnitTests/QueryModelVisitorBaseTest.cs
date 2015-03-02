@@ -15,10 +15,15 @@
 // under the License.
 // 
 using System;
+#if !NET_3_5
 using System.Collections.ObjectModel;
+#endif
 using NUnit.Framework;
 using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses;
+#if NET_3_5
+using Remotion.Linq.Collections;
+#endif
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.TestDomain;
 using Rhino.Mocks;

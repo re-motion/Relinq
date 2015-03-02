@@ -387,7 +387,13 @@ namespace Remotion.Linq.Parsing
       Expression newFalse = VisitExpression (expression.IfFalse);
       Expression newTrue = VisitExpression (expression.IfTrue);
       if ((newTest != expression.Test) || (newFalse != expression.IfFalse) || (newTrue != expression.IfTrue))
+      {
+#if !NET_3_5
         return Expression.Condition (newTest, newTrue, newFalse, expression.Type);
+#else
+        return Expression.Condition (newTest, newTrue, newFalse);
+#endif
+      }
       return expression;
     }
 

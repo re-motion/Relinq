@@ -29,16 +29,18 @@ namespace Remotion.Linq.Clauses.Expressions
   /// Custom extension expressions can specify their own <see cref="ExpressionType"/> or use a default one. re-linq reserves 
   /// <see cref="ExpressionType"/> values from 100000 to 150000 for its own expressions. Custom LINQ providers can use 150001 and above.
   /// </remarks>
-  public abstract class ExtensionExpression : Expression
+  public abstract partial class ExtensionExpression : Expression
   {
-    private readonly Type _type;
-    private readonly ExpressionType _nodeType;
-
     /// <summary>
     /// Defines a standard <see cref="ExpressionType"/> value that is used by all <see cref="ExtensionExpression"/> subclasses unless they specify
     /// their own <see cref="ExpressionType"/> value.
     /// </summary>
     public const ExpressionType DefaultExtensionExpressionNodeType = (ExpressionType) 150000;
+
+#if !NET_3_5
+    private readonly Type _type;
+    private readonly ExpressionType _nodeType;
+#endif
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ExtensionExpression"/> class with a default <see cref="ExpressionType"/> value.
@@ -56,13 +58,19 @@ namespace Remotion.Linq.Clauses.Expressions
     /// <param name="nodeType">The <see cref="ExpressionType"/> value to use as this expression's <see cref="Expression.NodeType"/> value.
     /// LINQ providers should use values starting from 150001 and above.</param>
     protected ExtensionExpression (Type type, ExpressionType nodeType)
+#if NET_3_5
+        : base (nodeType, ArgumentUtility.CheckNotNull ("", type))
+#endif
     {
       ArgumentUtility.CheckNotNull ("type", type);
-      
+
+#if !NET_3_5
       _type = type;
       _nodeType = nodeType;
+#endif
     }
 
+#if !NET_3_5
     public override ExpressionType NodeType
     {
       get { return _nodeType; }
@@ -72,87 +80,7 @@ namespace Remotion.Linq.Clauses.Expressions
     {
       get { return _type; }
     }
-
-    ///// <summary>
-    ///// Gets a value indicating whether this instance can be reduced to a tree of standard expressions.
-    ///// </summary>
-    ///// <value>
-    ///// 	<see langword="true"/> if this instance can be reduced; otherwise, <see langword="false"/>.
-    ///// </value>
-    ///// <remarks>
-    ///// <para>
-    ///// If this method returns <see langword="true"/>, the <see cref="Reduce"/> method can be called in order to produce a new 
-    ///// <see cref="Expression"/> that has the same semantics as this <see cref="ExtensionExpression"/> but consists of 
-    ///// expressions of standard node types.
-    ///// </para>
-    ///// <para>
-    ///// Subclasses overriding the <see cref="CanReduce"/> property to return <see langword="true" /> must also override the <see cref="Reduce"/> 
-    ///// method and cannot call its base implementation.
-    ///// </para>
-    ///// </remarks>
-    //public virtual bool CanReduce
-    //{
-    //  get { return false; }
-    //}
-
-    ///// <summary>
-    ///// Reduces this instance to a tree of standard expressions. If this instance cannot be reduced, the same <see cref="ExtensionExpression"/>
-    ///// is returned.
-    ///// </summary>
-    ///// <returns>If <see cref="CanReduce"/> is <see langword="true" />, a reduced version of this <see cref="ExtensionExpression"/>; otherwise,
-    ///// this <see cref="ExtensionExpression"/>.</returns>
-    ///// <remarks>
-    ///// <para>
-    ///// This method can be called in order to produce a new <see cref="Expression"/> that has the same semantics as this 
-    ///// <see cref="ExtensionExpression"/> but consists of expressions of standard node types. The reduction need not be complete, nodes can be 
-    ///// returned that themselves must be reduced.
-    ///// </para>
-    ///// <para>
-    ///// Subclasses overriding the <see cref="CanReduce"/> property to return <see langword="true" /> must also override this method and cannot
-    ///// call the base implementation.
-    ///// </para>
-    ///// </remarks>
-    //public virtual Expression Reduce ()
-    //{
-    //  if (CanReduce)
-    //    throw new InvalidOperationException ("Reducible nodes must override the Reduce method.");
-    //  return this;
-    //}
-
-    ///// <summary>
-    ///// Calls the <see cref="Reduce"/> method and checks certain invariants before returning the result. This method can only be called when
-    ///// <see cref="CanReduce"/> returns <see langword="true" />.
-    ///// </summary>
-    ///// <returns>A reduced version of this <see cref="ExtensionExpression"/>.</returns>
-    ///// <exception cref="InvalidOperationException">This <see cref="ExtensionExpression"/> is not reducible - or - the <see cref="Reduce"/> method 
-    ///// violated one of the invariants (see Remarks).</exception>
-    ///// <remarks>
-    /////   This method checks the following invariants:
-    /////   <list type="bullet">
-    /////     <item><see cref="Reduce"/> must not return <see langword="null" />.</item>
-    /////     <item><see cref="Reduce"/> must not return the original <see cref="ExtensionExpression"/>.</item>
-    /////     <item>
-    /////       The new expression returned by <see cref="Reduce"/> must be assignment-compatible with the type of the original 
-    /////       <see cref="ExtensionExpression"/>.
-    /////     </item>
-    /////   </list>
-    /////   </remarks>
-    //public Expression ReduceAndCheck ()
-    //{
-    //  if (!CanReduce)
-    //    throw new InvalidOperationException ("Reduce and check can only be called on reducible nodes.");
-
-    //  var result = Reduce();
-      
-    //  if (result == null)
-    //    throw new InvalidOperationException ("Reduce cannot return null.");
-    //  if (result == this)
-    //    throw new InvalidOperationException ("Reduce cannot return the original expression.");
-    //  if (!Type.IsAssignableFrom (result.Type))
-    //    throw new InvalidOperationException ("Reduce must produce an expression of a compatible type.");
-
-    //  return result;
-    //}
+#endif
 
     /// <summary>
     /// Accepts the specified visitor, by default dispatching to <see cref="ExpressionTreeVisitor.VisitExtensionExpression"/>. 

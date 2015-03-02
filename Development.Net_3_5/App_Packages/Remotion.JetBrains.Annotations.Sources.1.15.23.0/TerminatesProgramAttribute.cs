@@ -14,24 +14,26 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
-using System;
-using System.Collections.ObjectModel;
 
-namespace Remotion.Linq.Collections
+using System;
+
+#pragma warning disable 1591
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable IntroduceOptionalParameters.Global
+// ReSharper disable MemberCanBeProtected.Global
+// ReSharper disable InconsistentNaming
+// ReSharper disable once CheckNamespace
+
+namespace JetBrains.Annotations
 {
   /// <summary>
-  /// Provides event data for <see cref="ObservableCollection{T}"/>'s events.
+  /// Indicates that the marked method unconditionally terminates control flow execution.
+  /// For example, it could unconditionally throw exception
   /// </summary>
-  /// <typeparam name="T">The type of the items managed by the <see cref="ObservableCollection{T}"/>.</typeparam>
-  public class ObservableCollectionChangedEventArgs<T> : EventArgs
+  [AttributeUsage (AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+  sealed partial class TerminatesProgramAttribute : Attribute
   {
-    public int Index { get; set; }
-    public T Item { get; set; }
-
-    public ObservableCollectionChangedEventArgs (int index, T item)
-    {
-      Index = index;
-      Item = item;
-    }
   }
 }

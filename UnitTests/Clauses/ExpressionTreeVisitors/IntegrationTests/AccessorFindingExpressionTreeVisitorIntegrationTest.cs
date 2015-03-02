@@ -49,9 +49,15 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors.IntegrationTest
 
       // Expression<Func<dynamic, string>> input => input.OuterValue.InnerValue;
       var expectedParameter = Expression.Parameter (resultInitExpression.Type, "input");
+#if !NET_3_5
       var expectedOuterProperty = Expression.Property (expectedParameter, "OuterValue");
       var expectedInnerProperty = Expression.Property (expectedOuterProperty, "InnerValue");
       var expectedResult = Expression.Lambda (expectedInnerProperty, expectedParameter);
+#else
+      var expectedOuterGetter = Expression.Call (expectedParameter, "get_OuterValue", new Type[0]);
+      var expectedInnerGetter = Expression.Call (expectedOuterGetter, "get_InnerValue", new Type[0]);
+      var expectedResult = Expression.Lambda (expectedInnerGetter, expectedParameter);
+#endif
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }

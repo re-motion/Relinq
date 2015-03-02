@@ -18,7 +18,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+#if !NET_3_5
 using Microsoft.CSharp.RuntimeBinder;
+#endif
 using NUnit.Framework;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
@@ -201,6 +203,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.TreeEvaluation
       Assert.That (result.IsEvaluatableExpression (expression), Is.False);
     }
 
+#if !NET_3_5
     [Test]
     public void VisitDynamicExpression_WithParameterReference_NonEvaluable ()
     {
@@ -222,6 +225,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.TreeEvaluation
 
       Assert.That (result.IsEvaluatableExpression (body), Is.False);
     }
+#endif
 
     [Test]
     public void PartialEvaluationExceptionExpression_NotEvaluable_AndChildrenNeither ()

@@ -110,9 +110,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       {
         if (!s_genericMethodDefinitionCandidates.TryGetValue (method, out candidates))
         {
-          candidates = new Lazy<MethodInfo[]> (
-              () => GetGenericMethodDefinitionCandidates (genericMethodDefinition),
-              LazyThreadSafetyMode.ExecutionAndPublication);
+          candidates = new Lazy<MethodInfo[]> (() => GetGenericMethodDefinitionCandidates (genericMethodDefinition));
           s_genericMethodDefinitionCandidates.Add (method, candidates);
         }
       }

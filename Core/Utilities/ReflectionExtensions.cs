@@ -17,7 +17,7 @@
 
 using System;
 using JetBrains.Annotations;
-#if !NET_4_0
+#if !NET_4_0 && !NET_3_5
 using System.Linq;
 using Remotion.Utilities;
 #endif
@@ -27,7 +27,7 @@ namespace System.Reflection
 {
   internal static class ReflectionExtensions
   {
-#if !NET_4_0
+#if !NET_4_0 && !NET_3_5
     [CanBeNull]
     public static MethodInfo GetGetMethod ([NotNull] this PropertyInfo propertyInfo, bool nonPublic)
     {
@@ -43,7 +43,7 @@ namespace System.Reflection
     }
 #endif
 
-#if NET_4_0
+#if NET_4_0 || NET_3_5
     [NotNull]
     public static Type[] GetDefinedTypes ([NotNull] this Assembly assembly)
     {
