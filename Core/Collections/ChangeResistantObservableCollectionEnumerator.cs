@@ -37,7 +37,7 @@ namespace Remotion.Linq.Collections
   /// including the newly inserted item and not including the removed item. If an item is moved or replaced, the enumeration will also continue 
   /// with the item located at the next position in the sequence.
   /// </remarks>
-  public class ChangeResistantObservableCollectionEnumerator<T> : IEnumerator<T>
+  internal class ChangeResistantObservableCollectionEnumerator<T> : IEnumerator<T>
   {
     private readonly ObservableCollection<T> _collection;
     private int _index;

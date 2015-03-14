@@ -23,7 +23,7 @@ namespace Remotion.Linq.Collections
   /// Represents an item enumerated by <see cref="ObservableCollectionExtensions.AsChangeResistantEnumerableWithIndex{T}"/>. This provides access
   /// to the <see cref="Index"/> as well as the <see cref="Value"/> of the enumerated item.
   /// </summary>
-  public struct IndexValuePair<T>
+  internal struct IndexValuePair<T>
   {
     private readonly ChangeResistantObservableCollectionEnumerator<T> _enumerator;
 

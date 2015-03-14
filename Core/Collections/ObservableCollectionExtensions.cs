@@ -25,7 +25,7 @@ namespace Remotion.Linq.Collections
   /// <summary>
   /// Extension methods for <see cref="ObservableCollection{T}"/>
   /// </summary>
-  public static class ObservableCollectionExtensions
+  internal static class ObservableCollectionExtensions
   {
     private class ChangeResistantEnumerable<T> : IEnumerable<T>
     {

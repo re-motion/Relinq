@@ -120,6 +120,15 @@
     <Compile Include="..\AssemblyInfoShared.cs">
       <Link>Properties\AssemblyInfoShared.cs</Link>
     </Compile>
+    <Compile Include="..\Core\Collections\ChangeResistantObservableCollectionEnumerator.cs">
+      <Link>Collections\ChangeResistantObservableCollectionEnumerator.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Collections\IndexValuePair.cs">
+      <Link>Collections\IndexValuePair.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Collections\ObservableCollectionExtensions.cs">
+      <Link>Collections\ObservableCollectionExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Core\Utilities\StringUtility.cs">
       <Link>Utilities\StringUtility.cs</Link>
     </Compile>
