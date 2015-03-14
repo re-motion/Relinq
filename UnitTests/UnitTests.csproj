@@ -126,6 +126,9 @@
     <Compile Include="..\Core\Collections\IndexValuePair.cs">
       <Link>Collections\IndexValuePair.cs</Link>
     </Compile>
+    <Compile Include="..\Core\Collections\MultiDictionaryExtensions.cs">
+      <Link>Collections\MultiDictionaryExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Core\Collections\ObservableCollectionExtensions.cs">
       <Link>Collections\ObservableCollectionExtensions.cs</Link>
     </Compile>
