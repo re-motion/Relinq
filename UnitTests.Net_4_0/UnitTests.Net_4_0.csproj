@@ -131,6 +131,18 @@
     <Compile Include="..\Core.Net_4_0\Utilities\TypeInfo.cs">
       <Link>Utilities\TypeInfo.cs</Link>
     </Compile>
+    <Compile Include="..\Core\Collections\ChangeResistantObservableCollectionEnumerator.cs">
+      <Link>Collections\ChangeResistantObservableCollectionEnumerator.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Collections\IndexValuePair.cs">
+      <Link>Collections\IndexValuePair.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Collections\MultiDictionaryExtensions.cs">
+      <Link>Collections\MultiDictionaryExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Collections\ObservableCollectionExtensions.cs">
+      <Link>Collections\ObservableCollectionExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Core\Utilities\StringUtility.cs">
       <Link>Utilities\StringUtility.cs</Link>
     </Compile>
