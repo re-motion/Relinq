@@ -17,7 +17,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+#if !NET_3_5
 using System.Collections.ObjectModel;
+#endif
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Collections
