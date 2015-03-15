@@ -382,6 +382,7 @@
     <Compile Include="QueryModelTest.cs" />
     <Compile Include="QueryModelVisitorBaseTest.cs" />
     <Compile Include="QueryProviderBaseTest.cs" />
+    <Compile Include="Utilities\GenericEnumerableReflectionUtilityTest.cs" />
     <Compile Include="Utilities\ReflectionUtilityTest.cs" />
     <Compile Include="Clauses\Expressions\ExtensionExpressionTestHelper.cs" />
     <Compile Include="TestDomain\Chef.cs" />
