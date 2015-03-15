@@ -22,7 +22,7 @@ using Remotion.Utilities;
 
 namespace Remotion.Linq.Utilities
 {
-  public static class ReflectionUtility
+  internal static class ReflectionUtility
   {
     public static MethodInfo GetMethod<T> (Expression<Func<T>> wrappedCall)
     {
