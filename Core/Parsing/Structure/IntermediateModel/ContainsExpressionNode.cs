@@ -52,15 +52,19 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
                   && (mi.IsStatic && mi.GetParameters().Length == 2 || !mi.IsStatic && mi.GetParameters().Length == 1))
         };
 
+    private readonly Expression _item;
+
     public ContainsExpressionNode (MethodCallExpressionParseInfo parseInfo, Expression item)
         : base(parseInfo, null, null)
     {
       ArgumentUtility.CheckNotNull ("item", item);
-      Item = item;
+      _item = item;
     }
 
-    public Expression Item { get; private set; }
-
+    public Expression Item
+    {
+      get { return _item; }
+    }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
@@ -70,7 +74,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
-      return new ContainsResultOperator(Item);
+      return new ContainsResultOperator(_item);
     }
   }
 }
