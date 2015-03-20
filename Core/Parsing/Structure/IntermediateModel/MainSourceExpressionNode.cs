@@ -43,7 +43,9 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckTypeIsAssignableFrom ("expression.Type", expression.Type, typeof (IEnumerable));
 
       _querySourceType = expression.Type;
-      _querySourceElementType = GenericEnumerableReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (expression.Type) ?? typeof (object);
+
+      if (!ItemTypeReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (expression.Type, out _querySourceElementType))
+        _querySourceElementType = typeof (object);
 
       _associatedIdentifier = associatedIdentifier;
       _parsedExpression = expression;

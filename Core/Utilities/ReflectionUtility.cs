@@ -85,8 +85,8 @@ namespace Remotion.Linq.Utilities
       ArgumentUtility.CheckNotNull ("enumerableType", enumerableType);
       ArgumentUtility.CheckNotNullOrEmpty ("argumentName", argumentName);
 
-      Type itemType = GenericEnumerableReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (enumerableType);
-      if (itemType == null)
+      Type itemType;
+      if (!ItemTypeReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (enumerableType, out itemType))
       {
         var message = string.Format ("Expected a closed generic type implementing IEnumerable<T>, but found '{0}'.", enumerableType);
         throw new ArgumentException (message, argumentName);
@@ -98,8 +98,8 @@ namespace Remotion.Linq.Utilities
       ArgumentUtility.CheckNotNull ("enumerableType", enumerableType);
       ArgumentUtility.CheckNotNullOrEmpty ("argumentName", argumentName);
 
-      Type itemType = GenericEnumerableReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (enumerableType);
-      if (itemType == null)
+      Type itemType;
+      if (!ItemTypeReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (enumerableType, out itemType))
       {
         var message = string.Format ("Expected a closed generic type implementing IEnumerable<T>, but found '{0}'.", enumerableType);
         throw new ArgumentException (message, argumentName);

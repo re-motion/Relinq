@@ -19,39 +19,68 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Utilities
 {
-  public static class GenericEnumerableReflectionUtility
+  /// <summary>
+  /// Provider a utility API for dealing with the item type of generic collections.
+  /// </summary>
+  public static class ItemTypeReflectionUtility
   {
-    public static Type TryGetItemTypeOfClosedGenericIEnumerable (Type possibleEnumerableType)
+    /// <summary>
+    /// Tries to extract the item type from the input <see cref="Type"/>.
+    /// </summary>
+    /// <param name="possibleEnumerableType">
+    /// The <see cref="Type"/> that might be an implementation of the <see cref="IEnumerable{T}"/> interface. Must not be <see langword="null" />.
+    /// </param>
+    /// <param name="itemType">An output parameter containing the extracted item <see cref="Type"/> or <see langword="null" />.</param>
+    /// <returns><see langword="true" /> if an <paramref name="itemType"/> could be extracted, otherwise <see langword="false" />.</returns>
+    [ContractAnnotation ("=>true, itemType:notnull; =>false, itemType:null")]
+    public static bool TryGetItemTypeOfClosedGenericIEnumerable ([NotNull]Type possibleEnumerableType, out Type itemType)
     {
       ArgumentUtility.CheckNotNull ("possibleEnumerableType", possibleEnumerableType);
 
       var possibleEnumerableTypeInfo = possibleEnumerableType.GetTypeInfo();
 
       if (possibleEnumerableTypeInfo.IsArray)
-        return possibleEnumerableTypeInfo.GetElementType();
+      {
+        itemType = possibleEnumerableTypeInfo.GetElementType();
+        return true;
+      }
 
       if (!IsIEnumerable (possibleEnumerableTypeInfo))
-        return null;
+      {
+        itemType = null;
+        return false;
+      }
 
       if (possibleEnumerableTypeInfo.IsGenericTypeDefinition)
-        return null;
+      {
+        itemType = null;
+        return false;
+      }
 
       if (possibleEnumerableTypeInfo.IsGenericType && possibleEnumerableType.GetGenericTypeDefinition() == typeof (IEnumerable<>))
-        return possibleEnumerableTypeInfo.GenericTypeArguments[0];
+      {
+        itemType = possibleEnumerableTypeInfo.GenericTypeArguments[0];
+        return true;
+      }
 
       var implementedEnumerableInterface = possibleEnumerableTypeInfo.ImplementedInterfaces
           .Select (t => t.GetTypeInfo())
           .FirstOrDefault (IsGenericIEnumerable);
 
       if (implementedEnumerableInterface == null)
-        return null;
+      {
+        itemType = null;
+        return false;
+      }
 
       Assertion.DebugAssert (implementedEnumerableInterface.IsGenericType);
-      return implementedEnumerableInterface.GenericTypeArguments[0];
+      itemType = implementedEnumerableInterface.GenericTypeArguments[0];
+      return true;
     }
 
     private static bool IsIEnumerable (TypeInfo type)
