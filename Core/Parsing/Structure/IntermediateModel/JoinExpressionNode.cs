@@ -45,6 +45,10 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
     private readonly ResolvedExpressionCache<Expression> _cachedOuterKeySelector;
     private readonly ResolvedExpressionCache<Expression> _cachedInnerKeySelector;
     private readonly ResolvedExpressionCache<Expression> _cachedResultSelector;
+    private readonly Expression _innerSequence;
+    private readonly LambdaExpression _outerKeySelector;
+    private readonly LambdaExpression _innerKeySelector;
+    private readonly LambdaExpression _resultSelector;
 
     public JoinExpressionNode (
         MethodCallExpressionParseInfo parseInfo,
@@ -66,39 +70,60 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       if (resultSelector.Parameters.Count != 2)
         throw new ArgumentException ("Result selector must have exactly two parameters.", "resultSelector");
 
-      InnerSequence = innerSequence;
-      OuterKeySelector = outerKeySelector;
-      InnerKeySelector = innerKeySelector;
-      ResultSelector = resultSelector;
+      _innerSequence = innerSequence;
+      _outerKeySelector = outerKeySelector;
+      _innerKeySelector = innerKeySelector;
+      _resultSelector = resultSelector;
 
       _cachedOuterKeySelector = new ResolvedExpressionCache<Expression> (this);
       _cachedInnerKeySelector = new ResolvedExpressionCache<Expression> (this);
       _cachedResultSelector = new ResolvedExpressionCache<Expression> (this);
     }
 
-    public Expression InnerSequence { get; private set; }
-    public LambdaExpression OuterKeySelector { get; private set; }
-    public LambdaExpression InnerKeySelector { get; private set; }
-    public LambdaExpression ResultSelector { get; private set; }
-    
+    public Expression InnerSequence
+    {
+      get { return _innerSequence; }
+    }
+
+    public LambdaExpression OuterKeySelector
+    {
+      get { return _outerKeySelector; }
+    }
+
+    public LambdaExpression InnerKeySelector
+    {
+      get { return _innerKeySelector; }
+    }
+
+    public LambdaExpression ResultSelector
+    {
+      get { return _resultSelector; }
+    }
+
     public Expression GetResolvedOuterKeySelector (ClauseGenerationContext clauseGenerationContext)
     {
       return _cachedOuterKeySelector.GetOrCreate (
-          r => r.GetResolvedExpression (OuterKeySelector.Body, OuterKeySelector.Parameters[0], clauseGenerationContext));
+          r => r.GetResolvedExpression (_outerKeySelector.Body, _outerKeySelector.Parameters[0], clauseGenerationContext));
     }
 
     public Expression GetResolvedInnerKeySelector (ClauseGenerationContext clauseGenerationContext)
     {
       return _cachedInnerKeySelector.GetOrCreate (
           r => QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (
-              this, InnerKeySelector.Parameters[0], InnerKeySelector.Body, clauseGenerationContext));
+              this, _innerKeySelector.Parameters[0], _innerKeySelector.Body, clauseGenerationContext));
     }
 
     public Expression GetResolvedResultSelector (ClauseGenerationContext clauseGenerationContext)
     {
-      return _cachedResultSelector.GetOrCreate (r => r.GetResolvedExpression (
-          QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (this, ResultSelector.Parameters[1], ResultSelector.Body, clauseGenerationContext),
-          ResultSelector.Parameters[0], clauseGenerationContext));
+      return _cachedResultSelector.GetOrCreate (
+          r => r.GetResolvedExpression (
+              QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (
+                  this,
+                  _resultSelector.Parameters[1],
+                  _resultSelector.Body,
+                  clauseGenerationContext),
+              _resultSelector.Parameters[0],
+              clauseGenerationContext));
     }
 
     public override Expression Resolve (
@@ -130,9 +155,9 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
     {
       var dummyInnerKeySelector = Expression.Constant (null);
       var joinClause = new JoinClause (
-          ResultSelector.Parameters[1].Name,
-          ResultSelector.Parameters[1].Type,
-          InnerSequence,
+          _resultSelector.Parameters[1].Name,
+          _resultSelector.Parameters[1].Type,
+          _innerSequence,
           GetResolvedOuterKeySelector (clauseGenerationContext),
           dummyInnerKeySelector);
       
