@@ -264,6 +264,7 @@
     <Compile Include="Clauses\JoinClause.cs" />
     <Compile Include="Clauses\OrderByClause.cs" />
     <Compile Include="Clauses\Ordering.cs" />
+    <Compile Include="Utilities\ItemTypeReflectionUtility.cs" />
     <Compile Include="Utilities\ReflectionExtensions.cs" />
     <Compile Include="Utilities\ReflectionUtility.cs" />
     <Compile Include="Parsing\ParserException.Obsolete.cs" />
