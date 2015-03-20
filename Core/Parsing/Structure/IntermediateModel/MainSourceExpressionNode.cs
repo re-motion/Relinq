@@ -59,7 +59,6 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
     public Type QuerySourceType
     {
       get { return _querySourceType; }
-      set { _querySourceType = value; }
     }
 
     public Expression ParsedExpression
@@ -70,7 +69,6 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
     public string AssociatedIdentifier
     {
       get { return _associatedIdentifier; }
-      set { _associatedIdentifier = value; }
     }
 
     public IExpressionNode Source
