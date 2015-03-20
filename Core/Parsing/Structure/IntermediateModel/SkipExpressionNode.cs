@@ -38,13 +38,18 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Enumerable.Skip<object> (null, 0)),
                                                            };
 
+    private readonly Expression _count;
+
     public SkipExpressionNode (MethodCallExpressionParseInfo parseInfo, Expression count)
         : base (parseInfo, null, null)
     {
-      Count = count;
+      _count = count;
     }
 
-    public Expression Count { get; set; }
+    public Expression Count
+    {
+      get { return _count; }
+    }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
@@ -57,7 +62,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
-      return new SkipResultOperator(Count);
+      return new SkipResultOperator(_count);
     }
   }
 }
