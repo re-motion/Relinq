@@ -31,23 +31,45 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class MainSourceExpressionNode : IQuerySourceExpressionNode
   {
+    private readonly Type _querySourceElementType;
+    private readonly Expression _parsedExpression;
+    private Type _querySourceType;
+    private string _associatedIdentifier;
+
     public MainSourceExpressionNode (string associatedIdentifier, Expression expression)
     {
       ArgumentUtility.CheckNotNullOrEmpty ("associatedIdentifier", associatedIdentifier);
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckTypeIsAssignableFrom ("expression.Type", expression.Type, typeof (IEnumerable));
 
-      QuerySourceType = expression.Type;
-      QuerySourceElementType = GenericEnumerableReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (expression.Type) ?? typeof (object);
+      _querySourceType = expression.Type;
+      _querySourceElementType = GenericEnumerableReflectionUtility.TryGetItemTypeOfClosedGenericIEnumerable (expression.Type) ?? typeof (object);
 
-      AssociatedIdentifier = associatedIdentifier;
-      ParsedExpression = expression;
+      _associatedIdentifier = associatedIdentifier;
+      _parsedExpression = expression;
     }
 
-    public Type QuerySourceElementType { get; private set; }
-    public Type QuerySourceType { get; set; }
-    public Expression ParsedExpression { get; private set; }
-    public string AssociatedIdentifier { get; set; }
+    public Type QuerySourceElementType
+    {
+      get { return _querySourceElementType; }
+    }
+
+    public Type QuerySourceType
+    {
+      get { return _querySourceType; }
+      set { _querySourceType = value; }
+    }
+
+    public Expression ParsedExpression
+    {
+      get { return _parsedExpression; }
+    }
+
+    public string AssociatedIdentifier
+    {
+      get { return _associatedIdentifier; }
+      set { _associatedIdentifier = value; }
+    }
 
     public IExpressionNode Source
     {
@@ -74,15 +96,15 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
       var mainFromClause = CreateMainFromClause (clauseGenerationContext);
       var defaultSelectClause = new SelectClause (new QuerySourceReferenceExpression (mainFromClause));
-      return new QueryModel (mainFromClause, defaultSelectClause) { ResultTypeOverride = QuerySourceType };
+      return new QueryModel (mainFromClause, defaultSelectClause) { ResultTypeOverride = _querySourceType };
     }
 
     private MainFromClause CreateMainFromClause (ClauseGenerationContext clauseGenerationContext)
     {
       var fromClause = new MainFromClause (
-          AssociatedIdentifier,
-          QuerySourceElementType,
-          ParsedExpression);
+          _associatedIdentifier,
+          _querySourceElementType,
+          _parsedExpression);
 
       clauseGenerationContext.AddContextInfo (this, fromClause);
       return fromClause;
