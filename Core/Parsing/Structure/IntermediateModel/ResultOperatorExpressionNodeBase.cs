@@ -27,6 +27,8 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public abstract class ResultOperatorExpressionNodeBase : MethodCallExpressionNodeBase
   {
+    private readonly MethodCallExpression _parsedExpression;
+
     protected ResultOperatorExpressionNodeBase (
         MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
         : base (parseInfo)
@@ -46,12 +48,15 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
         Source = new SelectExpressionNode (newParseInfo, optionalSelector);
       }
 
-      ParsedExpression = parseInfo.ParsedExpression;
+      _parsedExpression = parseInfo.ParsedExpression;
     }
 
     protected abstract ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext);
 
-    public MethodCallExpression ParsedExpression { get; private set; }
+    public MethodCallExpression ParsedExpression
+    {
+      get { return _parsedExpression; }
+    }
 
     protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
