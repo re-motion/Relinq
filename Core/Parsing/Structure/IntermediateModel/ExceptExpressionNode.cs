@@ -39,15 +39,20 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Enumerable.Except<object> (null, null)),
                                                            };
 
+    private readonly Expression _source2;
+
     public ExceptExpressionNode (MethodCallExpressionParseInfo parseInfo, Expression source2)
         : base (parseInfo, null, null)
     {
       ArgumentUtility.CheckNotNull ("source2", source2);
-      Source2 = source2;
+      _source2 = source2;
     }
 
-    public Expression Source2 { get; private set; }
-    
+    public Expression Source2
+    {
+      get { return _source2; }
+    }
+
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
@@ -59,7 +64,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
-      return new ExceptResultOperator (Source2);
+      return new ExceptResultOperator (_source2);
     }
   }
 }
