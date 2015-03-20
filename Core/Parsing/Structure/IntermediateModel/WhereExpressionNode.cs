@@ -37,6 +37,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
                                                            };
 
     private readonly ResolvedExpressionCache<Expression> _cachedPredicate;
+    private readonly LambdaExpression _predicate;
 
     public WhereExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression predicate)
         : base (parseInfo)
@@ -46,15 +47,18 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       if (predicate.Parameters.Count != 1)
         throw new ArgumentException ("Predicate must have exactly one parameter.", "predicate");
 
-      Predicate = predicate;
+      _predicate = predicate;
       _cachedPredicate = new ResolvedExpressionCache<Expression> (this);
     }
 
-    public LambdaExpression Predicate { get; private set; }
+    public LambdaExpression Predicate
+    {
+      get { return _predicate; }
+    }
 
     public Expression GetResolvedPredicate (ClauseGenerationContext clauseGenerationContext)
     {
-      return _cachedPredicate.GetOrCreate (r => r.GetResolvedExpression (Predicate.Body, Predicate.Parameters[0], clauseGenerationContext));
+      return _cachedPredicate.GetOrCreate (r => r.GetResolvedExpression (_predicate.Body, _predicate.Parameters[0], clauseGenerationContext));
     }
 
     public override Expression Resolve (
