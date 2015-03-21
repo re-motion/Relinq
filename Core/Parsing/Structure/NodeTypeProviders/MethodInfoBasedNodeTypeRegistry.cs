@@ -75,6 +75,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       registry.Register (ContainsExpressionNode.GetSupportedMethods(), typeof (ContainsExpressionNode));
       registry.Register (CountExpressionNode.GetSupportedMethods(), typeof (CountExpressionNode));
       registry.Register (DefaultIfEmptyExpressionNode.GetSupportedMethods(), typeof (DefaultIfEmptyExpressionNode));
+      registry.Register (DistinctExpressionNode.GetSupportedMethods(), typeof (DistinctExpressionNode));
 
       return registry;
     }
