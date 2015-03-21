@@ -37,25 +37,24 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethods_WithoutPredicate ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (CountExpressionNode.SupportedMethods, q => q.Count (), e => e.Count ());
-    }
+      Assert.That (
+          CountExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.Count<object> (null)),
+                  GetGenericMethodDefinition (() => Queryable.Count<object> (null, null)),
+                  GetGenericMethodDefinition (() => Enumerable.Count<object> (null)),
+                  GetGenericMethodDefinition (() => Enumerable.Count<object> (null, null)),
 
-    [Test]
-    public void SupportedMethods_WithoutPredicate_FromCollections ()
-    {
-      Assert.That (CountExpressionNode.SupportedMethods, Has.Member (typeof (List<>).GetProperty ("Count").GetGetMethod()));
-      Assert.That (CountExpressionNode.SupportedMethods, Has.Member (typeof (ArrayList).GetProperty ("Count").GetGetMethod ()));
-      Assert.That (CountExpressionNode.SupportedMethods, Has.Member (typeof (ICollection<>).GetProperty ("Count").GetGetMethod ()));
-      Assert.That (CountExpressionNode.SupportedMethods, Has.Member (typeof (ICollection).GetProperty ("Count").GetGetMethod ()));
-      Assert.That (CountExpressionNode.SupportedMethods, Has.Member (typeof (Array).GetProperty ("Length").GetGetMethod ()));
-    }
-
-    [Test]
-    public void SupportedMethod_WithPredicate ()
-    {
-      AssertSupportedMethod_Generic (CountExpressionNode.SupportedMethods, q => q.Count (o => o == null), e => e.Count (o => o == null));
+                  GetGenericMethodDefinition (() => ((List<int>) null).Count),
+                  GetGenericMethodDefinition (() => ((ICollection<int>) null).Count),
+                  GetGenericMethodDefinition (() => ((ICollection) null).Count),
+                  GetGenericMethodDefinition (() => (((ArrayList) null).Count)),
+                  GetGenericMethodDefinition (() => (((Array) null).Length)),
+              }));
     }
 
     [Test]
