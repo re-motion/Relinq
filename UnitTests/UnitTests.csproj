@@ -196,7 +196,6 @@
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\CompoundExpressionTreeProcessorTest.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\NullExpressionTreeProcessorTest.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\GetRegisterableMethodDefinition_MIBNTRT.cs" />
-    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\CreateFromTypes_MIBNTRT.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\GetNodeType_MIBNTRT.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\Register_MIBNTRT.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\IsRegistered_MIBNTRT.cs" />
