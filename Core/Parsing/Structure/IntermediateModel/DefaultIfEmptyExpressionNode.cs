@@ -43,13 +43,18 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
                                                                GetSupportedMethod (() => Enumerable.DefaultIfEmpty<object> (null, null)),
                                                            };
 
+    private readonly Expression _optionalDefaultValue;
+
     public DefaultIfEmptyExpressionNode (MethodCallExpressionParseInfo parseInfo, Expression optionalDefaultValue)
         : base(parseInfo, null, null)
     {
-      OptionalDefaultValue = optionalDefaultValue;
+      _optionalDefaultValue = optionalDefaultValue;
     }
 
-    public Expression OptionalDefaultValue { get; set; }
+    public Expression OptionalDefaultValue
+    {
+      get { return _optionalDefaultValue; }
+    }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
@@ -62,7 +67,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
-      return new DefaultIfEmptyResultOperator (OptionalDefaultValue);
+      return new DefaultIfEmptyResultOperator (_optionalDefaultValue);
     }
   }
 }

@@ -39,6 +39,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
                                                            };
 
     private readonly ResolvedExpressionCache<LambdaExpression> _cachedFunc;
+    private readonly LambdaExpression _func;
 
     public AggregateExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression func)
         : base(parseInfo, null, null)
@@ -48,17 +49,20 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       if (func.Parameters.Count != 2)
         throw new ArgumentException ("Func must have exactly two parameters.", "func");
 
-      Func = func;
+      _func = func;
       _cachedFunc = new ResolvedExpressionCache<LambdaExpression> (this);
     }
 
-    public LambdaExpression Func { get; private set; }
+    public LambdaExpression Func
+    {
+      get { return _func; }
+    }
 
     public LambdaExpression GetResolvedFunc (ClauseGenerationContext clauseGenerationContext)
     {
       // '(total, current) => total + current' becomes 'total => total + [current]'
       return _cachedFunc.GetOrCreate (
-          r => Expression.Lambda (r.GetResolvedExpression (Func.Body, Func.Parameters[1], clauseGenerationContext), Func.Parameters[0]));
+          r => Expression.Lambda (r.GetResolvedExpression (_func.Body, _func.Parameters[1], clauseGenerationContext), _func.Parameters[0]));
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)

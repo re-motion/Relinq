@@ -27,9 +27,11 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public abstract class ResultOperatorExpressionNodeBase : MethodCallExpressionNodeBase
   {
+    private readonly MethodCallExpression _parsedExpression;
+
     protected ResultOperatorExpressionNodeBase (
         MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate, LambdaExpression optionalSelector)
-        : base (parseInfo)
+        : base (TransformParseInfo (parseInfo, optionalPredicate, optionalSelector))
     {
       if (optionalPredicate != null && optionalPredicate.Parameters.Count != 1)
         throw new ArgumentException ("OptionalPredicate must have exactly one parameter.", "optionalPredicate");
@@ -37,21 +39,15 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       if (optionalSelector != null && optionalSelector.Parameters.Count != 1)
         throw new ArgumentException ("OptionalSelector must have exactly one parameter.", "optionalSelector");
 
-      if (optionalPredicate != null)
-        Source = new WhereExpressionNode (parseInfo, optionalPredicate);
-
-      if (optionalSelector != null)
-      {
-        var newParseInfo = new MethodCallExpressionParseInfo (parseInfo.AssociatedIdentifier, Source, parseInfo.ParsedExpression);
-        Source = new SelectExpressionNode (newParseInfo, optionalSelector);
-      }
-
-      ParsedExpression = parseInfo.ParsedExpression;
+      _parsedExpression = parseInfo.ParsedExpression;
     }
 
     protected abstract ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext);
 
-    public MethodCallExpression ParsedExpression { get; private set; }
+    public MethodCallExpression ParsedExpression
+    {
+      get { return _parsedExpression; }
+    }
 
     protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
@@ -69,6 +65,25 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       // Result operators can safely be appended to the previous query model even after another result operator, so do not wrap the previous
       // query model.
       return queryModel;
+    }
+
+    private static MethodCallExpressionParseInfo TransformParseInfo (
+        MethodCallExpressionParseInfo parseInfo,
+        LambdaExpression optionalPredicate,
+        LambdaExpression optionalSelector)
+    {
+      var source = parseInfo.Source;
+
+      if (optionalPredicate != null)
+        source = new WhereExpressionNode (parseInfo, optionalPredicate);
+
+      if (optionalSelector != null)
+      {
+        var newParseInfo = new MethodCallExpressionParseInfo (parseInfo.AssociatedIdentifier, source, parseInfo.ParsedExpression);
+        source = new SelectExpressionNode (newParseInfo, optionalSelector);
+      }
+
+      return new MethodCallExpressionParseInfo (parseInfo.AssociatedIdentifier, source, parseInfo.ParsedExpression);
     }
   }
 }

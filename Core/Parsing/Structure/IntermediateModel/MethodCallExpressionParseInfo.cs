@@ -25,6 +25,10 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public struct MethodCallExpressionParseInfo
   {
+    private readonly string _associatedIdentifier;
+    private readonly IExpressionNode _source;
+    private readonly MethodCallExpression _parsedExpression;
+
     public MethodCallExpressionParseInfo (string associatedIdentifier, IExpressionNode source, MethodCallExpression parsedExpression)
         : this()
     {
@@ -32,9 +36,9 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("source", source);
       ArgumentUtility.CheckNotNull ("parsedExpression", parsedExpression);
 
-      AssociatedIdentifier = associatedIdentifier;
-      Source = source;
-      ParsedExpression = parsedExpression;
+      _associatedIdentifier = associatedIdentifier;
+      _source = source;
+      _parsedExpression = parsedExpression;
     }
 
     /// <summary>
@@ -43,17 +47,26 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
     /// If there is no user-defined identifier (or the identifier is impossible to infer from the expression tree), a generated identifier
     /// is given instead.
     /// </summary>
-    public string AssociatedIdentifier { get; private set; }
+    public string AssociatedIdentifier
+    {
+      get { return _associatedIdentifier; }
+    }
 
     /// <summary>
     /// Gets the source expression node, i.e. the node streaming data into the parsed node.
     /// </summary>
     /// <value>The source.</value>
-    public IExpressionNode Source { get; private set; }
+    public IExpressionNode Source
+    {
+      get { return _source; }
+    }
 
     /// <summary>
     /// Gets the <see cref="MethodCallExpression"/> being parsed.
     /// </summary>
-    public MethodCallExpression ParsedExpression { get; private set; }
+    public MethodCallExpression ParsedExpression
+    {
+      get { return _parsedExpression; }
+    }
   }
 }

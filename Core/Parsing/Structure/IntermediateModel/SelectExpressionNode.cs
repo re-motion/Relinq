@@ -37,6 +37,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
                                                            };
 
     private readonly ResolvedExpressionCache<Expression> _cachedSelector;
+    private readonly LambdaExpression _selector;
 
     public SelectExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression selector)
         : base (parseInfo)
@@ -46,11 +47,14 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       if (selector.Parameters.Count != 1)
         throw new ArgumentException ("Selector must have exactly one parameter.", "selector");
 
-      Selector = selector;
+      _selector = selector;
       _cachedSelector = new ResolvedExpressionCache<Expression> (this);
     }
 
-    public LambdaExpression Selector { get; private set; }
+    public LambdaExpression Selector
+    {
+      get { return _selector; }
+    }
 
     public Expression GetResolvedSelector (ClauseGenerationContext clauseGenerationContext)
     {

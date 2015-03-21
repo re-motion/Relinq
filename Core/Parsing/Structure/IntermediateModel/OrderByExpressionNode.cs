@@ -37,6 +37,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
                                                            };
 
     private readonly ResolvedExpressionCache<Expression> _cachedSelector;
+    private readonly LambdaExpression _keySelector;
 
     public OrderByExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression keySelector)
         : base (parseInfo)
@@ -46,15 +47,18 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       if (keySelector.Parameters.Count != 1)
         throw new ArgumentException ("KeySelector must have exactly one parameter.", "keySelector");
 
-      KeySelector = keySelector;
+      _keySelector = keySelector;
       _cachedSelector = new ResolvedExpressionCache<Expression> (this);
     }
 
-    public LambdaExpression KeySelector { get; private set; }
+    public LambdaExpression KeySelector
+    {
+      get { return _keySelector; }
+    }
 
     public Expression GetResolvedKeySelector (ClauseGenerationContext clauseGenerationContext)
     {
-      return _cachedSelector.GetOrCreate (r => r.GetResolvedExpression (KeySelector.Body, KeySelector.Parameters[0], clauseGenerationContext));
+      return _cachedSelector.GetOrCreate (r => r.GetResolvedExpression (_keySelector.Body, _keySelector.Parameters[0], clauseGenerationContext));
     }
 
     public override Expression Resolve (

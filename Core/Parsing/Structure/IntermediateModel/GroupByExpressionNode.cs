@@ -42,6 +42,8 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
     private readonly ResolvedExpressionCache<Expression> _cachedKeySelector;
     private readonly ResolvedExpressionCache<Expression> _cachedElementSelector;
+    private readonly LambdaExpression _keySelector;
+    private readonly LambdaExpression _optionalElementSelector;
 
     public GroupByExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression keySelector, LambdaExpression optionalElementSelector)
         : base (parseInfo, null, null)
@@ -54,8 +56,8 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       if (optionalElementSelector != null && optionalElementSelector.Parameters.Count != 1)
         throw new ArgumentException ("ElementSelector must have exactly one parameter.", "optionalElementSelector");
 
-      KeySelector = keySelector;
-      OptionalElementSelector = optionalElementSelector;
+      _keySelector = keySelector;
+      _optionalElementSelector = optionalElementSelector;
 
       _cachedKeySelector = new ResolvedExpressionCache<Expression> (this);
 
@@ -63,22 +65,28 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
         _cachedElementSelector = new ResolvedExpressionCache<Expression> (this);
     }
 
-    public LambdaExpression KeySelector { get; private set; }
-    public LambdaExpression OptionalElementSelector { get; private set; }
+    public LambdaExpression KeySelector
+    {
+      get { return _keySelector; }
+    }
+
+    public LambdaExpression OptionalElementSelector
+    {
+      get { return _optionalElementSelector; }
+    }
 
     public Expression GetResolvedKeySelector (ClauseGenerationContext clauseGenerationContext)
     {
-      return _cachedKeySelector.GetOrCreate (r => r.GetResolvedExpression (KeySelector.Body, KeySelector.Parameters[0], clauseGenerationContext));
+      return _cachedKeySelector.GetOrCreate (r => r.GetResolvedExpression (_keySelector.Body, _keySelector.Parameters[0], clauseGenerationContext));
     }
 
     public Expression GetResolvedOptionalElementSelector (ClauseGenerationContext clauseGenerationContext)
     {
-      if (OptionalElementSelector == null)
+      if (_optionalElementSelector == null)
         return null;
 
-      return
-          _cachedElementSelector.GetOrCreate (
-              r => r.GetResolvedExpression (OptionalElementSelector.Body, OptionalElementSelector.Parameters[0], clauseGenerationContext));
+      return _cachedElementSelector.GetOrCreate (
+          r => r.GetResolvedExpression (_optionalElementSelector.Body, _optionalElementSelector.Parameters[0], clauseGenerationContext));
     }
 
     public override Expression Resolve (
@@ -100,7 +108,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       {
         // supply a default element selector if none is given
         // just resolve KeySelector.Parameters[0], that's the input data flowing in from the source node
-        resolvedElementSelector = Source.Resolve (KeySelector.Parameters[0], KeySelector.Parameters[0], clauseGenerationContext);
+        resolvedElementSelector = Source.Resolve (_keySelector.Parameters[0], _keySelector.Parameters[0], clauseGenerationContext);
       }
       
       var resultOperator = new GroupResultOperator (AssociatedIdentifier, resolvedKeySelector, resolvedElementSelector);

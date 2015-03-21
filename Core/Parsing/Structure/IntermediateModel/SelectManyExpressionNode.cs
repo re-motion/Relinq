@@ -47,6 +47,8 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
     private readonly ResolvedExpressionCache<Expression> _cachedCollectionSelector;
     private readonly ResolvedExpressionCache<Expression> _cachedResultSelector;
+    private readonly LambdaExpression _collectionSelector;
+    private readonly LambdaExpression _resultSelector;
 
     public SelectManyExpressionNode (
         MethodCallExpressionParseInfo parseInfo, LambdaExpression collectionSelector, LambdaExpression resultSelector)
@@ -57,34 +59,41 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       if (collectionSelector.Parameters.Count != 1)
         throw new ArgumentException ("Collection selector must have exactly one parameter.", "collectionSelector");
 
-      CollectionSelector = collectionSelector;
+      _collectionSelector = collectionSelector;
 
       if (resultSelector != null)
       {
         if (resultSelector.Parameters.Count != 2)
           throw new ArgumentException ("Result selector must have exactly two parameters.", "resultSelector");
 
-        ResultSelector = resultSelector;
+        _resultSelector = resultSelector;
       }
       else
       {
         var parameter1 = Expression.Parameter (collectionSelector.Parameters[0].Type, collectionSelector.Parameters[0].Name);
         var itemType = ReflectionUtility.GetItemTypeOfClosedGenericIEnumerable (CollectionSelector.Body.Type, "collectionSelector");
         var parameter2 = Expression.Parameter (itemType, parseInfo.AssociatedIdentifier);
-        ResultSelector = Expression.Lambda (parameter2, parameter1, parameter2);
+        _resultSelector = Expression.Lambda (parameter2, parameter1, parameter2);
       }
 
       _cachedCollectionSelector = new ResolvedExpressionCache<Expression> (this);
       _cachedResultSelector = new ResolvedExpressionCache<Expression> (this);
     }
 
-    public LambdaExpression CollectionSelector { get; private set; }
-    public LambdaExpression ResultSelector { get; private set; }
+    public LambdaExpression CollectionSelector
+    {
+      get { return _collectionSelector; }
+    }
+
+    public LambdaExpression ResultSelector
+    {
+      get { return _resultSelector; }
+    }
 
     public Expression GetResolvedCollectionSelector (ClauseGenerationContext clauseGenerationContext)
     {
       return _cachedCollectionSelector.GetOrCreate (
-          r => r.GetResolvedExpression (CollectionSelector.Body, CollectionSelector.Parameters[0], clauseGenerationContext));
+          r => r.GetResolvedExpression (_collectionSelector.Body, _collectionSelector.Parameters[0], clauseGenerationContext));
     }
 
     public Expression GetResolvedResultSelector (ClauseGenerationContext clauseGenerationContext)
@@ -97,9 +106,13 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
       return _cachedResultSelector.GetOrCreate (
           r => r.GetResolvedExpression (
-                   QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (this, ResultSelector.Parameters[1], ResultSelector.Body, clauseGenerationContext),
-                   ResultSelector.Parameters[0],
-                   clauseGenerationContext));
+              QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (
+                  this,
+                  ResultSelector.Parameters[1],
+                  ResultSelector.Body,
+                  clauseGenerationContext),
+              _resultSelector.Parameters[0],
+              clauseGenerationContext));
     }
 
     public override Expression Resolve (
@@ -119,7 +132,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       var resolvedCollectionSelector = GetResolvedCollectionSelector (clauseGenerationContext);
-      var clause = new AdditionalFromClause (ResultSelector.Parameters[1].Name, ResultSelector.Parameters[1].Type, resolvedCollectionSelector);
+      var clause = new AdditionalFromClause (_resultSelector.Parameters[1].Name, _resultSelector.Parameters[1].Type, resolvedCollectionSelector);
       queryModel.BodyClauses.Add (clause);
 
       clauseGenerationContext.AddContextInfo (this, clause);

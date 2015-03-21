@@ -43,6 +43,8 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
                                                            };
 
     private readonly ResolvedExpressionCache<Expression> _cachedResultSelector;
+    private readonly JoinExpressionNode _joinExpressionNode;
+    private readonly LambdaExpression _resultSelector;
 
     public GroupJoinExpressionNode (
         MethodCallExpressionParseInfo parseInfo, 
@@ -65,21 +67,32 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
         throw new ArgumentException ("Result selector must have exactly two parameters.", "resultSelector");
 
       var joinResultSelector = Expression.Lambda (Expression.Constant (null), outerKeySelector.Parameters[0], innerKeySelector.Parameters[0]);
-      JoinExpressionNode = new JoinExpressionNode (parseInfo, innerSequence, outerKeySelector, innerKeySelector, joinResultSelector);
-      
-      ResultSelector = resultSelector;
+      _joinExpressionNode = new JoinExpressionNode (parseInfo, innerSequence, outerKeySelector, innerKeySelector, joinResultSelector);
+      _resultSelector = resultSelector;
       _cachedResultSelector = new ResolvedExpressionCache<Expression> (this);
     }
 
-    public JoinExpressionNode JoinExpressionNode { get; private set; }
+    public JoinExpressionNode JoinExpressionNode
+    {
+      get { return _joinExpressionNode; }
+    }
 
-    public LambdaExpression ResultSelector { get; private set; }
+    public LambdaExpression ResultSelector
+    {
+      get { return _resultSelector; }
+    }
 
     public Expression GetResolvedResultSelector (ClauseGenerationContext clauseGenerationContext)
     {
-      return _cachedResultSelector.GetOrCreate (r => r.GetResolvedExpression (
-          QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (this, ResultSelector.Parameters[1], ResultSelector.Body, clauseGenerationContext),
-          ResultSelector.Parameters[0], clauseGenerationContext));
+      return _cachedResultSelector.GetOrCreate (
+          r => r.GetResolvedExpression (
+              QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (
+                  this,
+                  _resultSelector.Parameters[1],
+                  _resultSelector.Body,
+                  clauseGenerationContext),
+              _resultSelector.Parameters[0],
+              clauseGenerationContext));
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
@@ -98,8 +111,8 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      var joinClause = JoinExpressionNode.CreateJoinClause (clauseGenerationContext);
-      var groupJoinClause = new GroupJoinClause (ResultSelector.Parameters[1].Name, ResultSelector.Parameters[1].Type, joinClause);
+      var joinClause = _joinExpressionNode.CreateJoinClause (clauseGenerationContext);
+      var groupJoinClause = new GroupJoinClause (_resultSelector.Parameters[1].Name, _resultSelector.Parameters[1].Type, joinClause);
 
       clauseGenerationContext.AddContextInfo (this, groupJoinClause);
       queryModel.BodyClauses.Add (groupJoinClause);

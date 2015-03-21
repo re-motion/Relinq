@@ -43,6 +43,9 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
                                                            };
 
     private readonly ResolvedExpressionCache<LambdaExpression> _cachedFunc;
+    private readonly Expression _seed;
+    private readonly LambdaExpression _func;
+    private readonly LambdaExpression _optionalResultSelector;
 
     public AggregateFromSeedExpressionNode (
         MethodCallExpressionParseInfo parseInfo, 
@@ -60,22 +63,32 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       if (optionalResultSelector != null && optionalResultSelector.Parameters.Count != 1)
         throw new ArgumentException ("Result selector must have exactly one parameter.", "optionalResultSelector");
 
-      Seed = seed;
-      Func = func;
-      OptionalResultSelector = optionalResultSelector;
-
+      _seed = seed;
+      _func = func;
+      _optionalResultSelector = optionalResultSelector;
       _cachedFunc = new ResolvedExpressionCache<LambdaExpression> (this);
     }
 
-    public Expression Seed { get; private set; }
-    public LambdaExpression Func { get; private set; }
-    public LambdaExpression OptionalResultSelector { get; private set; }
+    public Expression Seed
+    {
+      get { return _seed; }
+    }
+
+    public LambdaExpression Func
+    {
+      get { return _func; }
+    }
+
+    public LambdaExpression OptionalResultSelector
+    {
+      get { return _optionalResultSelector; }
+    }
 
     public LambdaExpression GetResolvedFunc (ClauseGenerationContext clauseGenerationContext)
     {
       // '(total, current) => total + current' becomes 'total => total + [current]'
       return _cachedFunc.GetOrCreate (
-          r => Expression.Lambda (r.GetResolvedExpression (Func.Body, Func.Parameters[1], clauseGenerationContext), Func.Parameters[0]));
+          r => Expression.Lambda (r.GetResolvedExpression (_func.Body, _func.Parameters[1], clauseGenerationContext), _func.Parameters[0]));
     }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
@@ -85,7 +98,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
-      return new AggregateFromSeedResultOperator (Seed, GetResolvedFunc (clauseGenerationContext), OptionalResultSelector);
+      return new AggregateFromSeedResultOperator (_seed, GetResolvedFunc (clauseGenerationContext), _optionalResultSelector);
     }
   }
 }
