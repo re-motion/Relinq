@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
 
@@ -52,16 +51,11 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       var supportedMethodsForTypes =
           from t in expressionNodeTypes
           let supportedMethodsField = t.GetRuntimeField ("SupportedMethods")
-          let getSupportedMethodsMethod = t.GetRuntimeMethod ("GetSupportedMethods", new Type[0])
+          where supportedMethodsField != null && supportedMethodsField.IsStatic
           select new
                  {
                      Type = t,
-                     Methods =
-                         supportedMethodsField != null && supportedMethodsField.IsStatic
-                             ? (IEnumerable<MethodInfo>) supportedMethodsField.GetValue (null)
-                             : getSupportedMethodsMethod != null && getSupportedMethodsMethod.IsStatic
-                                 ? (IEnumerable<MethodInfo>) getSupportedMethodsMethod.Invoke (null, new object[0])
-                                 : Enumerable.Empty<MethodInfo>()
+                     Methods = (IEnumerable<MethodInfo>) supportedMethodsField.GetValue (null)
                  };
 
       var registry = new MethodInfoBasedNodeTypeRegistry();
@@ -70,6 +64,9 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       {
         registry.Register (methodsForType.Methods, methodsForType.Type);
       }
+
+      registry.Register (AggregateExpressionNode.GetSupportedMethods(), typeof (AggregateExpressionNode));
+      registry.Register (AggregateFromSeedExpressionNode.GetSupportedMethods(), typeof (AggregateFromSeedExpressionNode));
 
       return registry;
     }

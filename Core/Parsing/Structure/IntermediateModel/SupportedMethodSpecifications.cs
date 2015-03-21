@@ -40,5 +40,12 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       return input.Where (mi => mi.GetParameters().Length == 2);
     }
 
+    public static IEnumerable<MethodInfo> WithSeedParameter (this IEnumerable<MethodInfo> input)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+
+      return input.Where (mi => mi.GetParameters().Length == 3 || mi.GetParameters().Length == 4);
+    }
+
   }
 }

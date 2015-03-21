@@ -46,21 +46,18 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethods_WithoutResultSelector ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (
-          AggregateFromSeedExpressionNode.SupportedMethods,
-          q => q.Aggregate<object, object> (null, (i, j) => null),
-          e => e.Aggregate<object, object> (null, (i, j) => null));
-    }
-
-    [Test]
-    public void SupportedMethods_WithResultSelector ()
-    {
-      AssertSupportedMethod_Generic (
-          AggregateFromSeedExpressionNode.SupportedMethods,
-          q => q.Aggregate<object, object, object> (null, (i, j) => null, o => null),
-          e => e.Aggregate<object, object, object> (null, (i, j) => null, o => null));
+      Assert.That (
+          AggregateFromSeedExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.Aggregate<object, object> (null, null, (o1, o2) => null)),
+                  GetGenericMethodDefinition (() => Queryable.Aggregate<object, object, object> (null, null, (o1, o2) => null, o => null)),
+                  GetGenericMethodDefinition (() => Enumerable.Aggregate<object, object> (null, null, (o1, o2) => null)),
+                  GetGenericMethodDefinition (() => Enumerable.Aggregate<object, object, object> (null, null, (o1, o2) => null, o => null)),
+              }));
     }
 
     [Test]
