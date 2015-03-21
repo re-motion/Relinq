@@ -33,8 +33,8 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   {
     private readonly Type _querySourceElementType;
     private readonly Expression _parsedExpression;
-    private Type _querySourceType;
-    private string _associatedIdentifier;
+    private readonly Type _querySourceType;
+    private readonly string _associatedIdentifier;
 
     public MainSourceExpressionNode (string associatedIdentifier, Expression expression)
     {
