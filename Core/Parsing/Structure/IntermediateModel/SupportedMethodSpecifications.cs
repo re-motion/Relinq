@@ -55,6 +55,13 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       return input.Where (mi => mi.GetParameters().Length == 3 || mi.GetParameters().Length == 4);
     }
 
+    public static IEnumerable<MethodInfo> WithoutResultSelector (this IEnumerable<MethodInfo> input)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+
+      return input.Where (mi => mi.GetParameters().All (p => p.Name != "resultSelector"));
+    }
+
     private static bool HasGenericDelegateOfType (MethodInfo methodInfo, Type genericDelegateType)
     {
       return methodInfo.GetParameters()

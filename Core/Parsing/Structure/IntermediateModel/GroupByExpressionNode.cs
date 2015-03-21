@@ -15,11 +15,13 @@
 // under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -32,13 +34,10 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class GroupByExpressionNode : ResultOperatorExpressionNodeBase, IQuerySourceExpressionNode
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.GroupBy<object, object> (null, o => null)),
-                                                               GetSupportedMethod (() => Enumerable.GroupBy<object, object> (null, o => null)),
-                                                               GetSupportedMethod (() => Queryable.GroupBy<object, object, object> (null, o => null, o => null)),
-                                                               GetSupportedMethod (() => Enumerable.GroupBy<object, object, object> (null, o => null, o => null)),
-                                                           };
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("GroupBy").WithoutResultSelector().WithoutEqualityComparer();
+    }
 
     private readonly ResolvedExpressionCache<Expression> _cachedKeySelector;
     private readonly ResolvedExpressionCache<Expression> _cachedElementSelector;
