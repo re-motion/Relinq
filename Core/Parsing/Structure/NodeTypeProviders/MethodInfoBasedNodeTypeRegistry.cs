@@ -80,6 +80,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       registry.Register (FirstExpressionNode.GetSupportedMethods(), typeof (FirstExpressionNode));
       registry.Register (GroupByExpressionNode.GetSupportedMethods(), typeof (GroupByExpressionNode));
       registry.Register (GroupByWithResultSelectorExpressionNode.GetSupportedMethods(), typeof (GroupByWithResultSelectorExpressionNode));
+      registry.Register (GroupJoinExpressionNode.GetSupportedMethods(), typeof (GroupJoinExpressionNode));
 
       return registry;
     }
