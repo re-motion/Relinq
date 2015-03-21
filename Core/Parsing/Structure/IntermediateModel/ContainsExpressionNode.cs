@@ -41,17 +41,16 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("Contains").WithoutEqualityComparer();
     }
 
-    public static readonly NameBasedRegistrationInfo[] SupportedMethodNames = new[]
-        {
-          // Note: We only detect supported/unsupported types heuristically - real interface implementation checks (via GetInterfaceMap) would be
-          // too costly.
-          new NameBasedRegistrationInfo (
-              "Contains",
-              mi => mi.DeclaringType != typeof (string) 
-                  && typeof (IEnumerable).GetTypeInfo().IsAssignableFrom (mi.DeclaringType.GetTypeInfo())
-                  && !typeof (IDictionary).GetTypeInfo().IsAssignableFrom (mi.DeclaringType.GetTypeInfo())
-                  && (mi.IsStatic && mi.GetParameters().Length == 2 || !mi.IsStatic && mi.GetParameters().Length == 1))
-        };
+    public static IEnumerable<NameBasedRegistrationInfo> GetSupportedMethodNames ()
+    {
+      // Note: We only detect supported/unsupported types heuristically - real interface implementation checks (via GetInterfaceMap) would be too costly.
+      yield return new NameBasedRegistrationInfo (
+          "Contains",
+          mi => mi.DeclaringType != typeof (string)
+                && typeof (IEnumerable).GetTypeInfo().IsAssignableFrom (mi.DeclaringType.GetTypeInfo())
+                && !typeof (IDictionary).GetTypeInfo().IsAssignableFrom (mi.DeclaringType.GetTypeInfo())
+                && (mi.IsStatic && mi.GetParameters().Length == 2 || !mi.IsStatic && mi.GetParameters().Length == 1));
+    }
 
     private readonly Expression _item;
 

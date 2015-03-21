@@ -51,18 +51,18 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethodNames ()
+    public void GetSupportedMethodNames ()
     {
       AssertSupportedMethods_ByName (
-          ContainsExpressionNode.SupportedMethodNames,
+          ContainsExpressionNode.GetSupportedMethodNames(),
           () => ((IList<int>) null).Contains (0),
           () => ((ICollection<int>) null).Contains (1),
           () => ((IList) null).Contains (2),
           () => ((List<int>) null).Contains (3));
 
-      AssertNotSupportedMethods_ByName (ContainsExpressionNode.SupportedMethodNames, () => ((string) null).Contains ("x"));
-      AssertNotSupportedMethods_ByName (ContainsExpressionNode.SupportedMethodNames, () => ((IDictionary) null).Contains ("x"));
-      AssertNotSupportedMethods_ByName (ContainsExpressionNode.SupportedMethodNames, () => ((Hashtable) null).Contains ("x"));
+      AssertNotSupportedMethods_ByName (ContainsExpressionNode.GetSupportedMethodNames(), () => ((string) null).Contains ("x"));
+      AssertNotSupportedMethods_ByName (ContainsExpressionNode.GetSupportedMethodNames(), () => ((IDictionary) null).Contains ("x"));
+      AssertNotSupportedMethods_ByName (ContainsExpressionNode.GetSupportedMethodNames(), () => ((Hashtable) null).Contains ("x"));
     }
 
     [Test]

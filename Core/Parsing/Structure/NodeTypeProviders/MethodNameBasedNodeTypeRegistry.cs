@@ -50,19 +50,19 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       var infoForTypes =
           from t in expressionNodeTypes
           let supportedMethodNamesField = t.GetRuntimeField ("SupportedMethodNames")
+          where  supportedMethodNamesField != null && supportedMethodNamesField.IsStatic
           select new
                  {
                      Type = t,
-                     RegistrationInfo =
-                         supportedMethodNamesField != null && supportedMethodNamesField.IsStatic
-                             ? ((IEnumerable<NameBasedRegistrationInfo>) supportedMethodNamesField.GetValue (null))
-                             : Enumerable.Empty<NameBasedRegistrationInfo>()
+                     RegistrationInfo = ((IEnumerable<NameBasedRegistrationInfo>) supportedMethodNamesField.GetValue (null))
                  };
 
       var registry = new MethodNameBasedNodeTypeRegistry();
 
       foreach (var infoForType in infoForTypes)
         registry.Register (infoForType.RegistrationInfo, infoForType.Type);
+
+      registry.Register (ContainsExpressionNode.GetSupportedMethodNames(), typeof (ContainsExpressionNode));
 
       return registry;
     }
