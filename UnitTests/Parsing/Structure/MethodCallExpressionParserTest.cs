@@ -48,7 +48,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
       _methodInfoBasedNodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
       _methodInfoBasedNodeTypeRegistry.Register (TakeExpressionNode.SupportedMethods, typeof (TakeExpressionNode));
       _methodInfoBasedNodeTypeRegistry.Register (CountExpressionNode.GetSupportedMethods(), typeof (CountExpressionNode));
-      _methodInfoBasedNodeTypeRegistry.Register (JoinExpressionNode.SupportedMethods, typeof (JoinExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (JoinExpressionNode.GetSupportedMethods(), typeof (JoinExpressionNode));
 
       _parser = new MethodCallExpressionParser (_methodInfoBasedNodeTypeRegistry);
 
