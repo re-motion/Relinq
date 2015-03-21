@@ -74,6 +74,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       registry.Register (ConcatExpressionNode.GetSupportedMethods(), typeof (ConcatExpressionNode));
       registry.Register (ContainsExpressionNode.GetSupportedMethods(), typeof (ContainsExpressionNode));
       registry.Register (CountExpressionNode.GetSupportedMethods(), typeof (CountExpressionNode));
+      registry.Register (DefaultIfEmptyExpressionNode.GetSupportedMethods(), typeof (DefaultIfEmptyExpressionNode));
 
       return registry;
     }
