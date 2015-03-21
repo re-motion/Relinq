@@ -467,7 +467,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     [Test]
     public void GetQueryOperatorExpression_ArrayLongLength ()
     {
-      _methodInfoBasedNodeTypeRegistry.Register (LongCountExpressionNode.SupportedMethods, typeof (LongCountExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (LongCountExpressionNode.GetSupportedMethods(), typeof (LongCountExpressionNode));
       var memberExpression = (MemberExpression) ExpressionHelper.MakeExpression (() => new int[0].LongLength);
       var queryOperatorExpression = _expressionTreeParser.GetQueryOperatorExpression (memberExpression);
 

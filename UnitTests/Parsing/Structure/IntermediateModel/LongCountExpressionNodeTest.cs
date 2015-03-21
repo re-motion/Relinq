@@ -35,21 +35,20 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethod_WithoutPredicate ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (LongCountExpressionNode.SupportedMethods, q => q.LongCount (), e => e.LongCount ());
-    }
+      Assert.That (
+          LongCountExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.LongCount<object> (null)),
+                  GetGenericMethodDefinition (() => Queryable.LongCount<object> (null, null)),
+                  GetGenericMethodDefinition (() => Enumerable.LongCount<object> (null)),
+                  GetGenericMethodDefinition (() => Enumerable.LongCount<object> (null, null)),
 
-    [Test]
-    public void SupportedMethods_WithoutPredicate_ForArrays ()
-    {
-      Assert.That (LongCountExpressionNode.SupportedMethods, Has.Member (typeof (Array).GetProperty ("LongLength").GetGetMethod ()));
-    }
-
-    [Test]
-    public void SupportedMethod_WithPredicate ()
-    {
-      AssertSupportedMethod_Generic (LongCountExpressionNode.SupportedMethods, q => q.LongCount (o => o == null), e => e.LongCount (o => o == null));
+                  GetGenericMethodDefinition (() => (((Array) null).LongLength)),
+              }));
     }
 
     [Test]
