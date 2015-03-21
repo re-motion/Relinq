@@ -21,6 +21,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -32,49 +33,10 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class AverageExpressionNode : ResultOperatorExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.Average ((IQueryable<decimal>) null)),
-                                                               GetSupportedMethod (() => Queryable.Average ((IQueryable<decimal?>) null)),
-                                                               GetSupportedMethod (() => Queryable.Average ((IQueryable<double>) null)),
-                                                               GetSupportedMethod (() => Queryable.Average ((IQueryable<double?>) null)),
-                                                               GetSupportedMethod (() => Queryable.Average ((IQueryable<int>) null)),
-                                                               GetSupportedMethod (() => Queryable.Average ((IQueryable<int?>) null)),
-                                                               GetSupportedMethod (() => Queryable.Average ((IQueryable<long>) null)),
-                                                               GetSupportedMethod (() => Queryable.Average ((IQueryable<long?>) null)),
-                                                               GetSupportedMethod (() => Queryable.Average ((IQueryable<float>) null)),
-                                                               GetSupportedMethod (() => Queryable.Average ((IQueryable<float?>) null)),
-                                                               GetSupportedMethod (() => Queryable.Average<object> (null, o => (decimal) 0)),
-                                                               GetSupportedMethod (() => Queryable.Average<object> (null, o => (decimal?) 0)),
-                                                               GetSupportedMethod (() => Queryable.Average<object> (null, o => (double) 0)),
-                                                               GetSupportedMethod (() => Queryable.Average<object> (null, o => (double?) 0)),
-                                                               GetSupportedMethod (() => Queryable.Average<object> (null, o => (int) 0)),
-                                                               GetSupportedMethod (() => Queryable.Average<object> (null, o => (int?) 0)),
-                                                               GetSupportedMethod (() => Queryable.Average<object> (null, o => (long) 0)),
-                                                               GetSupportedMethod (() => Queryable.Average<object> (null, o => (long?) 0)),
-                                                               GetSupportedMethod (() => Queryable.Average<object> (null, o => (float) 0)),
-                                                               GetSupportedMethod (() => Queryable.Average<object> (null, o => (float?) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Average ((IEnumerable<decimal>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Average ((IEnumerable<decimal?>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Average ((IEnumerable<double>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Average ((IEnumerable<double?>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Average ((IEnumerable<int>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Average ((IEnumerable<int?>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Average ((IEnumerable<long>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Average ((IEnumerable<long?>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Average ((IEnumerable<float>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Average ((IEnumerable<float?>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Average<object> (null, o => (decimal) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Average<object> (null, o => (decimal?) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Average<object> (null, o => (double) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Average<object> (null, o => (double?) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Average<object> (null, o => (int) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Average<object> (null, o => (int?) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Average<object> (null, o => (long) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Average<object> (null, o => (long?) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Average<object> (null, o => (float) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Average<object> (null, o => (float?) 0))
-                                                           };
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("Average");
+    }
 
     public AverageExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate)
         : base(parseInfo, null, optionalPredicate)
