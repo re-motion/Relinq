@@ -15,11 +15,13 @@
 // under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -34,17 +36,11 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class FirstExpressionNode : ResultOperatorExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.First<object> (null)),
-                                                               GetSupportedMethod (() => Queryable.First<object> (null, null)),
-                                                               GetSupportedMethod (() => Queryable.FirstOrDefault<object> (null)),
-                                                               GetSupportedMethod (() => Queryable.FirstOrDefault<object> (null, null)),
-                                                               GetSupportedMethod (() => Enumerable.First<object> (null)),
-                                                               GetSupportedMethod (() => Enumerable.First<object> (null, null)),
-                                                               GetSupportedMethod (() => Enumerable.FirstOrDefault<object> (null)),
-                                                               GetSupportedMethod (() => Enumerable.FirstOrDefault<object> (null, null)),
-                                                           };
+    public static IEnumerable<MethodInfo> GetSupportedMethods ()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("First")
+          .Concat (ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("FirstOrDefault"));
+    }
 
     public FirstExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate)
         : base (parseInfo, optionalPredicate, null)
