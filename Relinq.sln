@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Development.Net_3_5.UnitTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.Net_3_5", "UnitTests.Net_3_5\UnitTests.Net_3_5.csproj", "{7E91B4D3-D5C4-4038-AA49-319939520E02}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceTests", "PerformanceTests\PerformanceTests.csproj", "{7860FE5E-89EC-4BD8-A788-04E0A42A5D38}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -126,6 +128,12 @@ Global
 		{7E91B4D3-D5C4-4038-AA49-319939520E02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E91B4D3-D5C4-4038-AA49-319939520E02}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7E91B4D3-D5C4-4038-AA49-319939520E02}.Release|x86.ActiveCfg = Release|Any CPU
+		{7860FE5E-89EC-4BD8-A788-04E0A42A5D38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7860FE5E-89EC-4BD8-A788-04E0A42A5D38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7860FE5E-89EC-4BD8-A788-04E0A42A5D38}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7860FE5E-89EC-4BD8-A788-04E0A42A5D38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7860FE5E-89EC-4BD8-A788-04E0A42A5D38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7860FE5E-89EC-4BD8-A788-04E0A42A5D38}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
