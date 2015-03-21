@@ -81,6 +81,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       registry.Register (GroupByExpressionNode.GetSupportedMethods(), typeof (GroupByExpressionNode));
       registry.Register (GroupByWithResultSelectorExpressionNode.GetSupportedMethods(), typeof (GroupByWithResultSelectorExpressionNode));
       registry.Register (GroupJoinExpressionNode.GetSupportedMethods(), typeof (GroupJoinExpressionNode));
+      registry.Register (IntersectExpressionNode.GetSupportedMethods(), typeof (IntersectExpressionNode));
 
       return registry;
     }
