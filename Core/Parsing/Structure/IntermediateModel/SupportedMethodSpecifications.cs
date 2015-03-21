@@ -20,10 +20,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 {
   internal static class SupportedMethodSpecifications
   {
+    public static IEnumerable<MethodInfo> WhereNameMatches (this IEnumerable<MethodInfo> input, string name)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+      ArgumentUtility.CheckNotNullOrEmpty ("name", name);
+
+      return input.Where (mi => mi.Name == name);
+    }
+    public static IEnumerable<MethodInfo> WithoutSeedParameter (this IEnumerable<MethodInfo> input)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+
+      return input.Where (mi => mi.GetParameters().Length == 2);
+    }
+
   }
 }

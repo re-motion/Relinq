@@ -27,6 +27,7 @@ using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
 using Remotion.Linq.UnitTests.TestDomain;
+using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
 {
@@ -49,23 +50,29 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     public ClauseGenerationContext ClauseGenerationContext { get; private set; }
     public QueryModel QueryModel { get; private set; }
 
-    protected MethodInfo GetGenericMethodDefinition<TReturn> (Expression<Func<IQueryable<object>, TReturn>> methodCallLambda)
+    protected MethodInfo GetGenericMethodDefinition<TReturn> (Expression<Func<TReturn>> methodCall)
+    {
+      var method = ReflectionUtility.GetMethod (methodCall);
+      return MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method, throwOnAmbiguousMatch: true);
+    }
+
+    private MethodInfo GetGenericMethodDefinition<TReturn> (Expression<Func<IQueryable<object>, TReturn>> methodCallLambda)
     {
       return GetMethod (methodCallLambda).GetGenericMethodDefinition ();
     }
 
-    protected MethodInfo GetMethod<TReturn> (Expression<Func<IQueryable<object>, TReturn>> methodCallLambda)
+    private MethodInfo GetMethod<TReturn> (Expression<Func<IQueryable<object>, TReturn>> methodCallLambda)
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (methodCallLambda);
       return methodCallExpression.Method;
     }
 
-    protected MethodInfo GetGenericMethodDefinition_Enumerable<TReturn> (Expression<Func<IEnumerable<object>, TReturn>> methodCallLambda)
+    private MethodInfo GetGenericMethodDefinition_Enumerable<TReturn> (Expression<Func<IEnumerable<object>, TReturn>> methodCallLambda)
     {
       return GetMethod_Enumerable (methodCallLambda).GetGenericMethodDefinition ();
     }
 
-    protected MethodInfo GetMethod_Enumerable<TReturn> (Expression<Func<IEnumerable<object>, TReturn>> methodCallLambda)
+    private MethodInfo GetMethod_Enumerable<TReturn> (Expression<Func<IEnumerable<object>, TReturn>> methodCallLambda)
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (methodCallLambda);
       return methodCallExpression.Method;
