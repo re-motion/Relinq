@@ -112,7 +112,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     protected void AssertSupportedMethod_Generic<TResult1, TResult2> (
-        MethodInfo[] supportedMethods, 
+        IEnumerable<MethodInfo> supportedMethods, 
         Expression<Func<IQueryable<object>, TResult1>> queryableMethodCall,
         Expression<Func<IEnumerable<object>, TResult2>> enumerableMethodCall)
     {
