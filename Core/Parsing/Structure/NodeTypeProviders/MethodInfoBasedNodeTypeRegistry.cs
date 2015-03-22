@@ -89,6 +89,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       registry.Register (MinExpressionNode.GetSupportedMethods(), typeof (MinExpressionNode));
       registry.Register (OfTypeExpressionNode.GetSupportedMethods(), typeof (OfTypeExpressionNode));
       registry.Register (OrderByDescendingExpressionNode.GetSupportedMethods(), typeof (OrderByDescendingExpressionNode));
+      registry.Register (OrderByExpressionNode.GetSupportedMethods(), typeof (OrderByExpressionNode));
 
       return registry;
     }
