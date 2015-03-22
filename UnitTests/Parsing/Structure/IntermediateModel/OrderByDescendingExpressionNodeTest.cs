@@ -39,9 +39,16 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethod_WithoutComparer ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (OrderByDescendingExpressionNode.SupportedMethods, q => q.OrderByDescending(i => i), e => e.OrderByDescending(i => i));
+      Assert.That (
+          OrderByDescendingExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.OrderByDescending<object, object> (null, null)),
+                  GetGenericMethodDefinition (() => Enumerable.OrderByDescending<object, object> (null, null))
+              }));
     }
 
     [Test]

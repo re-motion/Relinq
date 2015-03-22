@@ -40,7 +40,14 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
       return input.Where (mi => !HasGenericDelegateOfType (mi, typeof (IEqualityComparer<>)));
     }
-	
+
+    public static IEnumerable<MethodInfo> WithoutComparer (this IEnumerable<MethodInfo> input)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+
+      return input.Where (mi => !HasGenericDelegateOfType (mi, typeof (IComparer<>)));
+    }
+
     public static IEnumerable<MethodInfo> WithoutSeedParameter (this IEnumerable<MethodInfo> input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
