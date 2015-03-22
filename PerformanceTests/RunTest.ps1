@@ -10,7 +10,7 @@ $timer.Start();
 $timer.Stop();
 
 $elapsedTime = "{0:N0}" -f ($timer.ElapsedMilliseconds)
-Write-Host "Launching process and creating the QueryParser took " $elapsedTime "ms, reference time: ~170ms"
+Write-Host "Launching process and creating the QueryParser took " $elapsedTime "ms, reference time: ~130ms"
 
 $timer = [System.Diagnostics.Stopwatch]::StartNew();
 $timer.Start();
@@ -18,4 +18,4 @@ $timer.Start();
 $timer.Stop();
 
 $elapsedTime = "{0:N0}" -f ($timer.ElapsedMilliseconds)
-Write-Host "Launching process and creating the NodeTypeProvider took " $elapsedTime "ms, reference time: ~160ms"
+Write-Host "Launching process and creating the NodeTypeProvider took " $elapsedTime "ms, reference time: ~120ms"

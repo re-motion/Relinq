@@ -37,7 +37,7 @@ namespace Remotion.Linq.PerformanceTests
       var stopwatch = Stopwatch.StartNew();
       QueryParser.CreateDefault();
       stopwatch.Stop();
-      Console.WriteLine ("Time taken: {0}ms, reference time: ~77ms", stopwatch.ElapsedMilliseconds);
+      Console.WriteLine ("Time taken: {0}ms, reference time: ~36ms", stopwatch.ElapsedMilliseconds);
     }
 
     private static void CreateDefaultNodeTypeProvider ()
@@ -46,7 +46,7 @@ namespace Remotion.Linq.PerformanceTests
       var stopwatch = Stopwatch.StartNew();
       ExpressionTreeParser.CreateDefaultNodeTypeProvider();
       stopwatch.Stop();
-      Console.WriteLine ("Time taken: {0}ms, reference time: ~72ms", stopwatch.ElapsedMilliseconds);
+      Console.WriteLine ("Time taken: {0}ms, reference time: ~30ms", stopwatch.ElapsedMilliseconds);
     }
   }
 }
