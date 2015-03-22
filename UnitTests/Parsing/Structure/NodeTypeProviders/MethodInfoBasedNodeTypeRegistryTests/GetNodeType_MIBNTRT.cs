@@ -40,9 +40,9 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     [Test]
     public void Test_WithMethodInfo ()
     {
-      _registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      _registry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
 
-      var type = _registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
+      var type = _registry.GetNodeType (SelectExpressionNode.GetSupportedMethods().First());
 
       Assert.That (type, Is.SameAs (typeof (SelectExpressionNode)));
     }
@@ -50,10 +50,10 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     [Test]
     public void Test_WithMultipleNodes ()
     {
-      _registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      _registry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
       _registry.Register (SumExpressionNode.SupportedMethods, typeof (SumExpressionNode));
 
-      var type1 = _registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
+      var type1 = _registry.GetNodeType (SelectExpressionNode.GetSupportedMethods().First());
       var type2 = _registry.GetNodeType (SumExpressionNode.SupportedMethods[0]);
       var type3 = _registry.GetNodeType (SumExpressionNode.SupportedMethods[1]);
 
@@ -65,7 +65,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     [Test]
     public void Test_ClosedGenericMethod ()
     {
-      _registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      _registry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
 
       var closedGenericMethodCallExpression =
           (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select (i => i + 1));
@@ -121,7 +121,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     [Test]
     public void Test_UnknownMethod ()
     {
-      var result = _registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
+      var result = _registry.GetNodeType (SelectExpressionNode.GetSupportedMethods().First());
 
       Assert.That (result, Is.Null);
     }

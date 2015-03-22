@@ -45,7 +45,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
       _methodInfoBasedNodeTypeRegistry = new MethodInfoBasedNodeTypeRegistry ();
 
       _methodInfoBasedNodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
-      _methodInfoBasedNodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
       _methodInfoBasedNodeTypeRegistry.Register (TakeExpressionNode.SupportedMethods, typeof (TakeExpressionNode));
       _methodInfoBasedNodeTypeRegistry.Register (CountExpressionNode.GetSupportedMethods(), typeof (CountExpressionNode));
       _methodInfoBasedNodeTypeRegistry.Register (JoinExpressionNode.GetSupportedMethods(), typeof (JoinExpressionNode));
@@ -187,7 +187,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     public void Parse_WithSubQuery_UsesNodeTypeRegistry ()
     {
       var emptyNodeTypeRegistry = new MethodInfoBasedNodeTypeRegistry ();
-      emptyNodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      emptyNodeTypeRegistry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
       var parser = new MethodCallExpressionParser (emptyNodeTypeRegistry);
 
       var expression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<Cook>, IQueryable<int>> (

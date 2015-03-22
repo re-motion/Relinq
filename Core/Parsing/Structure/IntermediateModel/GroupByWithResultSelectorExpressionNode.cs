@@ -45,7 +45,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </remarks>
   public class GroupByWithResultSelectorExpressionNode : SelectExpressionNode, IQuerySourceExpressionNode
   {
-    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    public new static IEnumerable<MethodInfo> GetSupportedMethods()
     {
       return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("GroupBy").WithResultSelector().WithoutEqualityComparer();
     }

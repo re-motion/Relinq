@@ -320,7 +320,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
                   select a.ID;
 
       var nodeTypeRegistry = new MethodInfoBasedNodeTypeRegistry ();
-      nodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      nodeTypeRegistry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
       nodeTypeRegistry.Register (SelectManyExpressionNode.SupportedMethods, typeof (SelectManyExpressionNode));
       nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
 

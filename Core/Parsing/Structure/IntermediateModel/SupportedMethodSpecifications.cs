@@ -76,11 +76,32 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       return input.Where (mi => mi.GetParameters().Any (p => p.Name == "resultSelector"));
     }
 
+    public static IEnumerable<MethodInfo> WithoutIndexSelector (this IEnumerable<MethodInfo> input, int parameterPosition)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+
+      return input.Where (mi => !HasIndexSelectorParameter (mi, parameterPosition));
+    }
+
     private static bool HasGenericDelegateOfType (MethodInfo methodInfo, Type genericDelegateType)
     {
       return methodInfo.GetParameters()
           .Select (p => p.ParameterType.GetTypeInfo())
           .Any (p => p.IsGenericType && genericDelegateType.GetTypeInfo().IsAssignableFrom (p.GetGenericTypeDefinition().GetTypeInfo()));
+    }
+
+    private static bool HasIndexSelectorParameter (MethodInfo methodInfo, int parameterPosition)
+    {
+      var parameters = methodInfo.GetParameters();
+      if (parameters.Length <= parameterPosition)
+        return false;
+
+      var selectorType = parameters[parameterPosition].ParameterType.GetTypeInfo();
+      // Enumerable taks a Func<...> but Querable takes an Expression<Func<...>>
+      if (typeof (Expression).GetTypeInfo().IsAssignableFrom (selectorType))
+        selectorType = selectorType.GenericTypeArguments[0].GetTypeInfo();
+
+      return selectorType.GenericTypeArguments[1] == typeof (int);
     }
   }
 }

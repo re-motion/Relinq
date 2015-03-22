@@ -41,9 +41,9 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     public void Test_WithRegistered_ReturnsTrue ()
     {
       var registry = _registry;
-      registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      registry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
 
-      var result = registry.IsRegistered (SelectExpressionNode.SupportedMethods[0]);
+      var result = registry.IsRegistered (SelectExpressionNode.GetSupportedMethods().First());
       Assert.That (result, Is.True);
     }
 
@@ -51,7 +51,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     public void Test_WithClosedGenericMethod_ReturnsTrue ()
     {
       var registry = _registry;
-      registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      registry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
 
       var closedGenericMethodCallExpression =
           (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select (i => i + 1));
@@ -95,7 +95,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     public void Test_WithNotRegistered_ReturnsFalse ()
     {
       var registry = _registry;
-      var result = registry.IsRegistered (SelectExpressionNode.SupportedMethods[0]);
+      var result = registry.IsRegistered (SelectExpressionNode.GetSupportedMethods().First());
       Assert.That (result, Is.False);
     }
   }
