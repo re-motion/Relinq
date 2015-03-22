@@ -36,40 +36,39 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethod_WithoutSelector ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (MinExpressionNode.SupportedMethods, q => q.Min (), e => e.Min ());
-    }
+      Assert.That (
+          MinExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.Min<object> (null)),
+                  GetGenericMethodDefinition (() => Queryable.Min<object, object> (null, null)),
+                  GetGenericMethodDefinition (() => Enumerable.Min<object> (null)),
+                  GetGenericMethodDefinition (() => Enumerable.Min<object, object> (null, null)),
 
-    [Test]
-    public void SupportedMethod_WithSelector ()
-    {
-      AssertSupportedMethod_Generic (MinExpressionNode.SupportedMethods, q => q.Min (i => i.ToString ()), e => e.Min (i => i.ToString ()));
-    }
-
-    [Test]
-    public void SupportedMethod_IEnumerableOverloads ()
-    {
-      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<decimal>) e).Min ());
-      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<decimal?>) e).Min ());
-      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<double>) e).Min ());
-      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<double?>) e).Min ());
-      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<int>) e).Min ());
-      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<int?>) e).Min ());
-      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<long>) e).Min ());
-      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<long?>) e).Min ());
-      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<float>) e).Min ());
-      AssertSupportedMethod_NonGeneric (MinExpressionNode.SupportedMethods, null, e => ((IEnumerable<float?>) e).Min ());
-      AssertSupportedMethod_Generic<object, decimal> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => 0.0m));
-      AssertSupportedMethod_Generic<object, decimal?> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => (decimal?) 0.0m));
-      AssertSupportedMethod_Generic<object, double> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => 0.0));
-      AssertSupportedMethod_Generic<object, double?> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => (double?) 0.0));
-      AssertSupportedMethod_Generic<object, int> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => 0));
-      AssertSupportedMethod_Generic<object, int?> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => (int?) 0));
-      AssertSupportedMethod_Generic<object, long> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => 0L));
-      AssertSupportedMethod_Generic<object, long?> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => (long?) 0L));
-      AssertSupportedMethod_Generic<object, float> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => 0.0f));
-      AssertSupportedMethod_Generic<object, float?> (MinExpressionNode.SupportedMethods, null, e => e.Min (i => (float?) 0.0f));
+                  GetGenericMethodDefinition (() => Enumerable.Min ((IEnumerable<decimal>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Min ((IEnumerable<decimal?>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Min ((IEnumerable<double>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Min ((IEnumerable<double?>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Min ((IEnumerable<int>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Min ((IEnumerable<int?>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Min ((IEnumerable<long>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Min ((IEnumerable<long?>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Min ((IEnumerable<float>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Min ((IEnumerable<float?>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Min<object> (null, o => (decimal) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Min<object> (null, o => (decimal?) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Min<object> (null, o => (double) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Min<object> (null, o => (double?) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Min<object> (null, o => (int) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Min<object> (null, o => (int?) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Min<object> (null, o => (long) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Min<object> (null, o => (long?) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Min<object> (null, o => (float) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Min<object> (null, o => (float?) 0))
+              }));
     }
 
     [Test]

@@ -86,6 +86,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       registry.Register (LastExpressionNode.GetSupportedMethods(), typeof (LastExpressionNode));
       registry.Register (LongCountExpressionNode.GetSupportedMethods(), typeof (LongCountExpressionNode));
       registry.Register (MaxExpressionNode.GetSupportedMethods(), typeof (MaxExpressionNode));
+      registry.Register (MinExpressionNode.GetSupportedMethods(), typeof (MinExpressionNode));
 
       return registry;
     }
