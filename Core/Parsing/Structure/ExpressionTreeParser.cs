@@ -56,7 +56,7 @@ namespace Remotion.Linq.Parsing.Structure
       var searchedTypes = typeof (MethodInfoBasedNodeTypeRegistry).GetTypeInfo().Assembly.GetDefinedTypes();
       var innerProviders = new INodeTypeProvider[]
                            {
-                               MethodInfoBasedNodeTypeRegistry.CreateFromTypes (searchedTypes),
+                               MethodInfoBasedNodeTypeRegistry.CreateFromRemotionLinqAssembly(),
                                MethodNameBasedNodeTypeRegistry.CreateFromTypes(searchedTypes)
                            };
       return new CompoundNodeTypeProvider (innerProviders);

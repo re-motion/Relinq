@@ -35,35 +35,14 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
         new Dictionary<MethodInfo, Lazy<MethodInfo[]>>();
 
     /// <summary>
-    /// Creates a <see cref="MethodInfoBasedNodeTypeRegistry"/> and automatically registers all types implementing <see cref="IExpressionNode"/> 
-    /// from a given type sequence that offer a public static <c>SupportedMethods</c> field.
+    /// Creates a <see cref="MethodInfoBasedNodeTypeRegistry"/> and registers all <see cref="IExpressionNode"/> implementations in the <b>Remotion.Linq</b> assembly.
     /// </summary>
-    /// <returns>A <see cref="MethodInfoBasedNodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types with a <c>SupportedMethods</c>
-    /// field registered.</returns>
-    public static MethodInfoBasedNodeTypeRegistry CreateFromTypes (IEnumerable<Type> searchedTypes)
+    /// <returns>
+    /// A <see cref="MethodInfoBasedNodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types in the <b>Remotion.Linq</b> assembly registered.
+    /// </returns>
+    public static MethodInfoBasedNodeTypeRegistry CreateFromRemotionLinqAssembly ()
     {
-      ArgumentUtility.CheckNotNull ("searchedTypes", searchedTypes);
-
-      var expressionNodeTypes = from t in searchedTypes
-                                where typeof (IExpressionNode).GetTypeInfo().IsAssignableFrom (t.GetTypeInfo())
-                                select t;
-
-      var supportedMethodsForTypes =
-          from t in expressionNodeTypes
-          let supportedMethodsField = t.GetRuntimeField ("SupportedMethods")
-          where supportedMethodsField != null && supportedMethodsField.IsStatic
-          select new
-                 {
-                     Type = t,
-                     Methods = (IEnumerable<MethodInfo>) supportedMethodsField.GetValue (null)
-                 };
-
       var registry = new MethodInfoBasedNodeTypeRegistry();
-
-      foreach (var methodsForType in supportedMethodsForTypes)
-      {
-        registry.Register (methodsForType.Methods, methodsForType.Type);
-      }
 
       registry.Register (AggregateExpressionNode.GetSupportedMethods(), typeof (AggregateExpressionNode));
       registry.Register (AggregateFromSeedExpressionNode.GetSupportedMethods(), typeof (AggregateFromSeedExpressionNode));
