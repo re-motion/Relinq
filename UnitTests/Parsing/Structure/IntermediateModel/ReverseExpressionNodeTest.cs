@@ -36,9 +36,16 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethod_WithoutComparer ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (ReverseExpressionNode.SupportedMethods, q => q.Reverse (), e => e.Reverse ());
+      Assert.That (
+          ReverseExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.Reverse<object> (null)),
+                  GetGenericMethodDefinition (() => Enumerable.Reverse<object> (null))
+              }));
     }
 
     [Test]
