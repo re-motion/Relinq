@@ -35,7 +35,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
         new Dictionary<MethodInfo, Lazy<MethodInfo[]>>();
 
     /// <summary>
-    /// Creates a <see cref="MethodInfoBasedNodeTypeRegistry"/> and registers all <see cref="IExpressionNode"/> implementations in the <b>Remotion.Linq</b> assembly.
+    /// Creates a <see cref="MethodInfoBasedNodeTypeRegistry"/> and registers all relevant <see cref="IExpressionNode"/> implementations in the <b>Remotion.Linq</b> assembly.
     /// </summary>
     /// <returns>
     /// A <see cref="MethodInfoBasedNodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types in the <b>Remotion.Linq</b> assembly registered.
