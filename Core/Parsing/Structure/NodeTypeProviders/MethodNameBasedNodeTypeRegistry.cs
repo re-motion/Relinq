@@ -34,33 +34,14 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
   public sealed class MethodNameBasedNodeTypeRegistry : INodeTypeProvider
   {
     /// <summary>
-    /// Creates a <see cref="MethodNameBasedNodeTypeRegistry"/> and automatically registers all types implementing <see cref="IExpressionNode"/> 
-    /// from a given type sequence that offer a public static <c>SupportedMethodNames</c> field.
+    /// Creates a <see cref="MethodNameBasedNodeTypeRegistry"/> and registers all relevant <see cref="IExpressionNode"/> implementations in the <b>Remotion.Linq</b> assembly.
     /// </summary>
-    /// <returns>A <see cref="MethodInfoBasedNodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types with a <c>SupportedMethodNames</c>
-    /// field registered.</returns>
-    public static MethodNameBasedNodeTypeRegistry CreateFromTypes (IEnumerable<Type> searchedTypes)
+    /// <returns>
+    /// A <see cref="MethodInfoBasedNodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types in the <b>Remotion.Linq</b> assembly registered.
+    /// </returns>
+    public static MethodNameBasedNodeTypeRegistry CreateFromRemotionLinqAssembly ()
     {
-      ArgumentUtility.CheckNotNull ("searchedTypes", searchedTypes);
-
-      var expressionNodeTypes = from t in searchedTypes
-                                where typeof (IExpressionNode).GetTypeInfo().IsAssignableFrom (t.GetTypeInfo())
-                                select t;
-
-      var infoForTypes =
-          from t in expressionNodeTypes
-          let supportedMethodNamesField = t.GetRuntimeField ("SupportedMethodNames")
-          where  supportedMethodNamesField != null && supportedMethodNamesField.IsStatic
-          select new
-                 {
-                     Type = t,
-                     RegistrationInfo = ((IEnumerable<NameBasedRegistrationInfo>) supportedMethodNamesField.GetValue (null))
-                 };
-
       var registry = new MethodNameBasedNodeTypeRegistry();
-
-      foreach (var infoForType in infoForTypes)
-        registry.Register (infoForType.RegistrationInfo, infoForType.Type);
 
       registry.Register (ContainsExpressionNode.GetSupportedMethodNames(), typeof (ContainsExpressionNode));
 
