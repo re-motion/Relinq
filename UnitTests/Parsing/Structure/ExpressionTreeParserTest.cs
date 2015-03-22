@@ -49,7 +49,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
       _methodInfoBasedNodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
       _methodInfoBasedNodeTypeRegistry.Register (TakeExpressionNode.SupportedMethods, typeof (TakeExpressionNode));
       _methodInfoBasedNodeTypeRegistry.Register (CountExpressionNode.SupportedMethods, typeof (CountExpressionNode));
-      _methodInfoBasedNodeTypeRegistry.Register (ContainsExpressionNode.SupportedMethods, typeof (ContainsExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (ContainsExpressionNode.GetSupportedMethods(), typeof (ContainsExpressionNode));
 
       _expressionTreeParser = new ExpressionTreeParser (_methodInfoBasedNodeTypeRegistry, new PartialEvaluatingExpressionTreeProcessor() );
 

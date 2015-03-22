@@ -72,6 +72,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       registry.Register (AverageExpressionNode.GetSupportedMethods(), typeof (AverageExpressionNode));
       registry.Register (CastExpressionNode.GetSupportedMethods(), typeof (CastExpressionNode));
       registry.Register (ConcatExpressionNode.GetSupportedMethods(), typeof (ConcatExpressionNode));
+      registry.Register (ContainsExpressionNode.GetSupportedMethods(), typeof (ContainsExpressionNode));
 
       return registry;
     }

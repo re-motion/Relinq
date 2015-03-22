@@ -16,12 +16,14 @@
 // 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -34,11 +36,10 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class ContainsExpressionNode : ResultOperatorExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-        {
-          GetSupportedMethod (() => Queryable.Contains<object> (null, null)),
-          GetSupportedMethod (() => Enumerable.Contains<object>(null, null))
-        };
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("Contains").WithoutEqualityComparer();
+    }
 
     public static readonly NameBasedRegistrationInfo[] SupportedMethodNames = new[]
         {

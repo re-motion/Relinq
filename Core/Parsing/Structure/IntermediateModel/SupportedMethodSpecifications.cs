@@ -33,6 +33,14 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
       return input.Where (mi => mi.Name == name);
     }
+
+    public static IEnumerable<MethodInfo> WithoutEqualityComparer (this IEnumerable<MethodInfo> input)
+    {
+      ArgumentUtility.CheckNotNull ("input", input);
+
+      return input.Where (mi => !HasGenericDelegateOfType (mi, typeof (IEqualityComparer<>)));
+    }
+	
     public static IEnumerable<MethodInfo> WithoutSeedParameter (this IEnumerable<MethodInfo> input)
     {
       ArgumentUtility.CheckNotNull ("input", input);
@@ -47,5 +55,11 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       return input.Where (mi => mi.GetParameters().Length == 3 || mi.GetParameters().Length == 4);
     }
 
+    private static bool HasGenericDelegateOfType (MethodInfo methodInfo, Type genericDelegateType)
+    {
+      return methodInfo.GetParameters()
+          .Select (p => p.ParameterType.GetTypeInfo())
+          .Any (p => p.IsGenericType && genericDelegateType.GetTypeInfo().IsAssignableFrom (p.GetGenericTypeDefinition().GetTypeInfo()));
+    }
   }
 }
