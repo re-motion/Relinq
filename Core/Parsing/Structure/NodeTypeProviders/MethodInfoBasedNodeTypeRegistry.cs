@@ -92,6 +92,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       registry.Register (OrderByExpressionNode.GetSupportedMethods(), typeof (OrderByExpressionNode));
       registry.Register (ReverseExpressionNode.GetSupportedMethods(), typeof (ReverseExpressionNode));
       registry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
+      registry.Register (SelectManyExpressionNode.GetSupportedMethods(), typeof (SelectManyExpressionNode));
 
       return registry;
     }

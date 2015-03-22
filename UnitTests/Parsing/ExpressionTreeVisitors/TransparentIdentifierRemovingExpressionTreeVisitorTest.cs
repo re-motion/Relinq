@@ -321,7 +321,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
 
       var nodeTypeRegistry = new MethodInfoBasedNodeTypeRegistry ();
       nodeTypeRegistry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
-      nodeTypeRegistry.Register (SelectManyExpressionNode.SupportedMethods, typeof (SelectManyExpressionNode));
+      nodeTypeRegistry.Register (SelectManyExpressionNode.GetSupportedMethods(), typeof (SelectManyExpressionNode));
       nodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
 
       var selectNode = (SelectExpressionNode) new ExpressionTreeParser (nodeTypeRegistry, new NullExpressionTreeProcessor()).ParseTree (query.Expression);
