@@ -51,10 +51,10 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     public void Test_SameMethodTwice_OverridesPreviousNodeType ()
     {
       var registry = _registry;
-      registry.Register (WhereExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
-      registry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
+      registry.Register (WhereExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
+      registry.Register (WhereExpressionNode.GetSupportedMethods(), typeof (WhereExpressionNode));
 
-      var type = registry.GetNodeType (WhereExpressionNode.SupportedMethods[0]);
+      var type = registry.GetNodeType (WhereExpressionNode.GetSupportedMethods().First());
       Assert.That (type, Is.SameAs (typeof (WhereExpressionNode)));
     }
 

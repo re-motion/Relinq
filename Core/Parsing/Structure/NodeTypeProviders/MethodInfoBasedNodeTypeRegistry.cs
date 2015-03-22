@@ -100,6 +100,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       registry.Register (ThenByDescendingExpressionNode.GetSupportedMethods(), typeof (ThenByDescendingExpressionNode));
       registry.Register (ThenByExpressionNode.GetSupportedMethods(), typeof (ThenByExpressionNode));
       registry.Register (UnionExpressionNode.GetSupportedMethods(), typeof (UnionExpressionNode));
+      registry.Register (WhereExpressionNode.GetSupportedMethods(), typeof (WhereExpressionNode));
 
       return registry;
     }
