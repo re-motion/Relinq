@@ -36,126 +36,54 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethod_WithoutSelector_OnDecimal ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_NonGeneric (
-          SumExpressionNode.SupportedMethods, 
-          q => ((IQueryable<decimal>) q).Sum(),
-          e => ((IEnumerable<decimal>) e).Sum ());
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnNDecimal ()
-    {
-      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<decimal?>) q).Sum(), e => ((IEnumerable<decimal?>) e).Sum());
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnDouble ()
-    {
-      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<double>) q).Sum(), e => ((IEnumerable<double>) e).Sum());
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnNDouble ()
-    {
-      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<double?>) q).Sum(), e => ((IEnumerable<double?>) e).Sum());
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnSingle ()
-    {
-      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<float>) q).Sum(), e => ((IEnumerable<float>) e).Sum());
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnNSingle ()
-    {
-      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<float?>) q).Sum(), e => ((IEnumerable<float?>) e).Sum());
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnInt32 ()
-    {
-      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<int>) q).Sum (), e => ((IEnumerable<int>) e).Sum ());
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnNInt32 ()
-    {
-      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<int?>) q).Sum(), e => ((IEnumerable<int?>) e).Sum());
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnInt64 ()
-    {
-      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<long>) q).Sum(), e => ((IEnumerable<long>) e).Sum());
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnNInt64 ()
-    {
-      AssertSupportedMethod_NonGeneric (SumExpressionNode.SupportedMethods, q => ((IQueryable<long?>) q).Sum(), e => ((IEnumerable<long?>) e).Sum());
-    }
-
-    [Test]
-    public void SupportedMethod_WithDecimalSelector ()
-    {
-      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => 0.0m), e => e.Sum (i => 0.0m));
-    }
-
-    [Test]
-    public void SupportedMethod_WithNDecimalSelector ()
-    {
-      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => (decimal?) 0.0m), e => e.Sum (i => (decimal?) 0.0m));
-    }
-
-    [Test]
-    public void SupportedMethod_WithDoubleSelector ()
-    {
-      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => 0.0), e => e.Sum (i => 0.0));
-    }
-
-    [Test]
-    public void SupportedMethod_WithNDoubleSelector ()
-    {
-      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => (double?) 0.0), e => e.Sum (i => (double?) 0.0));
-    }
-
-    [Test]
-    public void SupportedMethod_WithSingleSelector ()
-    {
-      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => 0.0f), e => e.Sum (i => 0.0f));
-    }
-
-    [Test]
-    public void SupportedMethod_WithNSingleSelector ()
-    {
-      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => (float?) 0.0f), e => e.Sum (i => (float?) 0.0f));
-    }
-
-    [Test]
-    public void SupportedMethod_WithInt32Selector ()
-    {
-      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => 0), e => e.Sum (i => 0));
-    }
-
-    [Test]
-    public void SupportedMethod_WithNInt32Selector ()
-    {
-      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => (int?) 0), e => e.Sum (i => (int?) 0));
-    }
-
-    [Test]
-    public void SupportedMethod_WithInt64Selector ()
-    {
-      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => 0L), e => e.Sum (i => 0L));
-    }
-
-    [Test]
-    public void SupportedMethod_WithNInt64Selector ()
-    {
-      AssertSupportedMethod_Generic (SumExpressionNode.SupportedMethods, q => q.Sum (i => (long?) 0L), e => e.Sum (i => (long?) 0L));
+      Assert.That (
+          SumExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.Sum ((IQueryable<decimal>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Sum ((IQueryable<decimal?>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Sum ((IQueryable<double>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Sum ((IQueryable<double?>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Sum ((IQueryable<int>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Sum ((IQueryable<int?>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Sum ((IQueryable<long>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Sum ((IQueryable<long?>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Sum ((IQueryable<float>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Sum ((IQueryable<float?>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Sum<object> (null, o => (decimal) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Sum<object> (null, o => (decimal?) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Sum<object> (null, o => (double) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Sum<object> (null, o => (double?) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Sum<object> (null, o => (int) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Sum<object> (null, o => (int?) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Sum<object> (null, o => (long) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Sum<object> (null, o => (long?) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Sum<object> (null, o => (float) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Sum<object> (null, o => (float?) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum ((IEnumerable<decimal>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum ((IEnumerable<decimal?>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum ((IEnumerable<double>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum ((IEnumerable<double?>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum ((IEnumerable<int>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum ((IEnumerable<int?>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum ((IEnumerable<long>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum ((IEnumerable<long?>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum ((IEnumerable<float>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum ((IEnumerable<float?>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum<object> (null, o => (decimal) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum<object> (null, o => (decimal?) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum<object> (null, o => (double) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum<object> (null, o => (double?) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum<object> (null, o => (int) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum<object> (null, o => (int?) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum<object> (null, o => (long) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum<object> (null, o => (long?) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum<object> (null, o => (float) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Sum<object> (null, o => (float?) 0)),
+              }));
     }
 
     [Test]

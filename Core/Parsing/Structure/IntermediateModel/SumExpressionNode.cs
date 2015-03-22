@@ -16,11 +16,11 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -32,49 +32,10 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class SumExpressionNode : ResultOperatorExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.Sum ((IQueryable<decimal>) null)),
-                                                               GetSupportedMethod (() => Queryable.Sum ((IQueryable<decimal?>) null)),
-                                                               GetSupportedMethod (() => Queryable.Sum ((IQueryable<double>) null)),
-                                                               GetSupportedMethod (() => Queryable.Sum ((IQueryable<double?>) null)),
-                                                               GetSupportedMethod (() => Queryable.Sum ((IQueryable<int>) null)),
-                                                               GetSupportedMethod (() => Queryable.Sum ((IQueryable<int?>) null)),
-                                                               GetSupportedMethod (() => Queryable.Sum ((IQueryable<long>) null)),
-                                                               GetSupportedMethod (() => Queryable.Sum ((IQueryable<long?>) null)),
-                                                               GetSupportedMethod (() => Queryable.Sum ((IQueryable<float>) null)),
-                                                               GetSupportedMethod (() => Queryable.Sum ((IQueryable<float?>) null)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (decimal) 0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (decimal?) 0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (double) 0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (double?) 0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (int) 0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (int?) 0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (long) 0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (long?) 0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (float) 0)),
-                                                               GetSupportedMethod (() => Queryable.Sum<object> (null, o => (float?) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<decimal>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<decimal?>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<double>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<double?>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<int>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<int?>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<long>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<long?>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<float>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Sum ((IEnumerable<float?>) null)),
-                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (decimal) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (decimal?) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (double) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (double?) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (int) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (int?) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (long) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (long?) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (float) 0)),
-                                                               GetSupportedMethod (() => Enumerable.Sum<object> (null, o => (float?) 0)),
-                                                           };
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("Sum");
+    }
 
     public SumExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalSelector)
         : base (parseInfo, null, optionalSelector)

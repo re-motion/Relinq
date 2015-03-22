@@ -23,6 +23,7 @@ using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
 using Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfoBasedNodeTypeRegistryTests.TestDomain;
+using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfoBasedNodeTypeRegistryTests
 {
@@ -64,9 +65,9 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     public void Test_WithNonGenericMethod_ReturnsTrue ()
     {
       var registry = _registry;
-      registry.Register (SumExpressionNode.SupportedMethods, typeof (SumExpressionNode));
+      registry.Register (SumExpressionNode.GetSupportedMethods(), typeof (SumExpressionNode));
 
-      var nonGenericMethod = SumExpressionNode.SupportedMethods[0];
+      var nonGenericMethod = ReflectionUtility.GetMethod (() => Queryable.Sum ((IQueryable<int>) null));
       Assert.That (nonGenericMethod.IsGenericMethod, Is.False);
 
       var result = registry.IsRegistered (nonGenericMethod);
