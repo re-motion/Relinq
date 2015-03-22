@@ -15,11 +15,13 @@
 // under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 {
@@ -32,11 +34,10 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class UnionExpressionNode : QuerySourceSetOperationExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.Union<object> (null, null)),
-                                                               GetSupportedMethod (() => Enumerable.Union<object> (null, null))
-                                                           };
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("Union").WithoutEqualityComparer();
+    }
 
     public UnionExpressionNode (MethodCallExpressionParseInfo parseInfo, Expression source2)
       : base(parseInfo, source2)
