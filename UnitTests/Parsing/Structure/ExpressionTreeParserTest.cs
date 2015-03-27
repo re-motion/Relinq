@@ -45,11 +45,11 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     {
       _methodInfoBasedNodeTypeRegistry = new MethodInfoBasedNodeTypeRegistry();
 
-      _methodInfoBasedNodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
-      _methodInfoBasedNodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
-      _methodInfoBasedNodeTypeRegistry.Register (TakeExpressionNode.SupportedMethods, typeof (TakeExpressionNode));
-      _methodInfoBasedNodeTypeRegistry.Register (CountExpressionNode.SupportedMethods, typeof (CountExpressionNode));
-      _methodInfoBasedNodeTypeRegistry.Register (ContainsExpressionNode.SupportedMethods, typeof (ContainsExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (WhereExpressionNode.GetSupportedMethods(), typeof (WhereExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (TakeExpressionNode.GetSupportedMethods(), typeof (TakeExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (CountExpressionNode.GetSupportedMethods(), typeof (CountExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (ContainsExpressionNode.GetSupportedMethods(), typeof (ContainsExpressionNode));
 
       _expressionTreeParser = new ExpressionTreeParser (_methodInfoBasedNodeTypeRegistry, new PartialEvaluatingExpressionTreeProcessor() );
 
@@ -467,7 +467,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     [Test]
     public void GetQueryOperatorExpression_ArrayLongLength ()
     {
-      _methodInfoBasedNodeTypeRegistry.Register (LongCountExpressionNode.SupportedMethods, typeof (LongCountExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (LongCountExpressionNode.GetSupportedMethods(), typeof (LongCountExpressionNode));
       var memberExpression = (MemberExpression) ExpressionHelper.MakeExpression (() => new int[0].LongLength);
       var queryOperatorExpression = _expressionTreeParser.GetQueryOperatorExpression (memberExpression);
 

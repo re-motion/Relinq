@@ -21,6 +21,7 @@ using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.UnitTests.TestDomain;
+using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
 {
@@ -38,27 +39,22 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethod_WithoutPredicate ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (LastExpressionNode.SupportedMethods, q => q.Last (), e => e.Last ());
-    }
-
-    [Test]
-    public void SupportedMethod_WithPredicate ()
-    {
-      AssertSupportedMethod_Generic (LastExpressionNode.SupportedMethods, q => q.Last (o => o == null), e => e.Last (o => o == null));
-    }
-
-    [Test]
-    public void SupportedMethod_LastOrDefault_WithoutPredicate ()
-    {
-      AssertSupportedMethod_Generic (LastExpressionNode.SupportedMethods, q => q.LastOrDefault (), e => e.LastOrDefault ());
-    }
-
-    [Test]
-    public void SupportedMethod_LastOrDefault_WithPredicate ()
-    {
-      AssertSupportedMethod_Generic (LastExpressionNode.SupportedMethods, q => q.LastOrDefault (o => o == null), e => e.LastOrDefault (o => o == null));
+      Assert.That (
+          LastExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.Last<object> (null)),
+                  GetGenericMethodDefinition (() => Queryable.Last<object> (null, null)),
+                  GetGenericMethodDefinition (() => Queryable.LastOrDefault<object> (null)),
+                  GetGenericMethodDefinition (() => Queryable.LastOrDefault<object> (null, null)),
+                  GetGenericMethodDefinition (() => Enumerable.Last<object> (null)),
+                  GetGenericMethodDefinition (() => Enumerable.Last<object> (null, null)),
+                  GetGenericMethodDefinition (() => Enumerable.LastOrDefault<object> (null)),
+                  GetGenericMethodDefinition (() => Enumerable.LastOrDefault<object> (null, null)),
+              }));
     }
 
     [Test]
@@ -78,7 +74,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_NoDefaultAllowed ()
     {
-      var node = new LastExpressionNode (CreateParseInfo (LastExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (Cook))), null);
+      var node = new LastExpressionNode (CreateParseInfo (ReflectionUtility.GetMethod (() => Queryable.Last<Cook> (null))), null);
       
       node.Apply (QueryModel, ClauseGenerationContext);
       
@@ -88,7 +84,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_DefaultAllowed ()
     {
-      var node = new LastExpressionNode (CreateParseInfo (LastExpressionNode.SupportedMethods[3].MakeGenericMethod (typeof (Cook))), null);
+      var node = new LastExpressionNode (CreateParseInfo (ReflectionUtility.GetMethod (() => Queryable.LastOrDefault<Cook> (null, null))), null);
       
       node.Apply (QueryModel, ClauseGenerationContext);
 

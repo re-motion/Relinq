@@ -15,6 +15,7 @@
 // under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -33,17 +34,12 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class SelectManyExpressionNode : MethodCallExpressionNodeBase, IQuerySourceExpressionNode
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (
-                                                                   () => Queryable.SelectMany<object, object[], object> (null, o => null, null)),
-                                                               GetSupportedMethod (
-                                                                   () => Enumerable.SelectMany<object, object[], object> (null, o => null, null)),
-                                                               GetSupportedMethod (
-                                                                   () => Queryable.SelectMany<object, object[]> (null, o => null)),
-                                                               GetSupportedMethod (
-                                                                   () => Enumerable.SelectMany<object, object[]> (null, o => null)),
-                                                           };
+    private const int c_indexSelectorParameterPosition = 1;
+
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("SelectMany").WithoutIndexSelector (c_indexSelectorParameterPosition);
+    }
 
     private readonly ResolvedExpressionCache<Expression> _cachedCollectionSelector;
     private readonly ResolvedExpressionCache<Expression> _cachedResultSelector;

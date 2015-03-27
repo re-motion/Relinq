@@ -15,6 +15,7 @@
 // under the License.
 // 
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -24,6 +25,14 @@ namespace Remotion.Linq.Utilities
 {
   internal static class ReflectionUtility
   {
+    private static readonly ReadOnlyCollection<MethodInfo> s_enumerableAndQueryableMethods =
+        new ReadOnlyCollection<MethodInfo> (typeof (Enumerable).GetRuntimeMethods().Concat (typeof (Queryable).GetRuntimeMethods()).ToList());
+
+    public static ReadOnlyCollection<MethodInfo> EnumerableAndQueryableMethods
+    {
+      get { return s_enumerableAndQueryableMethods; }
+    }
+
     public static MethodInfo GetMethod<T> (Expression<Func<T>> wrappedCall)
     {
       ArgumentUtility.CheckNotNull ("wrappedCall", wrappedCall);

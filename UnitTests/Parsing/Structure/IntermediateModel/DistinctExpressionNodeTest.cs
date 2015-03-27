@@ -36,9 +36,16 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethod_WithoutComparer ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (DistinctExpressionNode.SupportedMethods, q => q.Distinct(), e => e.Distinct());
+      Assert.That (
+          DistinctExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.Distinct<object> (null)),
+                  GetGenericMethodDefinition (() => Enumerable.Distinct<object> (null))
+              }));
     }
 
     [Test]

@@ -15,10 +15,12 @@
 // under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -32,11 +34,10 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class ThenByExpressionNode : MethodCallExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.ThenBy<object, object> (null, null)),
-                                                               GetSupportedMethod (() => Enumerable.ThenBy<object, object> (null, null)),
-                                                           };
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("ThenBy").WithoutComparer();
+    }
 
     private readonly ResolvedExpressionCache<Expression> _cachedSelector;
     private readonly LambdaExpression _keySelector;

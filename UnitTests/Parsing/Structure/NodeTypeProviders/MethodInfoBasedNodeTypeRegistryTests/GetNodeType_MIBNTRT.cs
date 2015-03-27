@@ -23,6 +23,7 @@ using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
 using Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfoBasedNodeTypeRegistryTests.TestDomain;
+using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfoBasedNodeTypeRegistryTests
 {
@@ -40,9 +41,9 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     [Test]
     public void Test_WithMethodInfo ()
     {
-      _registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      _registry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
 
-      var type = _registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
+      var type = _registry.GetNodeType (SelectExpressionNode.GetSupportedMethods().First());
 
       Assert.That (type, Is.SameAs (typeof (SelectExpressionNode)));
     }
@@ -50,12 +51,12 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     [Test]
     public void Test_WithMultipleNodes ()
     {
-      _registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
-      _registry.Register (SumExpressionNode.SupportedMethods, typeof (SumExpressionNode));
+      _registry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
+      _registry.Register (SumExpressionNode.GetSupportedMethods(), typeof (SumExpressionNode));
 
-      var type1 = _registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
-      var type2 = _registry.GetNodeType (SumExpressionNode.SupportedMethods[0]);
-      var type3 = _registry.GetNodeType (SumExpressionNode.SupportedMethods[1]);
+      var type1 = _registry.GetNodeType (SelectExpressionNode.GetSupportedMethods().First());
+      var type2 = _registry.GetNodeType (SumExpressionNode.GetSupportedMethods().First());
+      var type3 = _registry.GetNodeType (SumExpressionNode.GetSupportedMethods().Skip(1).First());
 
       Assert.That (type1, Is.SameAs (typeof (SelectExpressionNode)));
       Assert.That (type2, Is.SameAs (typeof (SumExpressionNode)));
@@ -65,7 +66,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     [Test]
     public void Test_ClosedGenericMethod ()
     {
-      _registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      _registry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
 
       var closedGenericMethodCallExpression =
           (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select (i => i + 1));
@@ -78,9 +79,9 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     public void Test_NonGenericMethod ()
     {
       var registry = _registry;
-      registry.Register (SumExpressionNode.SupportedMethods, typeof (SumExpressionNode));
+      registry.Register (SumExpressionNode.GetSupportedMethods(), typeof (SumExpressionNode));
 
-      var nonGenericMethod = SumExpressionNode.SupportedMethods[0];
+      var nonGenericMethod = ReflectionUtility.GetMethod (() => Queryable.Sum ((IQueryable<int>) null));
       Assert.That (nonGenericMethod.IsGenericMethod, Is.False);
 
       var type = registry.GetNodeType (nonGenericMethod);
@@ -121,7 +122,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     [Test]
     public void Test_UnknownMethod ()
     {
-      var result = _registry.GetNodeType (SelectExpressionNode.SupportedMethods[0]);
+      var result = _registry.GetNodeType (SelectExpressionNode.GetSupportedMethods().First());
 
       Assert.That (result, Is.Null);
     }

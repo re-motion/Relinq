@@ -39,9 +39,16 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethod_WithoutComparer ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (IntersectExpressionNode.SupportedMethods, q => q.Intersect (null), e => e.Intersect (null));
+      Assert.That (
+          IntersectExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.Intersect<object> (null, null)),
+                  GetGenericMethodDefinition (() => Enumerable.Intersect<object> (null, null))
+              }));
     }
 
     [Test]

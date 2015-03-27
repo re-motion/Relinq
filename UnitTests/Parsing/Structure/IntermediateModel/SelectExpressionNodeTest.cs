@@ -36,10 +36,18 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
       _node = new SelectExpressionNode (CreateParseInfo (), selector);
     }
 
+
     [Test]
-    public void SupportedMethod_WithoutPosition ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (SelectExpressionNode.SupportedMethods, q => q.Select (i => i.ToString()), e => e.Select (i => i.ToString()));
+      Assert.That (
+          SelectExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.Select<object, object> (null, o => null)),
+                  GetGenericMethodDefinition (() => Enumerable.Select<object, object> (null, o => null))
+              }));
     }
 
     [Test]

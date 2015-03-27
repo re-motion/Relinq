@@ -42,15 +42,18 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethod_WithoutPosition ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (SelectManyExpressionNode.SupportedMethods, q => q.SelectMany (i => new[] { 1, 2, 3 }, (i, j) => new { i, j }), e => e.SelectMany (i => new[] { 1, 2, 3 }, (i, j) => new { i, j }));
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutResultOperator ()
-    {
-      AssertSupportedMethod_Generic (SelectManyExpressionNode.SupportedMethods, q => q.SelectMany (i => new[] { 1, 2, 3 }), e => e.SelectMany (i => new[] { 1, 2, 3 }));
+      Assert.That (
+          SelectManyExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.SelectMany<object, object[], object> (null, o => null, null)),
+                  GetGenericMethodDefinition (() => Enumerable.SelectMany<object, object[], object> (null, o => null, null)),
+                  GetGenericMethodDefinition (() => Queryable.SelectMany<object, object[]> (null, o => null)),
+                  GetGenericMethodDefinition (() => Enumerable.SelectMany<object, object[]> (null, o => null)),
+              }));
     }
 
     [Test]

@@ -15,11 +15,13 @@
 // under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -34,13 +36,10 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class AggregateFromSeedExpressionNode : ResultOperatorExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.Aggregate<object, object>(null, null, (o1, o2) => null)),
-                                                               GetSupportedMethod (() => Queryable.Aggregate<object, object, object>(null, null, (o1, o2) => null, o => null)),
-                                                               GetSupportedMethod (() => Enumerable.Aggregate<object, object>(null, null, (o1, o2) => null)),
-                                                               GetSupportedMethod (() => Enumerable.Aggregate<object, object, object>(null, null, (o1, o2) => null, o => null)),
-                                                           };
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("Aggregate").WithSeedParameter();
+    }
 
     private readonly ResolvedExpressionCache<LambdaExpression> _cachedFunc;
     private readonly Expression _seed;

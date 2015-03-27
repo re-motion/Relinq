@@ -15,10 +15,12 @@
 // under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -30,11 +32,10 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class OrderByExpressionNode : MethodCallExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.OrderBy<object, object> (null, null)),
-                                                               GetSupportedMethod (() => Enumerable.OrderBy<object, object> (null, null)),
-                                                           };
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("OrderBy").WithoutComparer();
+    }
 
     private readonly ResolvedExpressionCache<Expression> _cachedSelector;
     private readonly LambdaExpression _keySelector;

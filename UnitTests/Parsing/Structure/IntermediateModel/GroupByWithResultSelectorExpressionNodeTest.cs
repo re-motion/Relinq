@@ -75,17 +75,20 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethods ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (
-          GroupByWithResultSelectorExpressionNode.SupportedMethods,
-          q => q.GroupBy (o => o.GetType(), o => o, (key, g) => 12),
-          e => e.GroupBy (o => o.GetType(), o => o, (key, g) => 12));
-
-      AssertSupportedMethod_Generic (
-          GroupByWithResultSelectorExpressionNode.SupportedMethods,
-          q => q.GroupBy (o => o.GetType(), (key, g) => 12),
-          e => e.GroupBy (o => o.GetType(), (key, g) => 12));
+      Assert.That (
+          GroupByWithResultSelectorExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  //Key- and result-selector
+                  GetGenericMethodDefinition (() => Enumerable.GroupBy<object, object, object> (null, o => null, (k, g) => null)),
+                  GetGenericMethodDefinition (() => Queryable.GroupBy<object, object, object> (null, o => null, (k, g) => null)),
+                  //Key-, element- and result-selector
+                  GetGenericMethodDefinition (() => Queryable.GroupBy<object, object, object, object> (null, o => null, o => null, (k, g) => null)),
+                  GetGenericMethodDefinition (() => Enumerable.GroupBy<object, object, object, object> (null, o => null, o => null, (k, g) => null)),
+              }));
     }
 
     [Test]

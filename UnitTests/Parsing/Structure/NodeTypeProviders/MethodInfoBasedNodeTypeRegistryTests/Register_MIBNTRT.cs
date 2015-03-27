@@ -16,10 +16,13 @@
 // 
 
 using System;
+using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
 using Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfoBasedNodeTypeRegistryTests.TestDomain;
+using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfoBasedNodeTypeRegistryTests
 {
@@ -39,7 +42,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     {
       Assert.That (_registry.RegisteredMethodInfoCount, Is.EqualTo (0));
 
-      _registry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      _registry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
 
       Assert.That (_registry.RegisteredMethodInfoCount, Is.EqualTo (2));
     }
@@ -48,17 +51,17 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
     public void Test_SameMethodTwice_OverridesPreviousNodeType ()
     {
       var registry = _registry;
-      registry.Register (WhereExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
-      registry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
+      registry.Register (WhereExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
+      registry.Register (WhereExpressionNode.GetSupportedMethods(), typeof (WhereExpressionNode));
 
-      var type = registry.GetNodeType (WhereExpressionNode.SupportedMethods[0]);
+      var type = registry.GetNodeType (WhereExpressionNode.GetSupportedMethods().First());
       Assert.That (type, Is.SameAs (typeof (WhereExpressionNode)));
     }
 
     [Test]
     public void Test_WithMethodInfoAndClosedGenericMethod_NotAllowed ()
     {
-      var closedGenericMethod = SelectExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (int), typeof (int));
+      var closedGenericMethod = ReflectionUtility.GetMethod (() => Queryable.Select (null, (Expression<Func<int, int>>) null));
 
       Assert.That (
           () => _registry.Register (new[] { closedGenericMethod }, typeof (SelectExpressionNode)),

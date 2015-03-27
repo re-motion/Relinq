@@ -15,11 +15,13 @@
 // under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 {
@@ -33,14 +35,10 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class AnyExpressionNode : ResultOperatorExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.Any<object> (null)),
-                                                               GetSupportedMethod (() => Queryable.Any<object> (null, null)),
-                                                               GetSupportedMethod (() => Enumerable.Any<object> (null)),
-                                                               GetSupportedMethod (() => Enumerable.Any<object> (null, null))
-                                                           };
-
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("Any");
+    }
 
     public AnyExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate)
         : base (parseInfo, optionalPredicate, null)

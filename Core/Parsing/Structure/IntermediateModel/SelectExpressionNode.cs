@@ -15,10 +15,12 @@
 // under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -30,11 +32,12 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class SelectExpressionNode : MethodCallExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.Select<object, object> (null, o => null)),
-                                                               GetSupportedMethod (() => Enumerable.Select<object, object> (null, o => null)),
-                                                           };
+    private const int c_indexSelectorParameterPosition = 1;
+
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("Select").WithoutIndexSelector (c_indexSelectorParameterPosition);
+    }
 
     private readonly ResolvedExpressionCache<Expression> _cachedSelector;
     private readonly LambdaExpression _selector;

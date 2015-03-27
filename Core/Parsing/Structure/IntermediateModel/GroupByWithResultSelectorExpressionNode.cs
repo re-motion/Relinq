@@ -45,13 +45,10 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </remarks>
   public class GroupByWithResultSelectorExpressionNode : SelectExpressionNode, IQuerySourceExpressionNode
   {
-    public new static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.GroupBy<object, object, object, object> (null, o => null, o => null, (k, g) => null)),
-                                                               GetSupportedMethod (() => Queryable.GroupBy<object, object, object> (null, o => null, (k, g) => null)),
-                                                               GetSupportedMethod (() => Enumerable.GroupBy<object, object, object, object> (null, o => null, o => null, (k, g) => null)),
-                                                               GetSupportedMethod (() => Enumerable.GroupBy<object, object, object> (null, o => null, (k, g) => null)),
-                                                           };
+    public new static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("GroupBy").WithResultSelector().WithoutEqualityComparer();
+    }
 
     public GroupByWithResultSelectorExpressionNode (
         MethodCallExpressionParseInfo parseInfo, 

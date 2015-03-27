@@ -15,11 +15,13 @@
 // under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -32,15 +34,10 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class JoinExpressionNode : MethodCallExpressionNodeBase, IQuerySourceExpressionNode
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (
-                                                                   () => Queryable.Join<object, object, object, object> (
-                                                                             null, null, o => null, o => null, (o, i) => null)),
-                                                               GetSupportedMethod (
-                                                                   () => Enumerable.Join<object, object, object, object> (
-                                                                             null, null, o => null, o => null, (o, i) => null)),
-                                                           };
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("Join").WithoutEqualityComparer();
+    }
 
     private readonly ResolvedExpressionCache<Expression> _cachedOuterKeySelector;
     private readonly ResolvedExpressionCache<Expression> _cachedInnerKeySelector;

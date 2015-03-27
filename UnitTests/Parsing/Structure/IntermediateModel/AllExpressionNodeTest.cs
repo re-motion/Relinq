@@ -39,9 +39,16 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethods ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (AllExpressionNode.SupportedMethods, q => q.All (o => o == null), e => e.All (o => o == null));
+      Assert.That (
+          AllExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.All<object> (null, null)),
+                  GetGenericMethodDefinition (() => Enumerable.All<object> (null, null))
+              }));
     }
 
     [Test]

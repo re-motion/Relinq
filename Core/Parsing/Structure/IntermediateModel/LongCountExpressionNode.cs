@@ -15,12 +15,14 @@
 // under the License.
 // 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 {
@@ -33,33 +35,14 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public class LongCountExpressionNode : ResultOperatorExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods;
-
-    static LongCountExpressionNode ()
+    public static IEnumerable<MethodInfo> GetSupportedMethods ()
     {
-      var supportedMethods = new List<MethodInfo>
-                             {
-                             GetSupportedMethod (() => Queryable.LongCount<object> (null)),
-                             GetSupportedMethod (() => Queryable.LongCount<object> (null, null)),
-                             GetSupportedMethod (() => Enumerable.LongCount<object> (null)),
-                             GetSupportedMethod (() => Enumerable.LongCount<object> (null, null)),
-                         };
+      foreach (var methodInfo in ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("LongCount"))
+        yield return methodInfo;
 
-      var arrayLongLengthExpression = GetArrayLongLengthExpression();
-      if (arrayLongLengthExpression != null)
-        supportedMethods.Add (GetSupportedMethod (arrayLongLengthExpression));
-
-      SupportedMethods = supportedMethods.ToArray();
-    }
-
-    private static Expression<Func<long>> GetArrayLongLengthExpression ()
-    {
-      var property = typeof (Array).GetRuntimeProperty ("LongLength");
-      if (property == null)
-        return null;
-
-      //() => (((Array) null).LongLength;
-      return Expression.Lambda<Func<long>>(Expression.MakeMemberAccess (Expression.Constant (null, typeof (Array)), property));
+      var arrayLongLengthMethodInfo = typeof (Array).GetRuntimeMethod ("get_LongLength", new Type[0]);
+      if (arrayLongLengthMethodInfo != null)
+        yield return arrayLongLengthMethodInfo;
     }
 
     public LongCountExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate)

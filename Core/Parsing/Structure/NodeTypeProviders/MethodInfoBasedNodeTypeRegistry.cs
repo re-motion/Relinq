@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
 
@@ -36,37 +35,51 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
         new Dictionary<MethodInfo, Lazy<MethodInfo[]>>();
 
     /// <summary>
-    /// Creates a <see cref="MethodInfoBasedNodeTypeRegistry"/> and automatically registers all types implementing <see cref="IExpressionNode"/> 
-    /// from a given type sequence that offer a public static <c>SupportedMethods</c> field.
+    /// Creates a <see cref="MethodInfoBasedNodeTypeRegistry"/> and registers all relevant <see cref="IExpressionNode"/> implementations in the <b>Remotion.Linq</b> assembly.
     /// </summary>
-    /// <returns>A <see cref="MethodInfoBasedNodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types with a <c>SupportedMethods</c>
-    /// field registered.</returns>
-    public static MethodInfoBasedNodeTypeRegistry CreateFromTypes (IEnumerable<Type> searchedTypes)
+    /// <returns>
+    /// A <see cref="MethodInfoBasedNodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types in the <b>Remotion.Linq</b> assembly registered.
+    /// </returns>
+    public static MethodInfoBasedNodeTypeRegistry CreateFromRemotionLinqAssembly ()
     {
-      ArgumentUtility.CheckNotNull ("searchedTypes", searchedTypes);
-
-      var expressionNodeTypes = from t in searchedTypes
-                                where typeof (IExpressionNode).GetTypeInfo().IsAssignableFrom (t.GetTypeInfo())
-                                select t;
-
-      var supportedMethodsForTypes =
-          from t in expressionNodeTypes
-          let supportedMethodsField = t.GetRuntimeField ("SupportedMethods")
-          select new
-                 {
-                     Type = t,
-                     Methods =
-                         supportedMethodsField != null && supportedMethodsField.IsStatic
-                             ? (IEnumerable<MethodInfo>) supportedMethodsField.GetValue (null)
-                             : Enumerable.Empty<MethodInfo>()
-                 };
-
       var registry = new MethodInfoBasedNodeTypeRegistry();
 
-      foreach (var methodsForType in supportedMethodsForTypes)
-      {
-        registry.Register (methodsForType.Methods, methodsForType.Type);
-      }
+      registry.Register (AggregateExpressionNode.GetSupportedMethods(), typeof (AggregateExpressionNode));
+      registry.Register (AggregateFromSeedExpressionNode.GetSupportedMethods(), typeof (AggregateFromSeedExpressionNode));
+      registry.Register (AllExpressionNode.GetSupportedMethods(), typeof (AllExpressionNode));
+      registry.Register (AnyExpressionNode.GetSupportedMethods(), typeof (AnyExpressionNode));
+      registry.Register (AverageExpressionNode.GetSupportedMethods(), typeof (AverageExpressionNode));
+      registry.Register (CastExpressionNode.GetSupportedMethods(), typeof (CastExpressionNode));
+      registry.Register (ConcatExpressionNode.GetSupportedMethods(), typeof (ConcatExpressionNode));
+      registry.Register (ContainsExpressionNode.GetSupportedMethods(), typeof (ContainsExpressionNode));
+      registry.Register (CountExpressionNode.GetSupportedMethods(), typeof (CountExpressionNode));
+      registry.Register (DefaultIfEmptyExpressionNode.GetSupportedMethods(), typeof (DefaultIfEmptyExpressionNode));
+      registry.Register (DistinctExpressionNode.GetSupportedMethods(), typeof (DistinctExpressionNode));
+      registry.Register (ExceptExpressionNode.GetSupportedMethods(), typeof (ExceptExpressionNode));
+      registry.Register (FirstExpressionNode.GetSupportedMethods(), typeof (FirstExpressionNode));
+      registry.Register (GroupByExpressionNode.GetSupportedMethods(), typeof (GroupByExpressionNode));
+      registry.Register (GroupByWithResultSelectorExpressionNode.GetSupportedMethods(), typeof (GroupByWithResultSelectorExpressionNode));
+      registry.Register (GroupJoinExpressionNode.GetSupportedMethods(), typeof (GroupJoinExpressionNode));
+      registry.Register (IntersectExpressionNode.GetSupportedMethods(), typeof (IntersectExpressionNode));
+      registry.Register (JoinExpressionNode.GetSupportedMethods(), typeof (JoinExpressionNode));
+      registry.Register (LastExpressionNode.GetSupportedMethods(), typeof (LastExpressionNode));
+      registry.Register (LongCountExpressionNode.GetSupportedMethods(), typeof (LongCountExpressionNode));
+      registry.Register (MaxExpressionNode.GetSupportedMethods(), typeof (MaxExpressionNode));
+      registry.Register (MinExpressionNode.GetSupportedMethods(), typeof (MinExpressionNode));
+      registry.Register (OfTypeExpressionNode.GetSupportedMethods(), typeof (OfTypeExpressionNode));
+      registry.Register (OrderByDescendingExpressionNode.GetSupportedMethods(), typeof (OrderByDescendingExpressionNode));
+      registry.Register (OrderByExpressionNode.GetSupportedMethods(), typeof (OrderByExpressionNode));
+      registry.Register (ReverseExpressionNode.GetSupportedMethods(), typeof (ReverseExpressionNode));
+      registry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
+      registry.Register (SelectManyExpressionNode.GetSupportedMethods(), typeof (SelectManyExpressionNode));
+      registry.Register (SingleExpressionNode.GetSupportedMethods(), typeof (SingleExpressionNode));
+      registry.Register (SkipExpressionNode.GetSupportedMethods(), typeof (SkipExpressionNode));
+      registry.Register (SumExpressionNode.GetSupportedMethods(), typeof (SumExpressionNode));
+      registry.Register (TakeExpressionNode.GetSupportedMethods(), typeof (TakeExpressionNode));
+      registry.Register (ThenByDescendingExpressionNode.GetSupportedMethods(), typeof (ThenByDescendingExpressionNode));
+      registry.Register (ThenByExpressionNode.GetSupportedMethods(), typeof (ThenByExpressionNode));
+      registry.Register (UnionExpressionNode.GetSupportedMethods(), typeof (UnionExpressionNode));
+      registry.Register (WhereExpressionNode.GetSupportedMethods(), typeof (WhereExpressionNode));
 
       return registry;
     }
