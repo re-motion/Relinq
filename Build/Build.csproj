@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Remotion.BuildScript">
-      <HintPath>..\packages\Remotion.BuildScript.2.0.0-alpha006\lib\net45\Remotion.BuildScript.dll</HintPath>
+      <HintPath>..\packages\Remotion.BuildScript.2.0.0-alpha007\lib\net45\Remotion.BuildScript.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
