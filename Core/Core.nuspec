@@ -20,5 +20,7 @@
     <file src="bin\$configuration$\$id$.*" target="lib\net45" />
     <!-- By using a wildcard, the file-inclusion does not fail if no documentation file was found. -->
     <file src="$documentationFile$" target="doc" />
+    <file src="..\Core.Net_3_5\**\*.cs" target="src\Core.Net_3_5" />
+    <file src="..\Core.Net_4_0\**\*.cs" target="src\Core.Net_4_0" />
   </files>
 </package>
