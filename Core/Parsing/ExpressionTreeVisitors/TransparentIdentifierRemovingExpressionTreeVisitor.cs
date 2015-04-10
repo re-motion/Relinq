@@ -74,7 +74,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       return expression; // Note that we modifiy the (mutable) QueryModel, we return an unchanged expression
     }
 
-    protected internal override Expression VisitUnknownNonExtensionExpression (Expression expression)
+    protected override Expression VisitUnknownNonExtensionExpression (Expression expression)
     {
       //ignore
       return expression;

@@ -65,7 +65,7 @@ namespace Remotion.Linq.Parsing
       return base.VisitExtensionExpression (expression);
     }
 
-    protected internal override Expression VisitUnknownNonExtensionExpression (Expression expression)
+    protected override Expression VisitUnknownNonExtensionExpression (Expression expression)
     {
       var expressionAsExtensionExpression = expression as ExtensionExpression;
       if (expressionAsExtensionExpression != null && expressionAsExtensionExpression.CanReduce)

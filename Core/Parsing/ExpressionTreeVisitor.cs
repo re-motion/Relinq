@@ -331,7 +331,7 @@ namespace Remotion.Linq.Parsing
       return expression.VisitChildren (this);
     }
 
-    protected internal virtual Expression VisitUnknownNonExtensionExpression (Expression expression)
+    protected virtual Expression VisitUnknownNonExtensionExpression (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 

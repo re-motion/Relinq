@@ -60,7 +60,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       _partialEvaluationInfo = partialEvaluationInfo;
     }
 
-    protected internal override Expression VisitUnknownNonExtensionExpression (Expression expression)
+    protected override Expression VisitUnknownNonExtensionExpression (Expression expression)
     {
       //ignore
       return expression;
