@@ -101,8 +101,8 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       var expression = (ConditionalExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Conditional);
       Expect.Call (VisitorMock.VisitExpression (expression.Test)).Return (expression.Test);
-      Expect.Call (VisitorMock.VisitExpression (expression.IfFalse)).Return (expression.IfFalse);
       Expect.Call (VisitorMock.VisitExpression (expression.IfTrue)).Return (expression.IfTrue);
+      Expect.Call (VisitorMock.VisitExpression (expression.IfFalse)).Return (expression.IfFalse);
       var result = (ConditionalExpression) InvokeAndCheckVisitExpression ("VisitConditionalExpression", expression);
       Assert.That (result, Is.SameAs (expression));
     }
@@ -113,14 +113,14 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       var expression = (ConditionalExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Conditional);
       Expression newTest = Expression.Constant (true);
       Expect.Call (VisitorMock.VisitExpression (expression.Test)).Return (newTest);
-      Expect.Call (VisitorMock.VisitExpression (expression.IfFalse)).Return (expression.IfFalse);
       Expect.Call (VisitorMock.VisitExpression (expression.IfTrue)).Return (expression.IfTrue);
+      Expect.Call (VisitorMock.VisitExpression (expression.IfFalse)).Return (expression.IfFalse);
       var result = (ConditionalExpression) InvokeAndCheckVisitExpression ("VisitConditionalExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Conditional));
       Assert.That (result.Test, Is.SameAs (newTest));
-      Assert.That (result.IfFalse, Is.SameAs (expression.IfFalse));
       Assert.That (result.IfTrue, Is.SameAs (expression.IfTrue));
+      Assert.That (result.IfFalse, Is.SameAs (expression.IfFalse));
     }
 
     [Test]
@@ -129,14 +129,14 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       var expression = (ConditionalExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Conditional);
       Expression newFalse = Expression.Constant (1);
       Expect.Call (VisitorMock.VisitExpression (expression.Test)).Return (expression.Test);
-      Expect.Call (VisitorMock.VisitExpression (expression.IfFalse)).Return (newFalse);
       Expect.Call (VisitorMock.VisitExpression (expression.IfTrue)).Return (expression.IfTrue);
+      Expect.Call (VisitorMock.VisitExpression (expression.IfFalse)).Return (newFalse);
       var result = (ConditionalExpression) InvokeAndCheckVisitExpression ("VisitConditionalExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Conditional));
-      Assert.That (result.IfFalse, Is.SameAs (newFalse));
       Assert.That (result.Test, Is.SameAs (expression.Test));
       Assert.That (result.IfTrue, Is.SameAs (expression.IfTrue));
+      Assert.That (result.IfFalse, Is.SameAs (newFalse));
     }
 
     [Test]
@@ -145,13 +145,13 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       var expression = (ConditionalExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Conditional);
       Expression newTrue = Expression.Constant (1);
       Expect.Call (VisitorMock.VisitExpression (expression.Test)).Return (expression.Test);
-      Expect.Call (VisitorMock.VisitExpression (expression.IfFalse)).Return (expression.IfFalse);
       Expect.Call (VisitorMock.VisitExpression (expression.IfTrue)).Return (newTrue);
+      Expect.Call (VisitorMock.VisitExpression (expression.IfFalse)).Return (expression.IfFalse);
       var result = (ConditionalExpression) InvokeAndCheckVisitExpression ("VisitConditionalExpression", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Conditional));
-      Assert.That (result.IfTrue, Is.SameAs (newTrue));
       Assert.That (result.Test, Is.SameAs (expression.Test));
+      Assert.That (result.IfTrue, Is.SameAs (newTrue));
       Assert.That (result.IfFalse, Is.SameAs (expression.IfFalse));
     }
 
