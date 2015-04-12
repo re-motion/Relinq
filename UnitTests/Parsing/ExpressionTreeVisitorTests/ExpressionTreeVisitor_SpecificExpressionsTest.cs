@@ -303,21 +303,21 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitMemberExpression_Unchanged ()
+    public void VisitMember_Unchanged ()
     {
       var expression = (MemberExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.MemberAccess);
       Expect.Call (VisitorMock.VisitExpression (expression.Expression)).Return (expression.Expression);
-      var result = (MemberExpression) InvokeAndCheckVisitExpression ("VisitMemberExpression", expression);
+      var result = (MemberExpression) InvokeAndCheckVisitExpression ("VisitMember", expression);
       Assert.That (result, Is.SameAs (expression));
     }
 
     [Test]
-    public void VisitMemberExpression_ChangedExpression ()
+    public void VisitMember_ChangedExpression ()
     {
       var expression = (MemberExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.MemberAccess);
       Expression newExpression = Expression.Constant (DateTime.Now);
       Expect.Call (VisitorMock.VisitExpression (expression.Expression)).Return (newExpression);
-      var result = (MemberExpression) InvokeAndCheckVisitExpression ("VisitMemberExpression", expression);
+      var result = (MemberExpression) InvokeAndCheckVisitExpression ("VisitMember", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.MemberAccess));
       Assert.That (result.Expression, Is.SameAs (newExpression));

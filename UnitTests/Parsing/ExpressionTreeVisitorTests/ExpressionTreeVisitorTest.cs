@@ -255,7 +255,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitExpression_Member ()
     {
-      CheckDelegation ("VisitMemberExpression", ExpressionType.MemberAccess);
+      CheckDelegation ("VisitMember", ExpressionType.MemberAccess);
     }
 
     [Test]

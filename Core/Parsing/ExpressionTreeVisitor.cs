@@ -254,7 +254,7 @@ namespace Remotion.Linq.Parsing
         case ExpressionType.Lambda:
           return VisitLambda ((LambdaExpression) expression);
         case ExpressionType.MemberAccess:
-          return VisitMemberExpression ((MemberExpression) expression);
+          return VisitMember ((MemberExpression) expression);
         case ExpressionType.Call:
           return VisitMethodCall ((MethodCallExpression) expression);
         case ExpressionType.New:
@@ -475,7 +475,7 @@ namespace Remotion.Linq.Parsing
     }
 
     // Identical implemention by ExpressionVisitor
-    protected virtual Expression VisitMemberExpression (MemberExpression expression)
+    protected virtual Expression VisitMember (MemberExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       Expression newExpression = VisitExpression (expression.Expression);

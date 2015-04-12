@@ -52,18 +52,18 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
     {
     }
 
-    protected override Expression VisitMemberExpression (MemberExpression memberExpression)
+    protected override Expression VisitMember (MemberExpression memberExpression)
     {
       var memberBindings = GetMemberBindingsCreatedByExpression (memberExpression.Expression);
       if (memberBindings == null)
-        return base.VisitMemberExpression (memberExpression);
+        return base.VisitMember (memberExpression);
 
       var matchingAssignment = memberBindings
           .Where (binding => binding.MatchesReadAccess (memberExpression.Member))
           .LastOrDefault();
 
       if (matchingAssignment == null)
-        return base.VisitMemberExpression (memberExpression);
+        return base.VisitMember (memberExpression);
       else
         return matchingAssignment.AssociatedExpression;
     }

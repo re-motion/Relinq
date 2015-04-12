@@ -140,8 +140,8 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitMemberExpression: ", MatchType = MessageMatch.Contains)]
-    public void VisitMemberExpression ()
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitMember: ", MatchType = MessageMatch.Contains)]
+    public void VisitMember ()
     {
       VisitExpression (_visitor, ExpressionType.MemberAccess);
     }
