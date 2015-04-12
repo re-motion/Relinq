@@ -252,7 +252,7 @@ namespace Remotion.Linq.Parsing
         case ExpressionType.Invoke:
           return VisitInvocationExpression ((InvocationExpression) expression);
         case ExpressionType.Lambda:
-          return VisitLambdaExpression ((LambdaExpression) expression);
+          return VisitLambda ((LambdaExpression) expression);
         case ExpressionType.MemberAccess:
           return VisitMemberExpression ((MemberExpression) expression);
         case ExpressionType.Call:
@@ -442,11 +442,11 @@ namespace Remotion.Linq.Parsing
 
     // TODO: ExpressionVisitor.VisitLambda has no overload accepting LamdaExpression, only Expression<T>, derived from LambdaExpression. Is this a problem?
     // ExpressionVisitor.VisitBinary visits Body, Parameters, current implementation visits Parameters, Body
-    protected virtual Expression VisitLambdaExpression (LambdaExpression expression)
+    protected virtual Expression VisitLambda (LambdaExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       Expression newBody = VisitExpression (expression.Body);
-      ReadOnlyCollection<ParameterExpression> newParameters = VisitAndConvert (expression.Parameters, "VisitLambdaExpression");
+      ReadOnlyCollection<ParameterExpression> newParameters = VisitAndConvert (expression.Parameters, "VisitLambda");
       if ((newBody != expression.Body) || (newParameters != expression.Parameters))
         return Expression.Lambda (expression.Type, newBody, newParameters);
       return expression;

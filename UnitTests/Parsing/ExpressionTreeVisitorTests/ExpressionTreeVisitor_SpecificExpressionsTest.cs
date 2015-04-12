@@ -189,23 +189,23 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitLambdaExpression_Unchanged ()
+    public void VisitLambda_Unchanged ()
     {
       var expression = (LambdaExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Lambda);
       Expect.Call (VisitorMock.VisitExpression (expression.Body)).Return (expression.Body);
-      Expect.Call (VisitorMock.VisitAndConvert (expression.Parameters, "VisitLambdaExpression")).Return (expression.Parameters);
-      var result = (LambdaExpression) InvokeAndCheckVisitExpression ("VisitLambdaExpression", expression);
+      Expect.Call (VisitorMock.VisitAndConvert (expression.Parameters, "VisitLambda")).Return (expression.Parameters);
+      var result = (LambdaExpression) InvokeAndCheckVisitExpression ("VisitLambda", expression);
       Assert.That (result, Is.SameAs (expression));
     }
 
     [Test]
-    public void VisitLambdaExpression_ChangedBody ()
+    public void VisitLambda_ChangedBody ()
     {
       var expression = (LambdaExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Lambda);
       Expression newBody = Expression.Constant (1);
       Expect.Call (VisitorMock.VisitExpression (expression.Body)).Return (newBody);
-      Expect.Call (VisitorMock.VisitAndConvert (expression.Parameters, "VisitLambdaExpression")).Return (expression.Parameters);
-      var result = (LambdaExpression) InvokeAndCheckVisitExpression ("VisitLambdaExpression", expression);
+      Expect.Call (VisitorMock.VisitAndConvert (expression.Parameters, "VisitLambda")).Return (expression.Parameters);
+      var result = (LambdaExpression) InvokeAndCheckVisitExpression ("VisitLambda", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Lambda));
       Assert.That (result.Body, Is.SameAs (newBody));
@@ -213,13 +213,13 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitLambdaExpression_ChangedParameters ()
+    public void VisitLambda_ChangedParameters ()
     {
       var expression = (LambdaExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Lambda);
       ReadOnlyCollection<ParameterExpression> newParameters = new List<ParameterExpression> { Expression.Parameter (typeof (int), "i") }.AsReadOnly ();
       Expect.Call (VisitorMock.VisitExpression (expression.Body)).Return (expression.Body);
-      Expect.Call (VisitorMock.VisitAndConvert (expression.Parameters, "VisitLambdaExpression")).Return (newParameters);
-      var result = (LambdaExpression) InvokeAndCheckVisitExpression ("VisitLambdaExpression", expression);
+      Expect.Call (VisitorMock.VisitAndConvert (expression.Parameters, "VisitLambda")).Return (newParameters);
+      var result = (LambdaExpression) InvokeAndCheckVisitExpression ("VisitLambda", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Lambda));
       Assert.That (result.Parameters, Is.EqualTo (newParameters));

@@ -249,7 +249,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitExpression_Lambda ()
     {
-      CheckDelegation ("VisitLambdaExpression", ExpressionType.Lambda);
+      CheckDelegation ("VisitLambda", ExpressionType.Lambda);
     }
 
     [Test]

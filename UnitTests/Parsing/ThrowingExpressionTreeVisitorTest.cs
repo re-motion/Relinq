@@ -119,8 +119,8 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitLambdaExpression: ", MatchType = MessageMatch.Contains)]
-    public void VisitLambdaExpression ()
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitLambda: ", MatchType = MessageMatch.Contains)]
+    public void VisitLambda ()
     {
       VisitExpression (_visitor, ExpressionType.Lambda);
     }
