@@ -261,7 +261,7 @@ namespace Remotion.Linq.Parsing
           return VisitNew ((NewExpression) expression);
         case ExpressionType.NewArrayBounds:
         case ExpressionType.NewArrayInit:
-          return VisitNewArrayExpression ((NewArrayExpression) expression);
+          return VisitNewArray ((NewArrayExpression) expression);
         case ExpressionType.MemberInit:
           return VisitMemberInitExpression ((MemberInitExpression) expression);
         case ExpressionType.ListInit:
@@ -506,10 +506,10 @@ namespace Remotion.Linq.Parsing
     }
 
     // Identical implemention by ExpressionVisitor
-    protected virtual Expression VisitNewArrayExpression (NewArrayExpression expression)
+    protected virtual Expression VisitNewArray (NewArrayExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      ReadOnlyCollection<Expression> newExpressions = VisitAndConvert (expression.Expressions, "VisitNewArrayExpression");
+      ReadOnlyCollection<Expression> newExpressions = VisitAndConvert (expression.Expressions, "VisitNewArray");
       if (newExpressions != expression.Expressions)
       {
         var elementType = expression.Type.GetElementType();

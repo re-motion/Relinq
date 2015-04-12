@@ -189,14 +189,14 @@ namespace Remotion.Linq.Parsing
       return base.VisitNew (expression);
     }
 
-    protected override Expression VisitNewArrayExpression (NewArrayExpression expression)
+    protected override Expression VisitNewArray (NewArrayExpression expression)
     {
-      return VisitUnhandledItem<NewArrayExpression, Expression> (expression, "VisitNewArrayExpression", BaseVisitNewArrayExpression);
+      return VisitUnhandledItem<NewArrayExpression, Expression> (expression, "VisitNewArray", BaseVisitNewArray);
     }
 
-    protected Expression BaseVisitNewArrayExpression (NewArrayExpression expression)
+    protected Expression BaseVisitNewArray (NewArrayExpression expression)
     {
-      return base.VisitNewArrayExpression (expression);
+      return base.VisitNewArray (expression);
     }
 
     protected override Expression VisitMemberInitExpression (MemberInitExpression expression)

@@ -400,21 +400,21 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitNewArrayExpression_Unchanged ()
+    public void VisitNewArray_Unchanged ()
     {
       var expression = (NewArrayExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.NewArrayInit);
-      Expect.Call (VisitorMock.VisitAndConvert (expression.Expressions, "VisitNewArrayExpression")).Return (expression.Expressions);
-      var result = (NewArrayExpression) InvokeAndCheckVisitExpression ("VisitNewArrayExpression", expression);
+      Expect.Call (VisitorMock.VisitAndConvert (expression.Expressions, "VisitNewArray")).Return (expression.Expressions);
+      var result = (NewArrayExpression) InvokeAndCheckVisitExpression ("VisitNewArray", expression);
       Assert.That (result, Is.SameAs (expression));
     }
 
     [Test]
-    public void VisitNewArrayExpression_Init_Changed ()
+    public void VisitNewArray_Init_Changed ()
     {
       var expression = (NewArrayExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.NewArrayInit);
       ReadOnlyCollection<Expression> newExpressions = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
-      Expect.Call (VisitorMock.VisitAndConvert (expression.Expressions, "VisitNewArrayExpression")).Return (newExpressions);
-      var result = (NewArrayExpression) InvokeAndCheckVisitExpression ("VisitNewArrayExpression", expression);
+      Expect.Call (VisitorMock.VisitAndConvert (expression.Expressions, "VisitNewArray")).Return (newExpressions);
+      var result = (NewArrayExpression) InvokeAndCheckVisitExpression ("VisitNewArray", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.NewArrayInit));
       Assert.That (result.Expressions, Is.EqualTo (newExpressions));
@@ -422,12 +422,12 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitNewArrayExpression_Bounds_Changed ()
+    public void VisitNewArray_Bounds_Changed ()
     {
       var expression = (NewArrayExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.NewArrayBounds);
       ReadOnlyCollection<Expression> newExpressions = new List<Expression> (new Expression[] { Expression.Constant (214578) }).AsReadOnly ();
-      Expect.Call (VisitorMock.VisitAndConvert (expression.Expressions, "VisitNewArrayExpression")).Return (newExpressions);
-      var result = (NewArrayExpression) InvokeAndCheckVisitExpression ("VisitNewArrayExpression", expression);
+      Expect.Call (VisitorMock.VisitAndConvert (expression.Expressions, "VisitNewArray")).Return (newExpressions);
+      var result = (NewArrayExpression) InvokeAndCheckVisitExpression ("VisitNewArray", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.NewArrayBounds));
       Assert.That (result.Expressions, Is.EqualTo (newExpressions));

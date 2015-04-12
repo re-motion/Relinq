@@ -273,7 +273,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitExpression_NewAray ()
     {
-      CheckDelegation ("VisitNewArrayExpression", ExpressionType.NewArrayBounds, ExpressionType.NewArrayInit);
+      CheckDelegation ("VisitNewArray", ExpressionType.NewArrayBounds, ExpressionType.NewArrayInit);
     }
 
     [Test]

@@ -154,8 +154,8 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitNewArrayExpression: ", MatchType = MessageMatch.Contains)]
-    public void VisitNewArrayExpression ()
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitNewArray: ", MatchType = MessageMatch.Contains)]
+    public void VisitNewArray ()
     {
       VisitExpression (_visitor, ExpressionType.NewArrayInit);
     }
