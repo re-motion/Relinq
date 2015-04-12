@@ -209,14 +209,14 @@ namespace Remotion.Linq.Parsing
       return base.VisitMemberInit (expression);
     }
 
-    protected override Expression VisitListInitExpression (ListInitExpression expression)
+    protected override Expression VisitListInit (ListInitExpression expression)
     {
-      return VisitUnhandledItem<ListInitExpression, Expression> (expression, "VisitListInitExpression", BaseVisitListInitExpression);
+      return VisitUnhandledItem<ListInitExpression, Expression> (expression, "VisitListInit", BaseVisitListInit);
     }
 
-    protected Expression BaseVisitListInitExpression (ListInitExpression expression)
+    protected Expression BaseVisitListInit (ListInitExpression expression)
     {
-      return base.VisitListInitExpression (expression);
+      return base.VisitListInit (expression);
     }
 
     protected override ElementInit VisitElementInit (ElementInit elementInit)

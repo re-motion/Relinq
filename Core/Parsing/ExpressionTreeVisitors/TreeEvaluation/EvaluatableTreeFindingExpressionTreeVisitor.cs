@@ -133,7 +133,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
       return expression;
     }
 
-    protected override Expression VisitListInitExpression (ListInitExpression expression)
+    protected override Expression VisitListInit (ListInitExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       VisitElementInitList (expression.Initializers);

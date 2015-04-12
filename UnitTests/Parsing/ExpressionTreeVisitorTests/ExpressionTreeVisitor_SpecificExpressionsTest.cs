@@ -497,26 +497,26 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitListInitExpression_Unchanged ()
+    public void VisitListInit_Unchanged ()
     {
       var expression = (ListInitExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.ListInit);
       Expect.Call (VisitorMock.VisitExpression (expression.NewExpression)).Return (expression.NewExpression);
       Expect.Call (InvokeVisitMethod ("VisitElementInitList", expression.Initializers)).Return (expression.Initializers);
-      var result = (ListInitExpression) InvokeAndCheckVisitExpression ("VisitListInitExpression", expression);
+      var result = (ListInitExpression) InvokeAndCheckVisitExpression ("VisitListInit", expression);
       Assert.That (result, Is.SameAs (expression));
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException),
         ExpectedMessage = "ListInitExpressions only support non-null instances of type 'NewExpression' as their NewExpression member.")]
-    public void VisitListInitExpression_InvalidNewExpression ()
+    public void VisitListInit_InvalidNewExpression ()
     {
       var expression = (ListInitExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.ListInit);
       Expect.Call (VisitorMock.VisitExpression (expression.NewExpression)).Return (Expression.Constant (0));
       Expect.Call (InvokeVisitMethod ("VisitElementInitList", expression.Initializers)).Return (expression.Initializers);
       try
       {
-        InvokeAndCheckVisitExpression ("VisitListInitExpression", expression);
+        InvokeAndCheckVisitExpression ("VisitListInit", expression);
       }
       catch (TargetInvocationException ex)
       {
@@ -525,13 +525,13 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitListInitExpression_ChangedNewExpression ()
+    public void VisitListInit_ChangedNewExpression ()
     {
       var expression = (ListInitExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.ListInit);
       NewExpression newNewExpression = Expression.New (typeof (List<int>));
       Expect.Call (VisitorMock.VisitExpression (expression.NewExpression)).Return (newNewExpression);
       Expect.Call (InvokeVisitMethod ("VisitElementInitList", expression.Initializers)).Return (expression.Initializers);
-      var result = (ListInitExpression) InvokeAndCheckVisitExpression ("VisitListInitExpression", expression);
+      var result = (ListInitExpression) InvokeAndCheckVisitExpression ("VisitListInit", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.ListInit));
       Assert.That (result.NewExpression, Is.SameAs (newNewExpression));
@@ -539,14 +539,14 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitListInitExpression_ChangedInitializers ()
+    public void VisitListInit_ChangedInitializers ()
     {
       var expression = (ListInitExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.ListInit);
       ReadOnlyCollection<ElementInit> newInitializers =
           new List<ElementInit> (new[] { Expression.ElementInit (typeof (List<int>).GetMethod ("Add"), Expression.Constant (214578)) }).AsReadOnly ();
       Expect.Call (VisitorMock.VisitExpression (expression.NewExpression)).Return (expression.NewExpression);
       Expect.Call (InvokeVisitMethod ("VisitElementInitList", expression.Initializers)).Return (newInitializers);
-      var result = (ListInitExpression) InvokeAndCheckVisitExpression ("VisitListInitExpression", expression);
+      var result = (ListInitExpression) InvokeAndCheckVisitExpression ("VisitListInit", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.ListInit));
       Assert.That (result.Initializers, Is.EqualTo (newInitializers));

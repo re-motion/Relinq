@@ -285,7 +285,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitExpression_ListInit ()
     {
-      CheckDelegation ("VisitListInitExpression", ExpressionType.ListInit);
+      CheckDelegation ("VisitListInit", ExpressionType.ListInit);
     }
 
     [Test]

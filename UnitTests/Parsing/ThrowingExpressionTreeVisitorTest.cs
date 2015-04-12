@@ -168,8 +168,8 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitListInitExpression: ", MatchType = MessageMatch.Contains)]
-    public void VisitListInitExpression ()
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitListInit: ", MatchType = MessageMatch.Contains)]
+    public void VisitListInit ()
     {
       VisitExpression (_visitor, ExpressionType.ListInit);
     }
