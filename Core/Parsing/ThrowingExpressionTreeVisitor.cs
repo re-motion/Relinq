@@ -119,14 +119,14 @@ namespace Remotion.Linq.Parsing
       return base.VisitConstant (expression);
     }
 
-    protected override Expression VisitConditionalExpression (ConditionalExpression expression)
+    protected override Expression VisitConditional (ConditionalExpression expression)
     {
-      return VisitUnhandledItem<ConditionalExpression, Expression> (expression, "VisitConditionalExpression", BaseVisitConditionalExpression);
+      return VisitUnhandledItem<ConditionalExpression, Expression> (expression, "VisitConditional", BaseVisitConditional);
     }
 
-    protected Expression BaseVisitConditionalExpression (ConditionalExpression arg)
+    protected Expression BaseVisitConditional (ConditionalExpression arg)
     {
-      return base.VisitConditionalExpression (arg);
+      return base.VisitConditional (arg);
     }
 
     protected override Expression VisitParameterExpression (ParameterExpression expression)

@@ -231,7 +231,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitExpression_Conditional ()
     {
-      CheckDelegation ("VisitConditionalExpression", ExpressionType.Conditional);
+      CheckDelegation ("VisitConditional", ExpressionType.Conditional);
     }
 
     [Test]

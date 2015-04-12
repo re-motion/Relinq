@@ -105,8 +105,8 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitConditionalExpression: ", MatchType = MessageMatch.Contains)]
-    public void VisitConditionalExpression ()
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitConditional: ", MatchType = MessageMatch.Contains)]
+    public void VisitConditional ()
     {
       VisitExpression (_visitor, ExpressionType.Conditional);
     }

@@ -97,25 +97,25 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitConditionalExpression_Unchanged ()
+    public void VisitConditional_Unchanged ()
     {
       var expression = (ConditionalExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Conditional);
       Expect.Call (VisitorMock.VisitExpression (expression.Test)).Return (expression.Test);
       Expect.Call (VisitorMock.VisitExpression (expression.IfTrue)).Return (expression.IfTrue);
       Expect.Call (VisitorMock.VisitExpression (expression.IfFalse)).Return (expression.IfFalse);
-      var result = (ConditionalExpression) InvokeAndCheckVisitExpression ("VisitConditionalExpression", expression);
+      var result = (ConditionalExpression) InvokeAndCheckVisitExpression ("VisitConditional", expression);
       Assert.That (result, Is.SameAs (expression));
     }
 
     [Test]
-    public void VisitConditionalExpression_ChangedTest ()
+    public void VisitConditional_ChangedTest ()
     {
       var expression = (ConditionalExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Conditional);
       Expression newTest = Expression.Constant (true);
       Expect.Call (VisitorMock.VisitExpression (expression.Test)).Return (newTest);
       Expect.Call (VisitorMock.VisitExpression (expression.IfTrue)).Return (expression.IfTrue);
       Expect.Call (VisitorMock.VisitExpression (expression.IfFalse)).Return (expression.IfFalse);
-      var result = (ConditionalExpression) InvokeAndCheckVisitExpression ("VisitConditionalExpression", expression);
+      var result = (ConditionalExpression) InvokeAndCheckVisitExpression ("VisitConditional", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Conditional));
       Assert.That (result.Test, Is.SameAs (newTest));
@@ -124,14 +124,14 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitConditionalExpression_ChangedFalse ()
+    public void VisitConditional_ChangedFalse ()
     {
       var expression = (ConditionalExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Conditional);
       Expression newFalse = Expression.Constant (1);
       Expect.Call (VisitorMock.VisitExpression (expression.Test)).Return (expression.Test);
       Expect.Call (VisitorMock.VisitExpression (expression.IfTrue)).Return (expression.IfTrue);
       Expect.Call (VisitorMock.VisitExpression (expression.IfFalse)).Return (newFalse);
-      var result = (ConditionalExpression) InvokeAndCheckVisitExpression ("VisitConditionalExpression", expression);
+      var result = (ConditionalExpression) InvokeAndCheckVisitExpression ("VisitConditional", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Conditional));
       Assert.That (result.Test, Is.SameAs (expression.Test));
@@ -140,14 +140,14 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitConditionalExpression_ChangedTrue ()
+    public void VisitConditional_ChangedTrue ()
     {
       var expression = (ConditionalExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Conditional);
       Expression newTrue = Expression.Constant (1);
       Expect.Call (VisitorMock.VisitExpression (expression.Test)).Return (expression.Test);
       Expect.Call (VisitorMock.VisitExpression (expression.IfTrue)).Return (newTrue);
       Expect.Call (VisitorMock.VisitExpression (expression.IfFalse)).Return (expression.IfFalse);
-      var result = (ConditionalExpression) InvokeAndCheckVisitExpression ("VisitConditionalExpression", expression);
+      var result = (ConditionalExpression) InvokeAndCheckVisitExpression ("VisitConditional", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Conditional));
       Assert.That (result.Test, Is.SameAs (expression.Test));
@@ -157,7 +157,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 
 #if !NET_3_5
     [Test]
-    public void VisitConditionalExpression_WithType_AndChanges ()
+    public void VisitConditional_WithType_AndChanges ()
     {
       var test = Expression.Constant (true);
       var ifTrue = Expression.Constant (null, typeof (object));
@@ -169,7 +169,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       VisitorMock.Expect (mock => mock.VisitExpression (expression.IfTrue)).Return (expression.IfTrue);
       VisitorMock.Expect (mock => mock.VisitExpression (expression.IfFalse)).Return (newIfFalse);
 
-      var result = (ConditionalExpression) InvokeAndCheckVisitExpression ("VisitConditionalExpression", expression);
+      var result = (ConditionalExpression) InvokeAndCheckVisitExpression ("VisitConditional", expression);
 
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Conditional));

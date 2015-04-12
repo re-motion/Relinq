@@ -246,7 +246,7 @@ namespace Remotion.Linq.Parsing
         case ExpressionType.ArrayIndex:
           return VisitBinary ((BinaryExpression) expression);
         case ExpressionType.Conditional:
-          return VisitConditionalExpression ((ConditionalExpression) expression);
+          return VisitConditional ((ConditionalExpression) expression);
         case ExpressionType.Constant:
           return VisitConstant ((ConstantExpression) expression);
         case ExpressionType.Invoke:
@@ -416,7 +416,7 @@ namespace Remotion.Linq.Parsing
     }
 
     // ExpressionVisitor.VisitConditional visits Test, IfTrue, IfFalse, current implementation visits Test, IfFalse, IfTrue
-    protected virtual Expression VisitConditionalExpression (ConditionalExpression expression)
+    protected virtual Expression VisitConditional (ConditionalExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       Expression newTest = VisitExpression (expression.Test);
