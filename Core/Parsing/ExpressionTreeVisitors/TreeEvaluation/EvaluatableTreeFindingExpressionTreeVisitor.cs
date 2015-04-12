@@ -92,7 +92,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
       return base.VisitParameter (expression);
     }
 
-    protected override Expression VisitMethodCallExpression (MethodCallExpression expression)
+    protected override Expression VisitMethodCall (MethodCallExpression expression)
     {
       // Method calls are only evaluatable if they do not involve IQueryable objects.
 
@@ -105,7 +105,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
           _isCurrentSubtreeEvaluatable = false;
       }
 
-      return base.VisitMethodCallExpression (expression);
+      return base.VisitMethodCall (expression);
     }
 
     protected override Expression VisitMemberExpression (MemberExpression expression)

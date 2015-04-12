@@ -149,14 +149,14 @@ namespace Remotion.Linq.Parsing
       return base.VisitLambda (expression);
     }
 
-    protected override Expression VisitMethodCallExpression (MethodCallExpression expression)
+    protected override Expression VisitMethodCall (MethodCallExpression expression)
     {
-      return VisitUnhandledItem<MethodCallExpression, Expression> (expression, "VisitMethodCallExpression", BaseVisitMethodCallExpression);
+      return VisitUnhandledItem<MethodCallExpression, Expression> (expression, "VisitMethodCall", BaseVisitMethodCall);
     }
 
-    protected Expression BaseVisitMethodCallExpression (MethodCallExpression expression)
+    protected Expression BaseVisitMethodCall (MethodCallExpression expression)
     {
-      return base.VisitMethodCallExpression (expression);
+      return base.VisitMethodCall (expression);
     }
 
     protected override Expression VisitInvocationExpression (InvocationExpression expression)

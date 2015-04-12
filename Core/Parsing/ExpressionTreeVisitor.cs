@@ -256,7 +256,7 @@ namespace Remotion.Linq.Parsing
         case ExpressionType.MemberAccess:
           return VisitMemberExpression ((MemberExpression) expression);
         case ExpressionType.Call:
-          return VisitMethodCallExpression ((MethodCallExpression) expression);
+          return VisitMethodCall ((MethodCallExpression) expression);
         case ExpressionType.New:
           return VisitNewExpression ((NewExpression) expression);
         case ExpressionType.NewArrayBounds:
@@ -453,11 +453,11 @@ namespace Remotion.Linq.Parsing
     }
 
     // ExpressionVisitor.VisitBinary creates specialized MethodCallExpressions. Should not make a difference.
-    protected virtual Expression VisitMethodCallExpression (MethodCallExpression expression)
+    protected virtual Expression VisitMethodCall (MethodCallExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       Expression newObject = VisitExpression (expression.Object);
-      ReadOnlyCollection<Expression> newArguments = VisitAndConvert (expression.Arguments, "VisitMethodCallExpression");
+      ReadOnlyCollection<Expression> newArguments = VisitAndConvert (expression.Arguments, "VisitMethodCall");
       if ((newObject != expression.Object) || (newArguments != expression.Arguments))
         return Expression.Call (newObject, expression.Method, newArguments);
       return expression;
