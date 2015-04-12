@@ -751,15 +751,15 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Expression type 'SpecialExpressionNode' is not supported by this ExpressionTreeVisitor.*\\.", MatchType = MessageMatch.Regex)]
-    public void VisitUnknownNonExtensionExpression ()
+    public void VisitUnknownNonExtension ()
     {
       var expressionNode = new SpecialExpressionNode ((ExpressionType) (-1), typeof (int));
-      Expect.Call (InvokeVisitMethod ("VisitUnknownNonExtensionExpression", expressionNode)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
+      Expect.Call (InvokeVisitMethod ("VisitUnknownNonExtension", expressionNode)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
       MockRepository.ReplayAll();
 
       try
       {
-        InvokeVisitMethod ("VisitUnknownNonExtensionExpression", expressionNode);
+        InvokeVisitMethod ("VisitUnknownNonExtension", expressionNode);
       }
       catch (TargetInvocationException ex)
       {

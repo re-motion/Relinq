@@ -65,18 +65,18 @@ namespace Remotion.Linq.Parsing
       return base.VisitExtension (expression);
     }
 
-    protected override Expression VisitUnknownNonExtensionExpression (Expression expression)
+    protected override Expression VisitUnknownNonExtension (Expression expression)
     {
       var expressionAsExtensionExpression = expression as ExtensionExpression;
       if (expressionAsExtensionExpression != null && expressionAsExtensionExpression.CanReduce)
         return VisitExpression (expressionAsExtensionExpression.ReduceAndCheck()); 
 
-      return VisitUnhandledItem<Expression, Expression> (expression, "VisitUnknownNonExtensionExpression", BaseVisitUnknownNonExtensionExpression);
+      return VisitUnhandledItem<Expression, Expression> (expression, "VisitUnknownNonExtension", BaseVisitUnknownNonExtension);
     }
 
-    protected Expression BaseVisitUnknownNonExtensionExpression (Expression expression)
+    protected Expression BaseVisitUnknownNonExtension (Expression expression)
     {
-      return base.VisitUnknownNonExtensionExpression (expression);
+      return base.VisitUnknownNonExtension (expression);
     }
 
     protected override Expression VisitUnaryExpression (UnaryExpression expression)

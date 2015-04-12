@@ -152,7 +152,7 @@ namespace Remotion.Linq.Parsing
 
     /// <summary>
     /// Determines whether the given <see cref="Expression"/> is an unknown expression not derived from <see cref="ExtensionExpression"/>. 
-    /// <see cref="VisitExpression"/> cannot handle such expressions at all and will call <see cref="VisitUnknownNonExtensionExpression"/> for them.
+    /// <see cref="VisitExpression"/> cannot handle such expressions at all and will call <see cref="VisitUnknownNonExtension"/> for them.
     /// </summary>
     /// <param name="expression">The expression to check.</param>
     /// <returns>
@@ -277,7 +277,7 @@ namespace Remotion.Linq.Parsing
           return VisitQuerySourceReferenceExpression ((QuerySourceReferenceExpression) expression);
 
         default:
-          return VisitUnknownNonExtensionExpression (expression);
+          return VisitUnknownNonExtension (expression);
       }
     }
 
@@ -356,7 +356,7 @@ namespace Remotion.Linq.Parsing
     }
 
     // There is no longer a case of an unknown expression.
-    protected virtual Expression VisitUnknownNonExtensionExpression (Expression expression)
+    protected virtual Expression VisitUnknownNonExtension (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 

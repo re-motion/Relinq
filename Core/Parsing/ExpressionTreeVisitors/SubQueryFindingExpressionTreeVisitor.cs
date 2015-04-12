@@ -59,7 +59,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
         return base.VisitExpression (expression);
     }
     
-    protected override Expression VisitUnknownNonExtensionExpression (Expression expression)
+    protected override Expression VisitUnknownNonExtension (Expression expression)
     {
       //ignore
       return expression;

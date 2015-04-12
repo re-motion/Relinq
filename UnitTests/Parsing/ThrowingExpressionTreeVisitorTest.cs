@@ -70,8 +70,8 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitUnknownNonExtensionExpression: [-1]")]
-    public void VisitUnknownNonExtensionExpression ()
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitUnknownNonExtension: [-1]")]
+    public void VisitUnknownNonExtension ()
     {
       VisitExpression (_visitor, (ExpressionType) (-1));
     }
