@@ -85,11 +85,11 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
       return visitedExpression;
     }
 
-    protected override Expression VisitParameterExpression (ParameterExpression expression)
+    protected override Expression VisitParameter (ParameterExpression expression)
     {
       // Parameters are not evaluatable.
       _isCurrentSubtreeEvaluatable = false;
-      return base.VisitParameterExpression (expression);
+      return base.VisitParameter (expression);
     }
 
     protected override Expression VisitMethodCallExpression (MethodCallExpression expression)

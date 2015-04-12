@@ -267,7 +267,7 @@ namespace Remotion.Linq.Parsing
         case ExpressionType.ListInit:
           return VisitListInitExpression ((ListInitExpression) expression);
         case ExpressionType.Parameter:
-          return VisitParameterExpression ((ParameterExpression) expression);
+          return VisitParameter ((ParameterExpression) expression);
         case ExpressionType.TypeIs:
           return VisitTypeBinary ((TypeBinaryExpression) expression);
 
@@ -434,7 +434,7 @@ namespace Remotion.Linq.Parsing
     }
 
     // Identical implemention by ExpressionVisitor
-    protected virtual Expression VisitParameterExpression (ParameterExpression expression)
+    protected virtual Expression VisitParameter (ParameterExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       return expression;

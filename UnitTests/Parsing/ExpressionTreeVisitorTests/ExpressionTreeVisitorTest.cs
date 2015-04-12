@@ -291,7 +291,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitExpression_Parameter ()
     {
-      CheckDelegation ("VisitParameterExpression", ExpressionType.Parameter);
+      CheckDelegation ("VisitParameter", ExpressionType.Parameter);
     }
 
     [Test]

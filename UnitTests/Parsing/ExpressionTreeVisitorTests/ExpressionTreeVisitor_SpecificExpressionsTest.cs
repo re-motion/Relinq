@@ -181,10 +181,10 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 #endif
 
     [Test]
-    public void VisitParameterExpression ()
+    public void VisitParameter ()
     {
       var expression = (ParameterExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Parameter);
-      var result = (ParameterExpression) InvokeAndCheckVisitExpression ("VisitParameterExpression", expression);
+      var result = (ParameterExpression) InvokeAndCheckVisitExpression ("VisitParameter", expression);
       Assert.That (result, Is.SameAs (expression));
     }
 

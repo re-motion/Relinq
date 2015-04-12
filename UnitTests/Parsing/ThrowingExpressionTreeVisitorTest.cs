@@ -112,8 +112,8 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitParameterExpression: ", MatchType = MessageMatch.Contains)]
-    public void VisitParameterExpression ()
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitParameter: ", MatchType = MessageMatch.Contains)]
+    public void VisitParameter ()
     {
       VisitExpression (_visitor, ExpressionType.Parameter);
     }
