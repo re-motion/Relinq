@@ -250,7 +250,7 @@ namespace Remotion.Linq.Parsing
         case ExpressionType.Constant:
           return VisitConstant ((ConstantExpression) expression);
         case ExpressionType.Invoke:
-          return VisitInvocationExpression ((InvocationExpression) expression);
+          return VisitInvocation ((InvocationExpression) expression);
         case ExpressionType.Lambda:
           return VisitLambda ((LambdaExpression) expression);
         case ExpressionType.MemberAccess:
@@ -464,11 +464,11 @@ namespace Remotion.Linq.Parsing
     }
 
     // Identical implemention by ExpressionVisitor
-    protected virtual Expression VisitInvocationExpression (InvocationExpression expression)
+    protected virtual Expression VisitInvocation (InvocationExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       Expression newExpression = VisitExpression (expression.Expression);
-      ReadOnlyCollection<Expression> newArguments = VisitAndConvert (expression.Arguments, "VisitInvocationExpression");
+      ReadOnlyCollection<Expression> newArguments = VisitAndConvert (expression.Arguments, "VisitInvocation");
       if ((newExpression != expression.Expression) || (newArguments != expression.Arguments))
         return Expression.Invoke (newExpression, newArguments);
       return expression;

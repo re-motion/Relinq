@@ -243,7 +243,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitExpression_Invoke ()
     {
-      CheckDelegation ("VisitInvocationExpression", ExpressionType.Invoke);
+      CheckDelegation ("VisitInvocation", ExpressionType.Invoke);
     }
 
     [Test]
