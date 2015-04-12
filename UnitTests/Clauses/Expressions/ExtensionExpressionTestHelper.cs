@@ -58,7 +58,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       var returnedExpression = Expression.Constant (0);
 
       visitorMock
-          .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitExtensionExpression", expression))
+          .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitExtension", expression))
           .Return (returnedExpression);
       visitorMock.Replay ();
 

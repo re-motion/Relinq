@@ -39,11 +39,11 @@ namespace Remotion.Linq.Clauses.Expressions
   /// <para>
   /// Subclasses of <see cref="ThrowingExpressionTreeVisitor"/> that do not implement <see cref="IPartialEvaluationExceptionExpressionVisitor"/> will, 
   /// by default, automatically reduce this expression type to the <see cref="EvaluatedExpression"/> in the 
-  /// <see cref="ThrowingExpressionTreeVisitor.VisitExtensionExpression"/> method.
+  /// <see cref="ThrowingExpressionTreeVisitor.VisitExtension"/> method.
   /// </para>
   /// <para>
   /// Subclasses of <see cref="ExpressionTreeVisitor"/> that do not implement <see cref="IPartialEvaluationExceptionExpressionVisitor"/> will, 
-  /// by default, ignore this expression and visit its child expressions via the <see cref="ExpressionTreeVisitor.VisitExtensionExpression"/> and 
+  /// by default, ignore this expression and visit its child expressions via the <see cref="ExpressionTreeVisitor.VisitExtension"/> and 
   /// <see cref="VisitChildren"/> methods.
   /// </para>
   /// </remarks>

@@ -167,7 +167,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitExpression_ExtensionExpression ()
+    public void VisitExpression_Extension ()
     {
       var expectedResult = Expression.Constant (0);
 

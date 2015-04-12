@@ -40,7 +40,7 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    public void VisitExtensionExpression_ReducedExpressionIsVisited ()
+    public void VisitExtension_ReducedExpressionIsVisited ()
     {
       ExpressionTreeVisitor visitor = new TestThrowingConstantExpressionTreeVisitor();
       var constantExpression = Expression.Constant (0);
@@ -53,15 +53,15 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitExtensionExpression: Test")]
-    public void VisitExtensionExpression_NonReducibleExpression ()
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitExtension: Test")]
+    public void VisitExtension_NonReducibleExpression ()
     {
       ExpressionTreeVisitor visitor = new TestThrowingConstantExpressionTreeVisitor ();
 
       var nonReducibleExpression = MockRepository.GenerateStub<ExtensionExpression> (typeof (int));
       nonReducibleExpression
           .Stub (stub => stub.Accept (Arg<ExpressionTreeVisitor>.Is.Anything))
-          .WhenCalled (mi => PrivateInvoke.InvokeNonPublicMethod (mi.Arguments[0], "VisitExtensionExpression", nonReducibleExpression))
+          .WhenCalled (mi => PrivateInvoke.InvokeNonPublicMethod (mi.Arguments[0], "VisitExtension", nonReducibleExpression))
           .Return (nonReducibleExpression);
       nonReducibleExpression.Stub (stub => stub.CanReduce).Return (false);
       nonReducibleExpression.Stub (stub => stub.ToString ()).Return ("Test");

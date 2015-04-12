@@ -349,7 +349,7 @@ namespace Remotion.Linq.Parsing
     // The existing implementation requires ExtensionExpression to provide an implementation for VistChildren, otherwise a NotSupportedException is thrown.
     // In .NET 4.0, the Expression must be marked as CanReduce, otherwise an ArgumentException is thrown.
     // TODO: ExtensionExpression can be moved to .NET 3.5 implementation
-    protected internal virtual Expression VisitExtensionExpression (ExtensionExpression expression)
+    protected internal virtual Expression VisitExtension (ExtensionExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       return expression.VisitChildren (this);

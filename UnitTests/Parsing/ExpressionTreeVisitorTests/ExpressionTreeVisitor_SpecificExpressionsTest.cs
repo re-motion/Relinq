@@ -768,18 +768,18 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitExtensionExpression_CallsVisitChildren ()
+    public void VisitExtension_CallsVisitChildren ()
     {
       var expectedResult = Expression.Constant (0);
 
       var extensionExpressionMock = MockRepository.StrictMock<ExtensionExpression> (typeof (int));
-      Expect.Call (InvokeVisitMethod ("VisitExtensionExpression", extensionExpressionMock)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
+      Expect.Call (InvokeVisitMethod ("VisitExtension", extensionExpressionMock)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
       extensionExpressionMock
           .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitChildren", VisitorMock))
           .Return (expectedResult);
       MockRepository.ReplayAll();
 
-      var result = InvokeVisitMethod ("VisitExtensionExpression", extensionExpressionMock);
+      var result = InvokeVisitMethod ("VisitExtension", extensionExpressionMock);
 
       MockRepository.VerifyAll ();
       Assert.That (result, Is.SameAs (expectedResult));

@@ -83,7 +83,7 @@ namespace Remotion.Linq.Clauses.Expressions
 #endif
 
     /// <summary>
-    /// Accepts the specified visitor, by default dispatching to <see cref="ExpressionTreeVisitor.VisitExtensionExpression"/>. 
+    /// Accepts the specified visitor, by default dispatching to <see cref="ExpressionTreeVisitor.VisitExtension"/>. 
     /// Inheritors of the <see cref="ExtensionExpression"/> class can override this method in order to dispatch to a specific Visit method.
     /// </summary>
     /// <param name="visitor">The visitor whose Visit method should be invoked.</param>
@@ -91,13 +91,13 @@ namespace Remotion.Linq.Clauses.Expressions
     /// <remarks>
     /// Overriders can test the <paramref name="visitor"/> for a specific interface. If the visitor supports the interface, the extension expression 
     /// can dispatch to the respective strongly-typed Visit method declared in the interface. If it does not, the extension expression should call 
-    /// the base implementation of <see cref="Accept"/>, which will dispatch to <see cref="ExpressionTreeVisitor.VisitExtensionExpression"/>.
+    /// the base implementation of <see cref="Accept"/>, which will dispatch to <see cref="ExpressionTreeVisitor.VisitExtension"/>.
     /// </remarks>
     public virtual Expression Accept (ExpressionTreeVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       
-      return visitor.VisitExtensionExpression (this);
+      return visitor.VisitExtension (this);
     }
 
     /// <summary>
