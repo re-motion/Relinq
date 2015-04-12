@@ -121,7 +121,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       }
     }
 
-    protected override Expression VisitNewExpression (NewExpression expression)
+    protected override Expression VisitNew (NewExpression expression)
     {
       if (expression.Members != null && expression.Members.Count > 0)
       {

@@ -258,7 +258,7 @@ namespace Remotion.Linq.Parsing
         case ExpressionType.Call:
           return VisitMethodCall ((MethodCallExpression) expression);
         case ExpressionType.New:
-          return VisitNewExpression ((NewExpression) expression);
+          return VisitNew ((NewExpression) expression);
         case ExpressionType.NewArrayBounds:
         case ExpressionType.NewArrayInit:
           return VisitNewArrayExpression ((NewArrayExpression) expression);
@@ -485,10 +485,10 @@ namespace Remotion.Linq.Parsing
     }
 
     // TODO: ExpressionVisitor.VisitNew does not contain an obvious conversion of the NewExpression's argument types. Is this a problem?
-    protected virtual Expression VisitNewExpression (NewExpression expression)
+    protected virtual Expression VisitNew (NewExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      ReadOnlyCollection<Expression> newArguments = VisitAndConvert (expression.Arguments, "VisitNewExpression");
+      ReadOnlyCollection<Expression> newArguments = VisitAndConvert (expression.Arguments, "VisitNew");
       if (newArguments != expression.Arguments)
       {
         // This ReSharper warning is wrong - expression.Members can be null

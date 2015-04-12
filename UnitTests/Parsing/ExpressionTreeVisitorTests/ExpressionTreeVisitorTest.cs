@@ -267,7 +267,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitExpression_New ()
     {
-      CheckDelegation ("VisitNewExpression", ExpressionType.New);
+      CheckDelegation ("VisitNew", ExpressionType.New);
     }
 
     [Test]

@@ -324,41 +324,41 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitNewExpression_Unchanged ()
+    public void VisitNew_Unchanged ()
     {
       var expression = (NewExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.New);
-      Expect.Call (VisitorMock.VisitAndConvert (expression.Arguments, "VisitNewExpression")).Return (expression.Arguments);
-      var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNewExpression", expression);
+      Expect.Call (VisitorMock.VisitAndConvert (expression.Arguments, "VisitNew")).Return (expression.Arguments);
+      var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNew", expression);
       Assert.That (result, Is.SameAs (expression));
     }
 
     [Test]
-    public void VisitNewExpression_ChangedArguments ()
+    public void VisitNew_ChangedArguments ()
     {
       var expression = (NewExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.New);
       ReadOnlyCollection<Expression> newArguments = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
-      Expect.Call (VisitorMock.VisitAndConvert (expression.Arguments, "VisitNewExpression")).Return (newArguments);
-      var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNewExpression", expression);
+      Expect.Call (VisitorMock.VisitAndConvert (expression.Arguments, "VisitNew")).Return (newArguments);
+      var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNew", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.New));
       Assert.That (result.Arguments, Is.EqualTo (newArguments));
     }
 
     [Test]
-    public void VisitNewExpression_ChangedArguments_NoMembers ()
+    public void VisitNew_ChangedArguments_NoMembers ()
     {
       NewExpression expression = Expression.New (TypeForNewExpression.GetConstructor (typeof(int)), Expression.Constant (0));
 
       var newArguments = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
-      Expect.Call (VisitorMock.VisitAndConvert (expression.Arguments, "VisitNewExpression")).Return (newArguments);
-      var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNewExpression", expression);
+      Expect.Call (VisitorMock.VisitAndConvert (expression.Arguments, "VisitNew")).Return (newArguments);
+      var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNew", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.New));
       Assert.That (result.Arguments, Is.EqualTo (newArguments));
     }
 
     [Test]
-    public void VisitNewExpression_ChangedArguments_WithMembers ()
+    public void VisitNew_ChangedArguments_WithMembers ()
     {
       NewExpression expression = Expression.New (
           TypeForNewExpression.GetConstructor (typeof(int)),
@@ -366,8 +366,8 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
           typeof (TypeForNewExpression).GetProperty ("A"));
 
       var newArguments = new List<Expression> { Expression.Constant (214578) }.AsReadOnly ();
-      Expect.Call (VisitorMock.VisitAndConvert (expression.Arguments, "VisitNewExpression")).Return (newArguments);
-      var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNewExpression", expression);
+      Expect.Call (VisitorMock.VisitAndConvert (expression.Arguments, "VisitNew")).Return (newArguments);
+      var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNew", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.New));
       Assert.That (result.Arguments, Is.EqualTo (newArguments));
@@ -375,7 +375,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitNewExpression_ChangedArguments_WithMembers_AndConversionRequired ()
+    public void VisitNew_ChangedArguments_WithMembers_AndConversionRequired ()
     {
       NewExpression expression = Expression.New (
           typeof (KeyValuePair<object, object>).GetConstructor (new[] { typeof (object), typeof (object) }),
@@ -383,9 +383,9 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
           typeof (KeyValuePair<object, object>).GetProperty ("Key"), typeof (KeyValuePair<object, object>).GetProperty ("Value"));
 
       var newArguments = new List<Expression> { Expression.Constant ("testKey"), Expression.Constant ("testValue") }.AsReadOnly ();
-      Expect.Call (VisitorMock.VisitAndConvert (expression.Arguments, "VisitNewExpression")).Return (newArguments);
+      Expect.Call (VisitorMock.VisitAndConvert (expression.Arguments, "VisitNew")).Return (newArguments);
       
-      var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNewExpression", expression);
+      var result = (NewExpression) InvokeAndCheckVisitExpression ("VisitNew", expression);
 
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.New));
