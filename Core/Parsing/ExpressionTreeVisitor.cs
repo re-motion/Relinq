@@ -269,7 +269,7 @@ namespace Remotion.Linq.Parsing
         case ExpressionType.Parameter:
           return VisitParameterExpression ((ParameterExpression) expression);
         case ExpressionType.TypeIs:
-          return VisitTypeBinaryExpression ((TypeBinaryExpression) expression);
+          return VisitTypeBinary ((TypeBinaryExpression) expression);
 
         case SubQueryExpression.ExpressionType:
           return VisitSubQueryExpression ((SubQueryExpression) expression);
@@ -395,7 +395,7 @@ namespace Remotion.Linq.Parsing
     }
 
     // ExpressionVisitor.VisitTypeBinary differentiates between TypeIs and TypeEqual by supplying a different ExpressionType
-    protected virtual Expression VisitTypeBinaryExpression (TypeBinaryExpression expression)
+    protected virtual Expression VisitTypeBinary (TypeBinaryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       Expression newExpression = VisitExpression (expression.Expression);

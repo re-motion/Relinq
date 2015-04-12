@@ -99,14 +99,14 @@ namespace Remotion.Linq.Parsing
       return base.VisitBinary (expression);
     }
 
-    protected override Expression VisitTypeBinaryExpression (TypeBinaryExpression expression)
+    protected override Expression VisitTypeBinary (TypeBinaryExpression expression)
     {
-      return VisitUnhandledItem<TypeBinaryExpression, Expression> (expression, "VisitTypeBinaryExpression", BaseVisitTypeBinaryExpression);
+      return VisitUnhandledItem<TypeBinaryExpression, Expression> (expression, "VisitTypeBinary", BaseVisitTypeBinary);
     }
 
-    protected Expression BaseVisitTypeBinaryExpression (TypeBinaryExpression expression)
+    protected Expression BaseVisitTypeBinary (TypeBinaryExpression expression)
     {
-      return base.VisitTypeBinaryExpression (expression);
+      return base.VisitTypeBinary (expression);
     }
 
     protected override Expression VisitConstantExpression (ConstantExpression expression)

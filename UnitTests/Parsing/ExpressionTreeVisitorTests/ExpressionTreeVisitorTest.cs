@@ -297,7 +297,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitExpression_TypeBinary ()
     {
-      CheckDelegation ("VisitTypeBinaryExpression", ExpressionType.TypeIs);
+      CheckDelegation ("VisitTypeBinary", ExpressionType.TypeIs);
     }
 
     [Test]

@@ -91,8 +91,8 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitTypeBinaryExpression: ", MatchType = MessageMatch.Contains)]
-    public void VisitTypeBinaryExpression ()
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitTypeBinary: ", MatchType = MessageMatch.Contains)]
+    public void VisitTypeBinary ()
     {
       VisitExpression (_visitor, ExpressionType.TypeIs);
     }

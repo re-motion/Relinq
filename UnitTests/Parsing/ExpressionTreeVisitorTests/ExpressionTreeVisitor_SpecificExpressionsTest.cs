@@ -72,7 +72,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       var expression = (TypeBinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.TypeIs);
       Expect.Call (VisitorMock.VisitExpression (expression.Expression)).Return (expression.Expression);
-      var result = (TypeBinaryExpression) InvokeAndCheckVisitExpression ("VisitTypeBinaryExpression", expression);
+      var result = (TypeBinaryExpression) InvokeAndCheckVisitExpression ("VisitTypeBinary", expression);
       Assert.That (result, Is.SameAs (expression));
     }
 
@@ -82,7 +82,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       var expression = (TypeBinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.TypeIs);
       Expression newExpression = Expression.Constant (1);
       Expect.Call (VisitorMock.VisitExpression (expression.Expression)).Return (newExpression);
-      var result = (TypeBinaryExpression) InvokeAndCheckVisitExpression ("VisitTypeBinaryExpression", expression);
+      var result = (TypeBinaryExpression) InvokeAndCheckVisitExpression ("VisitTypeBinary", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.TypeIs));
       Assert.That (result.Expression, Is.SameAs (newExpression));
