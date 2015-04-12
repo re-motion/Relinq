@@ -237,7 +237,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitExpression_Constant ()
     {
-      CheckDelegation ("VisitConstantExpression", ExpressionType.Constant);
+      CheckDelegation ("VisitConstant", ExpressionType.Constant);
     }
 
     [Test]

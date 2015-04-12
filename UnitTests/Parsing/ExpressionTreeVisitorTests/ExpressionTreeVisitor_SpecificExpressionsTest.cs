@@ -89,10 +89,10 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitConstantExpression ()
+    public void VisitConstant ()
     {
       var expression = (ConstantExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Constant);
-      var result = (ConstantExpression) InvokeAndCheckVisitExpression ("VisitConstantExpression", expression);
+      var result = (ConstantExpression) InvokeAndCheckVisitExpression ("VisitConstant", expression);
       Assert.That (result, Is.SameAs (expression));
     }
 

@@ -98,8 +98,8 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitConstantExpression: ", MatchType = MessageMatch.Contains)]
-    public void VisitConstantExpression ()
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitConstant: ", MatchType = MessageMatch.Contains)]
+    public void VisitConstant ()
     {
       VisitExpression (_visitor, ExpressionType.Constant);
     }

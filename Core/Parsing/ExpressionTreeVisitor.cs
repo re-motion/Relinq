@@ -248,7 +248,7 @@ namespace Remotion.Linq.Parsing
         case ExpressionType.Conditional:
           return VisitConditionalExpression ((ConditionalExpression) expression);
         case ExpressionType.Constant:
-          return VisitConstantExpression ((ConstantExpression) expression);
+          return VisitConstant ((ConstantExpression) expression);
         case ExpressionType.Invoke:
           return VisitInvocationExpression ((InvocationExpression) expression);
         case ExpressionType.Lambda:
@@ -409,7 +409,7 @@ namespace Remotion.Linq.Parsing
     }
 
     // Identical implemention by ExpressionVisitor
-    protected virtual Expression VisitConstantExpression (ConstantExpression expression)
+    protected virtual Expression VisitConstant (ConstantExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       return expression;

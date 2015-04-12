@@ -27,7 +27,7 @@ namespace Remotion.Linq.UnitTests.Parsing
       throw new NotSupportedException ("Test of " + visitMethod + ": " + unhandledItem);
     }
 
-    protected override System.Linq.Expressions.Expression VisitConstantExpression (System.Linq.Expressions.ConstantExpression expression)
+    protected override System.Linq.Expressions.Expression VisitConstant (System.Linq.Expressions.ConstantExpression expression)
     {
       return Expression.Constant("ConstantExpression was visited");
     }
