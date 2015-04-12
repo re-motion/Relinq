@@ -201,7 +201,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void VisitExpression_Binary ()
     {
       CheckDelegation (
-          "VisitBinaryExpression",
+          "VisitBinary",
           ExpressionType.Add,
           ExpressionType.AddChecked,
           ExpressionType.Divide,

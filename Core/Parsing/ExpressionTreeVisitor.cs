@@ -244,7 +244,7 @@ namespace Remotion.Linq.Parsing
         case ExpressionType.LessThanOrEqual:
         case ExpressionType.Coalesce:
         case ExpressionType.ArrayIndex:
-          return VisitBinaryExpression ((BinaryExpression) expression);
+          return VisitBinary ((BinaryExpression) expression);
         case ExpressionType.Conditional:
           return VisitConditionalExpression ((ConditionalExpression) expression);
         case ExpressionType.Constant:
@@ -383,7 +383,7 @@ namespace Remotion.Linq.Parsing
 
     // ExpressionVisitor.VisitBinary visits Left, Conversion, Right, current implementation visits Left, Right, Conversion
     // ExpressionVisitor.VisitBinary creates LogicalBinaryExpression for reference equality check. Should not make a difference.
-    protected virtual Expression VisitBinaryExpression (BinaryExpression expression)
+    protected virtual Expression VisitBinary (BinaryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       Expression newLeft = VisitExpression (expression.Left);

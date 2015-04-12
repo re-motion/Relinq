@@ -89,14 +89,14 @@ namespace Remotion.Linq.Parsing
       return base.VisitUnaryExpression (expression);
     }
 
-    protected override Expression VisitBinaryExpression (BinaryExpression expression)
+    protected override Expression VisitBinary (BinaryExpression expression)
     {
-      return VisitUnhandledItem<BinaryExpression, Expression> (expression, "VisitBinaryExpression", BaseVisitBinaryExpression);
+      return VisitUnhandledItem<BinaryExpression, Expression> (expression, "VisitBinary", BaseVisitBinary);
     }
 
-    protected Expression BaseVisitBinaryExpression (BinaryExpression expression)
+    protected Expression BaseVisitBinary (BinaryExpression expression)
     {
-      return base.VisitBinaryExpression (expression);
+      return base.VisitBinary (expression);
     }
 
     protected override Expression VisitTypeBinaryExpression (TypeBinaryExpression expression)
