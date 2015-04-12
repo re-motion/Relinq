@@ -79,14 +79,14 @@ namespace Remotion.Linq.Parsing
       return base.VisitUnknownNonExtension (expression);
     }
 
-    protected override Expression VisitUnaryExpression (UnaryExpression expression)
+    protected override Expression VisitUnary (UnaryExpression expression)
     {
-      return VisitUnhandledItem<UnaryExpression, Expression> (expression, "VisitUnaryExpression", BaseVisitUnaryExpression);
+      return VisitUnhandledItem<UnaryExpression, Expression> (expression, "VisitUnary", BaseVisitUnary);
     }
 
-    protected Expression BaseVisitUnaryExpression (UnaryExpression expression)
+    protected Expression BaseVisitUnary (UnaryExpression expression)
     {
-      return base.VisitUnaryExpression (expression);
+      return base.VisitUnary (expression);
     }
 
     protected override Expression VisitBinary (BinaryExpression expression)

@@ -304,7 +304,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void VisitExpression_Unary ()
     {
       CheckDelegation (
-          "VisitUnaryExpression",
+          "VisitUnary",
           ExpressionType.UnaryPlus,
           ExpressionType.Negate,
           ExpressionType.NegateChecked,

@@ -32,37 +32,37 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
   public class ExpressionTreeVisitor_SpecificExpressionsTest : ExpressionTreeVisitorTestBase
   {
     [Test]
-    public void VisitUnaryExpression_Unchanges ()
+    public void VisitUnary_Unchanges ()
     {
       var expression = (UnaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.UnaryPlus);
       Expression expectedNextVisit = expression.Operand;
       Expect.Call (VisitorMock.VisitExpression (expectedNextVisit)).Return (expectedNextVisit);
 
-      Assert.That (InvokeAndCheckVisitExpression ("VisitUnaryExpression", expression), Is.SameAs (expression));
+      Assert.That (InvokeAndCheckVisitExpression ("VisitUnary", expression), Is.SameAs (expression));
     }
 
     [Test]
-    public void VisitUnaryExpression_UnaryPlus_Changes ()
+    public void VisitUnary_UnaryPlus_Changes ()
     {
       var expression = (UnaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.UnaryPlus);
       Expression expectedNextVisit = expression.Operand;
       Expression newOperand = Expression.Constant (1);
       Expect.Call (VisitorMock.VisitExpression (expectedNextVisit)).Return (newOperand);
 
-      var result = (UnaryExpression) InvokeAndCheckVisitExpression ("VisitUnaryExpression", expression);
+      var result = (UnaryExpression) InvokeAndCheckVisitExpression ("VisitUnary", expression);
       Assert.That (result.Operand, Is.SameAs (newOperand));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.UnaryPlus));
     }
 
     [Test]
-    public void VisitUnaryExpression_Negate_Changes ()
+    public void VisitUnary_Negate_Changes ()
     {
       var expression = (UnaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Negate);
       Expression expectedNextVisit = expression.Operand;
       Expression newOperand = Expression.Constant (1);
       Expect.Call (VisitorMock.VisitExpression (expectedNextVisit)).Return (newOperand);
 
-      var result = (UnaryExpression) InvokeAndCheckVisitExpression ("VisitUnaryExpression", expression);
+      var result = (UnaryExpression) InvokeAndCheckVisitExpression ("VisitUnary", expression);
       Assert.That (result.Operand, Is.SameAs (newOperand));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Negate));
     }

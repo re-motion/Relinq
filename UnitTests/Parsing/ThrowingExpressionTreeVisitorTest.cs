@@ -77,8 +77,8 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitUnaryExpression", MatchType = MessageMatch.Contains)]
-    public void VisitUnaryExpression ()
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitUnary", MatchType = MessageMatch.Contains)]
+    public void VisitUnary ()
     {
       VisitExpression (_visitor, ExpressionType.UnaryPlus);
     }

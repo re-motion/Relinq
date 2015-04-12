@@ -132,13 +132,13 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       return expression;
     }
 
-    protected override Expression VisitUnaryExpression (UnaryExpression expression)
+    protected override Expression VisitUnary (UnaryExpression expression)
     {
       if (expression.NodeType == ExpressionType.Convert || expression.NodeType == ExpressionType.ConvertChecked)
       {
         var reverseConvert = Expression.Convert (_accessorPathStack.Peek (), expression.Operand.Type);
         _accessorPathStack.Push (reverseConvert);
-        base.VisitUnaryExpression (expression);
+        base.VisitUnary (expression);
         _accessorPathStack.Pop ();
       }
 

@@ -219,7 +219,7 @@ namespace Remotion.Linq.Parsing
         case ExpressionType.Quote:
         case ExpressionType.TypeAs:
         case ExpressionType.UnaryPlus:
-          return VisitUnaryExpression ((UnaryExpression) expression);
+          return VisitUnary ((UnaryExpression) expression);
         case ExpressionType.Add:
         case ExpressionType.AddChecked:
         case ExpressionType.Divide:
@@ -365,7 +365,7 @@ namespace Remotion.Linq.Parsing
     }
 
     // Identical implemention by ExpressionVisitor, special handling for UnaryPlus is now handled by Expression.MakeUnary
-    protected virtual Expression VisitUnaryExpression (UnaryExpression expression)
+    protected virtual Expression VisitUnary (UnaryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       Expression newOperand = VisitExpression (expression.Operand);
