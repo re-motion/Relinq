@@ -269,15 +269,14 @@ namespace Remotion.Linq.Parsing
       return base.VisitSubQuery (expression);
     }
 
-    protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
+    protected override Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
     {
-      return VisitUnhandledItem<QuerySourceReferenceExpression, Expression> (
-          expression, "VisitQuerySourceReferenceExpression", BaseVisitQuerySourceReferenceExpression);
+      return VisitUnhandledItem<QuerySourceReferenceExpression, Expression> (expression, "VisitQuerySourceReference", BaseVisitQuerySourceReference);
     }
 
-    protected Expression BaseVisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
+    protected Expression BaseVisitQuerySourceReference (QuerySourceReferenceExpression expression)
     {
-      return base.VisitQuerySourceReferenceExpression (expression);
+      return base.VisitQuerySourceReference (expression);
     }
   }
 }

@@ -210,8 +210,8 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitQuerySourceReferenceExpression: ", MatchType = MessageMatch.Contains)]
-    public void VisitQuerySourceReferenceExpression ()
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitQuerySourceReference: ", MatchType = MessageMatch.Contains)]
+    public void VisitQuerySourceReference ()
     {
       _visitor.VisitExpression (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()));
     }

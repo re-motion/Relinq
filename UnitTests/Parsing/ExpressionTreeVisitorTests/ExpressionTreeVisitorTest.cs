@@ -327,7 +327,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void VisitExpression_QuerySourceReference ()
     {
       var clause = ExpressionHelper.CreateMainFromClause_Int();
-      CheckDelegation ("VisitQuerySourceReferenceExpression", new QuerySourceReferenceExpression (clause));
+      CheckDelegation ("VisitQuerySourceReference", new QuerySourceReferenceExpression (clause));
     }
 
     [Test]

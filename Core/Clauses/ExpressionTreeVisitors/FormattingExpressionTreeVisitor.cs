@@ -41,7 +41,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
     {
     }
 
-    protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
+    protected override Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       return Expression.Parameter (expression.Type, "[" + expression.ReferencedQuerySource.ItemName + "]");

@@ -274,7 +274,7 @@ namespace Remotion.Linq.Parsing
         case SubQueryExpression.ExpressionType:
           return VisitSubQuery ((SubQueryExpression) expression);
         case QuerySourceReferenceExpression.ExpressionType:
-          return VisitQuerySourceReferenceExpression ((QuerySourceReferenceExpression) expression);
+          return VisitQuerySourceReference ((QuerySourceReferenceExpression) expression);
 
         default:
           return VisitUnknownNonExtension (expression);
@@ -636,7 +636,7 @@ namespace Remotion.Linq.Parsing
     // QuerySourceReferenceExpression accpets visitor and casts to IQuerySourceReferenceExpressionVisitor, then calls VisitSubQuery.
     // Basic Visitor-implementation returns expression as is.
     // If visitor does not implement interface, do nothing?
-    protected virtual Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)
+    protected virtual Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
     {
       return expression;
     }
