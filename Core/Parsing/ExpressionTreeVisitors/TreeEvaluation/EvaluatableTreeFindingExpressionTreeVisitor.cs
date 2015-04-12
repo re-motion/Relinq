@@ -118,7 +118,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
       return base.VisitMember (expression);
     }
 
-    protected override Expression VisitMemberInitExpression (MemberInitExpression expression)
+    protected override Expression VisitMemberInit (MemberInitExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       VisitMemberBindingList (expression.Bindings);

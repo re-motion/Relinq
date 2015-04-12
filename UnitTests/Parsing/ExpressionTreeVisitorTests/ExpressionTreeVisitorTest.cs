@@ -279,7 +279,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitExpression_MemberInit ()
     {
-      CheckDelegation ("VisitMemberInitExpression", ExpressionType.MemberInit);
+      CheckDelegation ("VisitMemberInit", ExpressionType.MemberInit);
     }
 
     [Test]

@@ -263,7 +263,7 @@ namespace Remotion.Linq.Parsing
         case ExpressionType.NewArrayInit:
           return VisitNewArray ((NewArrayExpression) expression);
         case ExpressionType.MemberInit:
-          return VisitMemberInitExpression ((MemberInitExpression) expression);
+          return VisitMemberInit ((MemberInitExpression) expression);
         case ExpressionType.ListInit:
           return VisitListInitExpression ((ListInitExpression) expression);
         case ExpressionType.Parameter:
@@ -522,7 +522,7 @@ namespace Remotion.Linq.Parsing
     }
 
     // Identical implemention by ExpressionVisitor
-    protected virtual Expression VisitMemberInitExpression (MemberInitExpression expression)
+    protected virtual Expression VisitMemberInit (MemberInitExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       var newNewExpression = VisitExpression (expression.NewExpression) as NewExpression;

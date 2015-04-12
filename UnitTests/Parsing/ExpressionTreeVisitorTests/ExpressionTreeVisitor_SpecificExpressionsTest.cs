@@ -439,26 +439,26 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitMemberInitExpression_Unchanged ()
+    public void VisitMemberInit_Unchanged ()
     {
       var expression = (MemberInitExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.MemberInit);
       Expect.Call (VisitorMock.VisitExpression (expression.NewExpression)).Return (expression.NewExpression);
       Expect.Call (InvokeVisitMethod ("VisitMemberBindingList", expression.Bindings)).Return (expression.Bindings);
-      var result = (MemberInitExpression) InvokeAndCheckVisitExpression ("VisitMemberInitExpression", expression);
+      var result = (MemberInitExpression) InvokeAndCheckVisitExpression ("VisitMemberInit", expression);
       Assert.That (result, Is.SameAs (expression));
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException),
         ExpectedMessage = "MemberInitExpressions only support non-null instances of type 'NewExpression' as their NewExpression member.")]
-    public void VisitMemberInitExpression_InvalidNewExpression ()
+    public void VisitMemberInit_InvalidNewExpression ()
     {
       var expression = (MemberInitExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.MemberInit);
       Expect.Call (VisitorMock.VisitExpression (expression.NewExpression)).Return (Expression.Constant (0));
       Expect.Call (InvokeVisitMethod ("VisitMemberBindingList", expression.Bindings)).Return (expression.Bindings);
       try
       {
-        InvokeAndCheckVisitExpression ("VisitMemberInitExpression", expression);
+        InvokeAndCheckVisitExpression ("VisitMemberInit", expression);
       }
       catch (TargetInvocationException ex)
       {
@@ -467,13 +467,13 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitMemberInitExpression_ChangedNewExpression ()
+    public void VisitMemberInit_ChangedNewExpression ()
     {
       var expression = (MemberInitExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.MemberInit);
       NewExpression newNewExpression = Expression.New (typeof (List<int>));
       Expect.Call (VisitorMock.VisitExpression (expression.NewExpression)).Return (newNewExpression);
       Expect.Call (InvokeVisitMethod ("VisitMemberBindingList", expression.Bindings)).Return (expression.Bindings);
-      var result = (MemberInitExpression) InvokeAndCheckVisitExpression ("VisitMemberInitExpression", expression);
+      var result = (MemberInitExpression) InvokeAndCheckVisitExpression ("VisitMemberInit", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.MemberInit));
       Assert.That (result.NewExpression, Is.SameAs (newNewExpression));
@@ -481,7 +481,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void VisitMemberInitExpression_ChangedBindings ()
+    public void VisitMemberInit_ChangedBindings ()
     {
       var expression = (MemberInitExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.MemberInit);
       var capacityProperty = expression.NewExpression.Constructor.DeclaringType.GetProperty ("Capacity");
@@ -489,7 +489,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       ReadOnlyCollection<MemberBinding> newBindings = new List<MemberBinding> { Expression.Bind (capacityProperty, Expression.Constant (214578)) }.AsReadOnly ();
       Expect.Call (VisitorMock.VisitExpression (expression.NewExpression)).Return (expression.NewExpression);
       Expect.Call (InvokeVisitMethod ("VisitMemberBindingList", expression.Bindings)).Return (newBindings);
-      var result = (MemberInitExpression) InvokeAndCheckVisitExpression ("VisitMemberInitExpression", expression);
+      var result = (MemberInitExpression) InvokeAndCheckVisitExpression ("VisitMemberInit", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.MemberInit));
       Assert.That (result.Bindings, Is.EqualTo (newBindings));
