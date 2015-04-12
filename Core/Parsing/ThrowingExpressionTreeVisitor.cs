@@ -259,14 +259,14 @@ namespace Remotion.Linq.Parsing
       return base.VisitMemberListBinding (listBinding);
     }
 
-    protected override Expression VisitSubQueryExpression (SubQueryExpression expression)
+    protected override Expression VisitSubQuery (SubQueryExpression expression)
     {
-      return VisitUnhandledItem<SubQueryExpression, Expression> (expression, "VisitSubQueryExpression", BaseVisitSubQueryExpression);
+      return VisitUnhandledItem<SubQueryExpression, Expression> (expression, "VisitSubQuery", BaseVisitSubQuery);
     }
 
-    protected Expression BaseVisitSubQueryExpression (SubQueryExpression expression)
+    protected Expression BaseVisitSubQuery (SubQueryExpression expression)
     {
-      return base.VisitSubQueryExpression (expression);
+      return base.VisitSubQuery (expression);
     }
 
     protected override Expression VisitQuerySourceReferenceExpression (QuerySourceReferenceExpression expression)

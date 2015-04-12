@@ -47,7 +47,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       return Expression.Parameter (expression.Type, "[" + expression.ReferencedQuerySource.ItemName + "]");
     }
 
-    protected override Expression VisitSubQueryExpression (SubQueryExpression expression)
+    protected override Expression VisitSubQuery (SubQueryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       return Expression.Parameter (expression.Type, "{" + expression.QueryModel + "}");

@@ -320,7 +320,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void VisitExpression_SubQuery ()
     {
       QueryModel queryModel = ExpressionHelper.CreateQueryModel<Cook>();
-      CheckDelegation ("VisitSubQueryExpression", new SubQueryExpression (queryModel));
+      CheckDelegation ("VisitSubQuery", new SubQueryExpression (queryModel));
     }
 
     [Test]

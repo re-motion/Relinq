@@ -272,7 +272,7 @@ namespace Remotion.Linq.Parsing
           return VisitTypeBinary ((TypeBinaryExpression) expression);
 
         case SubQueryExpression.ExpressionType:
-          return VisitSubQueryExpression ((SubQueryExpression) expression);
+          return VisitSubQuery ((SubQueryExpression) expression);
         case QuerySourceReferenceExpression.ExpressionType:
           return VisitQuerySourceReferenceExpression ((QuerySourceReferenceExpression) expression);
 
@@ -627,7 +627,7 @@ namespace Remotion.Linq.Parsing
     // SubQueryExpression accpets visitor and casts to ISubQueryExpressionVisitor, then calls VisitSubQuery.
     // Basic Visitor-implementation returns expression as is.
     // If visitor does not implement interface, do nothing?
-    protected virtual Expression VisitSubQueryExpression (SubQueryExpression expression)
+    protected virtual Expression VisitSubQuery (SubQueryExpression expression)
     {
       return expression;
     }

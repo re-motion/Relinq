@@ -203,8 +203,8 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitSubQueryExpression: ", MatchType = MessageMatch.Contains)]
-    public void VisitSubQueryExpression ()
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitSubQuery: ", MatchType = MessageMatch.Contains)]
+    public void VisitSubQuery ()
     {
       _visitor.VisitExpression (new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ()));
     }
