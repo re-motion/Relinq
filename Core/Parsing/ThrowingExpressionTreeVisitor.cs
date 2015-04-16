@@ -55,7 +55,7 @@ namespace Remotion.Linq.Parsing
     protected internal override Expression VisitExtension (ExtensionExpression expression)
     {
       if (expression.CanReduce)
-        return VisitExpression (expression.ReduceAndCheck ());
+        return Visit (expression.ReduceAndCheck ());
       else
         return VisitUnhandledItem<ExtensionExpression, Expression> (expression, "VisitExtension", BaseVisitExtension);
     }
@@ -69,7 +69,7 @@ namespace Remotion.Linq.Parsing
     {
       var expressionAsExtensionExpression = expression as ExtensionExpression;
       if (expressionAsExtensionExpression != null && expressionAsExtensionExpression.CanReduce)
-        return VisitExpression (expressionAsExtensionExpression.ReduceAndCheck()); 
+        return Visit (expressionAsExtensionExpression.ReduceAndCheck()); 
 
       return VisitUnhandledItem<Expression, Expression> (expression, "VisitUnknownNonExtension", BaseVisitUnknownNonExtension);
     }

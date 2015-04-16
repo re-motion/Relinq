@@ -33,7 +33,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       ArgumentUtility.CheckNotNull ("tranformationProvider", tranformationProvider);
       
       var visitor = new TransformingExpressionTreeVisitor (tranformationProvider);
-      return visitor.VisitExpression (expression);
+      return visitor.Visit (expression);
     }
 
     private readonly IExpressionTranformationProvider _tranformationProvider;
@@ -45,9 +45,9 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       _tranformationProvider = tranformationProvider;
     }
 
-    public override Expression VisitExpression (Expression expression)
+    public override Expression Visit (Expression expression)
     {
-      var newExpression = base.VisitExpression (expression);
+      var newExpression = base.Visit (expression);
       if (newExpression == null)
         return newExpression;
 
@@ -58,7 +58,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
         var transformedExpression = transformation (newExpression);
         Assertion.IsNotNull (transformedExpression);
         if (transformedExpression != newExpression)
-          return VisitExpression (transformedExpression);
+          return Visit (transformedExpression);
       }
 
       return newExpression;

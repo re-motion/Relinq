@@ -43,7 +43,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("querySourceMapping", querySourceMapping);
 
-      return new CloningExpressionTreeVisitor (querySourceMapping, false).VisitExpression (expression);
+      return new CloningExpressionTreeVisitor (querySourceMapping, false).Visit (expression);
     }
     
     private CloningExpressionTreeVisitor (QuerySourceMapping querySourceMapping, bool ignoreUnmappedReferences)

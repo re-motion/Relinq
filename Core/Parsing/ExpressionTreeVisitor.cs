@@ -38,7 +38,7 @@ namespace Remotion.Linq.Parsing
   {
     /// <summary>
     /// Determines whether the given <see cref="Expression"/> is one of the expressions defined by <see cref="ExpressionType"/> for which
-    /// <see cref="ExpressionTreeVisitor"/> has a Visit method. <see cref="VisitExpression"/> handles those by calling the respective Visit method.
+    /// <see cref="ExpressionTreeVisitor"/> has a Visit method. <see cref="Visit"/> handles those by calling the respective Visit method.
     /// </summary>
     /// <param name="expression">The expression to check. Must not be <see langword="null" />.</param>
     /// <returns>
@@ -110,7 +110,7 @@ namespace Remotion.Linq.Parsing
 
     /// <summary>
     /// Determines whether the given <see cref="Expression"/> is one of the base expressions defined by re-linq. 
-    /// <see cref="VisitExpression"/> handles those by calling the respective Visit method.
+    /// <see cref="Visit"/> handles those by calling the respective Visit method.
     /// </summary>
     /// <param name="expression">The expression to check.</param>
     /// <returns>
@@ -135,7 +135,7 @@ namespace Remotion.Linq.Parsing
     }
 
     /// <summary>
-    /// Determines whether the given <see cref="Expression"/> is an <see cref="ExtensionExpression"/>. <see cref="VisitExpression"/> handles such
+    /// Determines whether the given <see cref="Expression"/> is an <see cref="ExtensionExpression"/>. <see cref="Visit"/> handles such
     /// expressions by calling <see cref="ExtensionExpression.Accept"/>.
     /// </summary>
     /// <param name="expression">The expression to check.</param>
@@ -152,7 +152,7 @@ namespace Remotion.Linq.Parsing
 
     /// <summary>
     /// Determines whether the given <see cref="Expression"/> is an unknown expression not derived from <see cref="ExtensionExpression"/>. 
-    /// <see cref="VisitExpression"/> cannot handle such expressions at all and will call <see cref="VisitUnknownNonExtension"/> for them.
+    /// <see cref="Visit"/> cannot handle such expressions at all and will call <see cref="VisitUnknownNonExtension"/> for them.
     /// </summary>
     /// <param name="expression">The expression to check.</param>
     /// <returns>
@@ -199,7 +199,7 @@ namespace Remotion.Linq.Parsing
 
     // Remove, is provided by ExpressionVisitor
     // TODO: What to do with all the unsupported Expressions, e.g. Loop, Goto, Try, etc?
-    public virtual Expression VisitExpression (Expression expression)
+    public virtual Expression Visit (Expression expression)
     {
       if (expression == null)
         return null;
@@ -289,7 +289,7 @@ namespace Remotion.Linq.Parsing
       if (expression == null)
         return null;
 
-      var newExpression = VisitExpression (expression) as T;
+      var newExpression = Visit (expression) as T;
 
       if (newExpression == null)
       {
@@ -368,7 +368,7 @@ namespace Remotion.Linq.Parsing
     protected virtual Expression VisitUnary (UnaryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      Expression newOperand = VisitExpression (expression.Operand);
+      Expression newOperand = Visit (expression.Operand);
       if (newOperand != expression.Operand)
       {
 #if NET_3_5
@@ -386,9 +386,9 @@ namespace Remotion.Linq.Parsing
     protected virtual Expression VisitBinary (BinaryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      Expression newLeft = VisitExpression (expression.Left);
-      var newConversion = (LambdaExpression) VisitExpression (expression.Conversion);
-      Expression newRight = VisitExpression (expression.Right);
+      Expression newLeft = Visit (expression.Left);
+      var newConversion = (LambdaExpression) Visit (expression.Conversion);
+      Expression newRight = Visit (expression.Right);
       if (newLeft != expression.Left || newRight != expression.Right || newConversion != expression.Conversion)
         return Expression.MakeBinary (expression.NodeType, newLeft, newRight, expression.IsLiftedToNull, expression.Method, newConversion);
       return expression;
@@ -398,7 +398,7 @@ namespace Remotion.Linq.Parsing
     protected virtual Expression VisitTypeBinary (TypeBinaryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      Expression newExpression = VisitExpression (expression.Expression);
+      Expression newExpression = Visit (expression.Expression);
       if (newExpression == expression.Expression)
         return expression;
 #if !NET_3_5
@@ -419,9 +419,9 @@ namespace Remotion.Linq.Parsing
     protected virtual Expression VisitConditional (ConditionalExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      Expression newTest = VisitExpression (expression.Test);
-      Expression newTrue = VisitExpression (expression.IfTrue);
-      Expression newFalse = VisitExpression (expression.IfFalse);
+      Expression newTest = Visit (expression.Test);
+      Expression newTrue = Visit (expression.IfTrue);
+      Expression newFalse = Visit (expression.IfFalse);
       if ((newTest != expression.Test) || (newFalse != expression.IfFalse) || (newTrue != expression.IfTrue))
       {
 #if !NET_3_5
@@ -445,7 +445,7 @@ namespace Remotion.Linq.Parsing
     protected virtual Expression VisitLambda (LambdaExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      Expression newBody = VisitExpression (expression.Body);
+      Expression newBody = Visit (expression.Body);
       ReadOnlyCollection<ParameterExpression> newParameters = VisitAndConvert (expression.Parameters, "VisitLambda");
       if ((newBody != expression.Body) || (newParameters != expression.Parameters))
         return Expression.Lambda (expression.Type, newBody, newParameters);
@@ -456,7 +456,7 @@ namespace Remotion.Linq.Parsing
     protected virtual Expression VisitMethodCall (MethodCallExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      Expression newObject = VisitExpression (expression.Object);
+      Expression newObject = Visit (expression.Object);
       ReadOnlyCollection<Expression> newArguments = VisitAndConvert (expression.Arguments, "VisitMethodCall");
       if ((newObject != expression.Object) || (newArguments != expression.Arguments))
         return Expression.Call (newObject, expression.Method, newArguments);
@@ -467,7 +467,7 @@ namespace Remotion.Linq.Parsing
     protected virtual Expression VisitInvocation (InvocationExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      Expression newExpression = VisitExpression (expression.Expression);
+      Expression newExpression = Visit (expression.Expression);
       ReadOnlyCollection<Expression> newArguments = VisitAndConvert (expression.Arguments, "VisitInvocation");
       if ((newExpression != expression.Expression) || (newArguments != expression.Arguments))
         return Expression.Invoke (newExpression, newArguments);
@@ -478,7 +478,7 @@ namespace Remotion.Linq.Parsing
     protected virtual Expression VisitMember (MemberExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      Expression newExpression = VisitExpression (expression.Expression);
+      Expression newExpression = Visit (expression.Expression);
       if (newExpression != expression.Expression)
         return Expression.MakeMemberAccess (newExpression, expression.Member);
       return expression;
@@ -525,7 +525,7 @@ namespace Remotion.Linq.Parsing
     protected virtual Expression VisitMemberInit (MemberInitExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      var newNewExpression = VisitExpression (expression.NewExpression) as NewExpression;
+      var newNewExpression = Visit (expression.NewExpression) as NewExpression;
       if (newNewExpression == null)
       {
         throw new NotSupportedException (
@@ -542,7 +542,7 @@ namespace Remotion.Linq.Parsing
     protected virtual Expression VisitListInit (ListInitExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      var newNewExpression = VisitExpression (expression.NewExpression) as NewExpression;
+      var newNewExpression = Visit (expression.NewExpression) as NewExpression;
       if (newNewExpression == null)
         throw new NotSupportedException ("ListInitExpressions only support non-null instances of type 'NewExpression' as their NewExpression member.");
       ReadOnlyCollection<ElementInit> newInitializers = VisitElementInitList (expression.Initializers);
@@ -583,7 +583,7 @@ namespace Remotion.Linq.Parsing
     {
       ArgumentUtility.CheckNotNull ("memberAssigment", memberAssigment);
 
-      Expression expression = VisitExpression (memberAssigment.Expression);
+      Expression expression = Visit (memberAssigment.Expression);
       if (expression != memberAssigment.Expression)
         return Expression.Bind (memberAssigment.Member, expression);
       return memberAssigment;

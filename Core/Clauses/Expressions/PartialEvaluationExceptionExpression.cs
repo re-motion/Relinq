@@ -87,7 +87,7 @@ namespace Remotion.Linq.Clauses.Expressions
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
 
-      var newEvaluatedExpression = visitor.VisitExpression (_evaluatedExpression);
+      var newEvaluatedExpression = visitor.Visit (_evaluatedExpression);
       if (newEvaluatedExpression != _evaluatedExpression)
         return new PartialEvaluationExceptionExpression (_exception, newEvaluatedExpression);
       else

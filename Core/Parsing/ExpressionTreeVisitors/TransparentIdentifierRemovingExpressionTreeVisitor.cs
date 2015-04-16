@@ -42,7 +42,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       do
       {
         expressionBeforeRemove = expressionAfterRemove;
-        expressionAfterRemove = new TransparentIdentifierRemovingExpressionTreeVisitor().VisitExpression (expressionAfterRemove);
+        expressionAfterRemove = new TransparentIdentifierRemovingExpressionTreeVisitor().Visit (expressionAfterRemove);
       } while (expressionAfterRemove != expressionBeforeRemove);
 
       return expressionAfterRemove;

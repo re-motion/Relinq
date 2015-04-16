@@ -46,7 +46,7 @@ namespace Remotion.Linq.UnitTests.Parsing
       var constantExpression = Expression.Constant (0);
       var expression = new TestExtensionExpression (constantExpression);
 
-      var result = visitor.VisitExpression (expression);
+      var result = visitor.Visit (expression);
 
       Assert.That (result, Is.Not.SameAs (constantExpression));
       Assert.That (((ConstantExpression) result).Value, Is.EqualTo("ConstantExpression was visited"));
@@ -66,112 +66,112 @@ namespace Remotion.Linq.UnitTests.Parsing
       nonReducibleExpression.Stub (stub => stub.CanReduce).Return (false);
       nonReducibleExpression.Stub (stub => stub.ToString ()).Return ("Test");
       
-      visitor.VisitExpression (nonReducibleExpression);
+      visitor.Visit (nonReducibleExpression);
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitUnknownNonExtension: [-1]")]
     public void VisitUnknownNonExtension ()
     {
-      VisitExpression (_visitor, (ExpressionType) (-1));
+      Visit (_visitor, (ExpressionType) (-1));
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitUnary", MatchType = MessageMatch.Contains)]
     public void VisitUnary ()
     {
-      VisitExpression (_visitor, ExpressionType.UnaryPlus);
+      Visit (_visitor, ExpressionType.UnaryPlus);
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitBinary: ", MatchType = MessageMatch.Contains)]
     public void VisitBinary ()
     {
-      VisitExpression (_visitor, ExpressionType.And);
+      Visit (_visitor, ExpressionType.And);
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitTypeBinary: ", MatchType = MessageMatch.Contains)]
     public void VisitTypeBinary ()
     {
-      VisitExpression (_visitor, ExpressionType.TypeIs);
+      Visit (_visitor, ExpressionType.TypeIs);
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitConstant: ", MatchType = MessageMatch.Contains)]
     public void VisitConstant ()
     {
-      VisitExpression (_visitor, ExpressionType.Constant);
+      Visit (_visitor, ExpressionType.Constant);
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitConditional: ", MatchType = MessageMatch.Contains)]
     public void VisitConditional ()
     {
-      VisitExpression (_visitor, ExpressionType.Conditional);
+      Visit (_visitor, ExpressionType.Conditional);
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitParameter: ", MatchType = MessageMatch.Contains)]
     public void VisitParameter ()
     {
-      VisitExpression (_visitor, ExpressionType.Parameter);
+      Visit (_visitor, ExpressionType.Parameter);
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitLambda: ", MatchType = MessageMatch.Contains)]
     public void VisitLambda ()
     {
-      VisitExpression (_visitor, ExpressionType.Lambda);
+      Visit (_visitor, ExpressionType.Lambda);
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitMethodCall: ", MatchType = MessageMatch.Contains)]
     public void VisitMethodCall ()
     {
-      VisitExpression (_visitor, ExpressionType.Call);
+      Visit (_visitor, ExpressionType.Call);
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitInvocation: ", MatchType = MessageMatch.Contains)]
     public void VisitInvocation ()
     {
-      VisitExpression (_visitor, ExpressionType.Invoke);
+      Visit (_visitor, ExpressionType.Invoke);
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitMember: ", MatchType = MessageMatch.Contains)]
     public void VisitMember ()
     {
-      VisitExpression (_visitor, ExpressionType.MemberAccess);
+      Visit (_visitor, ExpressionType.MemberAccess);
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitNew: ", MatchType = MessageMatch.Contains)]
     public void VisitNew ()
     {
-      VisitExpression (_visitor, ExpressionType.New);
+      Visit (_visitor, ExpressionType.New);
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitNewArray: ", MatchType = MessageMatch.Contains)]
     public void VisitNewArray ()
     {
-      VisitExpression (_visitor, ExpressionType.NewArrayInit);
+      Visit (_visitor, ExpressionType.NewArrayInit);
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitMemberInit: ", MatchType = MessageMatch.Contains)]
     public void VisitMemberInit ()
     {
-      VisitExpression (_visitor, ExpressionType.MemberInit);
+      Visit (_visitor, ExpressionType.MemberInit);
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitListInit: ", MatchType = MessageMatch.Contains)]
     public void VisitListInit ()
     {
-      VisitExpression (_visitor, ExpressionType.ListInit);
+      Visit (_visitor, ExpressionType.ListInit);
     }
 
     [Test]
@@ -206,19 +206,19 @@ namespace Remotion.Linq.UnitTests.Parsing
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitSubQuery: ", MatchType = MessageMatch.Contains)]
     public void VisitSubQuery ()
     {
-      _visitor.VisitExpression (new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ()));
+      _visitor.Visit (new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ()));
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitQuerySourceReference: ", MatchType = MessageMatch.Contains)]
     public void VisitQuerySourceReference ()
     {
-      _visitor.VisitExpression (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()));
+      _visitor.Visit (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()));
     }
 
-    private void VisitExpression (TestThrowingExpressionTreeVisitor visitor, ExpressionType nodeType)
+    private void Visit (TestThrowingExpressionTreeVisitor visitor, ExpressionType nodeType)
     {
-      visitor.VisitExpression (ExpressionInstanceCreator.GetExpressionInstance (nodeType));
+      visitor.Visit (ExpressionInstanceCreator.GetExpressionInstance (nodeType));
     }
 
   }

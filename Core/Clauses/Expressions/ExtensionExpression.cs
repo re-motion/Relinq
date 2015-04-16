@@ -101,7 +101,7 @@ namespace Remotion.Linq.Clauses.Expressions
     }
 
     /// <summary>
-    /// Must be overridden by <see cref="ExtensionExpression"/> subclasses by calling <see cref="ExpressionTreeVisitor.VisitExpression"/> on all 
+    /// Must be overridden by <see cref="ExtensionExpression"/> subclasses by calling <see cref="ExpressionTreeVisitor.Visit"/> on all 
     /// children of this extension node. 
     /// </summary>
     /// <param name="visitor">The visitor to visit the child nodes with.</param>

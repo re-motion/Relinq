@@ -78,7 +78,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       var visitorMock = MockRepository.GenerateStrictMock<ExpressionTreeVisitor> ();
 
       visitorMock
-          .Expect (mock => mock.VisitExpression (_evaluatedExpression))
+          .Expect (mock => mock.Visit (_evaluatedExpression))
           .Return (_evaluatedExpression);
       visitorMock.Replay ();
 
@@ -95,7 +95,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       var visitorMock = MockRepository.GenerateStrictMock<ExpressionTreeVisitor> ();
 
       visitorMock
-          .Expect (mock => mock.VisitExpression (_evaluatedExpression))
+          .Expect (mock => mock.Visit (_evaluatedExpression))
           .Return (newExpression);
       visitorMock.Replay ();
 

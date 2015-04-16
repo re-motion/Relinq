@@ -81,7 +81,7 @@ namespace Remotion.Linq.Clauses.Expressions
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
 
-      var newExpression = visitor.VisitExpression (_comparison);
+      var newExpression = visitor.Visit (_comparison);
       if (newExpression != _comparison)
         return new VBStringComparisonExpression (newExpression, _textCompare);
       else

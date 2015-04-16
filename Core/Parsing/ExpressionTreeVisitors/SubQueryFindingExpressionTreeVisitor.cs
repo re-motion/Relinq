@@ -34,7 +34,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       ArgumentUtility.CheckNotNull ("nodeTypeProvider", nodeTypeProvider);
 
       var visitor = new SubQueryFindingExpressionTreeVisitor (nodeTypeProvider);
-      return visitor.VisitExpression (expressionTree);
+      return visitor.Visit (expressionTree);
     }
 
     private readonly INodeTypeProvider _nodeTypeProvider;
@@ -50,13 +50,13 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       _queryParser = new QueryParser (_expressionTreeParser);
     }
 
-    public override Expression VisitExpression (Expression expression)
+    public override Expression Visit (Expression expression)
     {
       var potentialQueryOperatorExpression = _expressionTreeParser.GetQueryOperatorExpression (expression);
       if (potentialQueryOperatorExpression != null && _nodeTypeProvider.IsRegistered (potentialQueryOperatorExpression.Method))
         return CreateSubQueryNode (potentialQueryOperatorExpression);
       else
-        return base.VisitExpression (expression);
+        return base.Visit (expression);
     }
     
     protected override Expression VisitUnknownNonExtension (Expression expression)

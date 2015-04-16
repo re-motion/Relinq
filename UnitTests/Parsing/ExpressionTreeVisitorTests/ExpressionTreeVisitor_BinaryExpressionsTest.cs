@@ -29,11 +29,11 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void VisitBinary_Unchanged ()
     {
       BinaryExpression expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
-      Expect.Call (VisitorMock.VisitExpression (expression.Left)).Return (expression.Left);
-      Expect.Call (VisitorMock.VisitExpression (expression.Right)).Return (expression.Right);
-      Expect.Call (VisitorMock.VisitExpression (expression.Conversion)).Return (expression.Conversion);
+      Expect.Call (VisitorMock.Visit (expression.Left)).Return (expression.Left);
+      Expect.Call (VisitorMock.Visit (expression.Right)).Return (expression.Right);
+      Expect.Call (VisitorMock.Visit (expression.Conversion)).Return (expression.Conversion);
 
-      BinaryExpression result = (BinaryExpression) InvokeAndCheckVisitExpression ("VisitBinary", expression);
+      BinaryExpression result = (BinaryExpression) InvokeAndCheckVisit ("VisitBinary", expression);
       Assert.That (result, Is.SameAs (expression));
     }
 
@@ -42,11 +42,11 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       BinaryExpression expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Subtract);
       Expression newOperand = Expression.Constant (1);
-      Expect.Call (VisitorMock.VisitExpression (expression.Left)).Return (newOperand);
-      Expect.Call (VisitorMock.VisitExpression (expression.Right)).Return (expression.Right);
-      Expect.Call (VisitorMock.VisitExpression (expression.Conversion)).Return (expression.Conversion);
+      Expect.Call (VisitorMock.Visit (expression.Left)).Return (newOperand);
+      Expect.Call (VisitorMock.Visit (expression.Right)).Return (expression.Right);
+      Expect.Call (VisitorMock.Visit (expression.Conversion)).Return (expression.Conversion);
 
-      BinaryExpression result = (BinaryExpression) InvokeAndCheckVisitExpression ("VisitBinary", expression);
+      BinaryExpression result = (BinaryExpression) InvokeAndCheckVisit ("VisitBinary", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Subtract));
       Assert.That (result.Left, Is.SameAs (newOperand));
@@ -58,11 +58,11 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       BinaryExpression expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Subtract);
       Expression newOperand = Expression.Constant (1);
-      Expect.Call (VisitorMock.VisitExpression (expression.Left)).Return (expression.Left);
-      Expect.Call (VisitorMock.VisitExpression (expression.Right)).Return (newOperand);
-      Expect.Call (VisitorMock.VisitExpression (expression.Conversion)).Return (expression.Conversion);
+      Expect.Call (VisitorMock.Visit (expression.Left)).Return (expression.Left);
+      Expect.Call (VisitorMock.Visit (expression.Right)).Return (newOperand);
+      Expect.Call (VisitorMock.Visit (expression.Conversion)).Return (expression.Conversion);
 
-      BinaryExpression result = (BinaryExpression) InvokeAndCheckVisitExpression ("VisitBinary", expression);
+      BinaryExpression result = (BinaryExpression) InvokeAndCheckVisit ("VisitBinary", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.Subtract));
       Assert.That (result.Left, Is.SameAs (expression.Left));
@@ -82,11 +82,11 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
           null,
           conversion);
 
-      Expect.Call (VisitorMock.VisitExpression (expression.Left)).Return (expression.Left);
-      Expect.Call (VisitorMock.VisitExpression (expression.Right)).Return (expression.Right);
-      Expect.Call (VisitorMock.VisitExpression (expression.Conversion)).Return (expression.Conversion);
+      Expect.Call (VisitorMock.Visit (expression.Left)).Return (expression.Left);
+      Expect.Call (VisitorMock.Visit (expression.Right)).Return (expression.Right);
+      Expect.Call (VisitorMock.Visit (expression.Conversion)).Return (expression.Conversion);
 
-      BinaryExpression result = (BinaryExpression) InvokeAndCheckVisitExpression ("VisitBinary", expression);
+      BinaryExpression result = (BinaryExpression) InvokeAndCheckVisit ("VisitBinary", expression);
       Assert.That (result, Is.SameAs (expression));
     }
 
@@ -105,11 +105,11 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 
       LambdaExpression newConversion = Expression.Lambda (conversionParameter, conversionParameter);
 
-      Expect.Call (VisitorMock.VisitExpression (expression.Left)).Return (expression.Left);
-      Expect.Call (VisitorMock.VisitExpression (expression.Right)).Return (expression.Right);
-      Expect.Call (VisitorMock.VisitExpression (expression.Conversion)).Return (newConversion);
+      Expect.Call (VisitorMock.Visit (expression.Left)).Return (expression.Left);
+      Expect.Call (VisitorMock.Visit (expression.Right)).Return (expression.Right);
+      Expect.Call (VisitorMock.Visit (expression.Conversion)).Return (newConversion);
 
-      BinaryExpression result = (BinaryExpression) InvokeAndCheckVisitExpression ("VisitBinary", expression);
+      BinaryExpression result = (BinaryExpression) InvokeAndCheckVisit ("VisitBinary", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.Conversion, Is.SameAs (newConversion));
     }
@@ -125,11 +125,11 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       BinaryExpression expression = Expression.MakeBinary (ExpressionType.GreaterThan, left, right, true, method);
 
       Expression newOperand = Expression.Constant (1, typeof (int?));
-      Expect.Call (VisitorMock.VisitExpression (expression.Left)).Return (newOperand);
-      Expect.Call (VisitorMock.VisitExpression (expression.Right)).Return (expression.Right);
-      Expect.Call (VisitorMock.VisitExpression (expression.Conversion)).Return (expression.Conversion);
+      Expect.Call (VisitorMock.Visit (expression.Left)).Return (newOperand);
+      Expect.Call (VisitorMock.Visit (expression.Right)).Return (expression.Right);
+      Expect.Call (VisitorMock.Visit (expression.Conversion)).Return (expression.Conversion);
 
-      BinaryExpression result = (BinaryExpression) InvokeAndCheckVisitExpression ("VisitBinary", expression);
+      BinaryExpression result = (BinaryExpression) InvokeAndCheckVisit ("VisitBinary", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.IsLiftedToNull, Is.True);
     }
@@ -145,11 +145,11 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       BinaryExpression expression = Expression.MakeBinary (ExpressionType.GreaterThan, left, right, true, method);
 
       Expression newOperand = Expression.Constant (1, typeof (int?));
-      Expect.Call (VisitorMock.VisitExpression (expression.Left)).Return (newOperand);
-      Expect.Call (VisitorMock.VisitExpression (expression.Right)).Return (expression.Right);
-      Expect.Call (VisitorMock.VisitExpression (expression.Conversion)).Return (expression.Conversion);
+      Expect.Call (VisitorMock.Visit (expression.Left)).Return (newOperand);
+      Expect.Call (VisitorMock.Visit (expression.Right)).Return (expression.Right);
+      Expect.Call (VisitorMock.Visit (expression.Conversion)).Return (expression.Conversion);
 
-      BinaryExpression result = (BinaryExpression) InvokeAndCheckVisitExpression ("VisitBinary", expression);
+      BinaryExpression result = (BinaryExpression) InvokeAndCheckVisit ("VisitBinary", expression);
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.Method, Is.SameAs (method));
     }

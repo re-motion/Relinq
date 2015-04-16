@@ -25,9 +25,9 @@ namespace Remotion.Linq.UnitTests.Parsing
 {
   public class TestThrowingExpressionTreeVisitor : ThrowingExpressionTreeVisitor
   {
-    public new Expression VisitExpression (Expression expression)
+    public new Expression Visit (Expression expression)
     {
-      return base.VisitExpression (expression);
+      return base.Visit (expression);
     }
 
     public new MemberBinding VisitMemberBinding (MemberBinding memberBinding)

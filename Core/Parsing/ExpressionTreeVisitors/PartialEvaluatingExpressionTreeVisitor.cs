@@ -46,7 +46,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       var partialEvaluationInfo = EvaluatableTreeFindingExpressionTreeVisitor.Analyze (expressionTree);
 
       var visitor = new PartialEvaluatingExpressionTreeVisitor (expressionTree, partialEvaluationInfo);
-      return visitor.VisitExpression (expressionTree);
+      return visitor.Visit (expressionTree);
     }
 
     // _partialEvaluationInfo contains a list of the expressions that are safe to be evaluated.
@@ -66,7 +66,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       return expression;
     }
 
-    public override Expression VisitExpression (Expression expression)
+    public override Expression Visit (Expression expression)
     {
       // Only evaluate expressions which do not use any of the surrounding parameter expressions. Don't evaluate
       // lambda expressions (even if you could), we want to analyze those later on.
@@ -74,7 +74,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
         return null;
 
       if (expression.NodeType == ExpressionType.Lambda || !_partialEvaluationInfo.IsEvaluatableExpression (expression))
-        return base.VisitExpression (expression);
+        return base.Visit (expression);
 
       Expression evaluatedExpression;
       try
@@ -84,7 +84,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       catch (Exception ex)
       {
         // Evaluation caused an exception. Skip evaluation of this expression and proceed as if it weren't evaluable.
-        var baseVisitedExpression = base.VisitExpression (expression);
+        var baseVisitedExpression = base.Visit (expression);
         // Then wrap the result to capture the exception for the back-end.
         return new PartialEvaluationExceptionExpression (ex, baseVisitedExpression);
       }

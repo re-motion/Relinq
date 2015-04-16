@@ -47,17 +47,17 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
 
       var visitor = new EvaluatableTreeFindingExpressionTreeVisitor();
-      visitor.VisitExpression (expressionTree);
+      visitor.Visit (expressionTree);
       return visitor._partialEvaluationInfo;
     }
 
     private readonly PartialEvaluationInfo _partialEvaluationInfo = new PartialEvaluationInfo();
     private bool _isCurrentSubtreeEvaluatable;
 
-    public override Expression VisitExpression (Expression expression)
+    public override Expression Visit (Expression expression)
     {
       if (expression == null)
-        return base.VisitExpression (expression);
+        return base.Visit (expression);
 
       // An expression node/subtree is evaluatable iff:
       // - by itself it would be evaluatable, and
@@ -71,7 +71,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
       // Then call the specific Visit... method for this expression. This will determine if this node by itself is not evaluatable by setting 
       // _isCurrentSubtreeEvaluatable to false if it isn't. It will also investigate the evaluatability info of the child nodes and set 
       // _isCurrentSubtreeEvaluatable accordingly.
-      var visitedExpression = base.VisitExpression (expression);
+      var visitedExpression = base.Visit (expression);
 
       // If the current subtree is still marked to be evaluatable, put it into the result list.
       if (_isCurrentSubtreeEvaluatable)
@@ -129,7 +129,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
       if (!_isCurrentSubtreeEvaluatable)
         return expression;
 
-      VisitExpression (expression.NewExpression);
+      Visit (expression.NewExpression);
       return expression;
     }
 
@@ -144,7 +144,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
       if (!_isCurrentSubtreeEvaluatable)
         return expression;
 
-      VisitExpression (expression.NewExpression);
+      Visit (expression.NewExpression);
       return expression;
     }
 

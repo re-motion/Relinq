@@ -70,7 +70,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       }
 
       var visitor = new AccessorFindingExpressionTreeVisitor (searchedExpression, inputParameter);
-      visitor.VisitExpression (fullExpression);
+      visitor.Visit (fullExpression);
 
       if (visitor.AccessorPath != null)
         return visitor.AccessorPath;
@@ -102,7 +102,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
 
     public LambdaExpression AccessorPath { get; private set; }
 
-    public override Expression VisitExpression (Expression expression)
+    public override Expression Visit (Expression expression)
     {
       if (Equals (expression, _searchedExpression))
       {
@@ -113,7 +113,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       }
       else if (expression is NewExpression || expression is MemberInitExpression || expression is UnaryExpression)
       {
-        return base.VisitExpression (expression);
+        return base.Visit (expression);
       }
       else
       {
@@ -163,7 +163,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
     {
       var memberAccess = GetMemberAccessExpression (_accessorPathStack.Peek (), member);
       _accessorPathStack.Push (memberAccess);
-      VisitExpression (expression);
+      Visit (expression);
       _accessorPathStack.Pop ();
     }
 

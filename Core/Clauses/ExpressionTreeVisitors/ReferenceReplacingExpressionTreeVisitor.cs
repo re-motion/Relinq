@@ -44,7 +44,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("querySourceMapping", querySourceMapping);
 
-      return new ReferenceReplacingExpressionTreeVisitor (querySourceMapping, throwOnUnmappedReferences).VisitExpression (expression);
+      return new ReferenceReplacingExpressionTreeVisitor (querySourceMapping, throwOnUnmappedReferences).Visit (expression);
     }
 
     private readonly QuerySourceMapping _querySourceMapping;

@@ -35,7 +35,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       ArgumentUtility.CheckNotNull ("sourceTree", sourceTree);
 
       var visitor = new ReplacingExpressionTreeVisitor (replacedExpression, replacementExpression);
-      return visitor.VisitExpression (sourceTree);
+      return visitor.Visit (sourceTree);
     }
 
     private readonly Expression _replacedExpression;
@@ -47,17 +47,17 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       _replacementExpression = replacementExpression;
     }
 
-    public override Expression VisitExpression (Expression expression)
+    public override Expression Visit (Expression expression)
     {
       if (Equals (expression, _replacedExpression))
         return _replacementExpression;
       else
-        return base.VisitExpression (expression);
+        return base.Visit (expression);
     }
 
     protected override Expression VisitSubQuery (SubQueryExpression expression)
     {
-      expression.QueryModel.TransformExpressions (VisitExpression);
+      expression.QueryModel.TransformExpressions (Visit);
       return expression; // Note that we modifiy the (mutable) QueryModel, we return an unchanged expression
     }
 

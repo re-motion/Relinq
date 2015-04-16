@@ -56,7 +56,7 @@ namespace Remotion.Linq.Development.UnitTesting.Clauses.Expressions
 
     protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
     {
-      var result = visitor.VisitExpression (_expression);
+      var result = visitor.Visit (_expression);
       if (result != _expression)
         return new TestExtensionExpression (result);
 

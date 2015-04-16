@@ -48,7 +48,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       get { return _visitorMock; }
     }
 
-    protected Expression InvokeAndCheckVisitExpression (string methodName, Expression expression)
+    protected Expression InvokeAndCheckVisit (string methodName, Expression expression)
     {
       return (Expression) InvokeAndCheckVisitObject (methodName, expression);
     }
@@ -58,12 +58,12 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       return InvokeAndCheckVisitMethod (delegate { return InvokeVisitMethod (methodName, argument); }, argument);
     }
 
-    protected ReadOnlyCollection<T> InvokeAndCheckVisitExpressionList<T> (ReadOnlyCollection<T> expressions, string methodName) where T : Expression
+    protected ReadOnlyCollection<T> InvokeAndCheckVisitAndConvertList<T> (ReadOnlyCollection<T> expressions, string methodName) where T : Expression
     {
       return InvokeAndCheckVisitMethod (arg => VisitorMock.VisitAndConvert (expressions, methodName), expressions);
     }
 
-    protected T InvokeAndCheckVisitAndConvertExpression<T> (T expression, string methodName) where T : Expression
+    protected T InvokeAndCheckVisitAndConvert<T> (T expression, string methodName) where T : Expression
     {
       return InvokeAndCheckVisitMethod (arg => VisitorMock.VisitAndConvert (expression, methodName), expression);
     }

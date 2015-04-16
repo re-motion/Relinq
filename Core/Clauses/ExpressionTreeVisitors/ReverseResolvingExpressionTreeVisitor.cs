@@ -56,7 +56,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
 
       var lambdaParameter = Expression.Parameter (itemExpression.Type, "input");
       var visitor = new ReverseResolvingExpressionTreeVisitor (itemExpression, lambdaParameter);
-      var result = visitor.VisitExpression (resolvedExpression);
+      var result = visitor.Visit (resolvedExpression);
       return Expression.Lambda (result, lambdaParameter);
     }
 
@@ -82,7 +82,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
 
       var lambdaParameter = Expression.Parameter (itemExpression.Type, "input");
       var visitor = new ReverseResolvingExpressionTreeVisitor (itemExpression, lambdaParameter);
-      var result = visitor.VisitExpression (resolvedExpression.Body);
+      var result = visitor.Visit (resolvedExpression.Body);
       
       var parameters = new List<ParameterExpression> (resolvedExpression.Parameters);
       parameters.Insert (parameterInsertionPosition, lambdaParameter);

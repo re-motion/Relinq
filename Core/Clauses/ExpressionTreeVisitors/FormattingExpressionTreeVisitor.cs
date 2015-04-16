@@ -33,7 +33,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
     public static string Format (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      var transformedExpression = new FormattingExpressionTreeVisitor().VisitExpression (expression);
+      var transformedExpression = new FormattingExpressionTreeVisitor().Visit (expression);
       return transformedExpression.ToString();
     }
 
