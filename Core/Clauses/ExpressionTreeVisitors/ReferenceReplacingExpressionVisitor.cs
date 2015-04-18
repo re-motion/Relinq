@@ -62,7 +62,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       get { return _querySourceMapping; }
     }
 
-    protected override Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
+    protected internal override Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
@@ -81,7 +81,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       }
     }
 
-    protected override Expression VisitSubQuery (SubQueryExpression expression)
+    protected internal override Expression VisitSubQuery (SubQueryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
@@ -89,12 +89,13 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       return expression;
     }
 
+#if NET_3_5
     protected override Expression VisitRelinqUnknownNonExtension (Expression expression)
     {
       //ignore
       return expression;
     }
-
+#endif
   }
 
 }

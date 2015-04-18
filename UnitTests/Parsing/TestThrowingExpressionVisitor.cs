@@ -53,7 +53,7 @@ namespace Remotion.Linq.UnitTests.Parsing
       if (baseBehaviorCalledMethod.DeclaringType == typeof (RelinqExpressionVisitor))
         declaringType = typeof (RelinqExpressionVisitor);
       else
-        declaringType = typeof (ExpressionVisitor2);
+        declaringType = typeof (ExpressionVisitor);
 
       Assert.That (baseBehaviorCalledMethod, Is.EqualTo (declaringType.GetMethod (visitMethod, BindingFlags.NonPublic | BindingFlags.Instance)));
 

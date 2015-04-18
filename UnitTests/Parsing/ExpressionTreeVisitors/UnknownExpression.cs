@@ -51,6 +51,11 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     {
       get { return _type; }
     }
+
+    protected override Expression VisitChildren (ExpressionVisitor visitor)
+    {
+      return this;
+    }
 #endif
   }
 }

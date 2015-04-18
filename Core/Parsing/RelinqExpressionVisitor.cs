@@ -34,10 +34,10 @@ namespace Remotion.Linq.Parsing
   // Possibly only needed to provide default implementation for SubQueryExpression and QuerySourceReferenceExpression.
   // May this could be the ThrowingExpressionVisitor and other visitor-implementations that should not be throwing, e.g. ReferenceReplacingETV, 
   // simply implement the interface if they need to handle the custom expressions?
-  public abstract class RelinqExpressionVisitor : ExpressionVisitor2
+  public abstract partial class RelinqExpressionVisitor : ExpressionVisitor
   {    /// <summary>
     /// Determines whether the given <see cref="Expression"/> is one of the expressions defined by <see cref="ExpressionType"/> for which
-    /// <see cref="RelinqExpressionVisitor"/> has a Visit method. <see cref="ExpressionVisitor2.Visit"/> handles those by calling the respective Visit method.
+    /// <see cref="RelinqExpressionVisitor"/> has a Visit method. <see cref="ExpressionVisitor.Visit(Expression)"/> handles those by calling the respective Visit method.
     /// </summary>
     /// <param name="expression">The expression to check. Must not be <see langword="null" />.</param>
     /// <returns>
@@ -108,8 +108,8 @@ namespace Remotion.Linq.Parsing
     }
 
     /// <summary>
-    /// Determines whether the given <see cref="Expression"/> is an <see cref="ExtensionExpression"/>. <see cref="ExpressionVisitor2.Visit"/> handles such
-    /// expressions by calling <see cref="ExtensionExpression.Accept"/>.
+    /// Determines whether the given <see cref="Expression"/> is an <see cref="ExtensionExpression"/>. 
+    /// <see cref="ExpressionVisitor.Visit(Expression)"/> handles such expressions by calling <see cref="ExtensionExpression.Accept"/>.
     /// </summary>
     /// <param name="expression">The expression to check.</param>
     /// <returns>
@@ -125,7 +125,7 @@ namespace Remotion.Linq.Parsing
 
     /// <summary>
     /// Determines whether the given <see cref="Expression"/> is one of the base expressions defined by re-linq. 
-    /// <see cref="ExpressionVisitor2.Visit"/> handles those by calling the respective Visit method.
+    /// <see cref="ExpressionVisitor.Visit(Expression)"/> handles those by calling the respective Visit method.
     /// </summary>
     /// <param name="expression">The expression to check.</param>
     /// <returns>
@@ -147,23 +147,6 @@ namespace Remotion.Linq.Parsing
         default:
           return false;
       }
-    }
-
-    /// <summary>
-    /// Determines whether the given <see cref="Expression"/> is an unknown expression not derived from <see cref="ExtensionExpression"/>. 
-    /// <see cref="ExpressionVisitor2.Visit"/> cannot handle such expressions at all and will call <see cref="VisitUnknownNonExtension"/> for them.
-    /// </summary>
-    /// <param name="expression">The expression to check.</param>
-    /// <returns>
-    /// 	<see langword="true"/> if <paramref name="expression"/> is an unknown expression not derived from <see cref="ExtensionExpression"/>; 
-    ///   otherwise, <see langword="false"/>.
-    /// </returns>
-    // Should no longer be needed
-    public static bool IsUnknownNonExtensionExpression (Expression expression)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-
-      return !IsSupportedStandardExpression (expression) && !IsExtensionExpression (expression) && !IsRelinqExpression (expression);
     }
 
     /// <summary>
@@ -196,26 +179,6 @@ namespace Remotion.Linq.Parsing
       }
     }
 
-    protected override sealed Expression VisitUnknownNonExtension (Expression expression)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-
-      switch (expression.NodeType)
-      {
-        case SubQueryExpression.ExpressionType:
-          return VisitSubQuery ((SubQueryExpression) expression);
-        case QuerySourceReferenceExpression.ExpressionType:
-          return VisitQuerySourceReference ((QuerySourceReferenceExpression) expression);
-        default:
-          return VisitRelinqUnknownNonExtension (expression);
-      }
-    }
-
-    protected virtual Expression VisitRelinqUnknownNonExtension (Expression expression)
-    {
-      return base.VisitUnknownNonExtension (expression);
-    }
-
     // TODO: ExpressionVisitor.VisitNew does not contain an obvious conversion of the NewExpression's argument types. Is this a problem?
     protected override Expression VisitNew (NewExpression expression)
     {
@@ -241,7 +204,7 @@ namespace Remotion.Linq.Parsing
     // SubQueryExpression accpets visitor and casts to ISubQueryExpressionVisitor, then calls VisitSubQuery.
     // Basic Visitor-implementation returns expression as is.
     // If visitor does not implement interface, do nothing?
-    protected virtual Expression VisitSubQuery (SubQueryExpression expression)
+    protected internal virtual Expression VisitSubQuery (SubQueryExpression expression)
     {
       return expression;
     }
@@ -250,7 +213,7 @@ namespace Remotion.Linq.Parsing
     // QuerySourceReferenceExpression accpets visitor and casts to IQuerySourceReferenceExpressionVisitor, then calls VisitSubQuery.
     // Basic Visitor-implementation returns expression as is.
     // If visitor does not implement interface, do nothing?
-    protected virtual Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
+    protected internal virtual Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
     {
       return expression;
     }

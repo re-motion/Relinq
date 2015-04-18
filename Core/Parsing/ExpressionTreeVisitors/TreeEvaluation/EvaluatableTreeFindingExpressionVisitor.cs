@@ -15,6 +15,7 @@
 // under the License.
 // 
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -121,7 +122,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
     protected override Expression VisitMemberInit (MemberInitExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      VisitMemberBindingList (expression.Bindings);
+      Visit (expression.Bindings, VisitMemberBinding);
 
       // Visit the NewExpression only if the List initializers is evaluatable. It makes no sense to evaluate the ListExpression if the initializers
       // cannot be evaluated.
@@ -136,7 +137,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
     protected override Expression VisitListInit (ListInitExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      VisitElementInitList (expression.Initializers);
+      Visit (expression.Initializers, VisitElementInit);
 
       // Visit the NewExpression only if the List initializers is evaluatable. It makes no sense to evaluate the NewExpression if the initializers
       // cannot be evaluated.
@@ -148,11 +149,13 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
       return expression;
     }
 
+#if NET_3_5
     protected override Expression VisitRelinqUnknownNonExtension (Expression expression)
     {
-      // Ignore
+      //ignore
       return expression;
     }
+#endif
 
     private bool IsQueryableExpression (Expression expression)
     {

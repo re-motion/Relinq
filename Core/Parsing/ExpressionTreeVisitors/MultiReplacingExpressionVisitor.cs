@@ -56,16 +56,18 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
         return base.Visit (expression);
     }
 
-    protected override Expression VisitSubQuery (SubQueryExpression expression)
+    protected internal override Expression VisitSubQuery (SubQueryExpression expression)
     {
       expression.QueryModel.TransformExpressions (Visit);
       return expression; // Note that we modifiy the (mutable) QueryModel, we return an unchanged expression
     }
 
+#if NET_3_5
     protected override Expression VisitRelinqUnknownNonExtension (Expression expression)
     {
       //ignore
       return expression;
     }
+#endif
   }
 }

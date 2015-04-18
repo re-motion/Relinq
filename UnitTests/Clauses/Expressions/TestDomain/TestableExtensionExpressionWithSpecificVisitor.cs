@@ -17,7 +17,9 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
+#if NET_3_5
 using Remotion.Linq.Parsing;
+#endif
 
 namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
 {
@@ -28,7 +30,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
     {
     }
 
-    public override Expression Accept (ExpressionVisitor2 visitor)
+    protected override Expression Accept (ExpressionVisitor visitor)
     {
       var specificVisitor = visitor as ISpecificVisitor;
       if (specificVisitor != null)
@@ -37,7 +39,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
         return base.Accept (visitor);
     }
 
-    protected override Expression VisitChildren (ExpressionVisitor2 visitor)
+    protected override Expression VisitChildren (ExpressionVisitor visitor)
     {
       return this;
     }

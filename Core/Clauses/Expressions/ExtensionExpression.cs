@@ -83,25 +83,7 @@ namespace Remotion.Linq.Clauses.Expressions
 #endif
 
     /// <summary>
-    /// Accepts the specified visitor, by default dispatching to <see cref="ExpressionVisitor2.VisitExtension"/>. 
-    /// Inheritors of the <see cref="ExtensionExpression"/> class can override this method in order to dispatch to a specific Visit method.
-    /// </summary>
-    /// <param name="visitor">The visitor whose Visit method should be invoked.</param>
-    /// <returns>The <see cref="Expression"/> returned by the visitor.</returns>
-    /// <remarks>
-    /// Overriders can test the <paramref name="visitor"/> for a specific interface. If the visitor supports the interface, the extension expression 
-    /// can dispatch to the respective strongly-typed Visit method declared in the interface. If it does not, the extension expression should call 
-    /// the base implementation of <see cref="Accept"/>, which will dispatch to <see cref="ExpressionVisitor2.VisitExtension"/>.
-    /// </remarks>
-    public virtual Expression Accept (ExpressionVisitor2 visitor)
-    {
-      ArgumentUtility.CheckNotNull ("visitor", visitor);
-      
-      return visitor.VisitExtension (this);
-    }
-
-    /// <summary>
-    /// Must be overridden by <see cref="ExtensionExpression"/> subclasses by calling <see cref="ExpressionVisitor2.Visit"/> on all 
+    /// Must be overridden by <see cref="ExtensionExpression"/> subclasses by calling <see cref="ExpressionVisitor.Visit(Expression)"/> on all 
     /// children of this extension node. 
     /// </summary>
     /// <param name="visitor">The visitor to visit the child nodes with.</param>
@@ -111,6 +93,18 @@ namespace Remotion.Linq.Clauses.Expressions
     /// be returned holding the new child nodes. If the node has no children or the visitor does not replace any child node, the method should
     /// return this <see cref="ExtensionExpression"/>. 
     /// </remarks>
-    protected internal abstract Expression VisitChildren (ExpressionVisitor2 visitor);
+#if !NET_3_5
+    protected abstract override Expression VisitChildren (ExpressionVisitor visitor);
+#else
+    protected abstract Expression VisitChildren (ExpressionVisitor visitor);
+#endif
+
+#if !NET_3_5
+    protected override Expression Accept (ExpressionVisitor visitor)
+    {
+      // Delgate to base implementation. Override only exists for documentation reference.
+      return base.Accept (visitor);
+    }
+#endif
   }
 }

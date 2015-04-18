@@ -102,7 +102,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       _lambdaParameter = lambdaParameter;
     }
 
-    protected override Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
+    protected internal override Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 

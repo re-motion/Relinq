@@ -16,26 +16,30 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing;
 
-namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
+namespace Remotion.Linq.UnitTests.Parsing
 {
-  public class TestableExtensionExpression : ExtensionExpression
+  public class TestThrowingExpressionVisitorForLambda : ThrowingExpressionVisitor
   {
-    public TestableExtensionExpression (Type type)
-        : base (type)
+    public Expression LambdaExpresssionBaseBehaviorResult { get; private set; }
+
+    protected override TResult VisitUnhandledItem<TItem, TResult> (TItem unhandledItem, string visitMethod, Func<TItem, TResult> baseBehavior)
     {
+      if (unhandledItem is LambdaExpression)
+      {
+        LambdaExpresssionBaseBehaviorResult = (Expression) (object) baseBehavior (unhandledItem);
+        return base.VisitUnhandledItem (unhandledItem, visitMethod, baseBehavior);
+      }
+      else
+      {
+        return baseBehavior (unhandledItem);
+      }
     }
 
-    public TestableExtensionExpression (Type type, ExpressionType nodeType)
-        : base (type, nodeType)
+    protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
     {
-    }
-    
-    protected override Expression VisitChildren (ExpressionVisitor visitor)
-    {
-      return this;
+      throw new NotSupportedException("Test of " + visitMethod + ": " + unhandledItem);
     }
   }
 }

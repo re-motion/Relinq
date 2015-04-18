@@ -31,10 +31,10 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       Expression zero = Expression.Constant (0);
       Expression dateTimeValue = Expression.Constant (DateTime.MinValue);
       Expression zeroDouble = Expression.Constant (0.0);
-      NewArrayExpression arrayExpression = Expression.NewArrayInit (typeof (int));
+      NewArrayExpression arrayExpression = Expression.NewArrayInit (typeof (int), zero);
       Expression trueExpression = Expression.Constant (true);
-      LambdaExpression lambdaExpression = Expression.Lambda (zero);
-      LambdaExpression lambdaExpressionWithArguments = Expression.Lambda (zero, Expression.Parameter (typeof (int), "i"));
+      LambdaExpression lambdaExpression = Expression.Lambda<Func<int>> (zero);
+      LambdaExpression lambdaExpressionWithArguments = Expression.Lambda<Func<int, int>> (zero, Expression.Parameter (typeof (int), "i"));
       NewExpression newExpression = Expression.New (typeof (List<int>).GetConstructor (new[] { typeof (int) }), zero);
 
       map[ExpressionType.Add] = Expression.Add (zero, zero);
@@ -61,7 +61,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       map[ExpressionType.LessThanOrEqual] = Expression.LessThanOrEqual (zero, zero);
       map[ExpressionType.ListInit] = Expression.ListInit (newExpression, zero);
       map[ExpressionType.MemberAccess] = Expression.MakeMemberAccess (dateTimeValue, typeof (DateTime).GetProperty ("Date"));
-      map[ExpressionType.MemberInit] = Expression.MemberInit (newExpression);
+      map[ExpressionType.MemberInit] = Expression.MemberInit (newExpression, Expression.Bind (typeof (List<int>).GetProperty ("Capacity"), zero));
       map[ExpressionType.Modulo] = Expression.Modulo (zero, zero);
       map[ExpressionType.Multiply] = Expression.Multiply (zero, zero);
       map[ExpressionType.MultiplyChecked] = Expression.MultiplyChecked (zero, zero);
@@ -103,14 +103,14 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       return Expression.Bind (typeof (SimpleClass).GetField ("Value"), Expression.Constant ("test"));
     }
 
-    public static MemberMemberBinding CreateMemberMemberBinding ()
+    public static MemberMemberBinding CreateMemberMemberBinding (IEnumerable<MemberBinding> memberBindings)
     {
-      return Expression.MemberBind (typeof (SimpleClass).GetField ("ListValue"), new List<MemberBinding>());
+      return Expression.MemberBind (typeof (SimpleClass).GetField ("ListValue"), memberBindings);
     }
 
-    public static MemberListBinding CreateMemberListBinding ()
+    public static MemberListBinding CreateMemberListBinding (IEnumerable<ElementInit> initializers)
     {
-      return Expression.ListBind (typeof (SimpleClass).GetField ("ListValue"), new ElementInit[] { });
+      return Expression.ListBind (typeof (SimpleClass).GetField ("ListValue"), initializers);
     }
   }
 }

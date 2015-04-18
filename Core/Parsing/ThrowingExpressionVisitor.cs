@@ -25,7 +25,7 @@ namespace Remotion.Linq.Parsing
   /// Implements an <see cref="RelinqExpressionVisitor"/> that throws an exception for every expression type that is not explicitly supported.
   /// Inherit from this class to ensure that an exception is thrown when an expression is passed 
   /// </summary>
-  public abstract class ThrowingExpressionVisitor : RelinqExpressionVisitor
+  public abstract partial class ThrowingExpressionVisitor : RelinqExpressionVisitor
   {
     protected abstract Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod);
 
@@ -52,10 +52,24 @@ namespace Remotion.Linq.Parsing
       throw CreateUnhandledItemException (unhandledItem, visitMethod);
     }
 
+#if !NET_3_5
+    protected override Expression VisitExtension (Expression expression)
+    {
+      if (expression.CanReduce)
+        return Visit (expression.ReduceAndCheck());
+      else
+        return VisitUnhandledItem<Expression, Expression> (expression, "VisitExtension", BaseVisitExtension);
+    }
+
+    protected Expression BaseVisitExtension (Expression expression)
+    {
+      return base.VisitExtension (expression);
+    }
+#else
     protected internal override Expression VisitExtension (ExtensionExpression expression)
     {
       if (expression.CanReduce)
-        return Visit (expression.ReduceAndCheck ());
+        return Visit (expression.ReduceAndCheck());
       else
         return VisitUnhandledItem<ExtensionExpression, Expression> (expression, "VisitExtension", BaseVisitExtension);
     }
@@ -64,20 +78,7 @@ namespace Remotion.Linq.Parsing
     {
       return base.VisitExtension (expression);
     }
-
-    protected override Expression VisitRelinqUnknownNonExtension (Expression expression)
-    {
-      var expressionAsExtensionExpression = expression as ExtensionExpression;
-      if (expressionAsExtensionExpression != null && expressionAsExtensionExpression.CanReduce)
-        return Visit (expressionAsExtensionExpression.ReduceAndCheck()); 
-
-      return VisitUnhandledItem<Expression, Expression> (expression, "VisitUnknownNonExtension", BaseVisitUnknownNonExtension);
-    }
-
-    protected Expression BaseVisitUnknownNonExtension (Expression expression)
-    {
-      return base.VisitUnknownNonExtension (expression);
-    }
+#endif
 
     protected override Expression VisitUnary (UnaryExpression expression)
     {
@@ -139,6 +140,17 @@ namespace Remotion.Linq.Parsing
       return base.VisitParameter (expression);
     }
 
+#if !NET_3_5
+    protected override Expression VisitLambda<T> (Expression<T> expression)
+    {
+      return VisitUnhandledItem<Expression<T>, Expression> (expression, "VisitLambda", BaseVisitLambda);
+    }
+
+    protected Expression BaseVisitLambda<T> (Expression<T> expression)
+    {
+      return base.VisitLambda (expression);
+    }
+#else
     protected override Expression VisitLambda (LambdaExpression expression)
     {
       return VisitUnhandledItem<LambdaExpression, Expression> (expression, "VisitLambda", BaseVisitLambda);
@@ -148,6 +160,7 @@ namespace Remotion.Linq.Parsing
     {
       return base.VisitLambda (expression);
     }
+#endif
 
     protected override Expression VisitMethodCall (MethodCallExpression expression)
     {
@@ -229,37 +242,37 @@ namespace Remotion.Linq.Parsing
       return base.VisitElementInit (elementInit);
     }
 
-    protected override MemberBinding VisitMemberAssignment (MemberAssignment memberAssigment)
+    protected override MemberAssignment VisitMemberAssignment (MemberAssignment memberAssigment)
     {
-      return VisitUnhandledItem<MemberAssignment, MemberBinding> (memberAssigment, "VisitMemberAssignment", BaseVisitMemberAssignment);
+      return VisitUnhandledItem<MemberAssignment, MemberAssignment> (memberAssigment, "VisitMemberAssignment", BaseVisitMemberAssignment);
     }
 
-    protected MemberBinding BaseVisitMemberAssignment (MemberAssignment memberAssigment)
+    protected MemberAssignment BaseVisitMemberAssignment (MemberAssignment memberAssigment)
     {
       return base.VisitMemberAssignment (memberAssigment);
     }
 
-    protected override MemberBinding VisitMemberMemberBinding (MemberMemberBinding binding)
+    protected override MemberMemberBinding VisitMemberMemberBinding (MemberMemberBinding binding)
     {
-      return VisitUnhandledItem<MemberMemberBinding, MemberBinding> (binding, "VisitMemberMemberBinding", BaseVisitMemberMemberBinding);
+      return VisitUnhandledItem<MemberMemberBinding, MemberMemberBinding> (binding, "VisitMemberMemberBinding", BaseVisitMemberMemberBinding);
     }
 
-    protected MemberBinding BaseVisitMemberMemberBinding (MemberMemberBinding binding)
+    protected MemberMemberBinding BaseVisitMemberMemberBinding (MemberMemberBinding binding)
     {
       return base.VisitMemberMemberBinding (binding);
     }
 
-    protected override MemberBinding VisitMemberListBinding (MemberListBinding listBinding)
+    protected override MemberListBinding VisitMemberListBinding (MemberListBinding listBinding)
     {
-      return VisitUnhandledItem<MemberListBinding, MemberBinding> (listBinding, "VisitMemberListBinding", BaseVisitMemberListBinding);
+      return VisitUnhandledItem<MemberListBinding, MemberListBinding> (listBinding, "VisitMemberListBinding", BaseVisitMemberListBinding);
     }
 
-    protected MemberBinding BaseVisitMemberListBinding (MemberListBinding listBinding)
+    protected MemberListBinding BaseVisitMemberListBinding (MemberListBinding listBinding)
     {
       return base.VisitMemberListBinding (listBinding);
     }
 
-    protected override Expression VisitSubQuery (SubQueryExpression expression)
+    protected internal override Expression VisitSubQuery (SubQueryExpression expression)
     {
       return VisitUnhandledItem<SubQueryExpression, Expression> (expression, "VisitSubQuery", BaseVisitSubQuery);
     }
@@ -269,7 +282,7 @@ namespace Remotion.Linq.Parsing
       return base.VisitSubQuery (expression);
     }
 
-    protected override Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
+    protected internal override Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
     {
       return VisitUnhandledItem<QuerySourceReferenceExpression, Expression> (expression, "VisitQuerySourceReference", BaseVisitQuerySourceReference);
     }

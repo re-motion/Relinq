@@ -1,4 +1,4 @@
-// Copyright (c) rubicon IT GmbH, www.rubicon.eu
+﻿// Copyright (c) rubicon IT GmbH, www.rubicon.eu
 //
 // See the NOTICE file distributed with this work for additional information
 // regarding copyright ownership.  rubicon licenses this file to you under 
@@ -14,28 +14,24 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Linq.Expressions;
-using Remotion.Linq.Clauses.Expressions;
+using Remotion.Development.UnitTesting;
+#if NET_3_5
 using Remotion.Linq.Parsing;
+#endif
+using Remotion.Utilities;
 
-namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
+namespace Remotion.Linq.UnitTests.Utilities
 {
-  public class TestableExtensionExpression : ExtensionExpression
+  public static class ExpressionTestExtensions
   {
-    public TestableExtensionExpression (Type type)
-        : base (type)
+    public static Expression Accept<TExpression, TVisitor> (this TExpression expression, TVisitor visitor)
+        where TExpression : Expression
+        where TVisitor : ExpressionVisitor
     {
-    }
-
-    public TestableExtensionExpression (Type type, ExpressionType nodeType)
-        : base (type, nodeType)
-    {
-    }
-    
-    protected override Expression VisitChildren (ExpressionVisitor visitor)
-    {
-      return this;
+      return (Expression) PrivateInvoke.InvokeNonPublicMethod (expression, "Accept", visitor);
     }
   }
 }

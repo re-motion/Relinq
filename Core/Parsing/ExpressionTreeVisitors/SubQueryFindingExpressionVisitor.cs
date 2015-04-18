@@ -58,12 +58,14 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       else
         return base.Visit (expression);
     }
-    
+
+#if NET_3_5
     protected override Expression VisitRelinqUnknownNonExtension (Expression expression)
     {
       //ignore
       return expression;
     }
+#endif
 
     private SubQueryExpression CreateSubQueryNode (MethodCallExpression methodCallExpression)
     {

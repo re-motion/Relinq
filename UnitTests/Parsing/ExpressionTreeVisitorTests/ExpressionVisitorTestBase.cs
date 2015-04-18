@@ -15,7 +15,6 @@
 // under the License.
 // 
 using System;
-using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
@@ -58,26 +57,14 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       return InvokeAndCheckVisitMethod (delegate { return InvokeVisitMethod (methodName, argument); }, argument);
     }
 
-    protected ReadOnlyCollection<T> InvokeAndCheckVisitAndConvertList<T> (ReadOnlyCollection<T> expressions, string methodName) where T : Expression
+    protected T InvokeVisitAndConvert<T> (T expression, string methodName) where T : Expression
     {
-      return InvokeAndCheckVisitMethod (arg => VisitorMock.VisitAndConvert (expressions, methodName), expressions);
-    }
+      _mockRepository.ReplayAll ();
 
-    protected T InvokeAndCheckVisitAndConvert<T> (T expression, string methodName) where T : Expression
-    {
-      return InvokeAndCheckVisitMethod (arg => VisitorMock.VisitAndConvert (expression, methodName), expression);
-    }
+      T result = VisitorMock.VisitAndConvert (expression, methodName);
+      _mockRepository.VerifyAll ();
 
-    protected ReadOnlyCollection<MemberBinding> InvokeAndCheckVisitMemberBindingList (ReadOnlyCollection<MemberBinding> expressions)
-    {
-      return InvokeAndCheckVisitMethod (
-          arg => (ReadOnlyCollection<MemberBinding>) InvokeVisitMethod ("VisitMemberBindingList", expressions), expressions);
-    }
-
-    protected ReadOnlyCollection<ElementInit> InvokeAndCheckVisitElementInitList (ReadOnlyCollection<ElementInit> expressions)
-    {
-      return InvokeAndCheckVisitMethod (
-          delegate { return (ReadOnlyCollection<ElementInit>) InvokeVisitMethod ("VisitElementInitList", expressions); }, expressions);
+      return result;
     }
 
     private R InvokeAndCheckVisitMethod<A, R> (Func<A, R> visitMethod, A argument)
@@ -94,14 +81,12 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 
     protected object InvokeVisitMethod (string methodName, object argument)
     {
-      return _visitorMock.GetType ().GetMethod (methodName, BindingFlags.NonPublic | BindingFlags.Instance).Invoke (_visitorMock, new[] { argument });
-    }
+      var methodInfo = _visitorMock.GetType ().GetMethod (methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+      Assert.That (methodInfo, Is.Not.Null);
 
-    protected T InvokeVisitAndConvertMethod<T> (T expression, string methodName) where T : Expression
-    {
-      return (T) _visitorMock.GetType ().GetMethod ("VisitAndConvert", BindingFlags.NonPublic | BindingFlags.Instance)
-                     .MakeGenericMethod (typeof (T))
-                     .Invoke (_visitorMock, new object[] { expression, methodName });
+      if (methodInfo.ContainsGenericParameters)
+        methodInfo = methodInfo.MakeGenericMethod (argument.GetType().GetGenericArguments());
+      return methodInfo.Invoke (_visitorMock, new[] { argument });
     }
   }
 }

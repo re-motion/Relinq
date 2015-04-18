@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.Expressions
@@ -57,5 +58,18 @@ namespace Remotion.Linq.Clauses.Expressions
 #endif
 
     public QueryModel QueryModel { get; private set; }
+
+#if !NET_3_5
+    protected override Expression Accept (ExpressionVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+
+      var relinqVisitor = visitor as RelinqExpressionVisitor;
+      if (relinqVisitor == null)
+        return base.Accept (visitor);
+
+      return relinqVisitor.VisitSubQuery (this);
+    }
+#endif
   }
 }

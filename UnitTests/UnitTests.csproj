@@ -215,6 +215,7 @@
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\MediumTrustQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\TestDomain\GenericClass2.cs" />
     <Compile Include="Parsing\TestThrowingConstantExpressionVisitor.cs" />
+    <Compile Include="Parsing\TestThrowingExpressionVisitorForLambda.cs" />
     <Compile Include="Parsing\TupleExpressionBuilderTest.cs" />
     <Compile Include="TestDomain\BaseValue.cs" />
     <Compile Include="TestDomain\Course.cs" />
@@ -385,6 +386,7 @@
     <Compile Include="QueryModelTest.cs" />
     <Compile Include="QueryModelVisitorBaseTest.cs" />
     <Compile Include="QueryProviderBaseTest.cs" />
+    <Compile Include="Utilities\ExpressionTestExtensions.cs" />
     <Compile Include="Utilities\ItemTypeReflectionUtilityTest.cs" />
     <Compile Include="Utilities\ReflectionUtilityTest.cs" />
     <Compile Include="Clauses\Expressions\ExtensionExpressionTestHelper.cs" />

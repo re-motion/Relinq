@@ -106,7 +106,9 @@
     <Compile Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\NullableTypeUtility.cs" />
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\CloneContext.cs" />
-    <Compile Include="Clauses\Expressions\ExtensionExpression.cs" />
+    <Compile Include="Clauses\Expressions\ExtensionExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Clauses\Expressions\IPartialEvaluationExceptionExpressionVisitor.cs" />
     <Compile Include="Clauses\Expressions\IVBSpecificExpressionVisitor.cs" />
     <Compile Include="Clauses\Expressions\VBStringComparisonExpression.cs" />
@@ -176,7 +178,6 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBInformationIsNothingExpressionTransformer.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
-    <Compile Include="Parsing\ExpressionVisitor2.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ConcatExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\QuerySourceSetOperationExpressionNodeBase.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\SupportedMethodSpecifications.cs" />

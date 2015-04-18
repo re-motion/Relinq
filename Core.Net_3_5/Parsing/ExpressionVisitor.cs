@@ -23,7 +23,7 @@ using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing
 {
-  public abstract class ExpressionVisitor2
+  public abstract class ExpressionVisitor
   {
     // Remove, is provided by ExpressionVisitor
     // TODO: What to do with all the unsupported Expressions, e.g. Loop, Goto, Try, etc?
@@ -34,7 +34,7 @@ namespace Remotion.Linq.Parsing
 
       var extensionExpression = expression as ExtensionExpression;
       if (extensionExpression != null)
-        return extensionExpression.Accept (this);
+        return extensionExpression.AcceptInternal (this);
 
       switch (expression.NodeType)
       {
@@ -111,7 +111,7 @@ namespace Remotion.Linq.Parsing
     protected internal virtual Expression VisitExtension (ExtensionExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      return expression.VisitChildren (this);
+      return expression.VisitChildrenInternal (this);
     }
 
     // There is no longer a case of an unknown expression.
@@ -124,7 +124,7 @@ namespace Remotion.Linq.Parsing
     }
 
     // Remove, is provided by ExpressionVisitor, just not virtual
-    public virtual T VisitAndConvert<T> (T expression, string methodName) where T : Expression
+    public T VisitAndConvert<T> (T expression, string methodName) where T : Expression
     {
       ArgumentUtility.CheckNotNull ("methodName", methodName);
 
@@ -148,7 +148,7 @@ namespace Remotion.Linq.Parsing
     }
 
     // Remove, is provided by ExpressionVisitor, just not virtual
-    public virtual ReadOnlyCollection<T> VisitAndConvert<T> (ReadOnlyCollection<T> expressions, string callerName) where T : Expression
+    public ReadOnlyCollection<T> VisitAndConvert<T> (ReadOnlyCollection<T> expressions, string callerName) where T : Expression
     {
       ArgumentUtility.CheckNotNull ("expressions", expressions);
       ArgumentUtility.CheckNotNullOrEmpty ("callerName", callerName);
@@ -157,7 +157,7 @@ namespace Remotion.Linq.Parsing
     }
 
     // Replace with ExpressionVisitor.Visit<T> (ReadOnlyCollection<T>, Func<T,T>)
-    public ReadOnlyCollection<T> Visit<T> (ReadOnlyCollection<T> list, Func<T, T> visitMethod)
+    public static ReadOnlyCollection<T> Visit<T> (ReadOnlyCollection<T> list, Func<T, T> visitMethod)
         where T : class
     {
       ArgumentUtility.CheckNotNull ("list", list);
@@ -169,8 +169,6 @@ namespace Remotion.Linq.Parsing
       {
         T element = list[i];
         T newElement = visitMethod (element);
-        if (newElement == null)
-          throw new NotSupportedException ("The current list only supports objects of type '" + typeof (T).Name + "' as its elements.");
 
         if (element != newElement)
         {
@@ -210,7 +208,7 @@ namespace Remotion.Linq.Parsing
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       Expression newLeft = Visit (expression.Left);
-      var newConversion = (LambdaExpression) Visit (expression.Conversion);
+      var newConversion = VisitAndConvert (expression.Conversion, "VisitBinary");
       Expression newRight = Visit (expression.Right);
       if (newLeft != expression.Left || newRight != expression.Right || newConversion != expression.Conversion)
         return Expression.MakeBinary (expression.NodeType, newLeft, newRight, expression.IsLiftedToNull, expression.Method, newConversion);
@@ -355,7 +353,7 @@ namespace Remotion.Linq.Parsing
             "MemberInitExpressions only support non-null instances of type 'NewExpression' as their NewExpression member.");
       }
 
-      ReadOnlyCollection<MemberBinding> newBindings = VisitMemberBindingList (expression.Bindings);
+      ReadOnlyCollection<MemberBinding> newBindings = Visit (expression.Bindings, VisitMemberBinding);
       if (newNewExpression != expression.NewExpression || newBindings != expression.Bindings)
         return Expression.MemberInit (newNewExpression, newBindings);
       return expression;
@@ -368,7 +366,8 @@ namespace Remotion.Linq.Parsing
       var newNewExpression = Visit (expression.NewExpression) as NewExpression;
       if (newNewExpression == null)
         throw new NotSupportedException ("ListInitExpressions only support non-null instances of type 'NewExpression' as their NewExpression member.");
-      ReadOnlyCollection<ElementInit> newInitializers = VisitElementInitList (expression.Initializers);
+
+      ReadOnlyCollection<ElementInit> newInitializers = Visit (expression.Initializers, VisitElementInit);
       if (newNewExpression != expression.NewExpression || newInitializers != expression.Initializers)
         return Expression.ListInit (newNewExpression, newInitializers);
       return expression;
@@ -402,7 +401,7 @@ namespace Remotion.Linq.Parsing
     }
 
     // Identical implemention by ExpressionVisitor
-    protected virtual MemberBinding VisitMemberAssignment (MemberAssignment memberAssigment)
+    protected virtual MemberAssignment VisitMemberAssignment (MemberAssignment memberAssigment)
     {
       ArgumentUtility.CheckNotNull ("memberAssigment", memberAssigment);
 
@@ -413,37 +412,25 @@ namespace Remotion.Linq.Parsing
     }
 
     // Identical implemention by ExpressionVisitor
-    protected virtual MemberBinding VisitMemberMemberBinding (MemberMemberBinding binding)
+    protected virtual MemberMemberBinding VisitMemberMemberBinding (MemberMemberBinding binding)
     {
       ArgumentUtility.CheckNotNull ("binding", binding);
 
-      ReadOnlyCollection<MemberBinding> newBindings = VisitMemberBindingList (binding.Bindings);
+      ReadOnlyCollection<MemberBinding> newBindings = Visit (binding.Bindings, VisitMemberBinding);
       if (newBindings != binding.Bindings)
         return Expression.MemberBind (binding.Member, newBindings);
       return binding;
     }
 
     // Identical implemention by ExpressionVisitor
-    protected virtual MemberBinding VisitMemberListBinding (MemberListBinding listBinding)
+    protected virtual MemberListBinding VisitMemberListBinding (MemberListBinding listBinding)
     {
       ArgumentUtility.CheckNotNull ("listBinding", listBinding);
-      ReadOnlyCollection<ElementInit> newInitializers = VisitElementInitList (listBinding.Initializers);
 
+      ReadOnlyCollection<ElementInit> newInitializers = Visit (listBinding.Initializers, VisitElementInit);
       if (newInitializers != listBinding.Initializers)
         return Expression.ListBind (listBinding.Member, newInitializers);
       return listBinding;
-    }
-
-    // Identical implemention by ExpressionVisitor, just no extension point
-    protected virtual ReadOnlyCollection<MemberBinding> VisitMemberBindingList (ReadOnlyCollection<MemberBinding> expressions)
-    {
-      return Visit (expressions, VisitMemberBinding);
-    }
-
-    // Identical implemention by ExpressionVisitor, just no extension point
-    protected virtual ReadOnlyCollection<ElementInit> VisitElementInitList (ReadOnlyCollection<ElementInit> expressions)
-    {
-      return Visit (expressions, VisitElementInit);
     }
 
     [Obsolete ("This method has been split. Use VisitExtensionExpression or VisitUnknownNonExtensionExpression instead. 1.13.75")]

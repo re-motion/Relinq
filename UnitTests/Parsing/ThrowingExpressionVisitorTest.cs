@@ -24,6 +24,7 @@ using Remotion.Linq.Development.UnitTesting.Clauses.Expressions;
 using Remotion.Linq.Parsing;
 using Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests;
 using Remotion.Linq.UnitTests.TestDomain;
+using Remotion.Linq.UnitTests.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Parsing
@@ -70,7 +71,11 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
+#if !NET_3_5
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitExtension: [-1]")]
+#else
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitUnknownNonExtension: [-1]")]
+#endif
     public void VisitUnknownNonExtension ()
     {
       Visit (_visitor, (ExpressionType) (-1));
@@ -119,10 +124,13 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitLambda: ", MatchType = MessageMatch.Contains)]
     public void VisitLambda ()
     {
-      Visit (_visitor, ExpressionType.Lambda);
+      var visitor = new TestThrowingExpressionVisitorForLambda();
+      var lambdaExpression = ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Lambda);
+      Assert.That (() => visitor.Visit (lambdaExpression), Throws.TypeOf<NotSupportedException>().With.Message.Contains ("Test of VisitLambda: "));
+      var baseResult = visitor.LambdaExpresssionBaseBehaviorResult;
+      Assert.That (baseResult, Is.SameAs (lambdaExpression));
     }
 
     [Test]
@@ -192,14 +200,14 @@ namespace Remotion.Linq.UnitTests.Parsing
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitMemberMemberBinding: ", MatchType = MessageMatch.Contains)]
     public void VisitMemberMemberBinding ()
     {
-      _visitor.VisitMemberBinding (ExpressionInstanceCreator.CreateMemberMemberBinding ());
+      _visitor.VisitMemberBinding (ExpressionInstanceCreator.CreateMemberMemberBinding (new MemberBinding[0]));
     }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitMemberListBinding: ", MatchType = MessageMatch.Contains)]
     public void VisitMemberListBinding ()
     {
-      _visitor.VisitMemberBinding (ExpressionInstanceCreator.CreateMemberListBinding ());
+      _visitor.VisitMemberBinding (ExpressionInstanceCreator.CreateMemberListBinding (new ElementInit[0]));
     }
 
     [Test]

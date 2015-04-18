@@ -41,16 +41,33 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
     {
     }
 
-    protected override Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
+    protected internal override Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       return Expression.Parameter (expression.Type, "[" + expression.ReferencedQuerySource.ItemName + "]");
     }
 
-    protected override Expression VisitSubQuery (SubQueryExpression expression)
+    protected internal override Expression VisitSubQuery (SubQueryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       return Expression.Parameter (expression.Type, "{" + expression.QueryModel + "}");
+    }
+
+#if !NET_3_5
+    protected override Expression VisitExtension (Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      if (expression.CanReduce)
+        return base.VisitExtension (expression);
+
+      return Expression.Parameter (expression.Type, expression.ToString());
+    }
+#else
+    protected internal override Expression VisitExtension (ExtensionExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+      return Expression.Parameter (expression.Type, expression.ToString ());
     }
 
     protected override Expression VisitRelinqUnknownNonExtension (Expression expression)
@@ -58,11 +75,6 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       ArgumentUtility.CheckNotNull ("expression", expression);
       return Expression.Parameter (expression.Type, expression.ToString());
     }
-
-    protected internal override Expression VisitExtension (ExtensionExpression expression)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-      return Expression.Parameter (expression.Type, expression.ToString ());
-    }
+#endif
   }
 }

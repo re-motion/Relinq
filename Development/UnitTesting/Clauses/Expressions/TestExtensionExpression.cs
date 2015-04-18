@@ -19,7 +19,9 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+#if NET_3_5
 using Remotion.Linq.Parsing;
+#endif
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Development.UnitTesting.Clauses.Expressions
@@ -54,7 +56,7 @@ namespace Remotion.Linq.Development.UnitTesting.Clauses.Expressions
       return _expression;
     }
 
-    protected override Expression VisitChildren (ExpressionVisitor2 visitor)
+    protected override Expression VisitChildren (ExpressionVisitor visitor)
     {
       var result = visitor.Visit (_expression);
       if (result != _expression)

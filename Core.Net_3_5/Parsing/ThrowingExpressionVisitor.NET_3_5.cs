@@ -1,4 +1,4 @@
-// Copyright (c) rubicon IT GmbH, www.rubicon.eu
+﻿// Copyright (c) rubicon IT GmbH, www.rubicon.eu
 //
 // See the NOTICE file distributed with this work for additional information
 // regarding copyright ownership.  rubicon licenses this file to you under 
@@ -17,25 +17,23 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Parsing;
 
-namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
+namespace Remotion.Linq.Parsing
 {
-  public class TestableExtensionExpression : ExtensionExpression
+  public abstract partial class ThrowingExpressionVisitor
   {
-    public TestableExtensionExpression (Type type)
-        : base (type)
+    protected override Expression VisitRelinqUnknownNonExtension (Expression expression)
     {
+      var expressionAsExtensionExpression = expression as ExtensionExpression;
+      if (expressionAsExtensionExpression != null && expressionAsExtensionExpression.CanReduce)
+        return Visit (expressionAsExtensionExpression.ReduceAndCheck());
+
+      return VisitUnhandledItem<Expression, Expression> (expression, "VisitUnknownNonExtension", BaseVisitUnknownNonExtension);
     }
 
-    public TestableExtensionExpression (Type type, ExpressionType nodeType)
-        : base (type, nodeType)
+    protected Expression BaseVisitUnknownNonExtension (Expression expression)
     {
-    }
-    
-    protected override Expression VisitChildren (ExpressionVisitor visitor)
-    {
-      return this;
+      return base.VisitUnknownNonExtension (expression);
     }
   }
 }

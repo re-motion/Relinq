@@ -60,12 +60,6 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       _partialEvaluationInfo = partialEvaluationInfo;
     }
 
-    protected override Expression VisitRelinqUnknownNonExtension (Expression expression)
-    {
-      //ignore
-      return expression;
-    }
-
     public override Expression Visit (Expression expression)
     {
       // Only evaluate expressions which do not use any of the surrounding parameter expressions. Don't evaluate
@@ -124,5 +118,13 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
         return Expression.Constant (value, subtree.Type);
       }
     }
+
+#if NET_3_5
+    protected override Expression VisitRelinqUnknownNonExtension (Expression expression)
+    {
+      //ignore
+      return expression;
+    }
+#endif
   }
 }

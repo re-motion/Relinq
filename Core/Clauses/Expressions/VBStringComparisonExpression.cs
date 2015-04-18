@@ -32,12 +32,11 @@ namespace Remotion.Linq.Clauses.Expressions
   /// </para>
   /// <para>
   /// Subclasses of <see cref="ThrowingExpressionVisitor"/> that do not implement <see cref="IVBSpecificExpressionVisitor"/> will, by default, 
-  /// automatically reduce this expression type to <see cref="BinaryExpression"/> in the 
-  /// <see cref="ThrowingExpressionVisitor.VisitExtension"/> method.
+  /// automatically reduce this expression type to <see cref="BinaryExpression"/> in the <see cref="ThrowingExpressionVisitor.VisitExtension"/> method.
   /// </para>
   /// <para>
   /// Subclasses of <see cref="RelinqExpressionVisitor"/> that do not implement <see cref="IVBSpecificExpressionVisitor"/> will, by default, 
-  /// ignore this expression and visit its child expressions via the <see cref="ExpressionVisitor2.VisitExtension"/> and 
+  /// ignore this expression and visit its child expressions via the <see cref="ExpressionVisitor.VisitExtension"/> and 
   /// <see cref="VisitChildren"/> methods.
   /// </para>
   /// </remarks>
@@ -49,7 +48,7 @@ namespace Remotion.Linq.Clauses.Expressions
     private readonly bool _textCompare;
 
     public VBStringComparisonExpression (Expression comparison, bool textCompare)
-        : base(comparison.Type, ExpressionType)
+        : base (comparison.Type, ExpressionType)
     {
       ArgumentUtility.CheckNotNull ("comparison", comparison);
 
@@ -77,7 +76,7 @@ namespace Remotion.Linq.Clauses.Expressions
       return _comparison;
     }
 
-    protected internal override Expression VisitChildren (ExpressionVisitor2 visitor)
+    protected override Expression VisitChildren (ExpressionVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
 
@@ -88,7 +87,7 @@ namespace Remotion.Linq.Clauses.Expressions
         return this;
     }
 
-    public override Expression Accept (ExpressionVisitor2 visitor)
+    protected override Expression Accept (ExpressionVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
 

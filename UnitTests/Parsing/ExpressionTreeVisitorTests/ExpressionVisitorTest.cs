@@ -28,6 +28,7 @@ using Remotion.Linq.Development.UnitTesting.Parsing;
 using Remotion.Linq.Parsing;
 using Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors;
 using Remotion.Linq.UnitTests.TestDomain;
+using Remotion.Linq.UnitTests.Utilities;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 
@@ -68,10 +69,16 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       {
         var expressionInstance = ExpressionInstanceCreator.GetExpressionInstance (expressionType);
         Assert.That (
-            visitMethodExpressionTypes.Any (t => t.IsAssignableFrom (expressionInstance.GetType ())), 
-            Is.True, 
-            "Visit method for {0}", 
-            expressionInstance.GetType ());
+            visitMethodExpressionTypes.Any (
+                t =>
+                {
+                  if (t.ContainsGenericParameters && expressionInstance.GetType().IsGenericType)
+                    t = t.GetGenericTypeDefinition().MakeGenericType (expressionInstance.GetType().GetGenericArguments());
+                  return t.IsInstanceOfType (expressionInstance);
+                }),
+            Is.True,
+            "Visit method for {0}",
+            expressionInstance.GetType());
         Assert.That (RelinqExpressionVisitor.IsSupportedStandardExpression (expressionInstance), Is.True);
       }
     }
@@ -130,6 +137,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       Assert.That (RelinqExpressionVisitor.IsExtensionExpression (subQueryExpression), Is.False);
     }
 
+#if NET_3_5
     [Test]
     public void IsUnknownNonExtensionExpression ()
     {
@@ -148,6 +156,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
       Assert.That (RelinqExpressionVisitor.IsUnknownNonExtensionExpression (subQueryExpression), Is.False);
     }
+#endif
 
     [Test]
     public void AdjustArgumentsForNewExpression ()
@@ -183,18 +192,20 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       Assert.That (result, Is.SameAs (expectedResult));
     }
 
+#if NET_3_5
     [Test]
     public void Visit_Unknown ()
     {
       CheckDelegation ("VisitUnknownNonExtension", (ExpressionType) (-1));
     }
+#endif
 
     [Test]
     public void Visit_Null ()
     {
       var visitor = MockRepository.PartialMock<RelinqExpressionVisitor>();
       MockRepository.ReplayAll();
-      Assert.That (visitor.Visit (null), Is.Null);
+      Assert.That (visitor.Visit ((Expression) null), Is.Null);
     }
 
     [Test]
@@ -333,7 +344,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void VisitAndConvert_Single_OriginalNull ()
     {
-      var result = InvokeAndCheckVisitAndConvert<Expression> (null, "Add");
+      var result = InvokeVisitAndConvert<Expression> (null, "Add");
       Assert.That (result, Is.Null);
     }
 
@@ -343,7 +354,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       var expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
       Expect.Call (VisitorMock.Visit (expression)).Return (expression);
 
-      var result = InvokeAndCheckVisitAndConvert (expression, "Add");
+      var result = InvokeVisitAndConvert (expression, "Add");
 
       Assert.That (result, Is.SameAs (expression));
     }
@@ -356,16 +367,21 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 
       Expect.Call (VisitorMock.Visit (expression)).Return (newExpression);
 
-      var result = InvokeAndCheckVisitAndConvert (expression, "Add");
+      var result = InvokeVisitAndConvert (expression, "Add");
 
       Assert.That (result, Is.SameAs (newExpression));
     }
 
     [Test]
+#if !NET_3_5
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
+        "When called from 'VisitMethod', rewriting a node of type 'System.Linq.Expressions.BinaryExpression' must return a non-null value of the same type. "
+        + "Alternatively, override 'VisitMethod' and change it to not visit children of this type.")]
+#else
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
         "When called from 'VisitMethod', expressions of type 'BinaryExpression' can only be replaced with other non-null expressions of type "
-        + "'BinaryExpression'.")
-    ]
+        + "'BinaryExpression'.")]
+#endif
     public void VisitAndConvert_Single_ThrowsOnInvalidType ()
     {
       var expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
@@ -373,21 +389,26 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 
       Expect.Call (VisitorMock.Visit (expression)).Return (newExpression);
 
-      InvokeAndCheckVisitAndConvert (expression, "VisitMethod");
+      InvokeVisitAndConvert (expression, "VisitMethod");
     }
 
     [Test]
+#if !NET_3_5
+    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
+        "When called from 'VisitMethod', rewriting a node of type 'System.Linq.Expressions.BinaryExpression' must return a non-null value of the same type. "
+        + "Alternatively, override 'VisitMethod' and change it to not visit children of this type.")]
+#else
     [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
         "When called from 'VisitMethod', expressions of type 'BinaryExpression' can only be replaced with other non-null expressions of type "
-        + "'BinaryExpression'.")
-    ]
+        + "'BinaryExpression'.")]
+#endif
     public void VisitAndConvert_Single_ThrowsOnNull ()
     {
       var expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
 
       Expect.Call (VisitorMock.Visit (expression)).Return (null);
 
-      InvokeAndCheckVisitAndConvert (expression, "VisitMethod");
+      InvokeVisitAndConvert (expression, "VisitMethod");
     }
 
     [Test]
@@ -398,7 +419,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 
       Expect.Call (VisitorMock.Visit (expr1)).Return (expr1);
 
-      var result = VisitorMock.Visit (expressions, arg => InvokeAndCheckVisitAndConvert (expr1, "VisitAndConvert"));
+      var result = ExpressionVisitor.Visit (expressions, arg => InvokeVisitAndConvert (expr1, "VisitAndConvert"));
       
       Assert.That (result, Is.SameAs (expressions));
     }
@@ -411,20 +432,21 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       ReadOnlyCollection<Expression> expressions = new List<Expression> (new[] { expr1 }).AsReadOnly ();
 
       Expect.Call (VisitorMock.Visit (expr1)).Return (expr2);
-      var result = VisitorMock.Visit (expressions, arg => InvokeAndCheckVisitAndConvert (expr1, "VisitAndConvert"));
+      var result = ExpressionVisitor.Visit (expressions, arg => InvokeVisitAndConvert (expr1, "VisitAndConvert"));
       ReadOnlyCollection<Expression> conditionResult = new List<Expression> (new[] { expr2 }).AsReadOnly ();
       Assert.That (result, Is.EqualTo (conditionResult));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException),
-        ExpectedMessage = "The current list only supports objects of type 'Expression' as its elements.")]
-    public void VisitList_Changed_InvalidType ()
+    public void VisitList_Changed_SupportsNullValues ()
     {
       Expression expr1 = Expression.Constant (1);
-      ReadOnlyCollection<Expression> expressions = new List<Expression> (new[] { expr1 }).AsReadOnly ();
+      Expression expr2 = Expression.Constant (2);
+      ReadOnlyCollection<Expression> expressions = new List<Expression> (new[] { expr1, expr2 }).AsReadOnly ();
 
-      VisitorMock.Visit (expressions, arg => null);
+      var result = ExpressionVisitor.Visit (expressions, arg => arg == expr1 ? null : arg);
+
+      Assert.That (result, Is.EqualTo (new[] { null, expr2 }));
     }
 
     [Test]
@@ -476,7 +498,14 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       {
         MockRepository.BackToRecord (visitorMock);
         Expect.Call (visitorMock.Visit (expression)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
-        Expect.Call (methodToBeCalled.Invoke (visitorMock, new object[] { expression })).Return (expression);
+
+        MethodInfo methodToBeCalledWithoutGenericParameters;
+        if (methodToBeCalled.ContainsGenericParameters)
+          methodToBeCalledWithoutGenericParameters = methodToBeCalled.MakeGenericMethod (expression.GetType().GetGenericArguments());
+        else
+          methodToBeCalledWithoutGenericParameters = methodToBeCalled;
+
+        Expect.Call (methodToBeCalledWithoutGenericParameters.Invoke (visitorMock, new object[] { expression })).Return (expression);
 
         MockRepository.Replay (visitorMock);
 

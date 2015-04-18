@@ -68,17 +68,19 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
         return matchingAssignment.AssociatedExpression;
     }
 
-    protected override Expression VisitSubQuery (SubQueryExpression expression)
+    protected internal override Expression VisitSubQuery (SubQueryExpression expression)
     {
       expression.QueryModel.TransformExpressions (ReplaceTransparentIdentifiers);
       return expression; // Note that we modifiy the (mutable) QueryModel, we return an unchanged expression
     }
 
+#if NET_3_5
     protected override Expression VisitRelinqUnknownNonExtension (Expression expression)
     {
       //ignore
       return expression;
     }
+#endif
 
     private IEnumerable<MemberBinding> GetMemberBindingsCreatedByExpression (Expression expression)
     {

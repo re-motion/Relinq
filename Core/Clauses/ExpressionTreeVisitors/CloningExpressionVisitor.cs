@@ -51,7 +51,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
     {
     }
 
-    protected override Expression VisitSubQuery (SubQueryExpression expression)
+    protected internal override Expression VisitSubQuery (SubQueryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 

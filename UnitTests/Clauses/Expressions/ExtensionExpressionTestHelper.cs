@@ -23,6 +23,7 @@ using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing;
 using Remotion.Linq.Utilities;
+using Remotion.Linq.UnitTests.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Clauses.Expressions

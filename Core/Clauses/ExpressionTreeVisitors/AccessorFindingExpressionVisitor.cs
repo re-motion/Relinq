@@ -153,7 +153,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
         return memberBinding;
     }
 
-    protected override MemberBinding VisitMemberAssignment (MemberAssignment memberAssigment)
+    protected override MemberAssignment VisitMemberAssignment (MemberAssignment memberAssigment)
     {
       CheckAndVisitMemberAssignment (memberAssigment.Member, memberAssigment.Expression);
       return memberAssigment;

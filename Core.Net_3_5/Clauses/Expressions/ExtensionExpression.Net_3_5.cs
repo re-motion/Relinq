@@ -16,6 +16,8 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Linq.Parsing;
+using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.Expressions
 {
@@ -100,6 +102,38 @@ namespace Remotion.Linq.Clauses.Expressions
         throw new InvalidOperationException ("Reduce must produce an expression of a compatible type.");
 
       return result;
+    }
+
+    /// <summary>
+    /// Accepts the specified visitor, by default dispatching to <see cref="ExpressionVisitor.VisitExtension"/>. 
+    /// Inheritors of the <see cref="ExtensionExpression"/> class can override this method in order to dispatch to a specific Visit method.
+    /// </summary>
+    /// <param name="visitor">The visitor whose Visit method should be invoked.</param>
+    /// <returns>The <see cref="Expression"/> returned by the visitor.</returns>
+    /// <remarks>
+    /// Overriders can test the <paramref name="visitor"/> for a specific interface. If the visitor supports the interface, the extension expression 
+    /// can dispatch to the respective strongly-typed Visit method declared in the interface. If it does not, the extension expression should call 
+    /// the base implementation of <see cref="Accept"/>, which will dispatch to <see cref="ExpressionVisitor.VisitExtension"/>.
+    /// </remarks>
+    protected virtual Expression Accept (ExpressionVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+
+      return visitor.VisitExtension (this);
+    }
+
+    internal Expression AcceptInternal (ExpressionVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+
+      return Accept (visitor);
+    }
+
+    internal Expression VisitChildrenInternal (ExpressionVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+
+      return VisitChildren (visitor);
     }
   }
 }
