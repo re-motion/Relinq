@@ -37,7 +37,7 @@ namespace Remotion.Linq.Clauses.Expressions
   /// </para>
   /// <para>
   /// Subclasses of <see cref="RelinqExpressionVisitor"/> that do not implement <see cref="IVBSpecificExpressionVisitor"/> will, by default, 
-  /// ignore this expression and visit its child expressions via the <see cref="RelinqExpressionVisitor.VisitExtension"/> and 
+  /// ignore this expression and visit its child expressions via the <see cref="ExpressionVisitor2.VisitExtension"/> and 
   /// <see cref="VisitChildren"/> methods.
   /// </para>
   /// </remarks>
@@ -77,7 +77,7 @@ namespace Remotion.Linq.Clauses.Expressions
       return _comparison;
     }
 
-    protected internal override Expression VisitChildren (RelinqExpressionVisitor visitor)
+    protected internal override Expression VisitChildren (ExpressionVisitor2 visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
 
@@ -88,7 +88,7 @@ namespace Remotion.Linq.Clauses.Expressions
         return this;
     }
 
-    public override Expression Accept (RelinqExpressionVisitor visitor)
+    public override Expression Accept (ExpressionVisitor2 visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
 

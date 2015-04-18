@@ -148,7 +148,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
       return expression;
     }
 
-    protected override Expression VisitUnknownNonExtension (Expression expression)
+    protected override Expression VisitRelinqUnknownNonExtension (Expression expression)
     {
       // Ignore
       return expression;

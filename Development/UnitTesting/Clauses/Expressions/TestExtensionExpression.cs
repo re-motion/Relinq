@@ -54,7 +54,7 @@ namespace Remotion.Linq.Development.UnitTesting.Clauses.Expressions
       return _expression;
     }
 
-    protected override Expression VisitChildren (RelinqExpressionVisitor visitor)
+    protected override Expression VisitChildren (ExpressionVisitor2 visitor)
     {
       var result = visitor.Visit (_expression);
       if (result != _expression)

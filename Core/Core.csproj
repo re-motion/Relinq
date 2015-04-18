@@ -176,6 +176,7 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBInformationIsNothingExpressionTransformer.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionVisitor.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\PartialEvaluationInfo.cs" />
+    <Compile Include="Parsing\ExpressionVisitor2.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ConcatExpressionNode.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\QuerySourceSetOperationExpressionNodeBase.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\SupportedMethodSpecifications.cs" />

@@ -48,7 +48,14 @@ namespace Remotion.Linq.UnitTests.Parsing
     protected override TResult VisitUnhandledItem<TItem, TResult> (TItem unhandledItem, string visitMethod, Func<TItem, TResult> baseBehavior)
     {
       var baseBehaviorCalledMethod = GetCalledMethod (baseBehavior.Method.GetMethodBody ());
-      Assert.That (baseBehaviorCalledMethod, Is.EqualTo (typeof (RelinqExpressionVisitor).GetMethod (visitMethod, BindingFlags.NonPublic | BindingFlags.Instance)));
+
+      Type declaringType;
+      if (baseBehaviorCalledMethod.DeclaringType == typeof (RelinqExpressionVisitor))
+        declaringType = typeof (RelinqExpressionVisitor);
+      else
+        declaringType = typeof (ExpressionVisitor2);
+
+      Assert.That (baseBehaviorCalledMethod, Is.EqualTo (declaringType.GetMethod (visitMethod, BindingFlags.NonPublic | BindingFlags.Instance)));
 
       return base.VisitUnhandledItem (unhandledItem, visitMethod, baseBehavior);
     }

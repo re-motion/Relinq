@@ -83,7 +83,7 @@ namespace Remotion.Linq.Clauses.Expressions
 #endif
 
     /// <summary>
-    /// Accepts the specified visitor, by default dispatching to <see cref="RelinqExpressionVisitor.VisitExtension"/>. 
+    /// Accepts the specified visitor, by default dispatching to <see cref="ExpressionVisitor2.VisitExtension"/>. 
     /// Inheritors of the <see cref="ExtensionExpression"/> class can override this method in order to dispatch to a specific Visit method.
     /// </summary>
     /// <param name="visitor">The visitor whose Visit method should be invoked.</param>
@@ -91,9 +91,9 @@ namespace Remotion.Linq.Clauses.Expressions
     /// <remarks>
     /// Overriders can test the <paramref name="visitor"/> for a specific interface. If the visitor supports the interface, the extension expression 
     /// can dispatch to the respective strongly-typed Visit method declared in the interface. If it does not, the extension expression should call 
-    /// the base implementation of <see cref="Accept"/>, which will dispatch to <see cref="RelinqExpressionVisitor.VisitExtension"/>.
+    /// the base implementation of <see cref="Accept"/>, which will dispatch to <see cref="ExpressionVisitor2.VisitExtension"/>.
     /// </remarks>
-    public virtual Expression Accept (RelinqExpressionVisitor visitor)
+    public virtual Expression Accept (ExpressionVisitor2 visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       
@@ -101,7 +101,7 @@ namespace Remotion.Linq.Clauses.Expressions
     }
 
     /// <summary>
-    /// Must be overridden by <see cref="ExtensionExpression"/> subclasses by calling <see cref="RelinqExpressionVisitor.Visit"/> on all 
+    /// Must be overridden by <see cref="ExtensionExpression"/> subclasses by calling <see cref="ExpressionVisitor2.Visit"/> on all 
     /// children of this extension node. 
     /// </summary>
     /// <param name="visitor">The visitor to visit the child nodes with.</param>
@@ -111,6 +111,6 @@ namespace Remotion.Linq.Clauses.Expressions
     /// be returned holding the new child nodes. If the node has no children or the visitor does not replace any child node, the method should
     /// return this <see cref="ExtensionExpression"/>. 
     /// </remarks>
-    protected internal abstract Expression VisitChildren (RelinqExpressionVisitor visitor);
+    protected internal abstract Expression VisitChildren (ExpressionVisitor2 visitor);
   }
 }
