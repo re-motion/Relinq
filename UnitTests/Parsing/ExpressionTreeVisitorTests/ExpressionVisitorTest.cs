@@ -398,7 +398,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 
       Expect.Call (VisitorMock.Visit (expr1)).Return (expr1);
 
-      var result = VisitorMock.VisitList (expressions, arg => InvokeAndCheckVisitAndConvert (expr1, "VisitAndConvert"));
+      var result = VisitorMock.Visit (expressions, arg => InvokeAndCheckVisitAndConvert (expr1, "VisitAndConvert"));
       
       Assert.That (result, Is.SameAs (expressions));
     }
@@ -411,7 +411,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       ReadOnlyCollection<Expression> expressions = new List<Expression> (new[] { expr1 }).AsReadOnly ();
 
       Expect.Call (VisitorMock.Visit (expr1)).Return (expr2);
-      var result = VisitorMock.VisitList (expressions, arg => InvokeAndCheckVisitAndConvert (expr1, "VisitAndConvert"));
+      var result = VisitorMock.Visit (expressions, arg => InvokeAndCheckVisitAndConvert (expr1, "VisitAndConvert"));
       ReadOnlyCollection<Expression> conditionResult = new List<Expression> (new[] { expr2 }).AsReadOnly ();
       Assert.That (result, Is.EqualTo (conditionResult));
     }
@@ -424,7 +424,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       Expression expr1 = Expression.Constant (1);
       ReadOnlyCollection<Expression> expressions = new List<Expression> (new[] { expr1 }).AsReadOnly ();
 
-      VisitorMock.VisitList (expressions, arg => null);
+      VisitorMock.Visit (expressions, arg => null);
     }
 
     [Test]

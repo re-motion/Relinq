@@ -153,11 +153,11 @@ namespace Remotion.Linq.Parsing
       ArgumentUtility.CheckNotNull ("expressions", expressions);
       ArgumentUtility.CheckNotNullOrEmpty ("callerName", callerName);
 
-      return VisitList (expressions, expression => VisitAndConvert (expression, callerName));
+      return Visit (expressions, expression => VisitAndConvert (expression, callerName));
     }
 
     // Replace with ExpressionVisitor.Visit<T> (ReadOnlyCollection<T>, Func<T,T>)
-    public ReadOnlyCollection<T> VisitList<T> (ReadOnlyCollection<T> list, Func<T, T> visitMethod)
+    public ReadOnlyCollection<T> Visit<T> (ReadOnlyCollection<T> list, Func<T, T> visitMethod)
         where T : class
     {
       ArgumentUtility.CheckNotNull ("list", list);
@@ -437,13 +437,13 @@ namespace Remotion.Linq.Parsing
     // Identical implemention by ExpressionVisitor, just no extension point
     protected virtual ReadOnlyCollection<MemberBinding> VisitMemberBindingList (ReadOnlyCollection<MemberBinding> expressions)
     {
-      return VisitList (expressions, VisitMemberBinding);
+      return Visit (expressions, VisitMemberBinding);
     }
 
     // Identical implemention by ExpressionVisitor, just no extension point
     protected virtual ReadOnlyCollection<ElementInit> VisitElementInitList (ReadOnlyCollection<ElementInit> expressions)
     {
-      return VisitList (expressions, VisitElementInit);
+      return Visit (expressions, VisitElementInit);
     }
 
     [Obsolete ("This method has been split. Use VisitExtensionExpression or VisitUnknownNonExtensionExpression instead. 1.13.75")]
