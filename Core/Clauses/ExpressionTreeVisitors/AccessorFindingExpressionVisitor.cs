@@ -30,7 +30,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
   /// <example>
   /// <para>
   /// For example, consider the task of determining the value of a specific query source [s] from an input value corresponding to a complex 
-  /// expression. This <see cref="AccessorFindingExpressionTreeVisitor"/> will return a <see cref="LambdaExpression"/> able to perform this task.
+  /// expression. This <see cref="AccessorFindingExpressionVisitor"/> will return a <see cref="LambdaExpression"/> able to perform this task.
   /// </para>
   /// <para>
   /// <list type="bullet">
@@ -40,7 +40,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
   /// </list>
   /// </para>
   /// </example>
-  public class AccessorFindingExpressionTreeVisitor : ExpressionTreeVisitor
+  public class AccessorFindingExpressionVisitor : RelinqExpressionVisitor
   {
     /// <summary>
     /// Constructs a <see cref="LambdaExpression"/> that is able to extract a specific simple <paramref name="searchedExpression"/> from a 
@@ -49,7 +49,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
     /// <param name="searchedExpression">The expression an accessor to which should be created.</param>
     /// <param name="fullExpression">The full expression containing the <paramref name="searchedExpression"/>.</param>
     /// <param name="inputParameter">The input parameter to be used by the resulting lambda. Its type must match the type of <paramref name="fullExpression"/>.</param>
-    /// <remarks>The <see cref="AccessorFindingExpressionTreeVisitor"/> compares the <paramref name="searchedExpression"/> via reference equality,
+    /// <remarks>The <see cref="AccessorFindingExpressionVisitor"/> compares the <paramref name="searchedExpression"/> via reference equality,
     /// which means that exactly the same expression reference must be contained by <paramref name="fullExpression"/> for the visitor to return the
     /// expected result. In addition, the visitor can only provide accessors for expressions nested in <see cref="NewExpression"/> or 
     /// <see cref="MemberInitExpression"/>.</remarks>
@@ -69,7 +69,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
             "inputParameter");
       }
 
-      var visitor = new AccessorFindingExpressionTreeVisitor (searchedExpression, inputParameter);
+      var visitor = new AccessorFindingExpressionVisitor (searchedExpression, inputParameter);
       visitor.Visit (fullExpression);
 
       if (visitor.AccessorPath != null)
@@ -79,8 +79,8 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
         var message = string.Format (
             "The given expression '{0}' does not contain the searched expression '{1}' in a nested NewExpression with member assignments or a "
                 + "MemberBindingExpression.",
-            FormattingExpressionTreeVisitor.Format (fullExpression),
-            FormattingExpressionTreeVisitor.Format (searchedExpression));
+            FormattingExpressionVisitor.Format (fullExpression),
+            FormattingExpressionVisitor.Format (searchedExpression));
         throw new ArgumentException (message, "fullExpression");
       }
     }
@@ -90,7 +90,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
 
     private readonly Stack<Expression> _accessorPathStack = new Stack<Expression> ();
 
-    private AccessorFindingExpressionTreeVisitor (Expression searchedExpression, ParameterExpression inputParameter)
+    private AccessorFindingExpressionVisitor (Expression searchedExpression, ParameterExpression inputParameter)
     {
       ArgumentUtility.CheckNotNull ("searchedExpression", searchedExpression);
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);

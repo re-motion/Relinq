@@ -25,7 +25,7 @@ namespace Remotion.Linq.Clauses
   /// <summary>
   /// Maps <see cref="IQuerySource"/> instances to <see cref="Expression"/> instances. This is used by <see cref="QueryModel.Clone()"/>
   /// in order to be able to correctly update references to old clauses to point to the new clauses. Via 
-  /// <see cref="ReferenceReplacingExpressionTreeVisitor"/> and <see cref="CloningExpressionTreeVisitor"/>, it can also be used manually.
+  /// <see cref="ReferenceReplacingExpressionVisitor"/> and <see cref="CloningExpressionVisitor"/>, it can also be used manually.
   /// </summary>
   public sealed class QuerySourceMapping
   {

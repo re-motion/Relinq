@@ -181,7 +181,7 @@ namespace Remotion.Linq
       string mainQueryString;
       if (IsIdentityQuery ())
       {
-        mainQueryString = FormattingExpressionTreeVisitor.Format (MainFromClause.FromExpression);
+        mainQueryString = FormattingExpressionVisitor.Format (MainFromClause.FromExpression);
       }
       else
       {
@@ -232,7 +232,7 @@ namespace Remotion.Linq
       }
 
       var clone = queryModelBuilder.Build ();
-      clone.TransformExpressions (ex => CloningExpressionTreeVisitor.AdjustExpressionAfterCloning (ex, cloneContext.QuerySourceMapping));
+      clone.TransformExpressions (ex => CloningExpressionVisitor.AdjustExpressionAfterCloning (ex, cloneContext.QuerySourceMapping));
       clone.ResultTypeOverride = ResultTypeOverride;
       return clone;
     }

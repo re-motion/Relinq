@@ -34,7 +34,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
         Func<TVisitorInterface, Expression> visitMethodCall) where TExpression : ExtensionExpression
     {
       var mockRepository = new MockRepository ();
-      var visitorMock = mockRepository.StrictMultiMock<ExpressionTreeVisitor> (typeof (TVisitorInterface));
+      var visitorMock = mockRepository.StrictMultiMock<RelinqExpressionVisitor> (typeof (TVisitorInterface));
 
       var returnedExpression = Expression.Constant (0);
 
@@ -53,7 +53,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     public static void CheckAcceptForVisitorNotSupportingType<TExpression> (TExpression expression) where TExpression : ExtensionExpression
     {
       var mockRepository = new MockRepository ();
-      var visitorMock = mockRepository.StrictMock<ExpressionTreeVisitor> ();
+      var visitorMock = mockRepository.StrictMock<RelinqExpressionVisitor> ();
 
       var returnedExpression = Expression.Constant (0);
 
@@ -69,7 +69,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       Assert.That (result, Is.SameAs (returnedExpression));
     }
 
-    public static Expression CallVisitChildren (ExtensionExpression target, ExpressionTreeVisitor visitor)
+    public static Expression CallVisitChildren (ExtensionExpression target, RelinqExpressionVisitor visitor)
     {
       return (Expression) PrivateInvoke.InvokeNonPublicMethod (target, "VisitChildren", visitor);
     }

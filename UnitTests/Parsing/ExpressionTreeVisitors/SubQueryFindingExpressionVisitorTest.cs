@@ -34,7 +34,7 @@ using Remotion.Linq.UnitTests.TestQueryGenerators;
 namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
 {
   [TestFixture]
-  public class SubQueryFindingExpressionTreeVisitorTest
+  public class SubQueryFindingExpressionVisitorTest
   {
     private MethodInfoBasedNodeTypeRegistry _methodInfoBasedNodeTypeRegistry;
 
@@ -48,7 +48,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     public void Initialization_InnerParserHasNoTransformations ()
     {
       var visitorInstance = Activator.CreateInstance (
-          typeof (SubQueryFindingExpressionTreeVisitor), BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { _methodInfoBasedNodeTypeRegistry }, null);
+          typeof (SubQueryFindingExpressionVisitor), BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { _methodInfoBasedNodeTypeRegistry }, null);
 
       var innerParser = (QueryParser) PrivateInvoke.GetNonPublicField (visitorInstance, "_queryParser");
       Assert.That (innerParser.ExpressionTreeParser.Processor, Is.TypeOf (typeof (NullExpressionTreeProcessor)));
@@ -59,7 +59,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     {
       Expression expression = Expression.Constant ("test");
 
-      Expression newExpression = SubQueryFindingExpressionTreeVisitor.Process (expression, _methodInfoBasedNodeTypeRegistry);
+      Expression newExpression = SubQueryFindingExpressionVisitor.Process (expression, _methodInfoBasedNodeTypeRegistry);
       Assert.That (newExpression, Is.SameAs (expression));
     }
 
@@ -69,7 +69,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
       Expression subQuery = SelectTestQueryGenerator.CreateSimpleQuery (ExpressionHelper.CreateQueryable<Cook>()).Expression;
       Expression surroundingExpression = Expression.Lambda (subQuery);
 
-      Expression newExpression = SubQueryFindingExpressionTreeVisitor.Process (surroundingExpression, _methodInfoBasedNodeTypeRegistry);
+      Expression newExpression = SubQueryFindingExpressionVisitor.Process (surroundingExpression, _methodInfoBasedNodeTypeRegistry);
 
       Assert.That (newExpression, Is.Not.SameAs (surroundingExpression));
       Assert.That (newExpression, Is.InstanceOf (typeof (LambdaExpression)));
@@ -89,13 +89,13 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
       Expression subQuery = ExpressionHelper.MakeExpression (() => CustomSelect (ExpressionHelper.CreateQueryable<Cook>(), s => s));
       Expression surroundingExpression = Expression.Lambda (subQuery);
       // evaluate the ExpressionHelper.CreateQueryable<Cook> () method
-      var inputExpression = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (surroundingExpression);
+      var inputExpression = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (surroundingExpression);
 
       var emptyNodeTypeRegistry = new MethodInfoBasedNodeTypeRegistry();
       emptyNodeTypeRegistry.Register (new[] { ((MethodCallExpression) subQuery).Method }, typeof (SelectExpressionNode));
 
       var newLambdaExpression =
-          (LambdaExpression) SubQueryFindingExpressionTreeVisitor.Process (inputExpression, emptyNodeTypeRegistry);
+          (LambdaExpression) SubQueryFindingExpressionVisitor.Process (inputExpression, emptyNodeTypeRegistry);
       Assert.That (newLambdaExpression.Body, Is.InstanceOf (typeof (SubQueryExpression)));
     }
 
@@ -107,7 +107,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
       Expression surroundingExpression = Expression.Lambda (subQuery);
 
       var newLambdaExpression =
-          (LambdaExpression) SubQueryFindingExpressionTreeVisitor.Process (surroundingExpression, _methodInfoBasedNodeTypeRegistry);
+          (LambdaExpression) SubQueryFindingExpressionVisitor.Process (surroundingExpression, _methodInfoBasedNodeTypeRegistry);
       Assert.That (newLambdaExpression.Body, Is.InstanceOf (typeof (SubQueryExpression)));
     }
 
@@ -115,7 +115,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     public void VisitUnknownNonExtensionExpression_Ignored ()
     {
       var expression = new UnknownExpression (typeof (object));
-      var result = SubQueryFindingExpressionTreeVisitor.Process (expression, _methodInfoBasedNodeTypeRegistry);
+      var result = SubQueryFindingExpressionVisitor.Process (expression, _methodInfoBasedNodeTypeRegistry);
 
       Assert.That (result, Is.SameAs (expression));
     }
@@ -126,9 +126,9 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
       var subQuery = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateQueryable<Cook> () select s).Any());
       var extensionExpression = new VBStringComparisonExpression (subQuery, true);
       // evaluate the ExpressionHelper.CreateQueryable<Cook> () method
-      var inputExpression = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (extensionExpression);
+      var inputExpression = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (extensionExpression);
 
-      var result = SubQueryFindingExpressionTreeVisitor.Process (inputExpression, _methodInfoBasedNodeTypeRegistry);
+      var result = SubQueryFindingExpressionVisitor.Process (inputExpression, _methodInfoBasedNodeTypeRegistry);
 
       Assert.That (((VBStringComparisonExpression) result).Comparison, Is.TypeOf (typeof (SubQueryExpression)));
     }

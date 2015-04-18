@@ -25,7 +25,7 @@ namespace Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors
   /// Analyzes an <see cref="Expression"/> tree for sub-trees that are evaluatable in-memory, and evaluates those sub-trees.
   /// </summary>
   /// <remarks>
-  /// The <see cref="PartialEvaluatingExpressionTreeProcessor"/> uses the <see cref="PartialEvaluatingExpressionTreeVisitor"/> for partial evaluation.
+  /// The <see cref="PartialEvaluatingExpressionTreeProcessor"/> uses the <see cref="PartialEvaluatingExpressionVisitor"/> for partial evaluation.
   /// It performs two visiting runs over the <see cref="Expression"/> tree.
   /// </remarks>
   public sealed class PartialEvaluatingExpressionTreeProcessor : IExpressionTreeProcessor
@@ -34,7 +34,7 @@ namespace Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
 
-      return PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (expressionTree);
+      return PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (expressionTree);
     }
   }
 }

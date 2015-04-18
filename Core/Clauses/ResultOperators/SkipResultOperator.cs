@@ -90,7 +90,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return "Skip(" + FormattingExpressionTreeVisitor.Format (Count) + ")";
+      return "Skip(" + FormattingExpressionVisitor.Format (Count) + ")";
     }
   }
 }

@@ -25,16 +25,16 @@ using Rhino.Mocks.Interfaces;
 
 namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 {
-  public class ExpressionTreeVisitorTestBase
+  public class ExpressionVisitorTestBase
   {
     private MockRepository _mockRepository;
-    private ExpressionTreeVisitor _visitorMock;
+    private RelinqExpressionVisitor _visitorMock;
 
     [SetUp]
     public virtual void Setup ()
     {
       _mockRepository = new MockRepository ();
-      _visitorMock = _mockRepository.StrictMock<ExpressionTreeVisitor> ();
+      _visitorMock = _mockRepository.StrictMock<RelinqExpressionVisitor> ();
     }
 
     protected MockRepository MockRepository
@@ -43,7 +43,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       set { _mockRepository = value; }
     }
 
-    public ExpressionTreeVisitor VisitorMock
+    public RelinqExpressionVisitor VisitorMock
     {
       get { return _visitorMock; }
     }

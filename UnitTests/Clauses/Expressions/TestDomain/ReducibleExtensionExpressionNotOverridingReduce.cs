@@ -33,7 +33,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
       get { return true; }
     }
 
-    protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    protected override Expression VisitChildren (RelinqExpressionVisitor visitor)
     {
       return this;
     }

@@ -28,7 +28,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
     {
     }
 
-    public override Expression Accept (ExpressionTreeVisitor visitor)
+    public override Expression Accept (RelinqExpressionVisitor visitor)
     {
       var specificVisitor = visitor as ISpecificVisitor;
       if (specificVisitor != null)
@@ -37,7 +37,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
         return base.Accept (visitor);
     }
 
-    protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    protected override Expression VisitChildren (RelinqExpressionVisitor visitor)
     {
       return this;
     }

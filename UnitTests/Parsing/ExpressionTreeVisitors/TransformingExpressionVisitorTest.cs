@@ -24,7 +24,7 @@ using Rhino.Mocks;
 namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
 {
   [TestFixture]
-  public class TransformingExpressionTreeVisitorTest
+  public class TransformingExpressionVisitorTest
   {
     [Test]
     public void Transform_SingleMatchingTransformation ()
@@ -41,7 +41,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
           .Return (new ExpressionTransformation[0]);
       providerMock.Replay ();
 
-      var result = TransformingExpressionTreeVisitor.Transform (inputExpression, providerMock);
+      var result = TransformingExpressionVisitor.Transform (inputExpression, providerMock);
 
       providerMock.VerifyAllExpectations ();
       Assert.That (result, Is.SameAs (transformedExpression));
@@ -58,7 +58,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
           .Return (new ExpressionTransformation[0]);
       providerMock.Replay();
 
-      var result = TransformingExpressionTreeVisitor.Transform (inputExpression, providerMock);
+      var result = TransformingExpressionVisitor.Transform (inputExpression, providerMock);
 
       providerMock.VerifyAllExpectations ();
       Assert.That (result, Is.SameAs (inputExpression));
@@ -82,7 +82,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
           .Return (new ExpressionTransformation[0]);
       providerMock.Replay();
 
-      var result = TransformingExpressionTreeVisitor.Transform (inputExpression, providerMock);
+      var result = TransformingExpressionVisitor.Transform (inputExpression, providerMock);
 
       providerMock.VerifyAllExpectations();
       Assert.That (result, Is.SameAs (transformedExpression));
@@ -106,7 +106,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
           .Return (new ExpressionTransformation[0]);
       providerMock.Replay ();
 
-      var result = TransformingExpressionTreeVisitor.Transform (inputExpression, providerMock);
+      var result = TransformingExpressionVisitor.Transform (inputExpression, providerMock);
 
       providerMock.VerifyAllExpectations ();
       Assert.That (result, Is.SameAs (transformedExpression));
@@ -137,7 +137,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
           .Return (new ExpressionTransformation[0]);
       providerMock.Replay ();
 
-      var result = TransformingExpressionTreeVisitor.Transform (inputParentExpression, providerMock);
+      var result = TransformingExpressionVisitor.Transform (inputParentExpression, providerMock);
 
       providerMock.VerifyAllExpectations ();
       Assert.That (result, Is.SameAs (transformedParentExpression));
@@ -149,7 +149,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
       var providerMock = MockRepository.GenerateStrictMock<IExpressionTranformationProvider> ();
       providerMock.Replay ();
 
-      var result = TransformingExpressionTreeVisitor.Transform (null, providerMock);
+      var result = TransformingExpressionVisitor.Transform (null, providerMock);
 
       providerMock.VerifyAllExpectations ();
       Assert.That (result, Is.Null);

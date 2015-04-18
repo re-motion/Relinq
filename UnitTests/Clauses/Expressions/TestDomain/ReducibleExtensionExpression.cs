@@ -38,7 +38,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
       return Constant (0);
     }
 
-    protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    protected override Expression VisitChildren (RelinqExpressionVisitor visitor)
     {
       return this;
     }

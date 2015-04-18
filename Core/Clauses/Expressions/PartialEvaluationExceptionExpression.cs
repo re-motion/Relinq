@@ -28,7 +28,7 @@ namespace Remotion.Linq.Clauses.Expressions
   /// </summary>
   /// <remarks>
   /// <para>
-  /// When <see cref="PartialEvaluatingExpressionTreeVisitor"/> encounters an exception while evaluating an independent expression subtree, it
+  /// When <see cref="PartialEvaluatingExpressionVisitor"/> encounters an exception while evaluating an independent expression subtree, it
   /// will wrap the subtree within a <see cref="PartialEvaluationExceptionExpression"/>. The wrapper contains both the <see cref="Exception"/> 
   /// instance and the <see cref="EvaluatedExpression"/> that caused the exception.
   /// </para>
@@ -37,13 +37,13 @@ namespace Remotion.Linq.Clauses.Expressions
   /// To ignore this wrapper and only handle the inner <see cref="EvaluatedExpression"/>, call the <see cref="Reduce"/> method and visit the result.
   /// </para>
   /// <para>
-  /// Subclasses of <see cref="ThrowingExpressionTreeVisitor"/> that do not implement <see cref="IPartialEvaluationExceptionExpressionVisitor"/> will, 
+  /// Subclasses of <see cref="ThrowingExpressionVisitor"/> that do not implement <see cref="IPartialEvaluationExceptionExpressionVisitor"/> will, 
   /// by default, automatically reduce this expression type to the <see cref="EvaluatedExpression"/> in the 
-  /// <see cref="ThrowingExpressionTreeVisitor.VisitExtension"/> method.
+  /// <see cref="ThrowingExpressionVisitor.VisitExtension"/> method.
   /// </para>
   /// <para>
-  /// Subclasses of <see cref="ExpressionTreeVisitor"/> that do not implement <see cref="IPartialEvaluationExceptionExpressionVisitor"/> will, 
-  /// by default, ignore this expression and visit its child expressions via the <see cref="ExpressionTreeVisitor.VisitExtension"/> and 
+  /// Subclasses of <see cref="RelinqExpressionVisitor"/> that do not implement <see cref="IPartialEvaluationExceptionExpressionVisitor"/> will, 
+  /// by default, ignore this expression and visit its child expressions via the <see cref="RelinqExpressionVisitor.VisitExtension"/> and 
   /// <see cref="VisitChildren"/> methods.
   /// </para>
   /// </remarks>
@@ -83,7 +83,7 @@ namespace Remotion.Linq.Clauses.Expressions
       return _evaluatedExpression;
     }
 
-    protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    protected internal override Expression VisitChildren (RelinqExpressionVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
 
@@ -94,7 +94,7 @@ namespace Remotion.Linq.Clauses.Expressions
         return this;
     }
 
-    public override Expression Accept (ExpressionTreeVisitor visitor)
+    public override Expression Accept (RelinqExpressionVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
 
@@ -111,7 +111,7 @@ namespace Remotion.Linq.Clauses.Expressions
           @"PartialEvalException ({0} (""{1}""), {2})",
           _exception.GetType().Name,
           _exception.Message,
-          FormattingExpressionTreeVisitor.Format (_evaluatedExpression));
+          FormattingExpressionVisitor.Format (_evaluatedExpression));
     }
   }
 }

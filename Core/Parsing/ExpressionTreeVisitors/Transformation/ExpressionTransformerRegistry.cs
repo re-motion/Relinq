@@ -26,7 +26,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation
 {
   /// <summary>
   /// Manages registration and lookup of <see cref="IExpressionTransformer{T}"/> objects, and converts them to 
-  /// weakly typed <see cref="ExpressionTransformation"/> instances. Use this class together with <see cref="TransformingExpressionTreeVisitor"/>
+  /// weakly typed <see cref="ExpressionTransformation"/> instances. Use this class together with <see cref="TransformingExpressionVisitor"/>
   /// in order to apply the registered transformers to an <see cref="Expression"/> tree.
   /// </summary>
   public class ExpressionTransformerRegistry : IExpressionTranformationProvider
@@ -109,7 +109,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation
     /// <remarks>
     /// <para>
     /// The order in which transformers are registered is the same order on which they will later be applied by 
-    /// <see cref="TransformingExpressionTreeVisitor"/>. When more than one transformer is registered for a certain <see cref="ExpressionType"/>,
+    /// <see cref="TransformingExpressionVisitor"/>. When more than one transformer is registered for a certain <see cref="ExpressionType"/>,
     /// each of them will get a chance to transform a given <see cref="Expression"/>, until the first one returns a new <see cref="Expression"/>.
     /// At that point, the transformation will start again with the new <see cref="Expression"/> (and, if the expression's type has changed, potentially 
     /// different transformers).

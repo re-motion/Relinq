@@ -172,7 +172,7 @@ namespace Remotion.Linq.Clauses
         var message = string.Format (
             "The value stored by the {0} expression ('{1}') is not of type '{2}', it is of type '{3}'.",
             expressionName,
-            FormattingExpressionTreeVisitor.Format (expression),
+            FormattingExpressionVisitor.Format (expression),
             typeof (T),
             expression.Type);
         throw new ArgumentException (message, "expression");
@@ -188,7 +188,7 @@ namespace Remotion.Linq.Clauses
         var message = string.Format (
             "The {0} expression ('{1}') is no ConstantExpression, it is a {2}.",
             expressionName,
-            FormattingExpressionTreeVisitor.Format (expression),
+            FormattingExpressionVisitor.Format (expression),
             expression.GetType ().Name);
         throw new ArgumentException (message, "expression");
       }

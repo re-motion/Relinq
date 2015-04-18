@@ -73,7 +73,7 @@ namespace Remotion.Linq.Parsing.Structure
       // First, convert the argument expressions to their actual values - this unwraps ConstantantExpressions and UnaryExpressions
       var convertedParameters = UnwrapArgumentExpression (argumentExpression);
       // Then, detect subqueries
-      var parametersWithSubQueriesDetected = SubQueryFindingExpressionTreeVisitor.Process (convertedParameters, _nodeTypeProvider);
+      var parametersWithSubQueriesDetected = SubQueryFindingExpressionVisitor.Process (convertedParameters, _nodeTypeProvider);
 
       return parametersWithSubQueriesDetected;
     }
@@ -110,7 +110,7 @@ namespace Remotion.Linq.Parsing.Structure
     private NotSupportedException CreateParsingErrorException ( MethodCallExpression expression, string message, params object[] args)
     {
       return new NotSupportedException (
-          string.Format ("Could not parse expression '{0}': ", FormattingExpressionTreeVisitor.Format (expression))
+          string.Format ("Could not parse expression '{0}': ", FormattingExpressionVisitor.Format (expression))
           + string.Format (message, args));
     }
   }

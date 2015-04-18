@@ -47,7 +47,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
         var members = GetMembers (expression.Constructor, expression.Arguments);
         return Expression.New (
             expression.Constructor,
-            ExpressionTreeVisitor.AdjustArgumentsForNewExpression (expression.Arguments, members),
+            RelinqExpressionVisitor.AdjustArgumentsForNewExpression (expression.Arguments, members),
             members);
       }
 // ReSharper restore HeuristicUnreachableCode

@@ -101,7 +101,7 @@ namespace Remotion.Linq.Clauses
 
     public override string ToString ()
     {
-      return "select " + FormattingExpressionTreeVisitor.Format (Selector);
+      return "select " + FormattingExpressionVisitor.Format (Selector);
     }
 
     /// <summary>

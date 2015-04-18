@@ -34,16 +34,16 @@ namespace Remotion.Linq.Parsing
   // Possibly only needed to provide default implementation for SubQueryExpression and QuerySourceReferenceExpression.
   // May this could be the ThrowingExpressionVisitor and other visitor-implementations that should not be throwing, e.g. ReferenceReplacingETV, 
   // simply implement the interface if they need to handle the custom expressions?
-  public abstract class ExpressionTreeVisitor
+  public abstract class RelinqExpressionVisitor
   {
     /// <summary>
     /// Determines whether the given <see cref="Expression"/> is one of the expressions defined by <see cref="ExpressionType"/> for which
-    /// <see cref="ExpressionTreeVisitor"/> has a Visit method. <see cref="Visit"/> handles those by calling the respective Visit method.
+    /// <see cref="RelinqExpressionVisitor"/> has a Visit method. <see cref="Visit"/> handles those by calling the respective Visit method.
     /// </summary>
     /// <param name="expression">The expression to check. Must not be <see langword="null" />.</param>
     /// <returns>
     /// 	<see langword="true"/> if <paramref name="expression"/> is one of the expressions defined by <see cref="ExpressionType"/> and 
-    ///   <see cref="ExpressionTreeVisitor"/> has a Visit method for it; otherwise, <see langword="false"/>.
+    ///   <see cref="RelinqExpressionVisitor"/> has a Visit method for it; otherwise, <see langword="false"/>.
     /// </returns>
     // Note: Do not use Enum.IsDefined here - this method must only return true if we have a dedicated Visit method. (Which may not be the case for
     // future extensions of ExpressionType.)
@@ -115,7 +115,7 @@ namespace Remotion.Linq.Parsing
     /// <param name="expression">The expression to check.</param>
     /// <returns>
     /// 	<see langword="true"/> if <paramref name="expression"/> is a re-linq base expression (<see cref="SubQueryExpression"/>, 
-    ///   <see cref="QuerySourceReferenceExpression"/>) for which <see cref="ExpressionTreeVisitor"/> has dedicated Visit methods;
+    ///   <see cref="QuerySourceReferenceExpression"/>) for which <see cref="RelinqExpressionVisitor"/> has dedicated Visit methods;
     ///   otherwise, <see langword="false"/>.
     /// </returns>
     // Should no longer be needed

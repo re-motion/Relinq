@@ -189,7 +189,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     private LambdaExpression CreateFunc<TA1, TA2, TR> (Expression<Func<TA1, TA2, TR>> originalFunc)
     {
       return Expression.Lambda (
-          ReplacingExpressionTreeVisitor.Replace (originalFunc.Parameters[1], _sourceExpression, originalFunc.Body),
+          ReplacingExpressionVisitor.Replace (originalFunc.Parameters[1], _sourceExpression, originalFunc.Body),
           originalFunc.Parameters[0]);
     }
 

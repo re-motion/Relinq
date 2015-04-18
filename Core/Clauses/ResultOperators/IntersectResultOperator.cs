@@ -93,7 +93,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return "Intersect(" + FormattingExpressionTreeVisitor.Format (Source2) + ")";
+      return "Intersect(" + FormattingExpressionVisitor.Format (Source2) + ")";
     }
 
   }

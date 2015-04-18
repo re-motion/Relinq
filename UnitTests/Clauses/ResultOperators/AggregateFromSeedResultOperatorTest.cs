@@ -50,7 +50,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
 
       var originalFunc = ExpressionHelper.CreateLambdaExpression<int, int, int> ((total, i) => total + i);
       _func = Expression.Lambda (
-          ReplacingExpressionTreeVisitor.Replace (originalFunc.Parameters[1], _sourceExpression, originalFunc.Body), 
+          ReplacingExpressionVisitor.Replace (originalFunc.Parameters[1], _sourceExpression, originalFunc.Body), 
           originalFunc.Parameters[0]);
       _resultSelector = ExpressionHelper.CreateLambdaExpression<int, string> (total => total.ToString ());
 

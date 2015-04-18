@@ -162,7 +162,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
       var sequence = input.GetTypedSequence<TInput> ();
       var seed = GetConstantSeed<TAggregate> ();
-      var funcLambda = ReverseResolvingExpressionTreeVisitor.ReverseResolveLambda (input.DataInfo.ItemExpression, Func, 1);
+      var funcLambda = ReverseResolvingExpressionVisitor.ReverseResolveLambda (input.DataInfo.ItemExpression, Func, 1);
       var func = (Func<TAggregate, TInput, TAggregate>) funcLambda.Compile ();
 
       var aggregated = sequence.Aggregate (seed, func);
@@ -232,16 +232,16 @@ namespace Remotion.Linq.Clauses.ResultOperators
       {
         return string.Format (
             "Aggregate({0}, {1}, {2})",
-            FormattingExpressionTreeVisitor.Format (Seed),
-            FormattingExpressionTreeVisitor.Format (Func),
-            FormattingExpressionTreeVisitor.Format (OptionalResultSelector));
+            FormattingExpressionVisitor.Format (Seed),
+            FormattingExpressionVisitor.Format (Func),
+            FormattingExpressionVisitor.Format (OptionalResultSelector));
       }
       else
       {
         return string.Format (
             "Aggregate({0}, {1})",
-            FormattingExpressionTreeVisitor.Format (Seed),
-            FormattingExpressionTreeVisitor.Format (Func));
+            FormattingExpressionVisitor.Format (Seed),
+            FormattingExpressionVisitor.Format (Func));
       }
     }
 

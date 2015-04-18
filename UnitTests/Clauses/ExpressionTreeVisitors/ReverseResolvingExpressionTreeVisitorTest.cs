@@ -65,7 +65,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 
       var resolvedExpression = Expression.Constant (0);
 
-      LambdaExpression lambdaExpression = ReverseResolvingExpressionTreeVisitor.ReverseResolve (_itemExpression, resolvedExpression);
+      LambdaExpression lambdaExpression = ReverseResolvingExpressionVisitor.ReverseResolve (_itemExpression, resolvedExpression);
 
       var expectedExpression = ExpressionHelper.CreateLambdaExpression<AnonymousType<Cook, Cook>, int> (input => 0);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, lambdaExpression);
@@ -80,7 +80,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 
       var resolvedExpression = _querySource1;
 
-      LambdaExpression lambdaExpression = ReverseResolvingExpressionTreeVisitor.ReverseResolve (_itemExpression, resolvedExpression);
+      LambdaExpression lambdaExpression = ReverseResolvingExpressionVisitor.ReverseResolve (_itemExpression, resolvedExpression);
 
       var expectedExpression = ExpressionHelper.CreateLambdaExpression<AnonymousType<Cook, Cook>, Cook> (input => input.a);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, lambdaExpression);
@@ -99,7 +99,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
       var fromClause3 = ExpressionHelper.CreateMainFromClause_Int ("s3", typeof (Cook), ExpressionHelper.CreateQueryable<Cook>());
       var resolvedExpression = new QuerySourceReferenceExpression (fromClause3);
 
-      ReverseResolvingExpressionTreeVisitor.ReverseResolve (_itemExpression, resolvedExpression);
+      ReverseResolvingExpressionVisitor.ReverseResolve (_itemExpression, resolvedExpression);
     }
 
     [Test]
@@ -111,7 +111,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 
       var resolvedExpression = ExpressionHelper.Resolve<Cook, Cook, int> (_fromClause1, _fromClause2, (s1, s2) => s1.ID + s2.ID);
 
-      LambdaExpression lambdaExpression = ReverseResolvingExpressionTreeVisitor.ReverseResolve (_itemExpression, resolvedExpression);
+      LambdaExpression lambdaExpression = ReverseResolvingExpressionVisitor.ReverseResolve (_itemExpression, resolvedExpression);
 
       var expectedExpression = ExpressionHelper.CreateLambdaExpression<AnonymousType<Cook, Cook>, int> (input => input.a.ID + input.b.ID);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, lambdaExpression);
@@ -128,7 +128,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
       var parameter2 = Expression.Parameter (typeof (string), "y");
       var resolvedExpression = Expression.Lambda (Expression.Constant (0), parameter1, parameter2);
 
-      var lambdaExpression = ReverseResolvingExpressionTreeVisitor.ReverseResolveLambda (_itemExpression, resolvedExpression, 1);
+      var lambdaExpression = ReverseResolvingExpressionVisitor.ReverseResolveLambda (_itemExpression, resolvedExpression, 1);
 
       var expectedExpression = ExpressionHelper.CreateLambdaExpression<int, AnonymousType<Cook, Cook>, string, int> ((x, input, y) => 0);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, lambdaExpression);
@@ -146,7 +146,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
       var parameter2 = Expression.Parameter (typeof (string), "y");
       var resolvedExpression = Expression.Lambda (Expression.Constant (0), parameter1, parameter2);
 
-      ReverseResolvingExpressionTreeVisitor.ReverseResolveLambda (_itemExpression, resolvedExpression, 3);
+      ReverseResolvingExpressionVisitor.ReverseResolveLambda (_itemExpression, resolvedExpression, 3);
     }
 
     [Test]
@@ -161,7 +161,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
       var parameter2 = Expression.Parameter (typeof (string), "y");
       var resolvedExpression = Expression.Lambda (Expression.Constant (0), parameter1, parameter2);
 
-      ReverseResolvingExpressionTreeVisitor.ReverseResolveLambda (_itemExpression, resolvedExpression, -1);
+      ReverseResolvingExpressionVisitor.ReverseResolveLambda (_itemExpression, resolvedExpression, -1);
     }
   }
 }

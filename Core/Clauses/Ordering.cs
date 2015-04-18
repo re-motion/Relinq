@@ -100,7 +100,7 @@ namespace Remotion.Linq.Clauses
 
     public override string ToString ()
     {
-      return FormattingExpressionTreeVisitor.Format (Expression) + (OrderingDirection == OrderingDirection.Asc ? " asc" : " desc");
+      return FormattingExpressionVisitor.Format (Expression) + (OrderingDirection == OrderingDirection.Asc ? " asc" : " desc");
     }
   }
 }

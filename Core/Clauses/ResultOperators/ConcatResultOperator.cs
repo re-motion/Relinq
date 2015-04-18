@@ -114,7 +114,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return "Concat(" + FormattingExpressionTreeVisitor.Format (Source2) + ")";
+      return "Concat(" + FormattingExpressionVisitor.Format (Source2) + ")";
     }
   }
 }

@@ -72,7 +72,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.Predefined
       for (int i = 0; i < lambdaExpression.Parameters.Count; i++)
         mapping.Add (lambdaExpression.Parameters[i], arguments[i]);
 
-      return MultiReplacingExpressionTreeVisitor.Replace (mapping, body);
+      return MultiReplacingExpressionVisitor.Replace (mapping, body);
     }
   }
 }

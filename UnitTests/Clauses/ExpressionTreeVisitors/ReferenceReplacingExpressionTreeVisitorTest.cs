@@ -48,7 +48,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     public void Replaces_QuerySourceReferenceExpressions ()
     {
       var expression = new QuerySourceReferenceExpression (_oldFromClause);
-      var result = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
+      var result = ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
 
       Assert.That (((QuerySourceReferenceExpression) result).ReferencedQuerySource, Is.SameAs (_newFromClause));
     }
@@ -57,7 +57,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     public void Replaces_NestedExpressions ()
     {
       var expression = Expression.Negate (new QuerySourceReferenceExpression (_oldFromClause));
-      var result = (UnaryExpression) ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
+      var result = (UnaryExpression) ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
 
       Assert.That (((QuerySourceReferenceExpression) result.Operand).ReferencedQuerySource, Is.SameAs (_newFromClause));
     }
@@ -66,7 +66,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     public void VisitSubQuery_ExpressionUnchanged ()
     {
       var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
-      var result = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, false);
+      var result = ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (expression, _querySourceMapping, false);
 
       Assert.That (((SubQueryExpression) result).QueryModel, Is.SameAs (expression.QueryModel));
     }
@@ -82,7 +82,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
       var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
       _querySourceMapping.AddMapping (referencedClause, newReferenceExpression);
 
-      var result = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, false);
+      var result = ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (expression, _querySourceMapping, false);
       var newSubQuerySelectClause = ((SubQueryExpression) result).QueryModel.SelectClause;
       Assert.That (newSubQuerySelectClause.Selector, Is.SameAs (newReferenceExpression));
     }
@@ -93,7 +93,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     {
       var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
       expression.QueryModel.SelectClause.Selector = new QuerySourceReferenceExpression (expression.QueryModel.MainFromClause);
-      ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
+      ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
     }
     
 
@@ -102,14 +102,14 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     {
       var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
       expression.QueryModel.SelectClause.Selector = new QuerySourceReferenceExpression (expression.QueryModel.MainFromClause);
-      ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, false);
+      ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (expression, _querySourceMapping, false);
     }
 
     [Test]
     public void VisitUnknownNonExtensionExpression_Ignored ()
     {
       var expression = new UnknownExpression (typeof (object));
-      var result = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
+      var result = ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
 
       Assert.That (result, Is.SameAs (expression));
     }
@@ -119,7 +119,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     {
       var extensionExpression = new TestExtensionExpression (new QuerySourceReferenceExpression (_oldFromClause));
 
-      var result = (TestExtensionExpression) ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (extensionExpression, _querySourceMapping, true);
+      var result = (TestExtensionExpression) ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (extensionExpression, _querySourceMapping, true);
 
       var expectedExpression = new TestExtensionExpression (new QuerySourceReferenceExpression (_newFromClause));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, result);
@@ -130,7 +130,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     public void VisitUnmappedReference_Throws ()
     {
       var expression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
-      ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
+      ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
     }
 
     [Test]
@@ -138,14 +138,14 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     public void VisitUnmappedReference_IgnoreFalse_Throws ()
     {
       var expression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
-      ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
+      ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
     }
 
     [Test]
     public void VisitUnmappedReference_IgnoreTrue_Ignored ()
     {
       var expression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
-      var result = ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (expression, _querySourceMapping, false);
+      var result = ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (expression, _querySourceMapping, false);
 
       Assert.That (result, Is.SameAs (expression));
     }

@@ -29,20 +29,20 @@ using Rhino.Mocks;
 namespace Remotion.Linq.UnitTests.Parsing
 {
   [TestFixture]
-  public class ThrowingExpressionTreeVisitorTest
+  public class ThrowingExpressionVisitorTest
   {
-    private TestThrowingExpressionTreeVisitor _visitor;
+    private TestThrowingExpressionVisitor _visitor;
 
     [SetUp]
     public void SetUp ()
     {
-      _visitor = new TestThrowingExpressionTreeVisitor ();
+      _visitor = new TestThrowingExpressionVisitor ();
     }
 
     [Test]
     public void VisitExtension_ReducedExpressionIsVisited ()
     {
-      ExpressionTreeVisitor visitor = new TestThrowingConstantExpressionTreeVisitor();
+      RelinqExpressionVisitor visitor = new TestThrowingConstantExpressionVisitor();
       var constantExpression = Expression.Constant (0);
       var expression = new TestExtensionExpression (constantExpression);
 
@@ -56,11 +56,11 @@ namespace Remotion.Linq.UnitTests.Parsing
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitExtension: Test")]
     public void VisitExtension_NonReducibleExpression ()
     {
-      ExpressionTreeVisitor visitor = new TestThrowingConstantExpressionTreeVisitor ();
+      RelinqExpressionVisitor visitor = new TestThrowingConstantExpressionVisitor ();
 
       var nonReducibleExpression = MockRepository.GenerateStub<ExtensionExpression> (typeof (int));
       nonReducibleExpression
-          .Stub (stub => stub.Accept (Arg<ExpressionTreeVisitor>.Is.Anything))
+          .Stub (stub => stub.Accept (Arg<RelinqExpressionVisitor>.Is.Anything))
           .WhenCalled (mi => PrivateInvoke.InvokeNonPublicMethod (mi.Arguments[0], "VisitExtension", nonReducibleExpression))
           .Return (nonReducibleExpression);
       nonReducibleExpression.Stub (stub => stub.CanReduce).Return (false);
@@ -216,7 +216,7 @@ namespace Remotion.Linq.UnitTests.Parsing
       _visitor.Visit (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()));
     }
 
-    private void Visit (TestThrowingExpressionTreeVisitor visitor, ExpressionType nodeType)
+    private void Visit (TestThrowingExpressionVisitor visitor, ExpressionType nodeType)
     {
       visitor.Visit (ExpressionInstanceCreator.GetExpressionInstance (nodeType));
     }

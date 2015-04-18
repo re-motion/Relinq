@@ -113,7 +113,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return "Union(" + FormattingExpressionTreeVisitor.Format (Source2) + ")";
+      return "Union(" + FormattingExpressionVisitor.Format (Source2) + ")";
     }
   }
 }

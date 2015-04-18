@@ -111,7 +111,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return "Contains(" + FormattingExpressionTreeVisitor.Format (Item) + ")";
+      return "Contains(" + FormattingExpressionVisitor.Format (Item) + ")";
     }
   }
 }

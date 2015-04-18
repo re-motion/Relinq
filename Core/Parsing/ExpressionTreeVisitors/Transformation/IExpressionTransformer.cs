@@ -22,7 +22,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation
   /// <summary>
   /// <see cref="IExpressionTransformer{T}"/> is implemented by classes that transform <see cref="Expression"/> instances. The 
   /// <see cref="ExpressionTransformerRegistry"/> manages registration of <see cref="IExpressionTransformer{T}"/> instances, and the 
-  /// <see cref="TransformingExpressionTreeVisitor"/> applies the transformations.
+  /// <see cref="TransformingExpressionVisitor"/> applies the transformations.
   /// </summary>
   /// <typeparam name="T">The type of expressions handled by this <see cref="IExpressionTransformer{T}"/> implementation.</typeparam>
   /// <remarks>
@@ -31,7 +31,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation
   /// <see cref="ExpressionTransformation"/> only operates on <see cref="Expression"/> instances. 
   /// </para>
   /// <para>
-  /// <see cref="IExpressionTransformer{T}"/> can be used together with the <see cref="TransformingExpressionTreeVisitor"/> class by using the 
+  /// <see cref="IExpressionTransformer{T}"/> can be used together with the <see cref="TransformingExpressionVisitor"/> class by using the 
   /// <see cref="ExpressionTransformerRegistry"/> class as the transformation provider. <see cref="ExpressionTransformerRegistry"/> converts 
   /// strongly typed <see cref="IExpressionTransformer{T}"/> instances to weakly typed <see cref="ExpressionTransformation"/> delegate instances.
   /// </para>

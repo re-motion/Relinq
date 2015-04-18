@@ -145,7 +145,7 @@ namespace Remotion.Linq.Parsing.Structure
       if (expressionTree.Type == typeof (void))
       {
         throw new NotSupportedException (
-            string.Format ("Expressions of type void ('{0}') are not supported.", FormattingExpressionTreeVisitor.Format (expressionTree)));
+            string.Format ("Expressions of type void ('{0}') are not supported.", FormattingExpressionVisitor.Format (expressionTree)));
       }
 
       var processedExpressionTree = _processor.Process (expressionTree);
@@ -226,7 +226,7 @@ namespace Remotion.Linq.Parsing.Structure
 
     private IExpressionNode ParseNonQueryOperatorExpression (Expression expression, string associatedIdentifier)
     {
-      var preprocessedExpression = SubQueryFindingExpressionTreeVisitor.Process (expression, _nodeTypeProvider);
+      var preprocessedExpression = SubQueryFindingExpressionVisitor.Process (expression, _nodeTypeProvider);
 
       try
       {
@@ -241,7 +241,7 @@ namespace Remotion.Linq.Parsing.Structure
         var message = string.Format (
             "Cannot parse expression '{0}' as it has an unsupported type. Only query sources (that is, expressions that implement IEnumerable) "
             + "and query operators can be parsed.",
-            FormattingExpressionTreeVisitor.Format (preprocessedExpression));
+            FormattingExpressionVisitor.Format (preprocessedExpression));
         throw new NotSupportedException (message, ex);
       }
     }

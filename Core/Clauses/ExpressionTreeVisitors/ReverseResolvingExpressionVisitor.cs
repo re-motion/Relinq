@@ -37,7 +37,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
   /// The visitor generates the following <see cref="LambdaExpression"/>: <c>input => input.a.ID + input.b.ID</c>
   /// The lambda's input parameter has the same type as the ItemExpression.
   /// </example>
-  public class ReverseResolvingExpressionTreeVisitor : ExpressionTreeVisitor
+  public class ReverseResolvingExpressionVisitor : RelinqExpressionVisitor
   {
     /// <summary>
     /// Performs a reverse <see cref="IExpressionNode.Resolve"/> operation, i.e. creates a <see cref="LambdaExpression"/> from a given resolved expression, 
@@ -55,7 +55,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       ArgumentUtility.CheckNotNull ("resolvedExpression", resolvedExpression);
 
       var lambdaParameter = Expression.Parameter (itemExpression.Type, "input");
-      var visitor = new ReverseResolvingExpressionTreeVisitor (itemExpression, lambdaParameter);
+      var visitor = new ReverseResolvingExpressionVisitor (itemExpression, lambdaParameter);
       var result = visitor.Visit (resolvedExpression);
       return Expression.Lambda (result, lambdaParameter);
     }
@@ -81,7 +81,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
         throw new ArgumentOutOfRangeException ("parameterInsertionPosition");
 
       var lambdaParameter = Expression.Parameter (itemExpression.Type, "input");
-      var visitor = new ReverseResolvingExpressionTreeVisitor (itemExpression, lambdaParameter);
+      var visitor = new ReverseResolvingExpressionVisitor (itemExpression, lambdaParameter);
       var result = visitor.Visit (resolvedExpression.Body);
       
       var parameters = new List<ParameterExpression> (resolvedExpression.Parameters);
@@ -93,7 +93,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
     private readonly Expression _itemExpression;
     private readonly ParameterExpression _lambdaParameter;
 
-    private ReverseResolvingExpressionTreeVisitor (Expression itemExpression, ParameterExpression lambdaParameter)
+    private ReverseResolvingExpressionVisitor (Expression itemExpression, ParameterExpression lambdaParameter)
     {
       ArgumentUtility.CheckNotNull ("itemExpression", itemExpression);
       ArgumentUtility.CheckNotNull ("lambdaParameter", lambdaParameter);
@@ -108,7 +108,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
 
       try
       {
-        var accessorLambda = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (expression, _itemExpression, _lambdaParameter);
+        var accessorLambda = AccessorFindingExpressionVisitor.FindAccessorLambda (expression, _itemExpression, _lambdaParameter);
         return accessorLambda.Body;
       }
       catch (ArgumentException ex)
@@ -116,8 +116,8 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
         var message = string.Format (
             "Cannot create a LambdaExpression that retrieves the value of '{0}' from items with a structure of '{1}'. The item expression does not "
             + "contain the value or it is too complex.",
-            FormattingExpressionTreeVisitor.Format (expression),
-            FormattingExpressionTreeVisitor.Format (_itemExpression));
+            FormattingExpressionVisitor.Format (expression),
+            FormattingExpressionVisitor.Format (_itemExpression));
         throw new InvalidOperationException (message, ex);
       }
     }

@@ -14,13 +14,22 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
-
 using System;
+using System.Linq.Expressions;
 using Remotion.Linq.Parsing;
 
-namespace Remotion.Linq.Development.UnitTesting.Parsing
+namespace Remotion.Linq.UnitTests.Parsing
 {
-  public class TestableExpressionTreeVisitor : ExpressionTreeVisitor
+  public class TestThrowingConstantExpressionVisitor : ThrowingExpressionVisitor
   {
+    protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
+    {
+      throw new NotSupportedException ("Test of " + visitMethod + ": " + unhandledItem);
+    }
+
+    protected override System.Linq.Expressions.Expression VisitConstant (System.Linq.Expressions.ConstantExpression expression)
+    {
+      return Expression.Constant("ConstantExpression was visited");
+    }
   }
 }

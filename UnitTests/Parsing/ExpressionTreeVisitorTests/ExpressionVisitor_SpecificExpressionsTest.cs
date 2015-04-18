@@ -29,7 +29,7 @@ using Rhino.Mocks.Interfaces;
 namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 {
   [TestFixture]
-  public class ExpressionTreeVisitor_SpecificExpressionsTest : ExpressionTreeVisitorTestBase
+  public class ExpressionVisitor_SpecificExpressionsTest : ExpressionVisitorTestBase
   {
     [Test]
     public void VisitUnary_Unchanges ()
@@ -750,7 +750,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Expression type 'SpecialExpressionNode' is not supported by this ExpressionTreeVisitor.*\\.", MatchType = MessageMatch.Regex)]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Expression type 'SpecialExpressionNode' is not supported by this ExpressionVisitor.*\\.", MatchType = MessageMatch.Regex)]
     public void VisitUnknownNonExtension ()
     {
       var expressionNode = new SpecialExpressionNode ((ExpressionType) (-1), typeof (int));

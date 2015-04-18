@@ -23,7 +23,7 @@ using Remotion.Linq.Parsing;
 
 namespace Remotion.Linq.UnitTests.Parsing
 {
-  public class TestThrowingExpressionTreeVisitor : ThrowingExpressionTreeVisitor
+  public class TestThrowingExpressionVisitor : ThrowingExpressionVisitor
   {
     public new Expression Visit (Expression expression)
     {
@@ -48,7 +48,7 @@ namespace Remotion.Linq.UnitTests.Parsing
     protected override TResult VisitUnhandledItem<TItem, TResult> (TItem unhandledItem, string visitMethod, Func<TItem, TResult> baseBehavior)
     {
       var baseBehaviorCalledMethod = GetCalledMethod (baseBehavior.Method.GetMethodBody ());
-      Assert.That (baseBehaviorCalledMethod, Is.EqualTo (typeof (ExpressionTreeVisitor).GetMethod (visitMethod, BindingFlags.NonPublic | BindingFlags.Instance)));
+      Assert.That (baseBehaviorCalledMethod, Is.EqualTo (typeof (RelinqExpressionVisitor).GetMethod (visitMethod, BindingFlags.NonPublic | BindingFlags.Instance)));
 
       return base.VisitUnhandledItem (unhandledItem, visitMethod, baseBehavior);
     }
@@ -67,7 +67,7 @@ namespace Remotion.Linq.UnitTests.Parsing
       ++offset;
       Assert.That (offset < il.Length - 4, "Assertion failed.");
       var methodToken = il[offset] | (il[offset + 1] << 8) | (il[offset + 2] << 16) | (il[offset + 3] << 24);
-      return (MethodInfo) typeof (ThrowingExpressionTreeVisitor).Module.ResolveMethod (methodToken);
+      return (MethodInfo) typeof (ThrowingExpressionVisitor).Module.ResolveMethod (methodToken);
     }
   }
 }

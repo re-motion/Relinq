@@ -52,7 +52,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       var clause = GetQuerySourceForNode (referencedNode, context);
       var referenceExpression = new QuerySourceReferenceExpression (clause);
 
-      return ReplacingExpressionTreeVisitor.Replace (parameterToReplace, referenceExpression, expression);
+      return ReplacingExpressionVisitor.Replace (parameterToReplace, referenceExpression, expression);
     }
 
     /// <summary>

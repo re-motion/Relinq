@@ -73,7 +73,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       // we modify the structure of the stream of data coming into this node by our selector,
       // so we first resolve the selector, then we substitute the result for the inputParameter in the expressionToBeResolved
       var resolvedSelector = GetResolvedSelector (clauseGenerationContext);
-      return ReplacingExpressionTreeVisitor.Replace (inputParameter, resolvedSelector, expressionToBeResolved);
+      return ReplacingExpressionVisitor.Replace (inputParameter, resolvedSelector, expressionToBeResolved);
     }
 
     protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)

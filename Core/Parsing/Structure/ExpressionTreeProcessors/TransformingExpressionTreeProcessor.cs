@@ -27,7 +27,7 @@ namespace Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors
   /// <see cref="IExpressionTranformationProvider"/> (eg., <see cref="ExpressionTransformerRegistry"/>).
   /// </summary>
   /// <remarks>
-  /// The <see cref="TransformingExpressionTreeProcessor"/> uses the <see cref="TransformingExpressionTreeVisitor"/> to apply the transformations.
+  /// The <see cref="TransformingExpressionTreeProcessor"/> uses the <see cref="TransformingExpressionVisitor"/> to apply the transformations.
   /// It performs a single visiting run over the <see cref="Expression"/> tree.
   /// </remarks>
   public sealed class TransformingExpressionTreeProcessor : IExpressionTreeProcessor
@@ -55,7 +55,7 @@ namespace Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
 
-      return TransformingExpressionTreeVisitor.Transform (expressionTree, _provider);
+      return TransformingExpressionVisitor.Transform (expressionTree, _provider);
     }
   }
 }

@@ -174,7 +174,7 @@
     <Compile Include="Clauses\Expressions\VBStringComparisonExpressionTest.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\IntegrationTests\AccessorFindingExpressionTreeVisitorIntegrationTest.cs" />
     <Compile Include="Clauses\ResultOperators\ConcatResultOperatorTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\MultiReplacingExpressionTreeVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\MultiReplacingExpressionVisitorTest.cs" />
     <Compile Include="Clauses\Expressions\PartialEvaluationExceptionExpressionTest.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformerRegistryTest.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\AttributeEvaluatingExpressionTransformerTest.cs" />
@@ -186,7 +186,7 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\NullableValueTransformerTest.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBCompareStringExpressionTransformerTest.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBInformationIsNothingExpressionTransformerTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\TransformingExpressionTreeVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\TransformingExpressionVisitorTest.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitorTests\TypeForNewExpression.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -214,7 +214,7 @@
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\SubQueryQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\MediumTrustQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\TestDomain\GenericClass2.cs" />
-    <Compile Include="Parsing\TestThrowingConstantExpressionTreeVisitor.cs" />
+    <Compile Include="Parsing\TestThrowingConstantExpressionVisitor.cs" />
     <Compile Include="Parsing\TupleExpressionBuilderTest.cs" />
     <Compile Include="TestDomain\BaseValue.cs" />
     <Compile Include="TestDomain\Course.cs" />
@@ -235,7 +235,7 @@
     <Compile Include="Clauses\Expressions\TestDomain\TestableExtensionExpression.cs" />
     <Compile Include="Clauses\Expressions\TestDomain\TestableExtensionExpressionWithSpecificVisitor.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\AccessorFindingExpressionTreeVisitorTest.cs" />
-    <Compile Include="Clauses\ExpressionTreeVisitors\CloningExpressionTreeVisitorTest.cs" />
+    <Compile Include="Clauses\ExpressionTreeVisitors\CloningExpressionVisitorTest.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\FormattingExpressionTreeVisitorTest.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\ReferenceReplacingExpressionTreeVisitorTest.cs" />
     <Compile Include="Clauses\ExpressionTreeVisitors\ReverseResolvingExpressionTreeVisitorTest.cs" />
@@ -300,17 +300,17 @@
     <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\MemberBindingTestBase.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\MethodInfoBindingTest.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\PropertyInfoBindingTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\PartialEvaluatingExpressionTreeVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\ReplacingExpressionTreeVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\SubQueryFindingExpressionTreeVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\TransparentIdentifierRemovingExpressionTreeVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionTreeVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\PartialEvaluatingExpressionVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\ReplacingExpressionVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\SubQueryFindingExpressionVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\TransparentIdentifierRemovingExpressionVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionVisitorTest.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitors\UnknownExpression.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitorTests\ExpressionInstanceCreator.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitorTests\ExpressionTreeVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitorTests\ExpressionTreeVisitor_BinaryExpressionsTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitorTests\ExpressionTreeVisitor_SpecificExpressionsTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitorTests\ExpressionTreeVisitorTestBase.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitorTests\ExpressionVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitorTests\ExpressionVisitor_BinaryExpressionsTest.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitorTests\ExpressionVisitor_SpecificExpressionsTest.cs" />
+    <Compile Include="Parsing\ExpressionTreeVisitorTests\ExpressionVisitorTestBase.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitorTests\SimpleClass.cs" />
     <Compile Include="Parsing\ExpressionTreeVisitorTests\SpecialExpressionNode.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeParserTest.cs" />
@@ -375,8 +375,8 @@
     <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\TestDomain\GenericClass.cs" />
     <Compile Include="Parsing\Structure\TestDomain\NonGenericFakeCollection.cs" />
     <Compile Include="Parsing\Structure\TestDomain\QueryableFakeWithCount.cs" />
-    <Compile Include="Parsing\TestThrowingExpressionTreeVisitor.cs" />
-    <Compile Include="Parsing\ThrowingExpressionTreeVisitorTest.cs" />
+    <Compile Include="Parsing\TestThrowingExpressionVisitor.cs" />
+    <Compile Include="Parsing\ThrowingExpressionVisitorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

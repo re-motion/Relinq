@@ -101,7 +101,7 @@ namespace Remotion.Linq.Clauses
 
     public override string ToString ()
     {
-      var result = string.Format ("from {0} {1} in {2}", ItemType.Name, ItemName, FormattingExpressionTreeVisitor.Format (FromExpression));
+      var result = string.Format ("from {0} {1} in {2}", ItemType.Name, ItemName, FormattingExpressionVisitor.Format (FromExpression));
       return result;
     }
 

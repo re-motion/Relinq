@@ -102,7 +102,7 @@ namespace Remotion.Linq.Clauses
 
     public override string ToString ()
     {
-      return "where " + FormattingExpressionTreeVisitor.Format (Predicate);
+      return "where " + FormattingExpressionVisitor.Format (Predicate);
     }
   }
 }

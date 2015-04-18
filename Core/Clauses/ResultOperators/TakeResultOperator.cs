@@ -94,7 +94,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return "Take(" + FormattingExpressionTreeVisitor.Format (Count) + ")";
+      return "Take(" + FormattingExpressionVisitor.Format (Count) + ")";
     }
   }
 }

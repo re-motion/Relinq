@@ -75,7 +75,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     [Test]
     public void VisitChildren_ReturnsSameExpression ()
     {
-      var visitorMock = MockRepository.GenerateStrictMock<ExpressionTreeVisitor> ();
+      var visitorMock = MockRepository.GenerateStrictMock<RelinqExpressionVisitor> ();
 
       visitorMock
           .Expect (mock => mock.Visit (_evaluatedExpression))
@@ -92,7 +92,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     public void VisitChildren_ReturnsNewExpression ()
     {
       var newExpression = Expression.Equal (Expression.Constant ("string1"), Expression.Constant ("string"));
-      var visitorMock = MockRepository.GenerateStrictMock<ExpressionTreeVisitor> ();
+      var visitorMock = MockRepository.GenerateStrictMock<RelinqExpressionVisitor> ();
 
       visitorMock
           .Expect (mock => mock.Visit (_evaluatedExpression))

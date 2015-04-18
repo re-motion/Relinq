@@ -42,7 +42,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors.IntegrationTest
 
       var inputParameter = Expression.Parameter (resultInitExpression.Type, "input");
 
-      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (
+      var result = AccessorFindingExpressionVisitor.FindAccessorLambda (
           searchedExpression: derivedValueStringValuePropertyExpression,
           fullExpression: resultInitExpression,
           inputParameter: inputParameter);
@@ -81,7 +81,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors.IntegrationTest
 
       var inputParameter = Expression.Parameter (typeof (Result<DerivedValue>), "input");
 
-      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (
+      var result = AccessorFindingExpressionVisitor.FindAccessorLambda (
           searchedExpression: derivedValueStringValuePropertyExpression,
           fullExpression: resultInitExpression,
           inputParameter: inputParameter);
@@ -109,7 +109,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors.IntegrationTest
 
       var inputParameter = Expression.Parameter (typeof (Result<BaseValue>), "input");
 
-      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (
+      var result = AccessorFindingExpressionVisitor.FindAccessorLambda (
           searchedExpression: derivedValueStringValuePropertyExpression,
           fullExpression: resultInitExpression,
           inputParameter: inputParameter);

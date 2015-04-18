@@ -65,7 +65,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     [Test]
     public void Accept_CallsVisitExtension ()
     {
-      var visitorMock = _mockRepository.StrictMock<ExpressionTreeVisitor>();
+      var visitorMock = _mockRepository.StrictMock<RelinqExpressionVisitor>();
 
       visitorMock
           .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (visitorMock, "VisitExtension", _expression))
@@ -80,7 +80,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     [Test]
     public void Accept_ReturnsResultOf_VisitExtension ()
     {
-      var visitorMock = _mockRepository.StrictMock<ExpressionTreeVisitor> ();
+      var visitorMock = _mockRepository.StrictMock<RelinqExpressionVisitor> ();
       var expectedResult = Expression.Constant (0);
 
       visitorMock

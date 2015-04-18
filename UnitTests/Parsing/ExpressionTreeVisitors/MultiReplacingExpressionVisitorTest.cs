@@ -15,6 +15,7 @@
 // under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
@@ -26,44 +27,53 @@ using Remotion.Linq.UnitTests.TestDomain;
 namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
 {
   [TestFixture]
-  public class ReplacingExpressionTreeVisitorTest
+  public class MultiReplacingExpressionVisitorTest
   {
-    private ParameterExpression _replacedNode;
-    private ParameterExpression _replacementNode;
+    private ParameterExpression _replacedNode1;
+    private ParameterExpression _replacementNode1;
+    private ParameterExpression _replacedNode2;
+    private ParameterExpression _replacementNode2;
+
+    private Dictionary<Expression, Expression> _mapping;
 
     [SetUp]
     public void SetUp ()
     {
-      _replacedNode = ExpressionHelper.CreateParameterExpression ("replaced node");
-      _replacementNode = ExpressionHelper.CreateParameterExpression ("replacement node");
+      _replacedNode1 = ExpressionHelper.CreateParameterExpression ("replaced node 1");
+      _replacementNode1 = ExpressionHelper.CreateParameterExpression ("replacement node 1");
+
+      _replacedNode2 = ExpressionHelper.CreateParameterExpression ("replaced node 2");
+      _replacementNode2 = ExpressionHelper.CreateParameterExpression ("replacement node 2");
+
+      _mapping = new Dictionary<Expression, Expression> { { _replacedNode1, _replacementNode1 }, { _replacedNode2, _replacementNode2 } };
     }
 
     [Test]
-    public void ReplacesGivenNode_ByGivenReplacement ()
+    public void ReplacesGivenNode_ByReplacement ()
     {
-      var tree = _replacedNode;
+      var tree = _replacedNode2;
 
-      var result = ReplacingExpressionTreeVisitor.Replace (_replacedNode, _replacementNode, tree);
-      Assert.That (result, Is.SameAs (_replacementNode));
+      var result = MultiReplacingExpressionVisitor.Replace (_mapping, tree);
+      Assert.That (result, Is.SameAs (_replacementNode2));
     }
 
     [Test]
-    public void IgnoresTree_WhenReplacedNodeDoesNotExist ()
+    public void IgnoresTree_WhenReplacedNodesDoNotExist ()
     {
       var tree = ExpressionHelper.CreateLambdaExpression();
 
-      var result = ReplacingExpressionTreeVisitor.Replace (_replacedNode, _replacementNode, tree);
+      var result = MultiReplacingExpressionVisitor.Replace (_mapping, tree);
       Assert.That (result, Is.SameAs (tree));
     }
 
     [Test]
-    public void ReplacesTreePart ()
+    public void ReplacesTreeParts ()
     {
-      var tree = Expression.MakeBinary (ExpressionType.Add, Expression.Constant (0), _replacedNode);
+      var tree = Expression.MakeBinary (ExpressionType.Add, _replacedNode1, _replacedNode2);
 
-      var result = ReplacingExpressionTreeVisitor.Replace (_replacedNode, _replacementNode, tree);
+      var result = MultiReplacingExpressionVisitor.Replace (_mapping, tree);
 
-      var expectedResult = Expression.MakeBinary (ExpressionType.Add, Expression.Constant (0), _replacementNode);
+      var expectedResult = Expression.MakeBinary (ExpressionType.Add, _replacementNode1, _replacementNode2);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
@@ -72,13 +82,14 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     {
       var replacedNode = ExpressionHelper.CreateQueryable<Cook> ().Expression;
       var replacementNode = Expression.Constant (null, typeof (Cook[]));
+      var mapping = new Dictionary<Expression, Expression> { { replacedNode, replacementNode } };
 
       var subQueryMainFromClause = new MainFromClause ("c", typeof (Cook), replacedNode);
       var subQuery = ExpressionHelper.CreateQueryModel (subQueryMainFromClause);
 
       var tree = new SubQueryExpression (subQuery);
 
-      ReplacingExpressionTreeVisitor.Replace (replacedNode, replacementNode, tree);
+      MultiReplacingExpressionVisitor.Replace (mapping, tree);
 
       Assert.That (subQueryMainFromClause.FromExpression, Is.SameAs (replacementNode));
     }
@@ -87,7 +98,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     public void VisitUnknownNonExtensionExpression_Ignored ()
     {
       var expression = new UnknownExpression (typeof (object));
-      var result = ReplacingExpressionTreeVisitor.Replace (_replacedNode, _replacementNode, expression);
+      var result = MultiReplacingExpressionVisitor.Replace (_mapping, expression);
 
       Assert.That (result, Is.SameAs (expression));
     }
@@ -95,11 +106,11 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     [Test]
     public void VisitExtensionExpression_DescendsIntoChildren ()
     {
-      var tree = new VBStringComparisonExpression (_replacedNode, true);
+      var tree = new VBStringComparisonExpression (_replacedNode1, true);
 
-      var result = ReplacingExpressionTreeVisitor.Replace (_replacedNode, _replacementNode, tree);
+      var result = MultiReplacingExpressionVisitor.Replace (_mapping, tree);
 
-      var expected = new VBStringComparisonExpression (_replacementNode, true);
+      var expected = new VBStringComparisonExpression (_replacementNode1, true);
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
     }
   }

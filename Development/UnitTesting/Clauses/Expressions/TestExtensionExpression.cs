@@ -54,7 +54,7 @@ namespace Remotion.Linq.Development.UnitTesting.Clauses.Expressions
       return _expression;
     }
 
-    protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    protected override Expression VisitChildren (RelinqExpressionVisitor visitor)
     {
       var result = visitor.Visit (_expression);
       if (result != _expression)
@@ -65,7 +65,7 @@ namespace Remotion.Linq.Development.UnitTesting.Clauses.Expressions
 
     public override string ToString ()
     {
-      return "Test(" + FormattingExpressionTreeVisitor.Format (_expression) + ")";
+      return "Test(" + FormattingExpressionVisitor.Format (_expression) + ")";
     }
   }
 }

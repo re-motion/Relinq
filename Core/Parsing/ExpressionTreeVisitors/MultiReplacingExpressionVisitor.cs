@@ -27,7 +27,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
   /// <see cref="QueryModel"/> is changed by the replacement operations, it is not copied. The replacement node is not recursively searched for 
   /// occurrences of <see cref="Expression"/> nodes to be replaced.
   /// </summary>
-  public class MultiReplacingExpressionTreeVisitor : ExpressionTreeVisitor
+  public class MultiReplacingExpressionVisitor : RelinqExpressionVisitor
   {
     private readonly IDictionary<Expression, Expression> _expressionMapping;
 
@@ -36,11 +36,11 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
       ArgumentUtility.CheckNotNull ("expressionMapping", expressionMapping);
       ArgumentUtility.CheckNotNull ("sourceTree", sourceTree);
 
-      var visitor = new MultiReplacingExpressionTreeVisitor (expressionMapping);
+      var visitor = new MultiReplacingExpressionVisitor (expressionMapping);
       return visitor.Visit (sourceTree);
     }
 
-    private MultiReplacingExpressionTreeVisitor (IDictionary<Expression, Expression> expressionMapping)
+    private MultiReplacingExpressionVisitor (IDictionary<Expression, Expression> expressionMapping)
     {
       ArgumentUtility.CheckNotNull ("expressionMapping", expressionMapping);
 

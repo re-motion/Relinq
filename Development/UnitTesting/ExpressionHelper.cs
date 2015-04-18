@@ -306,7 +306,7 @@ namespace Remotion.Linq.Development.UnitTesting
       ArgumentUtility.CheckNotNull ("sourceToReference", sourceToReference);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
 
-      return ReplacingExpressionTreeVisitor.Replace (
+      return ReplacingExpressionVisitor.Replace (
           expressionToBeResolved.Parameters[0],
           new QuerySourceReferenceExpression (sourceToReference),
           expressionToBeResolved.Body);
@@ -326,7 +326,7 @@ namespace Remotion.Linq.Development.UnitTesting
                                   { expressionToBeResolved.Parameters[0], new QuerySourceReferenceExpression (sourceToReference1) },
                                   { expressionToBeResolved.Parameters[1], new QuerySourceReferenceExpression (sourceToReference2) }
                               };
-      var result = MultiReplacingExpressionTreeVisitor.Replace (expressionMapping, expressionToBeResolved.Body);
+      var result = MultiReplacingExpressionVisitor.Replace (expressionMapping, expressionToBeResolved.Body);
       return result;
     }
 
@@ -347,7 +347,7 @@ namespace Remotion.Linq.Development.UnitTesting
                                   { expressionToBeResolved.Parameters[1], new QuerySourceReferenceExpression (sourceToReference2) },
                                   { expressionToBeResolved.Parameters[2], new QuerySourceReferenceExpression (sourceToReference3) },
                               };
-      var result = MultiReplacingExpressionTreeVisitor.Replace (expressionMapping, expressionToBeResolved.Body);
+      var result = MultiReplacingExpressionVisitor.Replace (expressionMapping, expressionToBeResolved.Body);
       return result;
     }
 
@@ -361,7 +361,7 @@ namespace Remotion.Linq.Development.UnitTesting
       
       var parameterToResolve = expressionToBeResolved.Parameters[parameterToResolveIndex];
 
-      var resolvedBody = ReplacingExpressionTreeVisitor.Replace (
+      var resolvedBody = ReplacingExpressionVisitor.Replace (
           parameterToResolve,
           new QuerySourceReferenceExpression (source),
           expressionToBeResolved.Body);

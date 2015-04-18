@@ -34,7 +34,7 @@ using Rhino.Mocks.Interfaces;
 namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 {
   [TestFixture]
-  public class ExpressionTreeVisitorTest : ExpressionTreeVisitorTestBase
+  public class ExpressionVisitorTest : ExpressionVisitorTestBase
   {
     [Test]
     public void IsSupportedStandardExpression_True ()
@@ -55,7 +55,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
           };
 
       var visitMethodExpressionTypes = new HashSet<Type> (
-          from m in typeof (ExpressionTreeVisitor).GetMethods (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+          from m in typeof (RelinqExpressionVisitor).GetMethods (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
           where m.Name.StartsWith ("Visit")
           let parameters = m.GetParameters()
           where parameters.Length == 1
@@ -72,7 +72,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
             Is.True, 
             "Visit method for {0}", 
             expressionInstance.GetType ());
-        Assert.That (ExpressionTreeVisitor.IsSupportedStandardExpression (expressionInstance), Is.True);
+        Assert.That (RelinqExpressionVisitor.IsSupportedStandardExpression (expressionInstance), Is.True);
       }
     }
 
@@ -80,73 +80,73 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     public void IsSupportedStandardExpression_False ()
     {
       var extensionExpression = new TestExtensionExpression (Expression.Constant (0));
-      Assert.That (ExpressionTreeVisitor.IsSupportedStandardExpression (extensionExpression), Is.False);
+      Assert.That (RelinqExpressionVisitor.IsSupportedStandardExpression (extensionExpression), Is.False);
 
       var unknownExpression = new UnknownExpression (typeof (int));
-      Assert.That (ExpressionTreeVisitor.IsSupportedStandardExpression (unknownExpression), Is.False);
+      Assert.That (RelinqExpressionVisitor.IsSupportedStandardExpression (unknownExpression), Is.False);
 
       var querySourceReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
-      Assert.That (ExpressionTreeVisitor.IsSupportedStandardExpression (querySourceReferenceExpression), Is.False);
+      Assert.That (RelinqExpressionVisitor.IsSupportedStandardExpression (querySourceReferenceExpression), Is.False);
 
       var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook>());
-      Assert.That (ExpressionTreeVisitor.IsSupportedStandardExpression (subQueryExpression), Is.False);
+      Assert.That (RelinqExpressionVisitor.IsSupportedStandardExpression (subQueryExpression), Is.False);
     }
 
     [Test]
     public void IsRelinqExpression ()
     {
       var querySourceReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
-      Assert.That (ExpressionTreeVisitor.IsRelinqExpression (querySourceReferenceExpression), Is.True);
+      Assert.That (RelinqExpressionVisitor.IsRelinqExpression (querySourceReferenceExpression), Is.True);
 
       var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
-      Assert.That (ExpressionTreeVisitor.IsRelinqExpression (subQueryExpression), Is.True);
+      Assert.That (RelinqExpressionVisitor.IsRelinqExpression (subQueryExpression), Is.True);
 
       var standardExpression = Expression.Constant (0);
-      Assert.That (ExpressionTreeVisitor.IsRelinqExpression (standardExpression), Is.False);
+      Assert.That (RelinqExpressionVisitor.IsRelinqExpression (standardExpression), Is.False);
       
       var extensionExpression = new TestExtensionExpression (Expression.Constant (0));
-      Assert.That (ExpressionTreeVisitor.IsRelinqExpression (extensionExpression), Is.False);
+      Assert.That (RelinqExpressionVisitor.IsRelinqExpression (extensionExpression), Is.False);
 
       var unknownExpression = new UnknownExpression (typeof (int));
-      Assert.That (ExpressionTreeVisitor.IsRelinqExpression (unknownExpression), Is.False);
+      Assert.That (RelinqExpressionVisitor.IsRelinqExpression (unknownExpression), Is.False);
     }
 
     [Test]
     public void IsExtensionExpression ()
     {
       var extensionExpression = new TestExtensionExpression (Expression.Constant (0));
-      Assert.That (ExpressionTreeVisitor.IsExtensionExpression (extensionExpression), Is.True);
+      Assert.That (RelinqExpressionVisitor.IsExtensionExpression (extensionExpression), Is.True);
 
       var standardExpression = Expression.Constant (0);
-      Assert.That (ExpressionTreeVisitor.IsExtensionExpression (standardExpression), Is.False);
+      Assert.That (RelinqExpressionVisitor.IsExtensionExpression (standardExpression), Is.False);
 
       var unknownExpression = new UnknownExpression (typeof (int));
-      Assert.That (ExpressionTreeVisitor.IsExtensionExpression (unknownExpression), Is.False);
+      Assert.That (RelinqExpressionVisitor.IsExtensionExpression (unknownExpression), Is.False);
 
       var querySourceReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
-      Assert.That (ExpressionTreeVisitor.IsExtensionExpression (querySourceReferenceExpression), Is.False);
+      Assert.That (RelinqExpressionVisitor.IsExtensionExpression (querySourceReferenceExpression), Is.False);
 
       var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
-      Assert.That (ExpressionTreeVisitor.IsExtensionExpression (subQueryExpression), Is.False);
+      Assert.That (RelinqExpressionVisitor.IsExtensionExpression (subQueryExpression), Is.False);
     }
 
     [Test]
     public void IsUnknownNonExtensionExpression ()
     {
       var unknownExpression = new UnknownExpression (typeof (int));
-      Assert.That (ExpressionTreeVisitor.IsUnknownNonExtensionExpression (unknownExpression), Is.True);
+      Assert.That (RelinqExpressionVisitor.IsUnknownNonExtensionExpression (unknownExpression), Is.True);
 
       var standardExpression = Expression.Constant (0);
-      Assert.That (ExpressionTreeVisitor.IsUnknownNonExtensionExpression (standardExpression), Is.False);
+      Assert.That (RelinqExpressionVisitor.IsUnknownNonExtensionExpression (standardExpression), Is.False);
 
       var extensionExpression = new TestExtensionExpression (Expression.Constant (0));
-      Assert.That (ExpressionTreeVisitor.IsUnknownNonExtensionExpression (extensionExpression), Is.False);
+      Assert.That (RelinqExpressionVisitor.IsUnknownNonExtensionExpression (extensionExpression), Is.False);
 
       var querySourceReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
-      Assert.That (ExpressionTreeVisitor.IsUnknownNonExtensionExpression (querySourceReferenceExpression), Is.False);
+      Assert.That (RelinqExpressionVisitor.IsUnknownNonExtensionExpression (querySourceReferenceExpression), Is.False);
 
       var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
-      Assert.That (ExpressionTreeVisitor.IsUnknownNonExtensionExpression (subQueryExpression), Is.False);
+      Assert.That (RelinqExpressionVisitor.IsUnknownNonExtensionExpression (subQueryExpression), Is.False);
     }
 
     [Test]
@@ -156,7 +156,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       var tupleType = typeof (Tuple<double, object, string>);
       var members = new MemberInfo[] { tupleType.GetProperty ("Item1"), tupleType.GetMethod ("get_Item2"), tupleType.GetProperty ("Item3") };
 
-      var result = ExpressionTreeVisitor.AdjustArgumentsForNewExpression (arguments, members).ToArray();
+      var result = RelinqExpressionVisitor.AdjustArgumentsForNewExpression (arguments, members).ToArray();
 
       Assert.That (result.Length, Is.EqualTo (3));
       var expected1 = Expression.Convert (arguments[0], typeof (double));
@@ -171,7 +171,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       var expectedResult = Expression.Constant (0);
 
-      var visitor = new TestableExpressionTreeVisitor();
+      var visitor = new TestableExpressionVisitor();
 
       var extensionExpressionMock = MockRepository.StrictMock<ExtensionExpression> (typeof (int));
       extensionExpressionMock.Expect (mock => mock.Accept (visitor)).Return (expectedResult);
@@ -192,7 +192,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     [Test]
     public void Visit_Null ()
     {
-      var visitor = MockRepository.PartialMock<ExpressionTreeVisitor>();
+      var visitor = MockRepository.PartialMock<RelinqExpressionVisitor>();
       MockRepository.ReplayAll();
       Assert.That (visitor.Visit (null), Is.Null);
     }
@@ -467,7 +467,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
 
     private void CheckDelegation (string methodName, params Expression[] expressions)
     {
-      var visitorMock = MockRepository.StrictMock<ExpressionTreeVisitor>();
+      var visitorMock = MockRepository.StrictMock<RelinqExpressionVisitor>();
 
       MethodInfo methodToBeCalled = visitorMock.GetType().GetMethod (methodName, BindingFlags.NonPublic | BindingFlags.Instance);
       Assert.That (methodToBeCalled, Is.Not.Null);

@@ -22,17 +22,17 @@ using Remotion.Utilities;
 namespace Remotion.Linq.Parsing
 {
   /// <summary>
-  /// Implements an <see cref="ExpressionTreeVisitor"/> that throws an exception for every expression type that is not explicitly supported.
+  /// Implements an <see cref="RelinqExpressionVisitor"/> that throws an exception for every expression type that is not explicitly supported.
   /// Inherit from this class to ensure that an exception is thrown when an expression is passed 
   /// </summary>
-  public abstract class ThrowingExpressionTreeVisitor : ExpressionTreeVisitor
+  public abstract class ThrowingExpressionVisitor : RelinqExpressionVisitor
   {
     protected abstract Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod);
 
     /// <summary>
     /// Called when an unhandled item is visited. This method provides the item the visitor cannot handle (<paramref name="unhandledItem"/>), 
     /// the <paramref name="visitMethod"/> that is not implemented in the visitor, and a delegate that can be used to invoke the 
-    /// <paramref name="baseBehavior"/> of the <see cref="ExpressionTreeVisitor"/> class. The default behavior of this method is to call the
+    /// <paramref name="baseBehavior"/> of the <see cref="RelinqExpressionVisitor"/> class. The default behavior of this method is to call the
     /// <see cref="CreateUnhandledItemException{T}"/> method, but it can be overridden to do something else.
     /// </summary>
     /// <typeparam name="TItem">The type of the item that could not be handled. Either an <see cref="Expression"/> type, a <see cref="MemberBinding"/> 
@@ -40,7 +40,7 @@ namespace Remotion.Linq.Parsing
     /// <typeparam name="TResult">The result type expected for the visited <paramref name="unhandledItem"/>.</typeparam>
     /// <param name="unhandledItem">The unhandled item.</param>
     /// <param name="visitMethod">The visit method that is not implemented.</param>
-    /// <param name="baseBehavior">The behavior exposed by <see cref="ExpressionTreeVisitor"/> for this item type.</param>
+    /// <param name="baseBehavior">The behavior exposed by <see cref="RelinqExpressionVisitor"/> for this item type.</param>
     /// <returns>An object to replace <paramref name="unhandledItem"/> in the expression tree. Alternatively, the method can throw any exception.</returns>
     protected virtual TResult VisitUnhandledItem<TItem, TResult> (TItem unhandledItem, string visitMethod, Func<TItem, TResult> baseBehavior)
         where TItem: TResult

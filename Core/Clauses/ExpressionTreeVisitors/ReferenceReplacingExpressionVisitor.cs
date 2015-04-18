@@ -26,7 +26,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
   /// Takes an expression and replaces all <see cref="QuerySourceReferenceExpression"/> instances, as defined by a given <see cref="QuerySourceMapping"/>.
   /// This is used whenever references to query sources should be replaced by a transformation.
   /// </summary>
-  public class ReferenceReplacingExpressionTreeVisitor : ExpressionTreeVisitor
+  public class ReferenceReplacingExpressionVisitor : RelinqExpressionVisitor
   {
     /// <summary>
     /// Takes an expression and replaces all <see cref="QuerySourceReferenceExpression"/> instances, as defined by a given 
@@ -44,13 +44,13 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("querySourceMapping", querySourceMapping);
 
-      return new ReferenceReplacingExpressionTreeVisitor (querySourceMapping, throwOnUnmappedReferences).Visit (expression);
+      return new ReferenceReplacingExpressionVisitor (querySourceMapping, throwOnUnmappedReferences).Visit (expression);
     }
 
     private readonly QuerySourceMapping _querySourceMapping;
     private readonly bool _throwOnUnmappedReferences;
 
-    protected ReferenceReplacingExpressionTreeVisitor (QuerySourceMapping querySourceMapping, bool throwOnUnmappedReferences)
+    protected ReferenceReplacingExpressionVisitor (QuerySourceMapping querySourceMapping, bool throwOnUnmappedReferences)
     {
       ArgumentUtility.CheckNotNull ("querySourceMapping", querySourceMapping);
       _querySourceMapping = querySourceMapping;

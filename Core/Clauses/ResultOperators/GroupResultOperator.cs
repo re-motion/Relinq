@@ -156,10 +156,10 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
       var inputSequence = input.GetTypedSequence<TSource> ();
 
-      var keySelectorLambda = ReverseResolvingExpressionTreeVisitor.ReverseResolve (input.DataInfo.ItemExpression, KeySelector);
+      var keySelectorLambda = ReverseResolvingExpressionVisitor.ReverseResolve (input.DataInfo.ItemExpression, KeySelector);
       var keySelector = (Func<TSource, TKey>) keySelectorLambda.Compile ();
 
-      var elementSelectorLambda = ReverseResolvingExpressionTreeVisitor.ReverseResolve (input.DataInfo.ItemExpression, ElementSelector);
+      var elementSelectorLambda = ReverseResolvingExpressionVisitor.ReverseResolve (input.DataInfo.ItemExpression, ElementSelector);
       var elementSelector = (Func<TSource, TElement>) elementSelectorLambda.Compile ();
 
       var resultSequence = inputSequence.GroupBy (keySelector, elementSelector);
@@ -176,8 +176,8 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       return string.Format (
           "GroupBy({0}, {1})", 
-          FormattingExpressionTreeVisitor.Format (KeySelector), 
-          FormattingExpressionTreeVisitor.Format (ElementSelector));
+          FormattingExpressionVisitor.Format (KeySelector), 
+          FormattingExpressionVisitor.Format (ElementSelector));
     }
   }
 }

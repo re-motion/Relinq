@@ -28,7 +28,7 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
   /// to cloned clauses in the given <see cref="QuerySourceMapping"/>, otherwise an expression is thrown. This is used by <see cref="QueryModel.Clone()"/>
   /// to adjust references to the old <see cref="QueryModel"/> with references to the new <see cref="QueryModel"/>.
   /// </summary>
-  public class CloningExpressionTreeVisitor : ReferenceReplacingExpressionTreeVisitor
+  public class CloningExpressionVisitor : ReferenceReplacingExpressionVisitor
   {
     /// <summary>
     /// Adjusts the given expression for cloning, that is replaces <see cref="QuerySourceReferenceExpression"/> and <see cref="SubQueryExpression"/> 
@@ -43,10 +43,10 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("querySourceMapping", querySourceMapping);
 
-      return new CloningExpressionTreeVisitor (querySourceMapping, false).Visit (expression);
+      return new CloningExpressionVisitor (querySourceMapping, false).Visit (expression);
     }
     
-    private CloningExpressionTreeVisitor (QuerySourceMapping querySourceMapping, bool ignoreUnmappedReferences)
+    private CloningExpressionVisitor (QuerySourceMapping querySourceMapping, bool ignoreUnmappedReferences)
       : base (querySourceMapping, ignoreUnmappedReferences)
     {
     }

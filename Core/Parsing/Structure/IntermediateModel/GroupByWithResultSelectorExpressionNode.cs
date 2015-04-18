@@ -129,7 +129,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
                                   { resultSelector.Parameters[1], groupParameter },
                                   { resultSelector.Parameters[0], keyExpression }
                               };
-      var bodyWithGroupingAndKeyReplaced = MultiReplacingExpressionTreeVisitor.Replace (expressionMapping, resultSelector.Body);
+      var bodyWithGroupingAndKeyReplaced = MultiReplacingExpressionVisitor.Replace (expressionMapping, resultSelector.Body);
       return Expression.Lambda (bodyWithGroupingAndKeyReplaced, groupParameter);
     }
 

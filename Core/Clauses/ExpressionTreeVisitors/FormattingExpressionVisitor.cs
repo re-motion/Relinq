@@ -28,16 +28,16 @@ namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
   /// to circumvent a limitation in the <see cref="Expression"/> class, where overriding <see cref="Expression.ToString"/> in custom expressions
   /// will not work.
   /// </summary>
-  public class FormattingExpressionTreeVisitor : ExpressionTreeVisitor
+  public class FormattingExpressionVisitor : RelinqExpressionVisitor
   {
     public static string Format (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
-      var transformedExpression = new FormattingExpressionTreeVisitor().Visit (expression);
+      var transformedExpression = new FormattingExpressionVisitor().Visit (expression);
       return transformedExpression.ToString();
     }
 
-    private FormattingExpressionTreeVisitor ()
+    private FormattingExpressionVisitor ()
     {
     }
 

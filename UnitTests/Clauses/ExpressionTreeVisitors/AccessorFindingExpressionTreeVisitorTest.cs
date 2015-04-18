@@ -65,7 +65,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     [Test]
     public void TrivialExpression ()
     {
-      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, _searchedExpression, _intInputParameter);
+      var result = AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, _searchedExpression, _intInputParameter);
 
       Expression<Func<int, int>> expectedResult = input => input;
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
@@ -78,7 +78,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
       var searchedExpression2 = new QuerySourceReferenceExpression (searchedExpression1.ReferencedQuerySource);
 
       var inputParameter = Expression.Parameter (typeof (Cook), "input");
-      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (searchedExpression1, searchedExpression2, inputParameter);
+      var result = AccessorFindingExpressionVisitor.FindAccessorLambda (searchedExpression1, searchedExpression2, inputParameter);
 
       Expression<Func<Cook, Cook>> expectedResult = input => input;
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
@@ -89,7 +89,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     {
       var parameter = Expression.Parameter (typeof (long), "input");
       var fullExpression = Expression.Convert (_searchedExpression, typeof (long));
-      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, parameter);
+      var result = AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, parameter);
 
       Expression<Func<long, int>> expectedResult = input => (int) input;
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
@@ -100,7 +100,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     {
       var parameter = Expression.Parameter (typeof (long), "input");
       var fullExpression = Expression.ConvertChecked (_searchedExpression, typeof (long));
-      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, parameter);
+      var result = AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, parameter);
 
       Expression<Func<long, int>> expectedResult = input => (int) input;
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
@@ -115,7 +115,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
           new[] { _searchedExpression, Expression.Constant (1) },
           _anonymousTypeAGetter,
           _anonymousTypeBGetter);
-      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
+      var result = AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
 
       var inputParameter = Expression.Parameter (typeof (AnonymousType), "input");
       var expectedResult = Expression.Lambda (
@@ -137,7 +137,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
           Expression.New (_anonymousTypeCtorWithoutArgs),
           Expression.Bind (_anonymousTypeAProperty, _searchedExpression),
           Expression.Bind (_anonymousTypeBProperty, Expression.Constant (1)));
-      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
+      var result = AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
 
       Expression<Func<AnonymousType, int>> expectedResult = input => input.a;
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
@@ -164,7 +164,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
           new Expression[] { Expression.Constant (2), innerExpression },
           outerAnonymousTypeAGetter,
           outerAnonymousTypeBGetter);
-      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _nestedInputParameter);
+      var result = AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _nestedInputParameter);
 
       var inputParameter = Expression.Parameter (typeof (AnonymousType<int, AnonymousType>), "input");
        // input => input.get_b().get_a()
@@ -196,7 +196,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
           Expression.Bind (outerAnonymousTypeAProperty, Expression.Constant (2)),
           Expression.Bind (outerAnonymousTypeBProperty, innerExpression));
 
-      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _nestedInputParameter);
+      var result = AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _nestedInputParameter);
 
       Expression<Func<AnonymousType<int, AnonymousType>, int>> expectedResult = input => input.b.a;
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
@@ -220,7 +220,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
           Expression.New (outerTypeCtor),
           Expression.Bind (outerTypeValueProperty, innerExpression));
 
-      var result = AccessorFindingExpressionTreeVisitor.FindAccessorLambda (searchedExpression, fullExpression, nestedInputParameter);
+      var result = AccessorFindingExpressionVisitor.FindAccessorLambda (searchedExpression, fullExpression, nestedInputParameter);
 
       Expression<Func<Result<BaseValue>, string>> expectedResult = input => ((DerivedValue) input.Value).StringValue;
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
@@ -236,7 +236,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
           Expression.Bind (_anonymousTypeAProperty, Expression.Constant (3)),
           Expression.Bind (_anonymousTypeBProperty, Expression.Constant (1)));
 
-      AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
+      AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
     }
 
     [Test]
@@ -249,7 +249,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
           Expression.Bind (_anonymousTypeAProperty, Expression.MakeBinary (ExpressionType.Add, _searchedExpression, _searchedExpression)),
           Expression.Bind (_anonymousTypeBProperty, Expression.Constant (1)));
 
-      AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
+      AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
     }
 
     [Test]
@@ -259,7 +259,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     {
       var fullExpression = Expression.New (_anonymousTypeCtorWithArgs, _searchedExpression, _searchedExpression);
 
-      AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
+      AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
     }
 
     [Test]
@@ -275,7 +275,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
           Expression.ListBind (anonymousTypeListProperty, Expression.ElementInit (listAddMethod, _searchedExpression)),
           Expression.Bind (_anonymousTypeBProperty, Expression.Constant (1)));
 
-      AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
+      AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
     }
 
     [Test]
@@ -284,7 +284,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     public void SearchedExpressionNotFound_AlthoughInUnaryPlusExpression ()
     {
       var fullExpression = Expression.UnaryPlus (_searchedExpression);
-      AccessorFindingExpressionTreeVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _intInputParameter);
+      AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _intInputParameter);
     }
   }
 }

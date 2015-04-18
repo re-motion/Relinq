@@ -34,7 +34,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     public void OrdinaryExpression ()
     {
       var expression = Expression.MakeBinary (ExpressionType.GreaterThan, Expression.Constant (1), Expression.Constant (2));
-      var formattedExpression = FormattingExpressionTreeVisitor.Format (expression);
+      var formattedExpression = FormattingExpressionVisitor.Format (expression);
       Assert.That (formattedExpression, Is.EqualTo ("(1 > 2)"));
     }
 
@@ -44,7 +44,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
       var referencedClause = ExpressionHelper.CreateMainFromClause_Int ("i", typeof (int), ExpressionHelper.CreateQueryable<Cook>());
       
       var expression = Expression.MakeBinary (ExpressionType.GreaterThan, new QuerySourceReferenceExpression (referencedClause), Expression.Constant (2));
-      var formattedExpression = FormattingExpressionTreeVisitor.Format (expression);
+      var formattedExpression = FormattingExpressionVisitor.Format (expression);
       Assert.That (formattedExpression, Is.EqualTo ("([i] > 2)"));
     }
 
@@ -55,7 +55,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
       var subQueryModel = ExpressionHelper.ParseQuery (queryExpression);
 
       var expression = Expression.MakeBinary (ExpressionType.GreaterThan, new SubQueryExpression (subQueryModel), Expression.Constant (2));
-      var formattedExpression = FormattingExpressionTreeVisitor.Format (expression);
+      var formattedExpression = FormattingExpressionVisitor.Format (expression);
       Assert.That (formattedExpression, Is.EqualTo ("({TestQueryable<Cook>() => Count()} > 2)"));
     }
 
@@ -63,7 +63,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     public void VisitUnknownNonExtensionExpression ()
     {
       var expression = new UnknownExpression (typeof (object));
-      var result = FormattingExpressionTreeVisitor.Format (expression);
+      var result = FormattingExpressionVisitor.Format (expression);
 
       Assert.That (result, Is.EqualTo("[-1]"));
     }
@@ -72,7 +72,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
     public void VisitExtensionExpression ()
     {
       var expression = new TestExtensionExpression (Expression.Constant (0));
-      var result = FormattingExpressionTreeVisitor.Format (expression);
+      var result = FormattingExpressionVisitor.Format (expression);
 
       Assert.That (result, Is.EqualTo ("Test(0)"));
     }

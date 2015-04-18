@@ -26,19 +26,19 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
   /// The transformations occur in post-order (transforming child <see cref="Expression"/> nodes before parent nodes). When a transformation changes 
   /// the current <see cref="Expression"/>, its child nodes and itself will be revisited (and may be transformed again).
   /// </summary>
-  public class TransformingExpressionTreeVisitor : ExpressionTreeVisitor
+  public class TransformingExpressionVisitor : RelinqExpressionVisitor
   {
     public static Expression Transform (Expression expression, IExpressionTranformationProvider tranformationProvider)
     {
       ArgumentUtility.CheckNotNull ("tranformationProvider", tranformationProvider);
       
-      var visitor = new TransformingExpressionTreeVisitor (tranformationProvider);
+      var visitor = new TransformingExpressionVisitor (tranformationProvider);
       return visitor.Visit (expression);
     }
 
     private readonly IExpressionTranformationProvider _tranformationProvider;
     
-    protected TransformingExpressionTreeVisitor (IExpressionTranformationProvider tranformationProvider)
+    protected TransformingExpressionVisitor (IExpressionTranformationProvider tranformationProvider)
     {
       ArgumentUtility.CheckNotNull ("tranformationProvider", tranformationProvider);
 

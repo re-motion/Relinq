@@ -31,13 +31,13 @@ namespace Remotion.Linq.Clauses.Expressions
   /// To treat this expression as if it were an ordinary <see cref="BinaryExpression"/>, call its <see cref="Reduce"/> method and visit the result.
   /// </para>
   /// <para>
-  /// Subclasses of <see cref="ThrowingExpressionTreeVisitor"/> that do not implement <see cref="IVBSpecificExpressionVisitor"/> will, by default, 
+  /// Subclasses of <see cref="ThrowingExpressionVisitor"/> that do not implement <see cref="IVBSpecificExpressionVisitor"/> will, by default, 
   /// automatically reduce this expression type to <see cref="BinaryExpression"/> in the 
-  /// <see cref="ThrowingExpressionTreeVisitor.VisitExtension"/> method.
+  /// <see cref="ThrowingExpressionVisitor.VisitExtension"/> method.
   /// </para>
   /// <para>
-  /// Subclasses of <see cref="ExpressionTreeVisitor"/> that do not implement <see cref="IVBSpecificExpressionVisitor"/> will, by default, 
-  /// ignore this expression and visit its child expressions via the <see cref="ExpressionTreeVisitor.VisitExtension"/> and 
+  /// Subclasses of <see cref="RelinqExpressionVisitor"/> that do not implement <see cref="IVBSpecificExpressionVisitor"/> will, by default, 
+  /// ignore this expression and visit its child expressions via the <see cref="RelinqExpressionVisitor.VisitExtension"/> and 
   /// <see cref="VisitChildren"/> methods.
   /// </para>
   /// </remarks>
@@ -77,7 +77,7 @@ namespace Remotion.Linq.Clauses.Expressions
       return _comparison;
     }
 
-    protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    protected internal override Expression VisitChildren (RelinqExpressionVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
 
@@ -88,7 +88,7 @@ namespace Remotion.Linq.Clauses.Expressions
         return this;
     }
 
-    public override Expression Accept (ExpressionTreeVisitor visitor)
+    public override Expression Accept (RelinqExpressionVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
 
@@ -101,7 +101,7 @@ namespace Remotion.Linq.Clauses.Expressions
 
     public override string ToString ()
     {
-      return string.Format ("VBCompareString({0}, {1})", FormattingExpressionTreeVisitor.Format(Comparison), TextCompare);
+      return string.Format ("VBCompareString({0}, {1})", FormattingExpressionVisitor.Format(Comparison), TextCompare);
     }
     
   }

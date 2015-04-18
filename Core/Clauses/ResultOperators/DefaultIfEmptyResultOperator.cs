@@ -87,7 +87,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
       if (OptionalDefaultValue == null)
         return "DefaultIfEmpty()";
       else
-        return "DefaultIfEmpty(" + FormattingExpressionTreeVisitor.Format (OptionalDefaultValue) + ")";
+        return "DefaultIfEmpty(" + FormattingExpressionVisitor.Format (OptionalDefaultValue) + ")";
     }
   }
 }

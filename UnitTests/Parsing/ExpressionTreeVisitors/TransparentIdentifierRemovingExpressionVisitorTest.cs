@@ -33,7 +33,7 @@ using Remotion.Linq.UnitTests.TestDomain;
 namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
 {
   [TestFixture]
-  public class TransparentIdentifierRemovingExpressionTreeVisitorTest
+  public class TransparentIdentifierRemovingExpressionVisitorTest
   {
     private NewExpression _anonymousTypeNewExpression;
     private NewExpression _anonymousTypeNewExpressionWithAssignments;
@@ -78,7 +78,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
             Expression.Bind (_anonymousTypeA, _assignedExpressionA)),
           _anonymousTypeA);
 
-      var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (memberExpression);
+      var result = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (memberExpression);
       Assert.That (result, Is.SameAs (_assignedExpressionA));
     }
 
@@ -90,7 +90,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
           _anonymousTypeNewExpressionWithAssignments,
           _anonymousTypeA);
 
-      var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (memberExpression);
+      var result = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (memberExpression);
       Assert.That (result, Is.SameAs (_assignedExpressionA));
     }
 
@@ -105,7 +105,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
           _anonymousTypeNewExpressionWithMethodAssignments,
           _anonymousTypeA);
 
-      var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (memberExpression);
+      var result = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (memberExpression);
       Assert.That (result, Is.SameAs (_assignedExpressionA));
     }
 
@@ -120,7 +120,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
             Expression.Bind (_anonymousTypeB, _assignedExpressionB)),
           _anonymousTypeB);
 
-      var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (memberExpression);
+      var result = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (memberExpression);
       Assert.That (result, Is.SameAs (_assignedExpressionB));
     }
 
@@ -138,7 +138,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
             Expression.Bind (_anonymousTypeA, assignedExpression2)),
           _anonymousTypeA);
 
-      var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (memberExpression);
+      var result = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (memberExpression);
       Assert.That (result, Is.SameAs (assignedExpression2));
     }
 
@@ -152,7 +152,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
             Expression.Bind (_anonymousTypeA, _assignedExpressionA)),
           _anonymousTypeB);
 
-      var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (memberExpression);
+      var result = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (memberExpression);
       Assert.That (result, Is.SameAs (memberExpression));
     }
 
@@ -167,7 +167,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
             Expression.Bind (_anonymousTypeA, _assignedExpressionA)),
           _anonymousTypeList);
 
-      var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (memberExpression);
+      var result = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (memberExpression);
       Assert.That (result, Is.SameAs (memberExpression));
     }
 
@@ -179,7 +179,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
           _anonymousTypeNewExpression,
           _anonymousTypeA);
 
-      var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (memberExpression);
+      var result = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (memberExpression);
       Assert.That (result, Is.SameAs (memberExpression));
     }
 
@@ -193,7 +193,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
           Expression.Constant (anon),
           _anonymousTypeA);
 
-      var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (memberExpression);
+      var result = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (memberExpression);
       Assert.That (result, Is.SameAs (memberExpression));
     }
 
@@ -207,7 +207,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
             Expression.Bind (_anonymousTypeA, _assignedExpressionA)),
           _anonymousTypeA);
 
-      var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (Expression.Lambda (memberExpression));
+      var result = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (Expression.Lambda (memberExpression));
       Assert.That (result, Is.InstanceOf (typeof (LambdaExpression)));
       Assert.That (((LambdaExpression) result).Body, Is.SameAs (_assignedExpressionA));
     }
@@ -227,7 +227,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
           memberExpression,
           typeof (List<int>).GetProperty ("Count"));
 
-      var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (outerMemberExpression);
+      var result = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (outerMemberExpression);
       Assert.That (result, Is.InstanceOf (typeof (MemberExpression)));
       Assert.That (((MemberExpression) result).Expression, Is.SameAs (assignedExpression));
     }
@@ -247,7 +247,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
             Expression.Bind (_anonymousTypeA, memberExpression)),
           _anonymousTypeB);
 
-      var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (outerMemberExpression);
+      var result = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (outerMemberExpression);
 
       Assert.That (result, Is.InstanceOf (typeof (MemberExpression)));
       var innerExpression = ((MemberExpression) result).Expression;
@@ -270,7 +270,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
 
       var subQueryExpression = new SubQueryExpression (subQuery);
 
-      var result = (SubQueryExpression) TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (subQueryExpression);
+      var result = (SubQueryExpression) TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (subQueryExpression);
 
       Assert.That (result.QueryModel.SelectClause.Selector, Is.SameAs (_assignedExpressionA));
     }
@@ -291,7 +291,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
             Expression.Bind (_anonymousTypeA, replaceableExpression)),
           _anonymousTypeA);
 
-      var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (outerExpression);
+      var result = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (outerExpression);
       Assert.That (result, Is.SameAs (_assignedExpressionA));
     }
 
@@ -304,8 +304,8 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
       var expectedResult1 = ExpressionHelper.MakeExpression<int, int> (i => i);
       var expectedResult2 = ExpressionHelper.MakeExpression<int, int> (i => 1);
 
-      var result1 = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (expression1);
-      var result2 = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (expression2);
+      var result1 = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (expression1);
+      var result2 = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (expression2);
 
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult1, result1);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult2, result2);
@@ -337,7 +337,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
 
       var selectProjection = selectNode.GetResolvedSelector (clauseGenerationContext); // new ( a = IR (a), b = IR (b) ).a.ID
 
-      var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (selectProjection);
+      var result = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (selectProjection);
 
       // IR(a).ID
       Assert.That (result, Is.InstanceOf (typeof (MemberExpression)));
@@ -350,7 +350,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
     public void VisitUnknownNonExtensionExpression_Ignored ()
     {
       var expression = new UnknownExpression (typeof (object));
-      var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers(expression);
+      var result = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers(expression);
 
       Assert.That (result, Is.SameAs (expression));
     }
@@ -364,7 +364,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
           _anonymousTypeA);
       var extensionExpression = new TestExtensionExpression (memberExpression);
 
-      var result = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (extensionExpression);
+      var result = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (extensionExpression);
 
       var expectedExpression = new TestExtensionExpression (_assignedExpressionA);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, result);
