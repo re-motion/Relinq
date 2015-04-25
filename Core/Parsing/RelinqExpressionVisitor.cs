@@ -46,10 +46,11 @@ namespace Remotion.Linq.Parsing
     /// </returns>
     // Note: Do not use Enum.IsDefined here - this method must only return true if we have a dedicated Visit method. (Which may not be the case for
     // future extensions of ExpressionType.)
-    //TODO: What should be the new semantic here? 
-    // Continue to only support dedicated list?
-    // Move this check to EvaluatableTreeFindingExpressionTreeVsitor because that's the only place it is needed?
-    // No longer relevant since .NET 4.0?
+    //TODO: Move to EvaluatableTreeFindingExpressionTreeVisitor. 
+    // Step 1: For .NET 4.0, only check if the ExpressionType is defined by System.Core and that it is not of type 'Extension'.
+    // Step 2: For .NET 4.0, extend the previous check to handle Expressions of type 'Extension' by testing if the Expression CanBeReduced and then Reduce() the Expression.
+    //         Apply this rule recursivly until the reduced expression is same as the original expression.
+    //         Also, the implementation of the LambdaCompiler must be reviewed to check if it can handle expressions of type 'Extension'.
     public static bool IsSupportedStandardExpression (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
