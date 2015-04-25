@@ -25,6 +25,12 @@ namespace Remotion.Linq.Parsing
   /// Implements an <see cref="RelinqExpressionVisitor"/> that throws an exception for every expression type that is not explicitly supported.
   /// Inherit from this class to ensure that an exception is thrown when an expression is passed 
   /// </summary>
+  // TODO: .NET 4.0 implementation should test if the Expression type is an Expression defined by System.Core has been known at compile time.
+  // If so, the expression will have a well-known Visit-method implemented by the ThrowingExpressionVisitor. All other types defined by System.Core
+  // should be delegated to an untyped template method that will also throw by default. This way, Expression types introduced by future versions of System.Core
+  // can still be handled by consumers of re-linq while the system also retains the throwing default behavior.
+  // For Expressions not defined by System.Core, the default mechanism can apply, i.e. the VisitExtension-method will try to reduce the expression
+  // and otherwise, delegate to VisitUnhandledItem.
   public abstract partial class ThrowingExpressionVisitor : RelinqExpressionVisitor
   {
     protected abstract Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod);
