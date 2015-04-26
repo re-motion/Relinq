@@ -14,10 +14,11 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Linq.Expressions;
 
-namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
+namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
 {
   public class UnknownExpression : Expression
   {

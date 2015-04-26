@@ -14,13 +14,14 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using Remotion.Linq.Development.UnitTesting;
 
-namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.MemberBindings
+namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.MemberBindings
 {
   public abstract class MemberBindingTestBase
   {

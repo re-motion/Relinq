@@ -14,6 +14,7 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -22,7 +23,7 @@ using NUnit.Framework;
 using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
@@ -31,7 +32,7 @@ using Remotion.Linq.UnitTests.Parsing.Structure.TestDomain;
 using Remotion.Linq.UnitTests.TestDomain;
 using Remotion.Linq.UnitTests.TestQueryGenerators;
 
-namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors
+namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
 {
   [TestFixture]
   public class SubQueryFindingExpressionVisitorTest

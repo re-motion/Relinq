@@ -14,11 +14,12 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.MemberBindings
+namespace Remotion.Linq.Parsing.ExpressionVisitors.MemberBindings
 {
   /// <summary>
   /// Represents a <see cref="MethodInfo"/> being bound to an associated <see cref="Expression"/> instance. 

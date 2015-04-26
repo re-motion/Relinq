@@ -14,16 +14,17 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
 using NUnit.Framework;
 using Remotion.Linq.Development.UnitTesting;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
+using Remotion.Linq.Parsing.ExpressionVisitors.Transformation;
+using Remotion.Linq.Parsing.ExpressionVisitors.Transformation.PredefinedTransformations;
 using Remotion.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
+namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.Transformation.PredefinedTransformations
 {
   [TestFixture]
   public class AttributeEvaluatingExpressionTransformerTest
@@ -74,7 +75,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.Transformation.
           () => _transformer.Transform (expression),
           Throws.InvalidOperationException.With.Message.EqualTo (
               "There is more than one attribute providing transformers declared for method "
-              + "'Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations.AttributeEvaluatingExpressionTransformerTest+DomainType.MethodWithTwoAttributes'."));
+              + "'Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.Transformation.PredefinedTransformations.AttributeEvaluatingExpressionTransformerTest+DomainType.MethodWithTwoAttributes'."));
     }
 
     [Test]
@@ -99,7 +100,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.Transformation.
           () => _transformer.Transform (expression),
           Throws.InvalidOperationException.With.Message.EqualTo (
               "The 'NullTransformerAttribute' on method "
-              + "'Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations.AttributeEvaluatingExpressionTransformerTest+DomainType.MethodWithNullTransformer'"
+              + "'Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.Transformation.PredefinedTransformations.AttributeEvaluatingExpressionTransformerTest+DomainType.MethodWithNullTransformer'"
               + " returned 'null' instead of a transformer."));
     }
 

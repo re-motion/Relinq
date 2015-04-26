@@ -21,7 +21,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.ResultOperators;
 #if NET_3_5
 using Remotion.Linq.Collections;

@@ -14,6 +14,7 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -22,7 +23,7 @@ using Remotion.Linq.Parsing;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 
-namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
+namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
 {
   public class ExpressionVisitorTestBase
   {

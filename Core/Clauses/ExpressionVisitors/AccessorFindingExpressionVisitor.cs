@@ -14,6 +14,7 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -21,7 +22,7 @@ using System.Reflection;
 using Remotion.Linq.Parsing;
 using Remotion.Utilities;
 
-namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
+namespace Remotion.Linq.Clauses.ExpressionVisitors
 {
   /// <summary>
   /// Constructs a <see cref="LambdaExpression"/> that is able to extract a specific simple expression from a complex <see cref="NewExpression"/>

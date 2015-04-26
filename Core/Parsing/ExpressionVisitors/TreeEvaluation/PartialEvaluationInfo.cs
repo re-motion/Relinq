@@ -14,12 +14,13 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Utilities;
 
-namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
+namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
 {
   public class PartialEvaluationInfo
   {

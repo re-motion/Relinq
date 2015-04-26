@@ -14,6 +14,7 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -22,7 +23,7 @@ using Remotion.Linq.Parsing;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
 
-namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
+namespace Remotion.Linq.Clauses.ExpressionVisitors
 {
   /// <summary>
   /// Performs a reverse <see cref="IExpressionNode.Resolve"/> operation, i.e. creates a <see cref="LambdaExpression"/> from a given resolved expression, 

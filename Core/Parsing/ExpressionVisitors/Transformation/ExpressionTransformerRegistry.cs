@@ -14,15 +14,16 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Collections;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
+using Remotion.Linq.Parsing.ExpressionVisitors.Transformation.PredefinedTransformations;
 using Remotion.Utilities;
 
-namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation
+namespace Remotion.Linq.Parsing.ExpressionVisitors.Transformation
 {
   /// <summary>
   /// Manages registration and lookup of <see cref="IExpressionTransformer{T}"/> objects, and converts them to 

@@ -14,10 +14,11 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Linq.Expressions;
 
-namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation
+namespace Remotion.Linq.Parsing.ExpressionVisitors.Transformation
 {
   /// <summary>
   /// Transforms a given <see cref="Expression"/>. If the <see cref="ExpressionTransformation"/> can handle the <see cref="Expression"/>,

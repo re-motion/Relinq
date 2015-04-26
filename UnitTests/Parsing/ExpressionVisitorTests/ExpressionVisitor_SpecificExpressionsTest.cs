@@ -14,6 +14,7 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,7 +28,7 @@ using Remotion.Linq.Development.UnitTesting;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 
-namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
+namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
 {
   [TestFixture]
   public class ExpressionVisitor_SpecificExpressionsTest : ExpressionVisitorTestBase

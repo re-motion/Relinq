@@ -14,11 +14,12 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Reflection;
 using Remotion.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
+namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
 {
   internal class TypeForNewExpression
   {

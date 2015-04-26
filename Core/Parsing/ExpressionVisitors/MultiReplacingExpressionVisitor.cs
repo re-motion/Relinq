@@ -14,13 +14,14 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Utilities;
 
-namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
+namespace Remotion.Linq.Parsing.ExpressionVisitors
 {
   /// <summary>
   /// Replaces <see cref="Expression"/> nodes according to a given mapping specification. Expressions are also replaced within subqueries; the 

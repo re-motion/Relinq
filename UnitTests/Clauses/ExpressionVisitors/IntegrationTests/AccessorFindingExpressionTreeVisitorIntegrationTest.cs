@@ -16,14 +16,13 @@
 // 
 
 using System;
-using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors.IntegrationTests
+namespace Remotion.Linq.UnitTests.Clauses.ExpressionVisitors.IntegrationTests
 {
   [TestFixture]
   public class AccessorFindingExpressionTreeVisitorIntegrationTest

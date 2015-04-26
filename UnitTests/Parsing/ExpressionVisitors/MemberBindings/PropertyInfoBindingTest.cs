@@ -14,11 +14,12 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using NUnit.Framework;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors.MemberBindings;
+using Remotion.Linq.Parsing.ExpressionVisitors.MemberBindings;
 
-namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.MemberBindings
+namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.MemberBindings
 {
   [TestFixture]
   public class PropertyInfoBindingTest : MemberBindingTestBase

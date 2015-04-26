@@ -14,13 +14,14 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing;
 using Remotion.Utilities;
 
-namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
+namespace Remotion.Linq.Clauses.ExpressionVisitors
 {
   /// <summary>
   /// Transforms an expression tree into a human-readable string, taking all the custom expression nodes into account.

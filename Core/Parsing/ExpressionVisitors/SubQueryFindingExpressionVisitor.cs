@@ -14,6 +14,7 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
@@ -21,7 +22,7 @@ using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Remotion.Utilities;
 
-namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
+namespace Remotion.Linq.Parsing.ExpressionVisitors
 {
   /// <summary>
   /// Preprocesses an expression tree for parsing. The preprocessing involves detection of sub-queries and VB-specific expressions.

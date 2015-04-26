@@ -14,17 +14,18 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
 using NUnit.Framework;
 using Remotion.Linq.Development.UnitTesting;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
+using Remotion.Linq.Parsing.ExpressionVisitors.Transformation;
+using Remotion.Linq.Parsing.ExpressionVisitors.Transformation.PredefinedTransformations;
 using Remotion.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
+namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.Transformation.PredefinedTransformations
 {
   [TestFixture]
   public class MethodCallExpressionTransformerAttributeTest
@@ -58,7 +59,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.Transformation.
           () => new MethodCallExpressionTransformerAttribute (typeof (string)),
           Throws.ArgumentException.With.Message.EqualTo (
               "Parameter 'transformerType' is a 'System.String', which cannot be assigned to type "
-              + "'Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.IExpressionTransformer`1[System.Linq.Expressions.MethodCallExpression]'."
+              + "'Remotion.Linq.Parsing.ExpressionVisitors.Transformation.IExpressionTransformer`1[System.Linq.Expressions.MethodCallExpression]'."
               + "\r\nParameter name: transformerType"));
     }
 
@@ -78,7 +79,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.Transformation.
           () => attribute.GetExpressionTransformer (ExpressionHelper.CreateMethodCallExpression<Cook>()),
           Throws.InvalidOperationException.With.Message.EqualTo (
               "The method call transformer "
-              + "'Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations.MethodCallExpressionTransformerAttributeTest+FakeTransformerWithoutDefaultCtor' "
+              + "'Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.Transformation.PredefinedTransformations.MethodCallExpressionTransformerAttributeTest+FakeTransformerWithoutDefaultCtor' "
               + "has no public default constructor and therefore cannot be used with the MethodCallExpressionTransformerAttribute."));
     }
 

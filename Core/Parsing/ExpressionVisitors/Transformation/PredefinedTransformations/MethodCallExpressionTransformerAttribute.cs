@@ -14,11 +14,12 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Linq.Expressions;
 using Remotion.Utilities;
 
-namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
+namespace Remotion.Linq.Parsing.ExpressionVisitors.Transformation.PredefinedTransformations
 {
   /// <summary>
   /// Chooses a given <see cref="IExpressionTransformer{T}"/> for a specific method (or property get accessor).

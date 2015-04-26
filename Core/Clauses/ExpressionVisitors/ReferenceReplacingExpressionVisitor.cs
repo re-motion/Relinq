@@ -14,13 +14,14 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing;
 using Remotion.Utilities;
 
-namespace Remotion.Linq.Clauses.ExpressionTreeVisitors
+namespace Remotion.Linq.Clauses.ExpressionVisitors
 {
   /// <summary>
   /// Takes an expression and replaces all <see cref="QuerySourceReferenceExpression"/> instances, as defined by a given <see cref="QuerySourceMapping"/>.

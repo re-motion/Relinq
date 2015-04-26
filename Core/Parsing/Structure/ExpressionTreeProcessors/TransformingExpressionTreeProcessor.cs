@@ -16,8 +16,8 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
+using Remotion.Linq.Parsing.ExpressionVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors.Transformation;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors

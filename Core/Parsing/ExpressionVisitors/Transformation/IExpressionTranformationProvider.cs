@@ -14,11 +14,12 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation
+namespace Remotion.Linq.Parsing.ExpressionVisitors.Transformation
 {
   /// <summary>
   /// <see cref="IExpressionTranformationProvider"/> defines an API for classes returning <see cref="ExpressionTransformation"/> instances for specific 

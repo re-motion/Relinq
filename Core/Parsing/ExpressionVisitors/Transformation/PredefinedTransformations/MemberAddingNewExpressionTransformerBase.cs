@@ -14,13 +14,14 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Utilities;
 
-namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
+namespace Remotion.Linq.Parsing.ExpressionVisitors.Transformation.PredefinedTransformations
 {
   /// <summary>
   /// Provides a base class for transformers detecting <see cref="NewExpression"/> nodes for tuple types and adding <see cref="MemberInfo"/> metadata 

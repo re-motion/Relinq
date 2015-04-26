@@ -14,13 +14,14 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
+namespace Remotion.Linq.Parsing.ExpressionVisitors.Transformation.PredefinedTransformations
 {
   /// <summary>
   /// Detects <see cref="NewExpression"/> nodes for <see cref="DictionaryEntry"/> and adds <see cref="MemberInfo"/> metadata to those nodes.

@@ -14,15 +14,16 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.TestDomain;
 
-namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
+namespace Remotion.Linq.UnitTests.Clauses.ExpressionVisitors
 {
   [TestFixture]
   public class CloningExpressionVisitorTest

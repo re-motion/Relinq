@@ -14,15 +14,16 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Utilities;
-using MemberBinding = Remotion.Linq.Parsing.ExpressionTreeVisitors.MemberBindings.MemberBinding;
+using MemberBinding = Remotion.Linq.Parsing.ExpressionVisitors.MemberBindings.MemberBinding;
 
-namespace Remotion.Linq.Parsing.ExpressionTreeVisitors
+namespace Remotion.Linq.Parsing.ExpressionVisitors
 {
   /// <summary>
   /// Replaces expression patterns of the form <c>new T { x = 1, y = 2 }.x</c> (<see cref="MemberInitExpression"/>) or 

@@ -18,7 +18,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
+namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
 {
   public class SpecialExpressionNode : Expression
   {

@@ -14,13 +14,14 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Remotion.Utilities;
 
-namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
+namespace Remotion.Linq.Parsing.ExpressionVisitors.Transformation.PredefinedTransformations
 {
   /// <summary>
   /// Detects expressions invoking a <see cref="LambdaExpression"/> and replaces them with the body of that 

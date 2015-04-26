@@ -14,6 +14,7 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,15 +30,15 @@ using Remotion.Linq.Development.UnitTesting.Clauses.Expressions;
 #if NET_3_5
 using Remotion.Linq.Parsing;
 #endif
-using Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation;
-using Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests;
+using Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation;
+using Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests;
 using Remotion.Linq.UnitTests.Parsing.Structure.TestDomain;
 using Remotion.Linq.UnitTests.TestDomain;
 #if !NET_3_5
 using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
 #endif
 
-namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.TreeEvaluation
+namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
 {
   [TestFixture]
   public class EvaluatableTreeFindingExpressionVisitorTest

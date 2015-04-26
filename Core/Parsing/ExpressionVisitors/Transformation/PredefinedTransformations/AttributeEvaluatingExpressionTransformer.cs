@@ -14,13 +14,14 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Utilities;
 
-namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations
+namespace Remotion.Linq.Parsing.ExpressionVisitors.Transformation.PredefinedTransformations
 {
   /// <summary>
   /// Dynamically discovers attributes implementing the <see cref="IMethodCallExpressionTransformerAttribute"/> interface on methods and get accessors

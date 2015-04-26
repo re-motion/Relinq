@@ -18,7 +18,7 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.ExpressionVisitors;
 #if NET_3_5
 using Remotion.Linq.Parsing;
 #endif
