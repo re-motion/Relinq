@@ -23,10 +23,11 @@ using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing
 {
+  /// <summary>
+  /// Implementation of the .NET 4.0 <b>ExpressionVisitor</b> for .NET 3.5 libraries. This type acts as a base class for the <see cref="RelinqExpressionVisitor"/>.
+  /// </summary>
   public abstract class ExpressionVisitor
   {
-    // Remove, is provided by ExpressionVisitor
-    // TODO: What to do with all the unsupported Expressions, e.g. Loop, Goto, Try, etc?
     public virtual Expression Visit (Expression expression)
     {
       if (expression == null)
@@ -104,10 +105,6 @@ namespace Remotion.Linq.Parsing
       }
     }
 
-    // Identical implemention by ExpressionVisitor, but there is no "ExtensionExpression". Instead, "Expression" is already extensible.
-    // The existing implementation requires ExtensionExpression to provide an implementation for VistChildren, otherwise a NotSupportedException is thrown.
-    // In .NET 4.0, the Expression must be marked as CanReduce, otherwise an ArgumentException is thrown.
-    // TODO: ExtensionExpression can be moved to .NET 3.5 implementation
     protected internal virtual Expression VisitExtension (ExtensionExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -123,7 +120,6 @@ namespace Remotion.Linq.Parsing
       throw new NotSupportedException (message);
     }
 
-    // Remove, is provided by ExpressionVisitor, just not virtual
     public T VisitAndConvert<T> (T expression, string methodName) where T : Expression
     {
       ArgumentUtility.CheckNotNull ("methodName", methodName);
@@ -147,7 +143,6 @@ namespace Remotion.Linq.Parsing
       return newExpression;
     }
 
-    // Remove, is provided by ExpressionVisitor, just not virtual
     public ReadOnlyCollection<T> VisitAndConvert<T> (ReadOnlyCollection<T> expressions, string callerName) where T : Expression
     {
       ArgumentUtility.CheckNotNull ("expressions", expressions);
@@ -156,7 +151,6 @@ namespace Remotion.Linq.Parsing
       return Visit (expressions, expression => VisitAndConvert (expression, callerName));
     }
 
-    // Replace with ExpressionVisitor.Visit<T> (ReadOnlyCollection<T>, Func<T,T>)
     public static ReadOnlyCollection<T> Visit<T> (ReadOnlyCollection<T> list, Func<T, T> visitMethod)
         where T : class
     {
@@ -185,25 +179,23 @@ namespace Remotion.Linq.Parsing
         return list;
     }
 
-    // Identical implemention by ExpressionVisitor, special handling for UnaryPlus is now handled by Expression.MakeUnary
     protected virtual Expression VisitUnary (UnaryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       Expression newOperand = Visit (expression.Operand);
       if (newOperand != expression.Operand)
       {
-#if NET_3_5
         if (expression.NodeType == ExpressionType.UnaryPlus)
           return Expression.UnaryPlus (newOperand, expression.Method);
-#endif
-        return Expression.MakeUnary (expression.NodeType, newOperand, expression.Type, expression.Method);
+        else
+          return Expression.MakeUnary (expression.NodeType, newOperand, expression.Type, expression.Method);
       }
       else
+      {
         return expression;
+      }
     }
 
-    // ExpressionVisitor.VisitBinary visits Left, Conversion, Right, current implementation visits Left, Right, Conversion
-    // ExpressionVisitor.VisitBinary creates LogicalBinaryExpression for reference equality check. Should not make a difference.
     protected virtual Expression VisitBinary (BinaryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -215,28 +207,21 @@ namespace Remotion.Linq.Parsing
       return expression;
     }
 
-    // ExpressionVisitor.VisitTypeBinary differentiates between TypeIs and TypeEqual by supplying a different ExpressionType
     protected virtual Expression VisitTypeBinary (TypeBinaryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       Expression newExpression = Visit (expression.Expression);
       if (newExpression == expression.Expression)
         return expression;
-#if !NET_3_5
-      if (expression.NodeType == ExpressionType.TypeEqual)
-        return Expression.TypeEqual(newExpression, expression.TypeOperand);
-#endif
       return Expression.TypeIs (newExpression, expression.TypeOperand);
     }
 
-    // Identical implemention by ExpressionVisitor
     protected virtual Expression VisitConstant (ConstantExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       return expression;
     }
 
-    // ExpressionVisitor.VisitConditional visits Test, IfTrue, IfFalse, current implementation visits Test, IfFalse, IfTrue
     protected virtual Expression VisitConditional (ConditionalExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -244,25 +229,16 @@ namespace Remotion.Linq.Parsing
       Expression newTrue = Visit (expression.IfTrue);
       Expression newFalse = Visit (expression.IfFalse);
       if ((newTest != expression.Test) || (newFalse != expression.IfFalse) || (newTrue != expression.IfTrue))
-      {
-#if !NET_3_5
-        return Expression.Condition (newTest, newTrue, newFalse, expression.Type);
-#else
         return Expression.Condition (newTest, newTrue, newFalse);
-#endif
-      }
       return expression;
     }
 
-    // Identical implemention by ExpressionVisitor
     protected virtual Expression VisitParameter (ParameterExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
       return expression;
     }
 
-    // TODO: ExpressionVisitor.VisitLambda has no overload accepting LamdaExpression, only Expression<T>, derived from LambdaExpression. Is this a problem?
-    // ExpressionVisitor.VisitBinary visits Body, Parameters, current implementation visits Parameters, Body
     protected virtual Expression VisitLambda (LambdaExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -273,7 +249,6 @@ namespace Remotion.Linq.Parsing
       return expression;
     }
 
-    // ExpressionVisitor.VisitBinary creates specialized MethodCallExpressions. Should not make a difference.
     protected virtual Expression VisitMethodCall (MethodCallExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -284,7 +259,6 @@ namespace Remotion.Linq.Parsing
       return expression;
     }
 
-    // Identical implemention by ExpressionVisitor
     protected virtual Expression VisitInvocation (InvocationExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -295,7 +269,6 @@ namespace Remotion.Linq.Parsing
       return expression;
     }
 
-    // Identical implemention by ExpressionVisitor
     protected virtual Expression VisitMember (MemberExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -305,7 +278,6 @@ namespace Remotion.Linq.Parsing
       return expression;
     }
 
-    // TODO: ExpressionVisitor.VisitNew does not contain an obvious conversion of the NewExpression's argument types. Is this a problem?
     protected virtual Expression VisitNew (NewExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -326,7 +298,6 @@ namespace Remotion.Linq.Parsing
       return expression;
     }
 
-    // Identical implemention by ExpressionVisitor
     protected virtual Expression VisitNewArray (NewArrayExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -342,7 +313,6 @@ namespace Remotion.Linq.Parsing
       return expression;
     }
 
-    // Identical implemention by ExpressionVisitor
     protected virtual Expression VisitMemberInit (MemberInitExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -359,7 +329,6 @@ namespace Remotion.Linq.Parsing
       return expression;
     }
 
-    // Identical implemention by ExpressionVisitor
     protected virtual Expression VisitListInit (ListInitExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -373,7 +342,6 @@ namespace Remotion.Linq.Parsing
       return expression;
     }
 
-    // Identical implemention by ExpressionVisitor
     protected virtual ElementInit VisitElementInit (ElementInit elementInit)
     {
       ArgumentUtility.CheckNotNull ("elementInit", elementInit);
@@ -383,7 +351,6 @@ namespace Remotion.Linq.Parsing
       return elementInit;
     }
 
-    // Identical implemention by ExpressionVisitor
     protected virtual MemberBinding VisitMemberBinding (MemberBinding memberBinding)
     {
       ArgumentUtility.CheckNotNull ("memberBinding", memberBinding);
@@ -400,7 +367,6 @@ namespace Remotion.Linq.Parsing
       }
     }
 
-    // Identical implemention by ExpressionVisitor
     protected virtual MemberAssignment VisitMemberAssignment (MemberAssignment memberAssigment)
     {
       ArgumentUtility.CheckNotNull ("memberAssigment", memberAssigment);
@@ -411,7 +377,6 @@ namespace Remotion.Linq.Parsing
       return memberAssigment;
     }
 
-    // Identical implemention by ExpressionVisitor
     protected virtual MemberMemberBinding VisitMemberMemberBinding (MemberMemberBinding binding)
     {
       ArgumentUtility.CheckNotNull ("binding", binding);
@@ -422,7 +387,6 @@ namespace Remotion.Linq.Parsing
       return binding;
     }
 
-    // Identical implemention by ExpressionVisitor
     protected virtual MemberListBinding VisitMemberListBinding (MemberListBinding listBinding)
     {
       ArgumentUtility.CheckNotNull ("listBinding", listBinding);
@@ -431,12 +395,6 @@ namespace Remotion.Linq.Parsing
       if (newInitializers != listBinding.Initializers)
         return Expression.ListBind (listBinding.Member, newInitializers);
       return listBinding;
-    }
-
-    [Obsolete ("This method has been split. Use VisitExtensionExpression or VisitUnknownNonExtensionExpression instead. 1.13.75")]
-    protected internal virtual Expression VisitUnknownExpression (Expression expression)
-    {
-      throw new NotImplementedException ();
     }
   }
 }
