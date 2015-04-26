@@ -23,10 +23,8 @@ using System.Reflection;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
-using Remotion.Linq.Development.UnitTesting.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting.Parsing;
 using Remotion.Linq.Parsing;
-using Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors;
 using Remotion.Linq.UnitTests.TestDomain;
 using Remotion.Linq.UnitTests.Utilities;
 using Rhino.Mocks;
@@ -37,68 +35,6 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
   [TestFixture]
   public class ExpressionVisitorTest : ExpressionVisitorTestBase
   {
-    [Test]
-    public void IsSupportedStandardExpression_True ()
-    {
-      var supportedExpressionTypeValues = 
-          new[]
-          {
-              ExpressionType.ArrayLength, ExpressionType.Convert, ExpressionType.ConvertChecked, ExpressionType.Negate, ExpressionType.NegateChecked,
-              ExpressionType.Not, ExpressionType.Quote, ExpressionType.TypeAs, ExpressionType.UnaryPlus, ExpressionType.Add, ExpressionType.AddChecked,
-              ExpressionType.Divide, ExpressionType.Modulo, ExpressionType.Multiply, ExpressionType.MultiplyChecked, ExpressionType.Power,
-              ExpressionType.Subtract, ExpressionType.SubtractChecked, ExpressionType.And, ExpressionType.Or, ExpressionType.ExclusiveOr,
-              ExpressionType.LeftShift, ExpressionType.RightShift, ExpressionType.AndAlso, ExpressionType.OrElse, ExpressionType.Equal,
-              ExpressionType.NotEqual, ExpressionType.GreaterThanOrEqual, ExpressionType.GreaterThan, ExpressionType.LessThan,
-              ExpressionType.LessThanOrEqual, ExpressionType.Coalesce, ExpressionType.ArrayIndex, ExpressionType.Conditional, ExpressionType.Constant,
-              ExpressionType.Invoke, ExpressionType.Lambda, ExpressionType.MemberAccess, ExpressionType.Call, ExpressionType.New,
-              ExpressionType.NewArrayBounds, ExpressionType.NewArrayInit, ExpressionType.MemberInit, ExpressionType.ListInit, ExpressionType.Parameter, 
-              ExpressionType.TypeIs,
-          };
-
-      var visitMethodExpressionTypes = new HashSet<Type> (
-          from m in typeof (RelinqExpressionVisitor).GetMethods (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-          where m.Name.StartsWith ("Visit")
-          let parameters = m.GetParameters()
-          where parameters.Length == 1
-          let expressionType = parameters.Single().ParameterType
-          where expressionType != typeof (Expression)
-          select expressionType);
-      Assert.That (visitMethodExpressionTypes.Count > 0);
-
-      foreach (var expressionType in supportedExpressionTypeValues)
-      {
-        var expressionInstance = ExpressionInstanceCreator.GetExpressionInstance (expressionType);
-        Assert.That (
-            visitMethodExpressionTypes.Any (
-                t =>
-                {
-                  if (t.ContainsGenericParameters && expressionInstance.GetType().IsGenericType)
-                    t = t.GetGenericTypeDefinition().MakeGenericType (expressionInstance.GetType().GetGenericArguments());
-                  return t.IsInstanceOfType (expressionInstance);
-                }),
-            Is.True,
-            "Visit method for {0}",
-            expressionInstance.GetType());
-        Assert.That (RelinqExpressionVisitor.IsSupportedStandardExpression (expressionInstance), Is.True);
-      }
-    }
-
-    [Test]
-    public void IsSupportedStandardExpression_False ()
-    {
-      var extensionExpression = new TestExtensionExpression (Expression.Constant (0));
-      Assert.That (RelinqExpressionVisitor.IsSupportedStandardExpression (extensionExpression), Is.False);
-
-      var unknownExpression = new UnknownExpression (typeof (int));
-      Assert.That (RelinqExpressionVisitor.IsSupportedStandardExpression (unknownExpression), Is.False);
-
-      var querySourceReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
-      Assert.That (RelinqExpressionVisitor.IsSupportedStandardExpression (querySourceReferenceExpression), Is.False);
-
-      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook>());
-      Assert.That (RelinqExpressionVisitor.IsSupportedStandardExpression (subQueryExpression), Is.False);
-    }
-
     [Test]
     public void AdjustArgumentsForNewExpression ()
     {
