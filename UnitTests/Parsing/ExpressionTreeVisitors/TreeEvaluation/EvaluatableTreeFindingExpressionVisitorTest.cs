@@ -50,6 +50,30 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.TreeEvaluation
       }
     }
 
+#if !NET_3_5
+    private class TestExtensionExpressionWithType : Expression
+    {
+      public TestExtensionExpressionWithType ()
+      {
+      }
+
+      public override ExpressionType NodeType
+      {
+        get { return ExpressionType.Extension; }
+      }
+
+      public override bool CanReduce
+      {
+        get { return false; }
+      }
+
+      public override string ToString ()
+      {
+        return "Test(Extension)";
+      }
+    }
+#endif
+
     [Test]
     public void SimpleExpression_IsEvaluatable ()
     {
@@ -256,7 +280,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.TreeEvaluation
     }
 
     [Test]
-    public void IsSupportedStandardExpression_True ()
+    public void IsSupportedStandardExpression_WithNET35ExpressionType_True ()
     {
       var supportedExpressionTypeValues = 
           new[]
@@ -303,7 +327,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.TreeEvaluation
     }
 
     [Test]
-    public void IsSupportedStandardExpression_False ()
+    public void IsSupportedStandardExpression_WithNET35UnsupportedExpressionType_False ()
     {
       var visitor = new TestableEvaluatableTreeFindingExpressionVisitor();
       var extensionExpression = new TestExtensionExpression (Expression.Constant (0));
@@ -318,5 +342,23 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitors.TreeEvaluation
       var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook>());
       Assert.That (visitor.IsSupportedStandardExpression (subQueryExpression), Is.False);
     }
+
+#if !NET_3_5
+    [Test]
+    public void IsSupportedStandardExpression_WithNET40Expression_True ()
+    {
+      var visitor = new TestableEvaluatableTreeFindingExpressionVisitor();
+      var expression = Expression.Block (Expression.Constant ("a"));
+      Assert.That (visitor.IsSupportedStandardExpression (expression), Is.True);
+    }
+
+    [Test]
+    public void IsSupportedStandardExpression_WithExtensionExpression_False ()
+    {
+      var visitor = new TestableEvaluatableTreeFindingExpressionVisitor();
+      var extensionExpression = new TestExtensionExpressionWithType();
+      Assert.That (visitor.IsSupportedStandardExpression (extensionExpression), Is.False);
+    }
+#endif
   }
 }

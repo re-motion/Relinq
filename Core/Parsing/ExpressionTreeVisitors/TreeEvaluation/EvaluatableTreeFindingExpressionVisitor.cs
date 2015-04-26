@@ -15,7 +15,6 @@
 // under the License.
 // 
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -157,25 +156,47 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
     }
 #endif
 
+#if !NET_3_5
     /// <summary>
     /// Determines whether the given <see cref="Expression"/> is one of the expressions defined by <see cref="ExpressionType"/> for which
-    /// <see cref="RelinqExpressionVisitor"/> has a Visit method. <see cref="ExpressionVisitor.Visit(Expression)"/> handles those by calling the respective Visit method.
+    /// <see cref="ExpressionVisitor"/> has a dedicated Visit method. <see cref="ExpressionVisitor.Visit(Expression)"/> handles those by calling the respective Visit method.
     /// </summary>
     /// <param name="expression">The expression to check. Must not be <see langword="null" />.</param>
     /// <returns>
-    /// 	<see langword="true"/> if <paramref name="expression"/> is one of the expressions defined by <see cref="ExpressionType"/> and 
-    ///   <see cref="RelinqExpressionVisitor"/> has a Visit method for it; otherwise, <see langword="false"/>.
+    /// <see langword="true"/> if <paramref name="expression"/> is one of the expressions defined by <see cref="ExpressionType"/> and 
+    /// <see cref="ExpressionVisitor"/> has a dedicated Visit method for it; otherwise, <see langword="false"/>. 
+    /// Note that <see cref="ExpressionType.Extension"/>-type expressions are considered 'not supported' and will also return <see langword="false"/>.
     /// </returns>
-    // Note: Do not use Enum.IsDefined here - this method must only return true if we have a dedicated Visit method. (Which may not be the case for
-    // future extensions of ExpressionType.)
-    // TODO Step 1: For .NET 4.0, only check if the ExpressionType is defined by System.Core and that it is not of type 'Extension'.
-    // TODO Step 2: For .NET 4.0, extend the previous check to handle Expressions of type 'Extension' by testing if the Expression CanBeReduced and then Reduce() the Expression.
-    //    Apply this rule recursivly until the reduced expression is same as the original expression.
-    //    Also, the implementation of the LambdaCompiler must be reviewed to check if it can handle expressions of type 'Extension'.
     protected bool IsSupportedStandardExpression (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
+      // TODO: Extend the check to handle Expressions of type 'Extension' by testing if the Expression CanBeReduced and then Reduce() the Expression.
+      // Apply this rule recursivly until the reduced expression is same as the original expression.
+      // Precondition: The implementation of the LambdaCompiler must be reviewed to check if it can handle expressions of type 'Extension'.
+
+      if (expression.NodeType == ExpressionType.Extension)
+        return false;
+
+      // Note: In .NET 4.0, all expressions supplied by System.Core have a dedicated Visit method provided by System.Linq.Parsing.ExpressionVisitor.
+      return Enum.IsDefined (typeof (ExpressionType), expression.NodeType);
+    }
+#else
+    /// <summary>
+    /// Determines whether the given <see cref="Expression"/> is one of the expressions defined by <see cref="ExpressionType"/> for which
+    /// <see cref="ExpressionVisitor"/> has a Visit method. <see cref="ExpressionVisitor.Visit(Expression)"/> handles those by calling the respective Visit method.
+    /// </summary>
+    /// <param name="expression">The expression to check. Must not be <see langword="null" />.</param>
+    /// <returns>
+    /// 	<see langword="true"/> if <paramref name="expression"/> is one of the expressions defined by <see cref="ExpressionType"/> and 
+    ///   <see cref="ExpressionVisitor"/> has a Visit method for it; otherwise, <see langword="false"/>.
+    /// </returns>
+    protected bool IsSupportedStandardExpression (Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      // Note: Do not use Enum.IsDefined here - this method must only return true if we have a dedicated Visit method. In .NET 4.0, additional expression
+      // types have been introduced for which the .NET 3.5 implementation of ExpressionVisitor does not have corresponding Visit methods.
       switch (expression.NodeType)
       {
         case ExpressionType.ArrayLength:
@@ -228,6 +249,7 @@ namespace Remotion.Linq.Parsing.ExpressionTreeVisitors.TreeEvaluation
       }
       return false;
     }
+#endif
 
     private bool IsQueryableExpression (Expression expression)
     {
