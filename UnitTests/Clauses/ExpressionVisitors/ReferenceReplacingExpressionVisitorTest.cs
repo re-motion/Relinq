@@ -28,7 +28,7 @@ using Remotion.Linq.UnitTests.TestDomain;
 namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 {
   [TestFixture]
-  public class ReferenceReplacingExpressionTreeVisitorTest
+  public class ReferenceReplacingExpressionVisitorTest
   {
     private QuerySourceMapping _querySourceMapping;
     private MainFromClause _oldFromClause;

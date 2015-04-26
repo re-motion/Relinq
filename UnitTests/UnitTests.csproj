@@ -235,11 +235,11 @@
     <Compile Include="Clauses\Expressions\TestDomain\SpecificVisitor.cs" />
     <Compile Include="Clauses\Expressions\TestDomain\TestableExtensionExpression.cs" />
     <Compile Include="Clauses\Expressions\TestDomain\TestableExtensionExpressionWithSpecificVisitor.cs" />
-    <Compile Include="Clauses\ExpressionVisitors\AccessorFindingExpressionTreeVisitorTest.cs" />
+    <Compile Include="Clauses\ExpressionVisitors\AccessorFindingExpressionVisitorTest.cs" />
     <Compile Include="Clauses\ExpressionVisitors\CloningExpressionVisitorTest.cs" />
-    <Compile Include="Clauses\ExpressionVisitors\FormattingExpressionTreeVisitorTest.cs" />
-    <Compile Include="Clauses\ExpressionVisitors\ReferenceReplacingExpressionTreeVisitorTest.cs" />
-    <Compile Include="Clauses\ExpressionVisitors\ReverseResolvingExpressionTreeVisitorTest.cs" />
+    <Compile Include="Clauses\ExpressionVisitors\FormattingExpressionVisitorTest.cs" />
+    <Compile Include="Clauses\ExpressionVisitors\ReferenceReplacingExpressionVisitorTest.cs" />
+    <Compile Include="Clauses\ExpressionVisitors\ReverseResolvingExpressionVisitorTest.cs" />
     <Compile Include="Clauses\FromClauseBaseTest.cs" />
     <Compile Include="Clauses\GroupJoinClauseTest.cs" />
     <Compile Include="Clauses\JoinClauseTest.cs" />

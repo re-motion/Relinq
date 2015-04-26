@@ -28,7 +28,7 @@ using Remotion.Linq.UnitTests.TestDomain;
 namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 {
   [TestFixture]
-  public class FormattingExpressionTreeVisitorTest
+  public class FormattingExpressionVisitorTest
   {
     [Test]
     public void OrdinaryExpression ()

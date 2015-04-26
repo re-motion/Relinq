@@ -28,7 +28,7 @@ using Remotion.Linq.UnitTests.TestDomain;
 namespace Remotion.Linq.UnitTests.Clauses.ExpressionTreeVisitors
 {
   [TestFixture]
-  public class ReverseResolvingExpressionTreeVisitorTest
+  public class ReverseResolvingExpressionVisitorTest
   {
     private ConstructorInfo _anonymousTypeCtor;
     
