@@ -23,23 +23,6 @@ namespace Remotion.Linq.Parsing
 {
   public abstract partial class RelinqExpressionVisitor
   {
-  /// <summary>
-    /// Determines whether the given <see cref="Expression"/> is an unknown expression not derived from <see cref="ExtensionExpression"/>. 
-    /// <see cref="ExpressionVisitor.Visit"/> cannot handle such expressions at all and will call <see cref="VisitUnknownNonExtension"/> for them.
-    /// </summary>
-    /// <param name="expression">The expression to check.</param>
-    /// <returns>
-    /// 	<see langword="true"/> if <paramref name="expression"/> is an unknown expression not derived from <see cref="ExtensionExpression"/>; 
-    ///   otherwise, <see langword="false"/>.
-    /// </returns>
-    // Should no longer be needed
-    public static bool IsUnknownNonExtensionExpression (Expression expression)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-
-      return !IsSupportedStandardExpression (expression) && !IsExtensionExpression (expression) && !IsRelinqExpression (expression);
-    }
-
     protected override sealed Expression VisitUnknownNonExtension (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);

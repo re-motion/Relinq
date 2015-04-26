@@ -35,7 +35,8 @@ namespace Remotion.Linq.Parsing
   // May this could be the ThrowingExpressionVisitor and other visitor-implementations that should not be throwing, e.g. ReferenceReplacingETV, 
   // simply implement the interface if they need to handle the custom expressions?
   public abstract partial class RelinqExpressionVisitor : ExpressionVisitor
-  {    /// <summary>
+  {
+    /// <summary>
     /// Determines whether the given <see cref="Expression"/> is one of the expressions defined by <see cref="ExpressionType"/> for which
     /// <see cref="RelinqExpressionVisitor"/> has a Visit method. <see cref="ExpressionVisitor.Visit(Expression)"/> handles those by calling the respective Visit method.
     /// </summary>
@@ -106,48 +107,6 @@ namespace Remotion.Linq.Parsing
           return true;
       }
       return false;
-    }
-
-    /// <summary>
-    /// Determines whether the given <see cref="Expression"/> is an <see cref="ExtensionExpression"/>. 
-    /// <see cref="ExpressionVisitor.Visit(Expression)"/> handles such expressions by calling <see cref="ExtensionExpression.Accept"/>.
-    /// </summary>
-    /// <param name="expression">The expression to check.</param>
-    /// <returns>
-    /// 	<see langword="true"/> if <paramref name="expression"/> is an <see cref="ExtensionExpression"/>; otherwise, <see langword="false"/>.
-    /// </returns>
-    // Should no longer be needed
-    public static bool IsExtensionExpression (Expression expression)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-
-      return expression is ExtensionExpression;
-    }
-
-    /// <summary>
-    /// Determines whether the given <see cref="Expression"/> is one of the base expressions defined by re-linq. 
-    /// <see cref="ExpressionVisitor.Visit(Expression)"/> handles those by calling the respective Visit method.
-    /// </summary>
-    /// <param name="expression">The expression to check.</param>
-    /// <returns>
-    /// 	<see langword="true"/> if <paramref name="expression"/> is a re-linq base expression (<see cref="SubQueryExpression"/>, 
-    ///   <see cref="QuerySourceReferenceExpression"/>) for which <see cref="RelinqExpressionVisitor"/> has dedicated Visit methods;
-    ///   otherwise, <see langword="false"/>.
-    /// </returns>
-    // Should no longer be needed
-    public static bool IsRelinqExpression (Expression expression)
-    {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-
-      switch (expression.NodeType)
-      {
-        case SubQueryExpression.ExpressionType:
-        case QuerySourceReferenceExpression.ExpressionType:
-          return true;
-
-        default:
-          return false;
-      }
     }
 
     /// <summary>

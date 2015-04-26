@@ -100,65 +100,6 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     }
 
     [Test]
-    public void IsRelinqExpression ()
-    {
-      var querySourceReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
-      Assert.That (RelinqExpressionVisitor.IsRelinqExpression (querySourceReferenceExpression), Is.True);
-
-      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
-      Assert.That (RelinqExpressionVisitor.IsRelinqExpression (subQueryExpression), Is.True);
-
-      var standardExpression = Expression.Constant (0);
-      Assert.That (RelinqExpressionVisitor.IsRelinqExpression (standardExpression), Is.False);
-      
-      var extensionExpression = new TestExtensionExpression (Expression.Constant (0));
-      Assert.That (RelinqExpressionVisitor.IsRelinqExpression (extensionExpression), Is.False);
-
-      var unknownExpression = new UnknownExpression (typeof (int));
-      Assert.That (RelinqExpressionVisitor.IsRelinqExpression (unknownExpression), Is.False);
-    }
-
-    [Test]
-    public void IsExtensionExpression ()
-    {
-      var extensionExpression = new TestExtensionExpression (Expression.Constant (0));
-      Assert.That (RelinqExpressionVisitor.IsExtensionExpression (extensionExpression), Is.True);
-
-      var standardExpression = Expression.Constant (0);
-      Assert.That (RelinqExpressionVisitor.IsExtensionExpression (standardExpression), Is.False);
-
-      var unknownExpression = new UnknownExpression (typeof (int));
-      Assert.That (RelinqExpressionVisitor.IsExtensionExpression (unknownExpression), Is.False);
-
-      var querySourceReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
-      Assert.That (RelinqExpressionVisitor.IsExtensionExpression (querySourceReferenceExpression), Is.False);
-
-      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
-      Assert.That (RelinqExpressionVisitor.IsExtensionExpression (subQueryExpression), Is.False);
-    }
-
-#if NET_3_5
-    [Test]
-    public void IsUnknownNonExtensionExpression ()
-    {
-      var unknownExpression = new UnknownExpression (typeof (int));
-      Assert.That (RelinqExpressionVisitor.IsUnknownNonExtensionExpression (unknownExpression), Is.True);
-
-      var standardExpression = Expression.Constant (0);
-      Assert.That (RelinqExpressionVisitor.IsUnknownNonExtensionExpression (standardExpression), Is.False);
-
-      var extensionExpression = new TestExtensionExpression (Expression.Constant (0));
-      Assert.That (RelinqExpressionVisitor.IsUnknownNonExtensionExpression (extensionExpression), Is.False);
-
-      var querySourceReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
-      Assert.That (RelinqExpressionVisitor.IsUnknownNonExtensionExpression (querySourceReferenceExpression), Is.False);
-
-      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
-      Assert.That (RelinqExpressionVisitor.IsUnknownNonExtensionExpression (subQueryExpression), Is.False);
-    }
-#endif
-
-    [Test]
     public void AdjustArgumentsForNewExpression ()
     {
       var arguments = new[] { Expression.Constant (0), Expression.Constant ("string1"), Expression.Constant ("string2") };
