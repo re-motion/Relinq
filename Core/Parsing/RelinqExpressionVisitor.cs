@@ -26,14 +26,8 @@ using Remotion.Utilities;
 namespace Remotion.Linq.Parsing
 {
   /// <summary>
-  /// Provides a base class that can be used for visiting and optionally transforming each node of an <see cref="Expression"/> tree in a 
-  /// strongly typed fashion.
-  /// This is the base class of many transformation classes.
+  /// Provides a base class for expression visitors used with re-linq, adding support for <see cref="SubQueryExpression"/> and <see cref="QuerySourceReferenceExpression"/>.
   /// </summary>
-  // TODO: Find name for Relinq-ExpressionVisitor, derived from ExpressionVisitor. 
-  // Possibly only needed to provide default implementation for SubQueryExpression and QuerySourceReferenceExpression.
-  // May this could be the ThrowingExpressionVisitor and other visitor-implementations that should not be throwing, e.g. ReferenceReplacingETV, 
-  // simply implement the interface if they need to handle the custom expressions?
   public abstract partial class RelinqExpressionVisitor : ExpressionVisitor
   {
     /// <summary>
@@ -45,10 +39,6 @@ namespace Remotion.Linq.Parsing
     /// A sequence of expressions that are equivalent to <paramref name="arguments"/>, but converted to the associated member's
     /// result type if needed.
     /// </returns>
-    // TODO: Used by ExpressionTreeVisitor.VisitNew() and MemberAddingNewExpressionTransformerBase.Transform()
-    // VisitNew() does not perform a conversion in .NET 4.0. Was introduced in re-linq with RM-3712, commit 359923a931b6859cd75108041f4e320cd37aa596
-    // Is the conversion needed in Transfom()? Conversion has been introduced in RM-3631, commit 545bd33dc63095de9720ce3ee10cabd0c9448994, 
-    // so probably will just need to be moved back there.
     public static IEnumerable<Expression> AdjustArgumentsForNewExpression (IList<Expression> arguments, IList<MemberInfo> members)
     {
       ArgumentUtility.CheckNotNull ("arguments", arguments);
@@ -66,7 +56,6 @@ namespace Remotion.Linq.Parsing
       }
     }
 
-    // TODO: ExpressionVisitor.VisitNew does not contain an obvious conversion of the NewExpression's argument types. Is this a problem?
     protected override Expression VisitNew (NewExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -87,19 +76,11 @@ namespace Remotion.Linq.Parsing
       return expression;
     }
 
-    // TODO: Keep on type derived from ExpressionVisitor and refactor SubQueryExpression to use Accept-Visitor.
-    // SubQueryExpression accpets visitor and casts to ISubQueryExpressionVisitor, then calls VisitSubQuery.
-    // Basic Visitor-implementation returns expression as is.
-    // If visitor does not implement interface, do nothing?
     protected internal virtual Expression VisitSubQuery (SubQueryExpression expression)
     {
       return expression;
     }
 
-    // TODO: Keep on type derived from ExpressionVisitor and refactor QuerySourceReferenceExpression to use Accept-Visitor
-    // QuerySourceReferenceExpression accpets visitor and casts to IQuerySourceReferenceExpressionVisitor, then calls VisitSubQuery.
-    // Basic Visitor-implementation returns expression as is.
-    // If visitor does not implement interface, do nothing?
     protected internal virtual Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
     {
       return expression;
