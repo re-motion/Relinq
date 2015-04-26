@@ -84,7 +84,17 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
       map[ExpressionType.TypeAs] = Expression.TypeAs (zero, typeof (object));
       map[ExpressionType.TypeIs] = Expression.TypeIs (zero, typeof (object));
       map[(ExpressionType)(-1)] = new SpecialExpressionNode ((ExpressionType)(-1), typeof (int));
-
+#if !NET_3_5
+      map[ExpressionType.Block] = Expression.Block (zero);
+      map[ExpressionType.DebugInfo] = Expression.DebugInfo (Expression.SymbolDocument ("test.cs"), 1, 1, 1, 1);
+      map[ExpressionType.Goto] = Expression.Goto (Expression.Label());
+      map[ExpressionType.Index] = Expression.MakeIndex (arrayExpression, typeof (int[]).GetProperty ("Item"), new[] { zero });
+      map[ExpressionType.Label] = Expression.Label (Expression.Label());
+      map[ExpressionType.Loop] = Expression.Loop (zero);
+      map[ExpressionType.RuntimeVariables] = Expression.RuntimeVariables (Expression.Parameter (typeof (string)));
+      map[ExpressionType.Switch] = Expression.Switch (zero, Expression.SwitchCase (Expression.Default (typeof (void)), zero));
+      map[ExpressionType.Try] = Expression.TryFinally (zero, zero);
+#endif
       return map;
     }
 
@@ -112,5 +122,22 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionTreeVisitorTests
     {
       return Expression.ListBind (typeof (SimpleClass).GetField ("ListValue"), initializers);
     }
+
+#if !NET_3_5
+    public static CatchBlock CreateCatchBlock ()
+    {
+      return Expression.Catch (typeof (Exception), Expression.Constant ("test"));
+    }
+
+    public static LabelTarget CreateLabelTarget ()
+    {
+      return Expression.Label();
+    }
+
+    public static SwitchCase CreateSwitchCase ()
+    {
+      return Expression.SwitchCase (Expression.Constant ("test"), Expression.Constant ("test"));
+    }
+#endif
   }
 }

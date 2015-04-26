@@ -82,6 +82,13 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
+    public void Visit_Null ()
+    {
+      var result =_visitor.Visit (null);
+      Assert.That (result, Is.Null);
+    }
+
+    [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitUnary", MatchType = MessageMatch.Contains)]
     public void VisitUnary ()
     {
@@ -168,6 +175,78 @@ namespace Remotion.Linq.UnitTests.Parsing
       Visit (_visitor, ExpressionType.NewArrayInit);
     }
 
+#if !NET_3_5
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitBlock: ", MatchType = MessageMatch.Contains)]
+    public void VisitBlock ()
+    {
+      Visit (_visitor, ExpressionType.Block);
+    }
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitDebugInfo: ", MatchType = MessageMatch.Contains)]
+    public void VisitDebugInfo ()
+    {
+      Visit (_visitor, ExpressionType.DebugInfo);
+    }
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitDefault: ", MatchType = MessageMatch.Contains)]
+    public void VisitDefaultExpression ()
+    {
+      _visitor.Visit (Expression.Default (typeof (int)));
+    }
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitGoto: ", MatchType = MessageMatch.Contains)]
+    public void VisitGoto ()
+    {
+      Visit (_visitor, ExpressionType.Goto);
+    }
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitIndex: ", MatchType = MessageMatch.Contains)]
+    public void VisitIndex ()
+    {
+      Visit (_visitor, ExpressionType.Index);
+    }
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitLabel: ", MatchType = MessageMatch.Contains)]
+    public void VisitLabel ()
+    {
+      Visit (_visitor, ExpressionType.Label);
+    }
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitLoop: ", MatchType = MessageMatch.Contains)]
+    public void VisitLoop ()
+    {
+      Visit (_visitor, ExpressionType.Loop);
+    }
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitRuntimeVariables: ", MatchType = MessageMatch.Contains)]
+    public void VisitRuntimeVariables ()
+    {
+      Visit (_visitor, ExpressionType.RuntimeVariables);
+    }
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitSwitch: ", MatchType = MessageMatch.Contains)]
+    public void VisitSwitch ()
+    {
+      Visit (_visitor, ExpressionType.Switch);
+    }
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitTry: ", MatchType = MessageMatch.Contains)]
+    public void VisitTry ()
+    {
+      Visit (_visitor, ExpressionType.Try);
+    }
+#endif
+
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitMemberInit: ", MatchType = MessageMatch.Contains)]
     public void VisitMemberInit ()
@@ -209,6 +288,29 @@ namespace Remotion.Linq.UnitTests.Parsing
     {
       _visitor.VisitMemberBinding (ExpressionInstanceCreator.CreateMemberListBinding (new ElementInit[0]));
     }
+
+#if !NET_3_5
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitCatchBlock: ", MatchType = MessageMatch.Contains)]
+    public void VisitCatchBlock ()
+    {
+      _visitor.VisitCatchBlock (ExpressionInstanceCreator.CreateCatchBlock());
+    }
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitLabelTarget: ", MatchType = MessageMatch.Contains)]
+    public void VisitLabelTarget ()
+    {
+      _visitor.VisitLabelTarget (ExpressionInstanceCreator.CreateLabelTarget());
+    }
+
+    [Test]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitSwitchCase: ", MatchType = MessageMatch.Contains)]
+    public void VisitSwitchCase ()
+    {
+      _visitor.VisitSwitchCase (ExpressionInstanceCreator.CreateSwitchCase());
+    }
+#endif
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitSubQuery: ", MatchType = MessageMatch.Contains)]

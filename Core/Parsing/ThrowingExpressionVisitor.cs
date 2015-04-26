@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using System.Reflection;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Utilities;
 
@@ -25,15 +26,91 @@ namespace Remotion.Linq.Parsing
   /// Implements an <see cref="RelinqExpressionVisitor"/> that throws an exception for every expression type that is not explicitly supported.
   /// Inherit from this class to ensure that an exception is thrown when an expression is passed 
   /// </summary>
-  // TODO: .NET 4.0 implementation should test if the Expression type is an Expression defined by System.Core has been known at compile time.
-  // If so, the expression will have a well-known Visit-method implemented by the ThrowingExpressionVisitor. All other types defined by System.Core
-  // should be delegated to an untyped template method that will also throw by default. This way, Expression types introduced by future versions of System.Core
-  // can still be handled by consumers of re-linq while the system also retains the throwing default behavior.
-  // For Expressions not defined by System.Core, the default mechanism can apply, i.e. the VisitExtension-method will try to reduce the expression
-  // and otherwise, delegate to VisitUnhandledItem.
   public abstract partial class ThrowingExpressionVisitor : RelinqExpressionVisitor
   {
+#if !NET_3_5
+    private static readonly Assembly s_systemLinqAssembly = typeof (Expression).GetTypeInfo().Assembly;
+#endif
+
     protected abstract Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod);
+
+#if !NET_3_5
+    public override Expression Visit (Expression expression)
+    {
+      if (expression == null)
+        return base.Visit ((Expression) null);
+
+      var isCustomExpression = !ReferenceEquals (s_systemLinqAssembly, expression.GetType().GetTypeInfo().Assembly);
+      if (isCustomExpression)
+        return base.Visit (expression);
+
+      var isWellKnownStandardExpression = IsWellKnownStandardExpression (expression);
+      if (isWellKnownStandardExpression)
+        return base.Visit (expression);
+
+      return VisitUnknownStandardExpression (expression, "Visit" + expression.NodeType, base.Visit);
+    }
+
+    protected virtual Expression VisitUnknownStandardExpression (Expression expression, string visitMethod, Func<Expression, Expression> baseBehavior)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      throw CreateUnhandledItemException (expression, visitMethod);
+    }
+
+    private bool IsWellKnownStandardExpression (Expression expression)
+    {
+      if (expression is UnaryExpression)
+        return true;
+      if (expression is BinaryExpression)
+        return true;
+      if (expression is TypeBinaryExpression)
+        return true;
+      if (expression is ConstantExpression)
+        return true;
+      if (expression is ConditionalExpression)
+        return true;
+      if (expression is ParameterExpression)
+        return true;
+      if (expression is LambdaExpression)
+        return true;
+      if (expression is MethodCallExpression)
+        return true;
+      if (expression is InvocationExpression)
+        return true;
+      if (expression is MemberExpression)
+        return true;
+      if (expression is NewExpression)
+        return true;
+      if (expression is NewArrayExpression)
+        return true;
+      if (expression is MemberInitExpression)
+        return true;
+      if (expression is ListInitExpression)
+        return true;
+      if (expression is BlockExpression)
+        return true;
+      if (expression is DebugInfoExpression)
+        return true;
+      if (expression is DefaultExpression)
+        return true;
+      if (expression is GotoExpression)
+        return true;
+      if (expression is IndexExpression)
+        return true;
+      if (expression is LabelExpression)
+        return true;
+      if (expression is LoopExpression)
+        return true;
+      if (expression is RuntimeVariablesExpression)
+        return true;
+      if (expression is SwitchExpression)
+        return true;
+      if (expression is TryExpression)
+        return true;
+      return false;
+    }
+#endif
 
     /// <summary>
     /// Called when an unhandled item is visited. This method provides the item the visitor cannot handle (<paramref name="unhandledItem"/>), 
@@ -238,6 +315,122 @@ namespace Remotion.Linq.Parsing
       return base.VisitListInit (expression);
     }
 
+#if !NET_3_5
+    protected override Expression VisitBlock (BlockExpression expression)
+    {
+      return VisitUnhandledItem<BlockExpression, Expression> (expression, "VisitBlock", BaseVisitBlock);
+    }
+
+    protected Expression BaseVisitBlock (BlockExpression expression)
+    {
+      return base.VisitBlock (expression);
+    }
+
+    protected override Expression VisitDebugInfo (DebugInfoExpression expression)
+    {
+      return VisitUnhandledItem<DebugInfoExpression, Expression> (expression, "VisitDebugInfo", BaseVisitDebugInfo);
+    }
+
+    protected Expression BaseVisitDebugInfo (DebugInfoExpression expression)
+    {
+      return base.VisitDebugInfo (expression);
+    }
+
+    protected override Expression VisitDefault (DefaultExpression expression)
+    {
+      return VisitUnhandledItem<DefaultExpression, Expression> (expression, "VisitDefault", BaseVisitDefault);
+    }
+
+    protected Expression BaseVisitDefault (DefaultExpression expression)
+    {
+      return base.VisitDefault (expression);
+    }
+
+    protected override Expression VisitGoto (GotoExpression expression)
+    {
+      return VisitUnhandledItem<GotoExpression, Expression> (expression, "VisitGoto", BaseVisitGoto);
+    }
+
+    protected Expression BaseVisitGoto (GotoExpression expression)
+    {
+      return base.VisitGoto (expression);
+    }
+
+    protected override Expression VisitIndex (IndexExpression expression)
+    {
+      return VisitUnhandledItem<IndexExpression, Expression> (expression, "VisitIndex", BaseVisitIndex);
+    }
+
+    protected Expression BaseVisitIndex (IndexExpression expression)
+    {
+      return base.VisitIndex (expression);
+    }
+
+    protected override Expression VisitLabel (LabelExpression expression)
+    {
+      return VisitUnhandledItem<LabelExpression, Expression> (expression, "VisitLabel", BaseVisitLabel);
+    }
+
+    protected Expression BaseVisitLabel (LabelExpression expression)
+    {
+      return base.VisitLabel (expression);
+    }
+
+    protected override Expression VisitLoop (LoopExpression expression)
+    {
+      return VisitUnhandledItem<LoopExpression, Expression> (expression, "VisitLoop", BaseVisitLoop);
+    }
+
+    protected Expression BaseVisitLoop (LoopExpression expression)
+    {
+      return base.VisitLoop (expression);
+    }
+
+    protected override Expression VisitRuntimeVariables (RuntimeVariablesExpression expression)
+    {
+      return VisitUnhandledItem<RuntimeVariablesExpression, Expression> (expression, "VisitRuntimeVariables", BaseVisitRuntimeVariables);
+    }
+
+    protected Expression BaseVisitRuntimeVariables (RuntimeVariablesExpression expression)
+    {
+      return base.VisitRuntimeVariables (expression);
+    }
+
+    protected override Expression VisitSwitch (SwitchExpression expression)
+    {
+      return VisitUnhandledItem<SwitchExpression, Expression> (expression, "VisitSwitch", BaseVisitSwitch);
+    }
+
+    protected Expression BaseVisitSwitch (SwitchExpression expression)
+    {
+      return base.VisitSwitch (expression);
+    }
+
+    protected override Expression VisitTry (TryExpression expression)
+    {
+      return VisitUnhandledItem<TryExpression, Expression> (expression, "VisitTry", BaseVisitTry);
+    }
+
+    protected Expression BaseVisitTry (TryExpression expression)
+    {
+      return base.VisitTry (expression);
+    }
+#endif
+
+#if !NET_3_5
+    protected override MemberBinding VisitMemberBinding (MemberBinding expression)
+    {
+      // Base-implementation will already delegate all variations of MemberBinding to dedicated Vist-methods.
+      // Therefor, the VisitMemberBinding-method should not throw an exception on its own.
+      return BaseVisitMemberBinding (expression);
+    }
+
+    protected MemberBinding BaseVisitMemberBinding (MemberBinding expression)
+    {
+      return base.VisitMemberBinding (expression);
+    }
+#endif
+
     protected override ElementInit VisitElementInit (ElementInit elementInit)
     {
       return VisitUnhandledItem<ElementInit, ElementInit> (elementInit, "VisitElementInit", BaseVisitElementInit);
@@ -277,6 +470,39 @@ namespace Remotion.Linq.Parsing
     {
       return base.VisitMemberListBinding (listBinding);
     }
+
+#if !NET_3_5
+    protected override CatchBlock VisitCatchBlock (CatchBlock expression)
+    {
+      return VisitUnhandledItem<CatchBlock, CatchBlock> (expression, "VisitCatchBlock", BaseVisitCatchBlock);
+    }
+
+    protected CatchBlock BaseVisitCatchBlock (CatchBlock expression)
+    {
+      return base.VisitCatchBlock (expression);
+    }
+
+    protected override LabelTarget VisitLabelTarget (LabelTarget expression)
+    {
+      return VisitUnhandledItem<LabelTarget, LabelTarget> (expression, "VisitLabelTarget", BaseVisitLabelTarget);
+    }
+
+    protected LabelTarget BaseVisitLabelTarget (LabelTarget expression)
+    {
+      return base.VisitLabelTarget (expression);
+    }
+
+
+    protected override SwitchCase VisitSwitchCase (SwitchCase expression)
+    {
+      return VisitUnhandledItem<SwitchCase, SwitchCase> (expression, "VisitSwitchCase", BaseVisitSwitchCase);
+    }
+
+    protected SwitchCase BaseVisitSwitchCase (SwitchCase expression)
+    {
+      return base.VisitSwitchCase (expression);
+    }
+#endif
 
     protected internal override Expression VisitSubQuery (SubQueryExpression expression)
     {

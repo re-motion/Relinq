@@ -40,6 +40,23 @@ namespace Remotion.Linq.UnitTests.Parsing
       return base.VisitElementInit (elementInit);
     }
 
+#if !NET_3_5
+    public new CatchBlock VisitCatchBlock (CatchBlock catchBlock)
+    {
+      return base.VisitCatchBlock (catchBlock);
+    }
+
+    public new LabelTarget VisitLabelTarget (LabelTarget labelTarget)
+    {
+      return base.VisitLabelTarget (labelTarget);
+    }
+
+    public new SwitchCase VisitSwitchCase (SwitchCase switchCase)
+    {
+      return base.VisitSwitchCase (switchCase);
+    }
+#endif
+
     protected override Exception CreateUnhandledItemException<T> (T unhandledItem, string visitMethod)
     {
       throw new NotSupportedException("Test of " + visitMethod + ": " + unhandledItem);
