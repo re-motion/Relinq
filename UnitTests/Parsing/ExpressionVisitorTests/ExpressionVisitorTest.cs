@@ -54,6 +54,18 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
     }
 
     [Test]
+    public void AdjustArgumentsForNewExpression_WithMemberCountMismatch_ThrowsArgumentException ()
+    {
+      var arguments = new[] { Expression.Constant (0), Expression.Constant ("string1") };
+      var tupleType = typeof (Tuple<double, object>);
+      var members = new MemberInfo[] { tupleType.GetProperty ("Item1") };
+
+      Assert.That (
+          () =>  RelinqExpressionVisitor.AdjustArgumentsForNewExpression (arguments, members).ToArray(),
+          Throws.ArgumentException.With.Message.EqualTo ("Incorrect number of arguments for the given members."));
+    }
+
+    [Test]
     public void Visit_Extension ()
     {
       var expectedResult = Expression.Constant (0);

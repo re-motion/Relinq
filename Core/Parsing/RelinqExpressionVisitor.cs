@@ -43,8 +43,8 @@ namespace Remotion.Linq.Parsing
     {
       ArgumentUtility.CheckNotNull ("arguments", arguments);
       ArgumentUtility.CheckNotNull ("members", members);
-
-      Assertion.IsTrue (arguments.Count == members.Count);
+      if (arguments.Count != members.Count)
+        throw new ArgumentException ("Incorrect number of arguments for the given members.");
 
       for (int i = 0; i < arguments.Count; ++i)
       {
