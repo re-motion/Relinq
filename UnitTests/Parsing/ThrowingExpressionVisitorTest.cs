@@ -59,7 +59,11 @@ namespace Remotion.Linq.UnitTests.Parsing
     {
       RelinqExpressionVisitor visitor = new TestThrowingConstantExpressionVisitor ();
 
+#if !NET_3_5
+      var nonReducibleExpression = MockRepository.GenerateStub<Expression>();
+#else
       var nonReducibleExpression = MockRepository.GenerateStub<ExtensionExpression> (typeof (int));
+#endif
       nonReducibleExpression
           .Stub (stub => ExtensionExpressionTestHelper.CallAccept (stub, Arg<RelinqExpressionVisitor>.Is.Anything))
           .WhenCalled (mi => PrivateInvoke.InvokeNonPublicMethod (mi.Arguments[0], "VisitExtension", nonReducibleExpression))

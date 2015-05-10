@@ -17,7 +17,9 @@
 
 using System;
 using System.Linq.Expressions;
+#if NET_3_5
 using Remotion.Linq.Clauses.Expressions;
+#endif
 using Remotion.Linq.Clauses.ExpressionVisitors;
 #if NET_3_5
 using Remotion.Linq.Parsing;
@@ -26,17 +28,36 @@ using Remotion.Utilities;
 
 namespace Remotion.Linq.Development.UnitTesting.Clauses.Expressions
 {
-  public class TestExtensionExpression : ExtensionExpression
+  public class TestExtensionExpression
+#if !NET_3_5
+    : Expression
+#else
+    : ExtensionExpression
+#endif
   {
     private readonly Expression _expression;
 
     public TestExtensionExpression (Expression expression)
+#if NET_3_5
         : base(expression.Type)
+#endif
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       _expression = expression;
     }
+
+#if !NET_3_5
+    public override Type Type
+    {
+      get { return _expression.Type; }
+    }
+
+    public override ExpressionType NodeType
+    {
+      get { return ExpressionType.Extension; }
+    }
+#endif
 
     public Expression Expression
     {
