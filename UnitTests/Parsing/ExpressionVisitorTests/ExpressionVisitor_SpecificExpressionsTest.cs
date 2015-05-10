@@ -24,7 +24,6 @@ using System.Reflection;
 using NUnit.Framework;
 using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Development.UnitTesting;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 
@@ -386,35 +385,6 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.NodeType, Is.EqualTo (ExpressionType.New));
       Assert.That (result.Arguments, Is.EqualTo (new[] { newArgument }));
-      Assert.That (result.Members, Is.SameAs (expression.Members));
-    }
-
-    [Test]
-    public void VisitNew_ChangedArguments_WithMembers_AndConversionRequired ()
-    {
-      NewExpression expression = Expression.New (
-          typeof (KeyValuePair<object, object>).GetConstructor (new[] { typeof (object), typeof (object) }),
-          new Expression[] { Expression.Constant (null), Expression.Constant (null) },
-          typeof (KeyValuePair<object, object>).GetProperty ("Key"), typeof (KeyValuePair<object, object>).GetProperty ("Value"));
-      var argument1 = expression.Arguments[0];
-      var argument2 = expression.Arguments[1];
-
-      var newArgument1 = Expression.Constant ("testKey");
-      var newArgument2 = Expression.Constant ("testValue");
-      Expect.Call (VisitorMock.Visit (argument1)).Return (newArgument1);
-      Expect.Call (VisitorMock.Visit (argument2)).Return (newArgument2);
-      
-      var result = (NewExpression) InvokeAndCheckVisit ("VisitNew", expression);
-
-      Assert.That (result, Is.Not.SameAs (expression));
-      Assert.That (result.NodeType, Is.EqualTo (ExpressionType.New));
-      
-      Assert.That (result.Arguments.Count, Is.EqualTo (2));
-      var expectedArgument1 = Expression.Convert (newArgument1, typeof (object));
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedArgument1, result.Arguments[0]);
-      var expectedArgument2 = Expression.Convert (newArgument2, typeof (object));
-      ExpressionTreeComparer.CheckAreEqualTrees (expectedArgument2, result.Arguments[1]);
-      
       Assert.That (result.Members, Is.SameAs (expression.Members));
     }
 

@@ -187,6 +187,9 @@
     <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\VBCompareStringExpressionTransformerTest.cs" />
     <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\VBInformationIsNothingExpressionTransformerTest.cs" />
     <Compile Include="Parsing\ExpressionVisitors\TransformingExpressionVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitorTests\RelinqExpressionVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitorTests\RelinqExpressionVisitorTestBase.cs" />
+    <Compile Include="Parsing\ExpressionVisitorTests\RelinqExpressionVisitor_NewExpressionsTest.cs" />
     <Compile Include="Parsing\ExpressionVisitorTests\TypeForNewExpression.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -309,10 +312,6 @@
     <Compile Include="Parsing\ExpressionVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionVisitorTest.cs" />
     <Compile Include="Parsing\ExpressionVisitors\UnknownExpression.cs" />
     <Compile Include="Parsing\ExpressionVisitorTests\ExpressionInstanceCreator.cs" />
-    <Compile Include="Parsing\ExpressionVisitorTests\ExpressionVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitorTests\ExpressionVisitor_BinaryExpressionsTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitorTests\ExpressionVisitor_SpecificExpressionsTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitorTests\ExpressionVisitorTestBase.cs" />
     <Compile Include="Parsing\ExpressionVisitorTests\SimpleClass.cs" />
     <Compile Include="Parsing\ExpressionVisitorTests\SpecialExpressionNode.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeParserTest.cs" />
