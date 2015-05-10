@@ -387,7 +387,6 @@
     <Compile Include="QueryModelTest.cs" />
     <Compile Include="QueryModelVisitorBaseTest.cs" />
     <Compile Include="QueryProviderBaseTest.cs" />
-    <Compile Include="Utilities\ExpressionTestExtensions.cs" />
     <Compile Include="Utilities\ItemTypeReflectionUtilityTest.cs" />
     <Compile Include="Utilities\ReflectionUtilityTest.cs" />
     <Compile Include="Clauses\Expressions\ExtensionExpressionTestHelper.cs" />

@@ -26,8 +26,8 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Development.UnitTesting.Parsing;
 using Remotion.Linq.Parsing;
+using Remotion.Linq.UnitTests.Clauses.Expressions;
 using Remotion.Linq.UnitTests.TestDomain;
-using Remotion.Linq.UnitTests.Utilities;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 
@@ -73,7 +73,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
       var visitor = new TestableExpressionVisitor();
 
       var extensionExpressionMock = MockRepository.StrictMock<ExtensionExpression> (typeof (int));
-      extensionExpressionMock.Expect (mock => mock.Accept (visitor)).Return (expectedResult);
+      extensionExpressionMock.Expect (mock => ExtensionExpressionTestHelper.CallAccept (mock, visitor)).Return (expectedResult);
       extensionExpressionMock.Replay();
 
       var result = visitor.Visit (extensionExpressionMock);

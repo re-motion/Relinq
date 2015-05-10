@@ -23,7 +23,6 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing;
 using Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain;
-using Remotion.Linq.UnitTests.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Clauses.Expressions
@@ -73,7 +72,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
           .Return (_expression);
       visitorMock.Replay ();
 
-      _expression.Accept (visitorMock);
+      ExtensionExpressionTestHelper.CallAccept (_expression, visitorMock);
 
       visitorMock.VerifyAllExpectations ();
     }
@@ -89,7 +88,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
           .Return (expectedResult);
       visitorMock.Replay ();
 
-      var result = _expression.Accept (visitorMock);
+      var result = ExtensionExpressionTestHelper.CallAccept (_expression, visitorMock);
 
       visitorMock.VerifyAllExpectations ();
       Assert.That (result, Is.SameAs (expectedResult));

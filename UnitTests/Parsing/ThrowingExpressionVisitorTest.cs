@@ -22,9 +22,9 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Development.UnitTesting.Clauses.Expressions;
 using Remotion.Linq.Parsing;
+using Remotion.Linq.UnitTests.Clauses.Expressions;
 using Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests;
 using Remotion.Linq.UnitTests.TestDomain;
-using Remotion.Linq.UnitTests.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Parsing
@@ -61,7 +61,7 @@ namespace Remotion.Linq.UnitTests.Parsing
 
       var nonReducibleExpression = MockRepository.GenerateStub<ExtensionExpression> (typeof (int));
       nonReducibleExpression
-          .Stub (stub => stub.Accept (Arg<RelinqExpressionVisitor>.Is.Anything))
+          .Stub (stub => ExtensionExpressionTestHelper.CallAccept (stub, Arg<RelinqExpressionVisitor>.Is.Anything))
           .WhenCalled (mi => PrivateInvoke.InvokeNonPublicMethod (mi.Arguments[0], "VisitExtension", nonReducibleExpression))
           .Return (nonReducibleExpression);
       nonReducibleExpression.Stub (stub => stub.CanReduce).Return (false);

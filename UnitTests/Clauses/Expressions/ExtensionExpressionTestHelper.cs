@@ -25,7 +25,6 @@ using Remotion.Linq.Clauses.Expressions;
 #endif
 using Remotion.Linq.Parsing;
 using Remotion.Linq.Utilities;
-using Remotion.Linq.UnitTests.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Clauses.Expressions
@@ -51,7 +50,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
           .Return (returnedExpression);
       visitorMock.Replay ();
 
-      var result = expression.Accept (visitorMock);
+      var result = CallAccept (expression, visitorMock);
 
       visitorMock.VerifyAllExpectations ();
 
@@ -75,11 +74,22 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
           .Return (returnedExpression);
       visitorMock.Replay ();
 
-      var result = expression.Accept (visitorMock);
+      var result = CallAccept (expression, visitorMock);
 
       visitorMock.VerifyAllExpectations ();
 
       Assert.That (result, Is.SameAs (returnedExpression));
+    }
+
+    public static Expression CallAccept<TExpression, TVisitor> (TExpression expression, TVisitor visitor)
+#if !NET_3_5
+        where TExpression : Expression
+#else
+        where TExpression : ExtensionExpression
+#endif
+        where TVisitor : ExpressionVisitor
+    {
+      return (Expression) PrivateInvoke.InvokeNonPublicMethod (expression, "Accept", visitor);
     }
 
 #if !NET_3_5

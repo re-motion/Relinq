@@ -19,7 +19,6 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain;
-using Remotion.Linq.UnitTests.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Clauses.Expressions
@@ -33,7 +32,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       var visitorMock = MockRepository.GenerateMock<SpecificVisitor> ();
       
       var expression = new TestableExtensionExpressionWithSpecificVisitor (typeof (int));
-      expression.Accept (visitorMock);
+      ExtensionExpressionTestHelper.CallAccept (expression, visitorMock);
 
       visitorMock.AssertWasCalled (mock => mock.VisitTestableExtensionExpression (expression));
     }
