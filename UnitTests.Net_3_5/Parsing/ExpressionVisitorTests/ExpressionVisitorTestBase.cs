@@ -28,13 +28,13 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
   public class ExpressionVisitorTestBase
   {
     private MockRepository _mockRepository;
-    private RelinqExpressionVisitor _visitorMock;
+    private ExpressionVisitor _visitorMock;
 
     [SetUp]
     public virtual void Setup ()
     {
       _mockRepository = new MockRepository ();
-      _visitorMock = _mockRepository.StrictMock<RelinqExpressionVisitor> ();
+      _visitorMock = _mockRepository.StrictMock<ExpressionVisitor> ();
     }
 
     protected MockRepository MockRepository
@@ -43,7 +43,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
       set { _mockRepository = value; }
     }
 
-    public RelinqExpressionVisitor VisitorMock
+    public ExpressionVisitor VisitorMock
     {
       get { return _visitorMock; }
     }

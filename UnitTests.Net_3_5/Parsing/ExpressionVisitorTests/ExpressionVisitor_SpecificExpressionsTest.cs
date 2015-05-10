@@ -722,7 +722,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
 
 #if NET_3_5
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Expression type 'SpecialExpressionNode' is not supported by this RelinqExpressionVisitor.*\\.", MatchType = MessageMatch.Regex)]
+    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Expression type 'SpecialExpressionNode' is not supported by this ExpressionVisitor.*\\.", MatchType = MessageMatch.Regex)]
     public void VisitUnknownNonExtension ()
     {
       var expressionNode = new SpecialExpressionNode ((ExpressionType) (-1), typeof (int));
