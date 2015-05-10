@@ -47,7 +47,12 @@ namespace Remotion.Linq.Clauses.Expressions
   /// <see cref="VisitChildren"/> methods.
   /// </para>
   /// </remarks>
-  public class PartialEvaluationExceptionExpression : ExtensionExpression
+  public class PartialEvaluationExceptionExpression
+#if !NET_3_5
+    : Expression
+#else
+    : ExtensionExpression
+#endif
   {
     public const ExpressionType ExpressionType = (ExpressionType) 100004;
 
@@ -55,13 +60,27 @@ namespace Remotion.Linq.Clauses.Expressions
     private readonly Expression _evaluatedExpression;
 
     public PartialEvaluationExceptionExpression (Exception exception, Expression evaluatedExpression)
+#if NET_3_5
       : base (ArgumentUtility.CheckNotNull ("evaluatedExpression", evaluatedExpression).Type, ExpressionType)
+#endif
     {
       ArgumentUtility.CheckNotNull ("exception", exception);
       
       _exception = exception;
       _evaluatedExpression = evaluatedExpression;
     }
+
+#if !NET_3_5
+    public override Type Type
+    {
+      get { return _evaluatedExpression.Type; }
+    }
+
+    public override ExpressionType NodeType
+    {
+      get { return ExpressionType; }
+    }
+#endif
 
     public Exception Exception
     {

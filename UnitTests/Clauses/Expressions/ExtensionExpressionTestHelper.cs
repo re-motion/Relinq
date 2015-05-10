@@ -20,7 +20,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using Remotion.Development.UnitTesting;
+#if NET_3_5
 using Remotion.Linq.Clauses.Expressions;
+#endif
 using Remotion.Linq.Parsing;
 using Remotion.Linq.Utilities;
 using Remotion.Linq.UnitTests.Utilities;
@@ -32,9 +34,14 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
   {
     public static void CheckAcceptForVisitorSupportingType<TExpression, TVisitorInterface> (
         TExpression expression,
-        Func<TVisitorInterface, Expression> visitMethodCall) where TExpression : ExtensionExpression
+        Func<TVisitorInterface, Expression> visitMethodCall)
+#if !NET_3_5
+        where TExpression : Expression
+#else
+        where TExpression : ExtensionExpression
+#endif
     {
-      var mockRepository = new MockRepository ();
+      var mockRepository = new MockRepository();
       var visitorMock = mockRepository.StrictMultiMock<RelinqExpressionVisitor> (typeof (TVisitorInterface));
 
       var returnedExpression = Expression.Constant (0);
@@ -51,7 +58,12 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       Assert.That (result, Is.SameAs (returnedExpression));
     }
 
-    public static void CheckAcceptForVisitorNotSupportingType<TExpression> (TExpression expression) where TExpression : ExtensionExpression
+    public static void CheckAcceptForVisitorNotSupportingType<TExpression> (TExpression expression)
+#if !NET_3_5
+        where TExpression : Expression
+#else
+        where TExpression : ExtensionExpression
+#endif
     {
       var mockRepository = new MockRepository ();
       var visitorMock = mockRepository.StrictMock<RelinqExpressionVisitor> ();
@@ -70,7 +82,11 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       Assert.That (result, Is.SameAs (returnedExpression));
     }
 
-    public static Expression CallVisitChildren (ExtensionExpression target, RelinqExpressionVisitor visitor)
+#if !NET_3_5
+    public static Expression CallVisitChildren (Expression target, ExpressionVisitor visitor)
+#else
+    public static Expression CallVisitChildren (ExtensionExpression target, ExpressionVisitor visitor)
+#endif
     {
       return (Expression) PrivateInvoke.InvokeNonPublicMethod (target, "VisitChildren", visitor);
     }
