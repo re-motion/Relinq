@@ -106,9 +106,6 @@
     <Compile Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\NullableTypeUtility.cs" />
     <Compile Include="Clauses\AdditionalFromClause.cs" />
     <Compile Include="Clauses\CloneContext.cs" />
-    <Compile Include="Clauses\Expressions\ExtensionExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Clauses\Expressions\IPartialEvaluationExceptionExpressionVisitor.cs" />
     <Compile Include="Clauses\Expressions\IVBSpecificExpressionVisitor.cs" />
     <Compile Include="Clauses\Expressions\VBStringComparisonExpression.cs" />

@@ -230,8 +230,6 @@
     <Compile Include="TestDomain\Result.cs" />
     <Compile Include="TestUtilities\NonTransformedTuple.cs" />
     <Compile Include="Clauses\AdditionalFromClauseTest.cs" />
-    <Compile Include="Clauses\Expressions\ExtensionExpressionIntegrationTest.cs" />
-    <Compile Include="Clauses\Expressions\ExtensionExpressionTest.cs" />
     <Compile Include="Clauses\Expressions\QuerySourceReferenceExpressionTest.cs" />
     <Compile Include="Clauses\Expressions\TestDomain\ReducibleExtensionExpressionNotOverridingReduce.cs" />
     <Compile Include="Clauses\Expressions\TestDomain\ISpecificVisitor.cs" />

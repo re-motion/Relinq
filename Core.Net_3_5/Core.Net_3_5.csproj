@@ -92,6 +92,7 @@
     <Compile Include="..\Core\**\*.cs" Exclude="..\Core\App_Packages\**\*.*;..\Core\bin\**\*.*;..\Core\obj\**\*.*">
       <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
     </Compile>
+    <Compile Include="Clauses\Expressions\ExtensionExpression.cs" />
     <Compile Include="Clauses\Expressions\ExtensionExpression.Net_3_5.cs" />
     <Compile Include="Collections\NotifyCollectionChangedAction.cs" />
     <Compile Include="Collections\ObservableCollection.cs" />

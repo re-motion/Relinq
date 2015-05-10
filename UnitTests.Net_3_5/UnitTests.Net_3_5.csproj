@@ -187,6 +187,8 @@
     <Compile Include="..\UnitTests\**\*.cs" Exclude="..\UnitTests\App_Packages\**\*.*;..\UnitTests\bin\**\*.*;..\UnitTests\obj\**\*.*">
       <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
     </Compile>
+    <Compile Include="Clauses\Expressions\ExtensionExpressionIntegrationTest.cs" />
+    <Compile Include="Clauses\Expressions\ExtensionExpressionTest.cs" />
     <Compile Include="Collections\ObservableCollectionTest.cs" />
     <Compile Include="Parsing\ExpressionVisitorTests\ExpressionVisitorTest.cs" />
     <Compile Include="Parsing\ExpressionVisitorTests\ExpressionVisitorTestBase.cs" />
