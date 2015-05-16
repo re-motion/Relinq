@@ -88,6 +88,8 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
 
     protected override Expression VisitParameter (ParameterExpression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       // Parameters are not evaluatable.
       _isCurrentSubtreeEvaluatable = false;
       return base.VisitParameter (expression);
@@ -95,6 +97,8 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
 
     protected override Expression VisitMethodCall (MethodCallExpression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       // Method calls are only evaluatable if they do not involve IQueryable objects.
 
       if (IsQueryableExpression (expression.Object))
@@ -111,6 +115,8 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
 
     protected override Expression VisitMember (MemberExpression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       // MemberExpressions are only evaluatable if they do not involve IQueryable objects.
 
       if (IsQueryableExpression (expression.Expression))
@@ -259,6 +265,8 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
 
     public Expression VisitPartialEvaluationException (PartialEvaluationExceptionExpression partialEvaluationExceptionExpression)
     {
+      ArgumentUtility.CheckNotNull ("partialEvaluationExceptionExpression", partialEvaluationExceptionExpression);
+
       // PartialEvaluationExceptionExpression is not evaluable, and its children aren't either (so we don't visit them).
       _isCurrentSubtreeEvaluatable = false;
       return partialEvaluationExceptionExpression;

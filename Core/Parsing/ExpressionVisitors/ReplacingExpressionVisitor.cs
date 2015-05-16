@@ -58,6 +58,8 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
 
     protected internal override Expression VisitSubQuery (SubQueryExpression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       expression.QueryModel.TransformExpressions (Visit);
       return expression; // Note that we modifiy the (mutable) QueryModel, we return an unchanged expression
     }

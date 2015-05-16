@@ -50,7 +50,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
     {
       var newExpression = base.Visit (expression);
       if (newExpression == null)
-        return newExpression;
+        return null;
 
       var transformations = _tranformationProvider.GetTransformations (newExpression);
 

@@ -124,6 +124,8 @@ namespace Remotion.Linq.Clauses.ExpressionVisitors
 
     protected override Expression VisitNew (NewExpression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       if (expression.Members != null && expression.Members.Count > 0)
       {
         for (int i = 0; i < expression.Members.Count; i++)
@@ -135,6 +137,8 @@ namespace Remotion.Linq.Clauses.ExpressionVisitors
 
     protected override Expression VisitUnary (UnaryExpression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       if (expression.NodeType == ExpressionType.Convert || expression.NodeType == ExpressionType.ConvertChecked)
       {
         var reverseConvert = Expression.Convert (_accessorPathStack.Peek (), expression.Operand.Type);
@@ -148,6 +152,8 @@ namespace Remotion.Linq.Clauses.ExpressionVisitors
 
     protected override MemberBinding VisitMemberBinding (MemberBinding memberBinding)
     {
+      ArgumentUtility.CheckNotNull ("memberBinding", memberBinding);
+
       if (memberBinding is MemberAssignment)
         return base.VisitMemberBinding (memberBinding);
       else
@@ -156,6 +162,8 @@ namespace Remotion.Linq.Clauses.ExpressionVisitors
 
     protected override MemberAssignment VisitMemberAssignment (MemberAssignment memberAssigment)
     {
+      ArgumentUtility.CheckNotNull ("memberAssigment", memberAssigment);
+
       CheckAndVisitMemberAssignment (memberAssigment.Member, memberAssigment.Expression);
       return memberAssigment;
     }

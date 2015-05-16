@@ -55,6 +55,8 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
 
     protected override Expression VisitMember (MemberExpression memberExpression)
     {
+      ArgumentUtility.CheckNotNull ("memberExpression", memberExpression);
+
       var memberBindings = GetMemberBindingsCreatedByExpression (memberExpression.Expression);
       if (memberBindings == null)
         return base.VisitMember (memberExpression);
@@ -71,6 +73,8 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
 
     protected internal override Expression VisitSubQuery (SubQueryExpression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       expression.QueryModel.TransformExpressions (ReplaceTransparentIdentifiers);
       return expression; // Note that we modifiy the (mutable) QueryModel, we return an unchanged expression
     }
