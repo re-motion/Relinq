@@ -34,7 +34,6 @@ using Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation;
 using Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests;
 using Remotion.Linq.UnitTests.Parsing.Structure.TestDomain;
 using Remotion.Linq.UnitTests.TestDomain;
-using Rhino.Mocks;
 #if !NET_3_5
 using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
 #endif
@@ -44,6 +43,22 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
   [TestFixture]
   public class EvaluatableTreeFindingExpressionVisitorTest
   {
+#if !NET_3_5
+    private class RecursiveExpression : Expression
+    {
+      public override bool CanReduce
+      {
+        get { return true; }
+      }
+
+      public override Expression Reduce ()
+      {
+        // Intentionally wrong implementation. Reduce should never return itself.
+        return this;
+      }
+    }
+#endif
+
     [Test]
     public void SimpleExpression_IsEvaluatable ()
     {
@@ -117,6 +132,31 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
     }
 
+#if !NET_3_5
+    [Test]
+    public void VisitReducibleExtensionExpression_IsEvaluatable ()
+    {
+      var innerExpression = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (0), Expression.Constant (0));
+      var expression = new ReducibleExtensionExpression (innerExpression);
+      
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (innerExpression), Is.True);
+    }
+
+    [Test]
+    public void VisitNestedReducibleExtensionExpression_IsEvaluatable ()
+    {
+      var innerExpression = new ReducibleExtensionExpression (Expression.Constant (1));
+      var expression = new ReducibleExtensionExpression (Expression.Add (innerExpression, Expression.Constant (1)));
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (innerExpression), Is.True);
+    }
+#else
     [Test]
     public void VisitReducibleExtensionExpression_NotEvaluatable_ButChildrenMayBe ()
     {
@@ -128,6 +168,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       Assert.That (evaluationInfo.IsEvaluatableExpression (extensionExpression), Is.False);
       Assert.That (evaluationInfo.IsEvaluatableExpression (innerExpression), Is.True);
     }
+#endif
 
     [Test]
     public void VisitNonReducibleExtensionExpression_NotEvaluatable_ButChildrenMayBe ()
@@ -140,6 +181,28 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       Assert.That (evaluationInfo.IsEvaluatableExpression (extensionExpression), Is.False);
       Assert.That (evaluationInfo.IsEvaluatableExpression (innerExpression), Is.True);
     }
+
+    [Test]
+    public void VisitNestedNonReducibleExtensionExpression_NotEvaluatable ()
+    {
+      var innerExpression = new NonReducibleExtensionExpression (Expression.Constant (1));
+      var expression = new ReducibleExtensionExpression (Expression.Add (innerExpression, Expression.Constant (1)));
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (innerExpression), Is.False);
+    }
+
+#if !NET_3_5
+    [Test]
+    public void VisitExtensionExpressionWithInfiniteReduceImplementation_Throws ()
+    {
+      var expression = new RecursiveExpression();
+
+      Assert.That (() => EvaluatableTreeFindingExpressionVisitor.Analyze (expression), Throws.InvalidOperationException);
+    }
+#endif
 
     [Test]
     public void NullExpression_InOtherExpression_IsIgnored ()

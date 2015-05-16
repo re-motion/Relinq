@@ -321,6 +321,31 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
       Assert.That (result, Is.SameAs (expression));
     }
 
+#if !NET_3_5
+    [Test]
+    public void VisitReducibleExtensionExpression ()
+    {
+      var innerExpression = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (0), Expression.Constant (0));
+      var extensionExpression = new ReducibleExtensionExpression (innerExpression);
+      
+      var result = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (extensionExpression);
+
+      var expected = Expression.Constant (true);
+      ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
+    }
+
+    [Test]
+    public void VisitNonReducibleExtensionExpression ()
+    {
+      var innerExpression = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (0), Expression.Constant (0));
+      var extensionExpression = new NonReducibleExtensionExpression (innerExpression);
+      
+      var result = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (extensionExpression);
+
+      var expected = new NonReducibleExtensionExpression (Expression.Constant (true));
+      ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
+    }
+#else
     [Test]
     public void VisitExtensionExpression ()
     {
@@ -332,5 +357,6 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
       var expected = new ReducibleExtensionExpression (Expression.Constant (true));
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
     }
+#endif
   }
 }

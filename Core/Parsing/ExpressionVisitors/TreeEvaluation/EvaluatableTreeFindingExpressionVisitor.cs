@@ -35,11 +35,16 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
   /// <item>it is not a <see cref="MethodCallExpression"/> that involves an <see cref="IQueryable"/>, and</item>
   /// <item>it does not have any of those non-evaluatable expressions as its children.</item>
   /// </list>
+  /// <para>
   /// <see cref="ParameterExpression"/> nodes are not evaluatable because they usually identify the flow of
   /// some information from one query node to the next. 
+  /// </para><para>
   /// <see cref="MethodCallExpression"/> nodes that involve <see cref="IQueryable"/> parameters or object instances are not evaluatable because they 
   /// should usually be translated into the target query syntax.
-  /// Non-standard expressions are not evaluatable because they cannot be compiled and evaluated by LINQ.
+  /// </para><para>
+  /// In .NET 3.5, non-standard expressions are not evaluatable because they cannot be compiled and evaluated by LINQ. 
+  /// In .NET 4.0, non-standard expressions can be evaluated if they can be reduced to an evaluatable expression.
+  /// </para>
   /// </remarks>
   public sealed class EvaluatableTreeFindingExpressionVisitor : RelinqExpressionVisitor, IPartialEvaluationExceptionExpressionVisitor
   {
@@ -180,12 +185,14 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     /// </returns>
     private bool IsSupportedStandardExpression (Expression expression)
     {
-      // TODO RMLNQ-72: Extend the check to handle Expressions of type 'Extension' by testing if the Expression CanBeReduced and then Reduce() the Expression.
-      // Apply this rule recursivly until the reduced expression is same as the original expression.
-      // Precondition: The implementation of the LambdaCompiler must be reviewed to check if it can handle expressions of type 'Extension'.
-
       if (expression.NodeType == ExpressionType.Extension)
-        return false;
+      {
+        if (!expression.CanReduce)
+          return false;
+
+        var reducedExpression = expression.ReduceAndCheck();
+        return IsSupportedStandardExpression (reducedExpression);
+      }
 
       // Note: In .NET 4.0, all expressions supplied by System.Core have a dedicated Visit method provided by System.Linq.Parsing.ExpressionVisitor.
       return Enum.IsDefined (typeof (ExpressionType), expression.NodeType);
