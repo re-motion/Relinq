@@ -363,11 +363,11 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
       var memberExpression = Expression.MakeMemberAccess (
           _anonymousTypeNewExpressionWithAssignments,
           _anonymousTypeA);
-      var extensionExpression = new TestExtensionExpression (memberExpression);
+      var extensionExpression = new ReducibleExtensionExpression (memberExpression);
 
       var result = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (extensionExpression);
 
-      var expectedExpression = new TestExtensionExpression (_assignedExpressionA);
+      var expectedExpression = new ReducibleExtensionExpression (_assignedExpressionA);
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, result);
     }
 

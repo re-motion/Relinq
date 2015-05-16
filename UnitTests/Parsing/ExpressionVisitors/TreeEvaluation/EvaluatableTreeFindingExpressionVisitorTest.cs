@@ -44,35 +44,6 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
   [TestFixture]
   public class EvaluatableTreeFindingExpressionVisitorTest
   {
-#if !NET_3_5
-    private class TestExtensionExpressionWithType : Expression
-    {
-      public TestExtensionExpressionWithType ()
-      {
-      }
-
-      public override ExpressionType NodeType
-      {
-        get { return ExpressionType.Extension; }
-      }
-
-      public override bool CanReduce
-      {
-        get { return false; }
-      }
-
-      public override string ToString ()
-      {
-        return "Test(Extension)";
-      }
-
-      protected override Expression VisitChildren (ExpressionVisitor visitor)
-      {
-        return this;
-      }
-    }
-#endif
-
     [Test]
     public void SimpleExpression_IsEvaluatable ()
     {
@@ -147,14 +118,23 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
     }
 
     [Test]
-    public void VisitExtensionExpression_NotEvaluatable_ButChildrenMayBe ()
+    public void VisitReducibleExtensionExpression_NotEvaluatable_ButChildrenMayBe ()
     {
       var innerExpression = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (0), Expression.Constant (0));
-      var extensionExpression = new TestExtensionExpression (innerExpression);
-#if !NET_3_5
-      Assert.That (extensionExpression.NodeType, Is.EqualTo (ExpressionType.Extension));
-#endif
+      var extensionExpression = new ReducibleExtensionExpression (innerExpression);
+      
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (extensionExpression);
 
+      Assert.That (evaluationInfo.IsEvaluatableExpression (extensionExpression), Is.False);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (innerExpression), Is.True);
+    }
+
+    [Test]
+    public void VisitNonReducibleExtensionExpression_NotEvaluatable_ButChildrenMayBe ()
+    {
+      var innerExpression = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (0), Expression.Constant (0));
+      var extensionExpression = new NonReducibleExtensionExpression (innerExpression);
+      
       var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (extensionExpression);
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (extensionExpression), Is.False);

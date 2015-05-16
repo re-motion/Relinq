@@ -101,11 +101,11 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     [Test]
     [ExpectedException (typeof (ExpressionNodeInstantiationException), ExpectedMessage =
         "The given arguments did not match the expected arguments: Object of type "
-        + "'Remotion.Linq.Development.UnitTesting.Clauses.Expressions.TestExtensionExpression' cannot be converted to type "
+        + "'Remotion.Linq.Development.UnitTesting.Clauses.Expressions.ReducibleExtensionExpression' cannot be converted to type "
         + "'System.Linq.Expressions.LambdaExpression'.")]
     public void CreateExpressionNode_InvalidNodeParameterType ()
     {
-      var selector = new TestExtensionExpression (Expression.Constant (0));
+      var selector = new ReducibleExtensionExpression (Expression.Constant (0));
       MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), _parseInfo, new object[] { selector });
     }
 

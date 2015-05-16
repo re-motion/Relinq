@@ -118,11 +118,11 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionVisitors
     [Test]
     public void VisitExtensionExpression_ChildrenAreProcessed ()
     {
-      var extensionExpression = new TestExtensionExpression (new QuerySourceReferenceExpression (_oldFromClause));
+      var extensionExpression = new ReducibleExtensionExpression (new QuerySourceReferenceExpression (_oldFromClause));
 
-      var result = (TestExtensionExpression) ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (extensionExpression, _querySourceMapping, true);
+      var result = (ReducibleExtensionExpression) ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (extensionExpression, _querySourceMapping, true);
 
-      var expectedExpression = new TestExtensionExpression (new QuerySourceReferenceExpression (_newFromClause));
+      var expectedExpression = new ReducibleExtensionExpression (new QuerySourceReferenceExpression (_newFromClause));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, result);
     }
 

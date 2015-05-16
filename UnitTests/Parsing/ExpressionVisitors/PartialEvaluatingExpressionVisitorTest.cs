@@ -325,11 +325,11 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
     public void VisitExtensionExpression ()
     {
       var innerExpression = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (0), Expression.Constant (0));
-      var extensionExpression = new TestExtensionExpression (innerExpression);
+      var extensionExpression = new ReducibleExtensionExpression (innerExpression);
       
       var result = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (extensionExpression);
 
-      var expected = new TestExtensionExpression (Expression.Constant (true));
+      var expected = new ReducibleExtensionExpression (Expression.Constant (true));
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
     }
   }
