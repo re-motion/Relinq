@@ -24,6 +24,6 @@ namespace Remotion.Linq.Clauses.Expressions
   /// </summary>
   public interface IVBSpecificExpressionVisitor
   {
-    Expression VisitVBStringComparisonExpression (VBStringComparisonExpression vbStringComparisonExpression);
+    Expression VisitVBStringComparison (VBStringComparisonExpression vbStringComparisonExpression);
   }
 }

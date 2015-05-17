@@ -112,7 +112,7 @@ namespace Remotion.Linq.Clauses.Expressions
 
       var specificVisitor = visitor as IVBSpecificExpressionVisitor;
       if (specificVisitor != null)
-        return specificVisitor.VisitVBStringComparisonExpression (this);
+        return specificVisitor.VisitVBStringComparison (this);
       else
         return base.Accept (visitor);
     }

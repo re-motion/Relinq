@@ -113,7 +113,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     {
       ExtensionExpressionTestHelper.CheckAcceptForVisitorSupportingType<VBStringComparisonExpression, IVBSpecificExpressionVisitor> (
           _expression,
-          mock => mock.VisitVBStringComparisonExpression (_expression));
+          mock => mock.VisitVBStringComparison (_expression));
     }
 
     [Test]
