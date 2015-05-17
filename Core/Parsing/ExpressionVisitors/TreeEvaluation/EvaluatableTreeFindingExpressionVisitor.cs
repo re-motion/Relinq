@@ -172,7 +172,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      // TODO: Extend the check to handle Expressions of type 'Extension' by testing if the Expression CanBeReduced and then Reduce() the Expression.
+      // TODO RMLNQ-72: Extend the check to handle Expressions of type 'Extension' by testing if the Expression CanBeReduced and then Reduce() the Expression.
       // Apply this rule recursivly until the reduced expression is same as the original expression.
       // Precondition: The implementation of the LambdaCompiler must be reviewed to check if it can handle expressions of type 'Extension'.
 
