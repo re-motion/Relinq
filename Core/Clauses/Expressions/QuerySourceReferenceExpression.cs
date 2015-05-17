@@ -90,6 +90,11 @@ namespace Remotion.Linq.Clauses.Expressions
     }
 
 #if !NET_3_5
+    public override string ToString ()
+    {
+      return "[" + ReferencedQuerySource.ItemName + "]";
+    }
+
     protected override Expression Accept (ExpressionVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);

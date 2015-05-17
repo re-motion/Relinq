@@ -20,6 +20,7 @@ using NUnit.Framework;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel;
+using Remotion.Linq.UnitTests.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Clauses.Expressions
 {
@@ -64,5 +65,21 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       var referenceExpression2 = new QuerySourceReferenceExpression (SourceClause);
       Assert.That (referenceExpression1.GetHashCode (), Is.EqualTo (referenceExpression2.GetHashCode ()));
     }
+
+#if !NET_3_5
+    [Test]
+    public void TestToString ()
+    {
+      var referencedClause = ExpressionHelper.CreateMainFromClause_Int ("i", typeof (int), ExpressionHelper.CreateQueryable<Cook>());
+      var expression = Expression.MakeBinary (
+          ExpressionType.GreaterThan,
+          new QuerySourceReferenceExpression (referencedClause),
+          Expression.Constant (2));
+
+      var formattedExpression = expression.ToString();
+
+      Assert.That (formattedExpression, Is.EqualTo ("([i] > 2)"));
+    }
+#endif
   }
 }
