@@ -22,6 +22,7 @@ using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
@@ -113,7 +114,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return "Union(" + FormattingExpressionVisitor.Format (Source2) + ")";
+      return "Union(" + Source2.BuildString() + ")";
     }
   }
 }

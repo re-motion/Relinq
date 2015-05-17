@@ -19,6 +19,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
@@ -98,7 +99,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     /// <inheritdoc />
     public override string ToString ()
     {
-      return "All(" + FormattingExpressionVisitor.Format (Predicate) + ")";
+      return "All(" + Predicate.BuildString() + ")";
     }
   }
 }

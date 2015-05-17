@@ -19,6 +19,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
@@ -94,7 +95,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return "Take(" + FormattingExpressionVisitor.Format (Count) + ")";
+      return "Take(" + Count.BuildString() + ")";
     }
   }
 }

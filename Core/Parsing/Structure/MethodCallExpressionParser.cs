@@ -21,6 +21,7 @@ using System.Linq.Expressions;
 using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure
@@ -110,7 +111,7 @@ namespace Remotion.Linq.Parsing.Structure
     private NotSupportedException CreateParsingErrorException ( MethodCallExpression expression, string message, params object[] args)
     {
       return new NotSupportedException (
-          string.Format ("Could not parse expression '{0}': ", FormattingExpressionVisitor.Format (expression))
+          string.Format ("Could not parse expression '{0}': ", expression.BuildString())
           + string.Format (message, args));
     }
   }

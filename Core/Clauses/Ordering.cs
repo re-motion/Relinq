@@ -18,6 +18,7 @@ using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.ExpressionVisitors;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses
@@ -100,7 +101,7 @@ namespace Remotion.Linq.Clauses
 
     public override string ToString ()
     {
-      return FormattingExpressionVisitor.Format (Expression) + (OrderingDirection == OrderingDirection.Asc ? " asc" : " desc");
+      return Expression.BuildString() + (OrderingDirection == OrderingDirection.Asc ? " asc" : " desc");
     }
   }
 }

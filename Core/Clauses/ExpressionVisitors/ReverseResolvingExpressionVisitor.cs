@@ -21,6 +21,7 @@ using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ExpressionVisitors
@@ -117,8 +118,8 @@ namespace Remotion.Linq.Clauses.ExpressionVisitors
         var message = string.Format (
             "Cannot create a LambdaExpression that retrieves the value of '{0}' from items with a structure of '{1}'. The item expression does not "
             + "contain the value or it is too complex.",
-            FormattingExpressionVisitor.Format (expression),
-            FormattingExpressionVisitor.Format (_itemExpression));
+            expression.BuildString(),
+            _itemExpression.BuildString());
         throw new InvalidOperationException (message, ex);
       }
     }

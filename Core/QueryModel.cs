@@ -30,6 +30,7 @@ using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Collections;
 #endif
 using Remotion.Linq.Parsing.Structure;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq
@@ -181,7 +182,7 @@ namespace Remotion.Linq
       string mainQueryString;
       if (IsIdentityQuery ())
       {
-        mainQueryString = FormattingExpressionVisitor.Format (MainFromClause.FromExpression);
+        mainQueryString = MainFromClause.FromExpression.BuildString();
       }
       else
       {

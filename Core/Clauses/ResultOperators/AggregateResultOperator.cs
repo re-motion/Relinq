@@ -21,6 +21,7 @@ using System.Reflection;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
@@ -121,7 +122,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     /// <inheritdoc />
     public override string ToString ()
     {
-      return "Aggregate(" + FormattingExpressionVisitor.Format (Func) + ")";
+      return "Aggregate(" + Func.BuildString() + ")";
     }
 
     private bool DescribesValidFuncType (LambdaExpression value)

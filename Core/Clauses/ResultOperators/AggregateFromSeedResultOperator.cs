@@ -232,16 +232,16 @@ namespace Remotion.Linq.Clauses.ResultOperators
       {
         return string.Format (
             "Aggregate({0}, {1}, {2})",
-            FormattingExpressionVisitor.Format (Seed),
-            FormattingExpressionVisitor.Format (Func),
-            FormattingExpressionVisitor.Format (OptionalResultSelector));
+            Seed.BuildString(),
+            Func.BuildString(),
+            OptionalResultSelector.BuildString());
       }
       else
       {
         return string.Format (
             "Aggregate({0}, {1})",
-            FormattingExpressionVisitor.Format (Seed),
-            FormattingExpressionVisitor.Format (Func));
+            Seed.BuildString(),
+            Func.BuildString());
       }
     }
 

@@ -60,6 +60,9 @@
     <Compile Include="..\Core\Utilities\StringUtility.cs">
       <Link>Utilities\StringUtility.cs</Link>
     </Compile>
+    <Compile Include="..\Core\Utilities\ExpressionExtensions.cs">
+      <Link>Utilities\ExpressionExtensions.cs</Link>
+    </Compile>
     <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\AssertionConditionAttribute.cs" />
     <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\AssertionConditionType.cs" />
     <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\AssertionMethodAttribute.cs" />

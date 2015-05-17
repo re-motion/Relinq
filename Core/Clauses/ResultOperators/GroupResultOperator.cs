@@ -176,8 +176,8 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       return string.Format (
           "GroupBy({0}, {1})", 
-          FormattingExpressionVisitor.Format (KeySelector), 
-          FormattingExpressionVisitor.Format (ElementSelector));
+          KeySelector.BuildString(), 
+          ElementSelector.BuildString());
     }
   }
 }

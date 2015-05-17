@@ -19,6 +19,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionVisitors;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses
@@ -201,9 +202,9 @@ namespace Remotion.Linq.Clauses
           "join {0} {1} in {2} on {3} equals {4}",
           ItemType.Name,
           ItemName,
-          FormattingExpressionVisitor.Format (InnerSequence),
-          FormattingExpressionVisitor.Format (OuterKeySelector),
-          FormattingExpressionVisitor.Format (InnerKeySelector));
+          InnerSequence.BuildString(),
+          OuterKeySelector.BuildString(),
+          InnerKeySelector.BuildString());
     }
   }
 }
