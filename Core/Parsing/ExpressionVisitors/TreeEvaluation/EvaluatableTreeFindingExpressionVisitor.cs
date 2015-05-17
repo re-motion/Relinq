@@ -257,7 +257,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
       return expression != null && typeof (IQueryable).GetTypeInfo().IsAssignableFrom (expression.Type.GetTypeInfo());
     }
 
-    public Expression VisitPartialEvaluationExceptionExpression (PartialEvaluationExceptionExpression partialEvaluationExceptionExpression)
+    public Expression VisitPartialEvaluationException (PartialEvaluationExceptionExpression partialEvaluationExceptionExpression)
     {
       // PartialEvaluationExceptionExpression is not evaluable, and its children aren't either (so we don't visit them).
       _isCurrentSubtreeEvaluatable = false;

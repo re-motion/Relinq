@@ -119,7 +119,7 @@ namespace Remotion.Linq.Clauses.Expressions
 
       var specificVisitor = visitor as IPartialEvaluationExceptionExpressionVisitor;
       if (specificVisitor != null)
-        return specificVisitor.VisitPartialEvaluationExceptionExpression (this);
+        return specificVisitor.VisitPartialEvaluationException (this);
       else
         return base.Accept (visitor);
     }

@@ -24,6 +24,6 @@ namespace Remotion.Linq.Clauses.Expressions
   /// </summary>
   public interface IPartialEvaluationExceptionExpressionVisitor
   {
-    Expression VisitPartialEvaluationExceptionExpression (PartialEvaluationExceptionExpression partialEvaluationExceptionExpression);
+    Expression VisitPartialEvaluationException (PartialEvaluationExceptionExpression partialEvaluationExceptionExpression);
   }
 }

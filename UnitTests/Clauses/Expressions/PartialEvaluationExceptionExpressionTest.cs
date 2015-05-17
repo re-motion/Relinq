@@ -112,7 +112,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     {
       ExtensionExpressionTestHelper.CheckAcceptForVisitorSupportingType<PartialEvaluationExceptionExpression, IPartialEvaluationExceptionExpressionVisitor> (
           _exceptionExpression,
-          mock => mock.VisitPartialEvaluationExceptionExpression (_exceptionExpression));
+          mock => mock.VisitPartialEvaluationException (_exceptionExpression));
     }
 
     [Test]
