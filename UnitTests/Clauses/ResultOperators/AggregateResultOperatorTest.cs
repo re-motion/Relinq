@@ -24,7 +24,7 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Development.UnitTesting;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.UnitTests.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
@@ -189,7 +189,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     private LambdaExpression CreateFunc<TA1, TA2, TR> (Expression<Func<TA1, TA2, TR>> originalFunc)
     {
       return Expression.Lambda (
-          ReplacingExpressionTreeVisitor.Replace (originalFunc.Parameters[1], _sourceExpression, originalFunc.Body),
+          ReplacingExpressionVisitor.Replace (originalFunc.Parameters[1], _sourceExpression, originalFunc.Body),
           originalFunc.Parameters[0]);
     }
 

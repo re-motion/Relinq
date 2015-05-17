@@ -17,7 +17,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -68,7 +68,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
       var sequence = input.GetTypedSequence<T> ();
 
-      var predicateLambda = ReverseResolvingExpressionTreeVisitor.ReverseResolve (input.DataInfo.ItemExpression, Predicate);
+      var predicateLambda = ReverseResolvingExpressionVisitor.ReverseResolve (input.DataInfo.ItemExpression, Predicate);
       var predicate = (Func<T, bool>) predicateLambda.Compile ();
 
       var result = sequence.All (predicate);
@@ -98,7 +98,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     /// <inheritdoc />
     public override string ToString ()
     {
-      return "All(" + FormattingExpressionTreeVisitor.Format (Predicate) + ")";
+      return "All(" + FormattingExpressionVisitor.Format (Predicate) + ")";
     }
   }
 }

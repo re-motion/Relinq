@@ -19,7 +19,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -101,7 +101,7 @@ namespace Remotion.Linq.Clauses
 
     public override string ToString ()
     {
-      return "select " + FormattingExpressionTreeVisitor.Format (Selector);
+      return "select " + FormattingExpressionVisitor.Format (Selector);
     }
 
     /// <summary>

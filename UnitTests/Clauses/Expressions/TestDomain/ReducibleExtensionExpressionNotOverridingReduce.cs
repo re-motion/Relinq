@@ -16,24 +16,52 @@
 // 
 using System;
 using System.Linq.Expressions;
+#if NET_3_5
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing;
+#endif
 
 namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
 {
-  public class ReducibleExtensionExpressionNotOverridingReduce : ExtensionExpression
+  public class ReducibleExtensionExpressionNotOverridingReduce
+#if !NET_3_5
+    : Expression
+#else
+    : ExtensionExpression
+#endif
   {
+#if !NET_3_5
+    private readonly Type _type;
+
+    public ReducibleExtensionExpressionNotOverridingReduce (Type type)
+    {
+      _type = type;
+    }
+#else
     public ReducibleExtensionExpressionNotOverridingReduce (Type type)
         : base(type)
     {
     }
+#endif
+
+#if !NET_3_5
+    public override Type Type
+    {
+      get { return _type; }
+    }
+
+    public override ExpressionType NodeType
+    {
+      get { return ExpressionType.Extension; }
+    }
+#endif
 
     public override bool CanReduce
     {
       get { return true; }
     }
 
-    protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    protected override Expression VisitChildren (ExpressionVisitor visitor)
     {
       return this;
     }

@@ -75,10 +75,10 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     [Test]
     public void VisitChildren_ReturnsSameExpression ()
     {
-      var visitorMock = MockRepository.GenerateStrictMock<ExpressionTreeVisitor> ();
+      var visitorMock = MockRepository.GenerateStrictMock<RelinqExpressionVisitor> ();
 
       visitorMock
-          .Expect (mock => mock.VisitExpression (_evaluatedExpression))
+          .Expect (mock => mock.Visit (_evaluatedExpression))
           .Return (_evaluatedExpression);
       visitorMock.Replay ();
 
@@ -92,10 +92,10 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     public void VisitChildren_ReturnsNewExpression ()
     {
       var newExpression = Expression.Equal (Expression.Constant ("string1"), Expression.Constant ("string"));
-      var visitorMock = MockRepository.GenerateStrictMock<ExpressionTreeVisitor> ();
+      var visitorMock = MockRepository.GenerateStrictMock<RelinqExpressionVisitor> ();
 
       visitorMock
-          .Expect (mock => mock.VisitExpression (_evaluatedExpression))
+          .Expect (mock => mock.Visit (_evaluatedExpression))
           .Return (newExpression);
       visitorMock.Replay ();
 
@@ -112,7 +112,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     {
       ExtensionExpressionTestHelper.CheckAcceptForVisitorSupportingType<PartialEvaluationExceptionExpression, IPartialEvaluationExceptionExpressionVisitor> (
           _exceptionExpression,
-          mock => mock.VisitPartialEvaluationExceptionExpression (_exceptionExpression));
+          mock => mock.VisitPartialEvaluationException (_exceptionExpression));
     }
 
     [Test]

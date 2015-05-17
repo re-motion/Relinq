@@ -76,10 +76,10 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     [Test]
     public void VisitChildren_ReturnsSameExpression ()
     {
-      var visitorMock = MockRepository.GenerateStrictMock<ExpressionTreeVisitor> ();
+      var visitorMock = MockRepository.GenerateStrictMock<RelinqExpressionVisitor> ();
 
       visitorMock
-          .Expect (mock => mock.VisitExpression (_comparisonExpression))
+          .Expect (mock => mock.Visit (_comparisonExpression))
           .Return (_comparisonExpression);
       visitorMock.Replay ();
 
@@ -93,10 +93,10 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     public void VisitChildren_ReturnsNewExpression ()
     {
       var newExpression = Expression.Equal (Expression.Constant ("string1"), Expression.Constant ("string"));
-      var visitorMock = MockRepository.GenerateStrictMock<ExpressionTreeVisitor> ();
+      var visitorMock = MockRepository.GenerateStrictMock<RelinqExpressionVisitor> ();
 
       visitorMock
-          .Expect (mock => mock.VisitExpression (_comparisonExpression))
+          .Expect (mock => mock.Visit (_comparisonExpression))
           .Return (newExpression);
       visitorMock.Replay ();
 
@@ -113,7 +113,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     {
       ExtensionExpressionTestHelper.CheckAcceptForVisitorSupportingType<VBStringComparisonExpression, IVBSpecificExpressionVisitor> (
           _expression,
-          mock => mock.VisitVBStringComparisonExpression (_expression));
+          mock => mock.VisitVBStringComparison (_expression));
     }
 
     [Test]

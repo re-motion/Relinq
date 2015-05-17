@@ -19,7 +19,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -89,7 +89,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
       ArgumentUtility.CheckNotNull ("input", input);
 
       var sequence = input.GetTypedSequence<T>();
-      var funcLambda = ReverseResolvingExpressionTreeVisitor.ReverseResolveLambda (input.DataInfo.ItemExpression, Func, 1);
+      var funcLambda = ReverseResolvingExpressionVisitor.ReverseResolveLambda (input.DataInfo.ItemExpression, Func, 1);
       var func = (Func<T, T, T>) funcLambda.Compile ();
       var result = sequence.Aggregate (func);
       return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
@@ -121,7 +121,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     /// <inheritdoc />
     public override string ToString ()
     {
-      return "Aggregate(" + FormattingExpressionTreeVisitor.Format (Func) + ")";
+      return "Aggregate(" + FormattingExpressionVisitor.Format (Func) + ")";
     }
 
     private bool DescribesValidFuncType (LambdaExpression value)

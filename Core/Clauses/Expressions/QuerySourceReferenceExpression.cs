@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.Expressions
@@ -87,5 +88,18 @@ namespace Remotion.Linq.Clauses.Expressions
     {
       return ReferencedQuerySource.GetHashCode ();
     }
+
+#if !NET_3_5
+    protected override Expression Accept (ExpressionVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+
+      var relinqVisitor = visitor as RelinqExpressionVisitor;
+      if (relinqVisitor == null)
+        return base.Accept (visitor);
+
+      return relinqVisitor.VisitQuerySourceReference (this);
+    }
+#endif
   }
 }

@@ -21,7 +21,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
@@ -61,7 +61,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
 
       var convertExpression = Expression.Convert (inputParameter, CastItemType);
-      var expressionWithCast = ReplacingExpressionTreeVisitor.Replace (inputParameter, convertExpression, expressionToBeResolved);
+      var expressionWithCast = ReplacingExpressionVisitor.Replace (inputParameter, convertExpression, expressionToBeResolved);
       return Source.Resolve (inputParameter, expressionWithCast, clauseGenerationContext);
     }
 

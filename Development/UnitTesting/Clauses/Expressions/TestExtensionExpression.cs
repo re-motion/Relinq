@@ -17,24 +17,47 @@
 
 using System;
 using System.Linq.Expressions;
+#if NET_3_5
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+#endif
+using Remotion.Linq.Clauses.ExpressionVisitors;
+#if NET_3_5
 using Remotion.Linq.Parsing;
+#endif
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Development.UnitTesting.Clauses.Expressions
 {
-  public class TestExtensionExpression : ExtensionExpression
+  public class TestExtensionExpression
+#if !NET_3_5
+    : Expression
+#else
+    : ExtensionExpression
+#endif
   {
     private readonly Expression _expression;
 
     public TestExtensionExpression (Expression expression)
+#if NET_3_5
         : base(expression.Type)
+#endif
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       _expression = expression;
     }
+
+#if !NET_3_5
+    public override Type Type
+    {
+      get { return _expression.Type; }
+    }
+
+    public override ExpressionType NodeType
+    {
+      get { return ExpressionType.Extension; }
+    }
+#endif
 
     public Expression Expression
     {
@@ -54,9 +77,9 @@ namespace Remotion.Linq.Development.UnitTesting.Clauses.Expressions
       return _expression;
     }
 
-    protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    protected override Expression VisitChildren (ExpressionVisitor visitor)
     {
-      var result = visitor.VisitExpression (_expression);
+      var result = visitor.Visit (_expression);
       if (result != _expression)
         return new TestExtensionExpression (result);
 
@@ -65,7 +88,7 @@ namespace Remotion.Linq.Development.UnitTesting.Clauses.Expressions
 
     public override string ToString ()
     {
-      return "Test(" + FormattingExpressionTreeVisitor.Format (_expression) + ")";
+      return "Test(" + FormattingExpressionVisitor.Format (_expression) + ")";
     }
   }
 }

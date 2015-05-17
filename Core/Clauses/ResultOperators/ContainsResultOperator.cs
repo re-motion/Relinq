@@ -18,7 +18,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -111,7 +111,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return "Contains(" + FormattingExpressionTreeVisitor.Format (Item) + ")";
+      return "Contains(" + FormattingExpressionVisitor.Format (Item) + ")";
     }
   }
 }

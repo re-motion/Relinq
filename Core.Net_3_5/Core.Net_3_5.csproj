@@ -92,10 +92,11 @@
     <Compile Include="..\Core\**\*.cs" Exclude="..\Core\App_Packages\**\*.*;..\Core\bin\**\*.*;..\Core\obj\**\*.*">
       <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
     </Compile>
-    <Compile Include="Clauses\Expressions\ExtensionExpression.Net_3_5.cs" />
+    <Compile Include="Clauses\Expressions\ExtensionExpression.cs" />
     <Compile Include="Collections\NotifyCollectionChangedAction.cs" />
     <Compile Include="Collections\ObservableCollection.cs" />
     <Compile Include="Collections\NotifyCollectionChangedEventArgs.cs" />
+    <Compile Include="Parsing\ExpressionVisitor.cs" />
     <Compile Include="Utilities\Lazy.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +111,8 @@
     <None Include="App_Packages\Remotion.Utilities.Assertion.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
     <None Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
     <None Include="packages.config" />
+    <Compile Include="Parsing\ThrowingExpressionVisitor.NET_3_5.cs" />
+    <Compile Include="Parsing\RelinqExpressionVisitor.NET_3_5.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

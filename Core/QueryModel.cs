@@ -23,7 +23,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 #if NET_3_5
@@ -181,7 +181,7 @@ namespace Remotion.Linq
       string mainQueryString;
       if (IsIdentityQuery ())
       {
-        mainQueryString = FormattingExpressionTreeVisitor.Format (MainFromClause.FromExpression);
+        mainQueryString = FormattingExpressionVisitor.Format (MainFromClause.FromExpression);
       }
       else
       {
@@ -232,7 +232,7 @@ namespace Remotion.Linq
       }
 
       var clone = queryModelBuilder.Build ();
-      clone.TransformExpressions (ex => CloningExpressionTreeVisitor.AdjustExpressionAfterCloning (ex, cloneContext.QuerySourceMapping));
+      clone.TransformExpressions (ex => CloningExpressionVisitor.AdjustExpressionAfterCloning (ex, cloneContext.QuerySourceMapping));
       clone.ResultTypeOverride = ResultTypeOverride;
       return clone;
     }

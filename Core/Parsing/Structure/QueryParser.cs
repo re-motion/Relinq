@@ -18,7 +18,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
+using Remotion.Linq.Parsing.ExpressionVisitors.Transformation;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
 

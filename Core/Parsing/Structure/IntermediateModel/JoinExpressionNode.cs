@@ -20,7 +20,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
@@ -132,7 +132,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       // we modify the structure of the stream of data coming into this node by our result selector,
       // so we first resolve the result selector, then we substitute the result for the inputParameter in the expressionToBeResolved
       var resolvedResultSelector = GetResolvedResultSelector (clauseGenerationContext);
-      return ReplacingExpressionTreeVisitor.Replace (inputParameter, resolvedResultSelector, expressionToBeResolved);
+      return ReplacingExpressionVisitor.Replace (inputParameter, resolvedResultSelector, expressionToBeResolved);
     }
 
     protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)

@@ -17,7 +17,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses
@@ -102,7 +102,7 @@ namespace Remotion.Linq.Clauses
 
     public override string ToString ()
     {
-      return "where " + FormattingExpressionTreeVisitor.Format (Predicate);
+      return "where " + FormattingExpressionVisitor.Format (Predicate);
     }
   }
 }

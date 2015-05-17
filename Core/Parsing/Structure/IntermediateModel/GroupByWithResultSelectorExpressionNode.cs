@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
@@ -129,7 +129,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
                                   { resultSelector.Parameters[1], groupParameter },
                                   { resultSelector.Parameters[0], keyExpression }
                               };
-      var bodyWithGroupingAndKeyReplaced = MultiReplacingExpressionTreeVisitor.Replace (expressionMapping, resultSelector.Body);
+      var bodyWithGroupingAndKeyReplaced = MultiReplacingExpressionVisitor.Replace (expressionMapping, resultSelector.Body);
       return Expression.Lambda (bodyWithGroupingAndKeyReplaced, groupParameter);
     }
 

@@ -16,7 +16,7 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -45,7 +45,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
       var sourceNode = CurrentNode.Source;
       var resolvedExpression = sourceNode.Resolve (parameterToBeResolved, unresolvedExpression, clauseGenerationContext);
-      resolvedExpression = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (resolvedExpression);
+      resolvedExpression = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (resolvedExpression);
       return resolvedExpression;
     }
   }

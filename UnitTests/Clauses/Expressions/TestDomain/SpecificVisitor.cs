@@ -20,7 +20,7 @@ using Remotion.Linq.Parsing;
 
 namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
 {
-  public class SpecificVisitor : ExpressionTreeVisitor, ISpecificVisitor
+  public class SpecificVisitor : RelinqExpressionVisitor, ISpecificVisitor
   {
     public virtual Expression VisitTestableExtensionExpression (TestableExtensionExpressionWithSpecificVisitor expression)
     {

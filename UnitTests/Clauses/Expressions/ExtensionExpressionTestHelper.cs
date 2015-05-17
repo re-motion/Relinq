@@ -20,7 +20,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework;
 using Remotion.Development.UnitTesting;
+#if NET_3_5
 using Remotion.Linq.Clauses.Expressions;
+#endif
 using Remotion.Linq.Parsing;
 using Remotion.Linq.Utilities;
 using Rhino.Mocks;
@@ -31,10 +33,15 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
   {
     public static void CheckAcceptForVisitorSupportingType<TExpression, TVisitorInterface> (
         TExpression expression,
-        Func<TVisitorInterface, Expression> visitMethodCall) where TExpression : ExtensionExpression
+        Func<TVisitorInterface, Expression> visitMethodCall)
+#if !NET_3_5
+        where TExpression : Expression
+#else
+        where TExpression : ExtensionExpression
+#endif
     {
-      var mockRepository = new MockRepository ();
-      var visitorMock = mockRepository.StrictMultiMock<ExpressionTreeVisitor> (typeof (TVisitorInterface));
+      var mockRepository = new MockRepository();
+      var visitorMock = mockRepository.StrictMultiMock<RelinqExpressionVisitor> (typeof (TVisitorInterface));
 
       var returnedExpression = Expression.Constant (0);
 
@@ -43,33 +50,53 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
           .Return (returnedExpression);
       visitorMock.Replay ();
 
-      var result = expression.Accept (visitorMock);
+      var result = CallAccept (expression, visitorMock);
 
       visitorMock.VerifyAllExpectations ();
 
       Assert.That (result, Is.SameAs (returnedExpression));
     }
 
-    public static void CheckAcceptForVisitorNotSupportingType<TExpression> (TExpression expression) where TExpression : ExtensionExpression
+    public static void CheckAcceptForVisitorNotSupportingType<TExpression> (TExpression expression)
+#if !NET_3_5
+        where TExpression : Expression
+#else
+        where TExpression : ExtensionExpression
+#endif
     {
       var mockRepository = new MockRepository ();
-      var visitorMock = mockRepository.StrictMock<ExpressionTreeVisitor> ();
+      var visitorMock = mockRepository.StrictMock<RelinqExpressionVisitor> ();
 
       var returnedExpression = Expression.Constant (0);
 
       visitorMock
-          .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitExtensionExpression", expression))
+          .Expect (mock => PrivateInvoke.InvokeNonPublicMethod (mock, "VisitExtension", expression))
           .Return (returnedExpression);
       visitorMock.Replay ();
 
-      var result = expression.Accept (visitorMock);
+      var result = CallAccept (expression, visitorMock);
 
       visitorMock.VerifyAllExpectations ();
 
       Assert.That (result, Is.SameAs (returnedExpression));
     }
 
-    public static Expression CallVisitChildren (ExtensionExpression target, ExpressionTreeVisitor visitor)
+    public static Expression CallAccept<TExpression, TVisitor> (TExpression expression, TVisitor visitor)
+#if !NET_3_5
+        where TExpression : Expression
+#else
+        where TExpression : ExtensionExpression
+#endif
+        where TVisitor : ExpressionVisitor
+    {
+      return (Expression) PrivateInvoke.InvokeNonPublicMethod (expression, "Accept", visitor);
+    }
+
+#if !NET_3_5
+    public static Expression CallVisitChildren (Expression target, ExpressionVisitor visitor)
+#else
+    public static Expression CallVisitChildren (ExtensionExpression target, ExpressionVisitor visitor)
+#endif
     {
       return (Expression) PrivateInvoke.InvokeNonPublicMethod (target, "VisitChildren", visitor);
     }

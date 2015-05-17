@@ -22,7 +22,7 @@ using NUnit.Framework;
 using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
@@ -251,7 +251,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     {
       Func<int, int> func = i => i;
       var methodCallExpression = (MethodCallExpression)
-          PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (
+          PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (
               ExpressionHelper.MakeExpression<IQueryable<int>, IEnumerable<int>> (q => q.Select (func)));
 
       ParseMethodCallExpression (methodCallExpression);
@@ -262,7 +262,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     {
       Func<int, int> func = i => i;
       var methodCallExpression = (MethodCallExpression)
-          PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (
+          PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (
               ExpressionHelper.MakeExpression<IQueryable<int>, IEnumerable<int>> (q => q.Select (func)));
 
       var exception = Assert.Throws<NotSupportedException> (() => ParseMethodCallExpression (methodCallExpression));
