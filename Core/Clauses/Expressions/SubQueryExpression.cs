@@ -60,6 +60,11 @@ namespace Remotion.Linq.Clauses.Expressions
     public QueryModel QueryModel { get; private set; }
 
 #if !NET_3_5
+    public override string ToString ()
+    {
+      return "{" + QueryModel + "}";
+    }
+
     protected override Expression Accept (ExpressionVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
