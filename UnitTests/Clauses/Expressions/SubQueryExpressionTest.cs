@@ -44,5 +44,20 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       Assert.That (expression.QueryModel, Is.SameAs (queryModel));
       Assert.That (expression.NodeType, Is.EqualTo (SubQueryExpression.ExpressionType));
     }
+
+
+#if !NET_3_5
+    [Test]
+    public void TestToString ()
+    {
+      var queryExpression = ExpressionHelper.MakeExpression (() => (from s in ExpressionHelper.CreateQueryable<Cook> () select s).Count());
+      var subQueryModel = ExpressionHelper.ParseQuery (queryExpression);
+      var expression = Expression.MakeBinary (ExpressionType.GreaterThan, new SubQueryExpression (subQueryModel), Expression.Constant (2));
+
+      var formattedExpression = expression.ToString();
+
+      Assert.That (formattedExpression, Is.EqualTo ("({TestQueryable<Cook>() => Count()} > 2)"));
+    }
+#endif
   }
 }

@@ -19,6 +19,7 @@ using System.Linq.Expressions;
 using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Parsing;
 using Remotion.Linq.Parsing.ExpressionVisitors;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.Expressions
@@ -130,7 +131,7 @@ namespace Remotion.Linq.Clauses.Expressions
           @"PartialEvalException ({0} (""{1}""), {2})",
           _exception.GetType().Name,
           _exception.Message,
-          FormattingExpressionVisitor.Format (_evaluatedExpression));
+          _evaluatedExpression.BuildString());
     }
   }
 }

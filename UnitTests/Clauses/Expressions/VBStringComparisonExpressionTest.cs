@@ -18,6 +18,7 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Parsing;
 using Rhino.Mocks;
 
@@ -123,7 +124,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     }
 
     [Test]
-    public void To_String ()
+    public void ToString_Directly ()
     {
       var result = _expression.ToString();
 
@@ -131,6 +132,20 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       Assert.That (result, Is.EqualTo ("VBCompareString((\"string1\" == \"string2\"), True)"));
 #else
       Assert.That (result, Is.EqualTo ("VBCompareString((\"string1\" = \"string2\"), True)"));
+#endif
+    }
+
+    [Test]
+    public void ToString_Nested ()
+    {
+      var expression = Expression.Not (_expression);
+
+#if !NET_3_5
+      var result = expression.ToString();
+      Assert.That (result, Is.EqualTo ("Not(VBCompareString((\"string1\" == \"string2\"), True))"));
+#else
+      var result = FormattingExpressionVisitor.Format (expression);
+      Assert.That (result, Is.EqualTo ("Not(VBCompareString((\"string1\" = \"string2\"), True))"));
 #endif
     }
 

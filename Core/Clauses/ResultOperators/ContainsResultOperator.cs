@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
@@ -111,7 +112,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return "Contains(" + FormattingExpressionVisitor.Format (Item) + ")";
+      return "Contains(" + Item.BuildString() + ")";
     }
   }
 }

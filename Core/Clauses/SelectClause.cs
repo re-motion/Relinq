@@ -21,6 +21,7 @@ using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses
@@ -101,7 +102,7 @@ namespace Remotion.Linq.Clauses
 
     public override string ToString ()
     {
-      return "select " + FormattingExpressionVisitor.Format (Selector);
+      return "select " + Selector.BuildString();
     }
 
     /// <summary>

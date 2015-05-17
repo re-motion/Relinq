@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Parsing;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ExpressionVisitors
@@ -80,8 +81,8 @@ namespace Remotion.Linq.Clauses.ExpressionVisitors
         var message = string.Format (
             "The given expression '{0}' does not contain the searched expression '{1}' in a nested NewExpression with member assignments or a "
                 + "MemberBindingExpression.",
-            FormattingExpressionVisitor.Format (fullExpression),
-            FormattingExpressionVisitor.Format (searchedExpression));
+            fullExpression.BuildString(),
+            searchedExpression.BuildString());
         throw new ArgumentException (message, "fullExpression");
       }
     }

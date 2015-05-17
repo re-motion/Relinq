@@ -18,6 +18,7 @@ using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Parsing;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.Expressions
@@ -119,7 +120,7 @@ namespace Remotion.Linq.Clauses.Expressions
 
     public override string ToString ()
     {
-      return string.Format ("VBCompareString({0}, {1})", FormattingExpressionVisitor.Format(Comparison), TextCompare);
+      return string.Format ("VBCompareString({0}, {1})", Comparison.BuildString(), TextCompare);
     }
     
   }

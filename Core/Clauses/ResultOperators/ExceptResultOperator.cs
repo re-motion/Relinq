@@ -93,7 +93,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return "Except(" + FormattingExpressionVisitor.Format (Source2) + ")";
+      return "Except(" + Source2.BuildString() + ")";
     }
     
   }

@@ -189,6 +189,7 @@
     </Compile>
     <Compile Include="Clauses\Expressions\ExtensionExpressionIntegrationTest.cs" />
     <Compile Include="Clauses\Expressions\ExtensionExpressionTest.cs" />
+    <Compile Include="Clauses\ExpressionVisitors\FormattingExpressionVisitorTest.cs" />
     <Compile Include="Collections\ObservableCollectionTest.cs" />
     <Compile Include="Parsing\ExpressionVisitorTests\ExpressionVisitorTest.cs" />
     <Compile Include="Parsing\ExpressionVisitorTests\ExpressionVisitorTestBase.cs" />

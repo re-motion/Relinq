@@ -20,6 +20,7 @@ using System.Reflection;
 using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses
@@ -172,7 +173,7 @@ namespace Remotion.Linq.Clauses
         var message = string.Format (
             "The value stored by the {0} expression ('{1}') is not of type '{2}', it is of type '{3}'.",
             expressionName,
-            FormattingExpressionVisitor.Format (expression),
+            expression.BuildString(),
             typeof (T),
             expression.Type);
         throw new ArgumentException (message, "expression");
@@ -188,7 +189,7 @@ namespace Remotion.Linq.Clauses
         var message = string.Format (
             "The {0} expression ('{1}') is no ConstantExpression, it is a {2}.",
             expressionName,
-            FormattingExpressionVisitor.Format (expression),
+            expression.BuildString(),
             expression.GetType ().Name);
         throw new ArgumentException (message, "expression");
       }
