@@ -218,7 +218,6 @@
     <Compile Include="Parsing\TupleExpressionBuilder.cs" />
     <Compile Include="QueryModelBuilder.cs" />
     <Compile Include="QueryModelVisitorBase.cs" />
-    <Compile Include="Clauses\ExpressionVisitors\FormattingExpressionVisitor.cs" />
     <Compile Include="Parsing\ExpressionVisitors\Transformation\IExpressionTransformer.cs" />
     <Compile Include="Transformations\SubQueryFromClauseFlattener.cs" />
     <Compile Include="Parsing\ExpressionVisitors\TransformingExpressionVisitor.cs" />
