@@ -29,7 +29,7 @@ namespace Remotion.Linq.Clauses.ExpressionVisitors
   /// to cloned clauses in the given <see cref="QuerySourceMapping"/>, otherwise an expression is thrown. This is used by <see cref="QueryModel.Clone()"/>
   /// to adjust references to the old <see cref="QueryModel"/> with references to the new <see cref="QueryModel"/>.
   /// </summary>
-  public class CloningExpressionVisitor : ReferenceReplacingExpressionVisitor
+  public sealed class CloningExpressionVisitor : ReferenceReplacingExpressionVisitor
   {
     /// <summary>
     /// Adjusts the given expression for cloning, that is replaces <see cref="QuerySourceReferenceExpression"/> and <see cref="SubQueryExpression"/> 

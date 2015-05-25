@@ -30,7 +30,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
   /// <c>new T ( x = 1, y = 2 ).x</c> (<see cref="NewExpression"/>) to <c>1</c> (or <c>2</c> if <c>y</c> is accessed instead of <c>x</c>).
   /// Expressions are also replaced within subqueries; the <see cref="QueryModel"/> is changed by the replacement operations, it is not copied. 
   /// </summary>
-  public class TransparentIdentifierRemovingExpressionVisitor : RelinqExpressionVisitor
+  public sealed class TransparentIdentifierRemovingExpressionVisitor : RelinqExpressionVisitor
   {
     public static Expression ReplaceTransparentIdentifiers (Expression expression)
     {

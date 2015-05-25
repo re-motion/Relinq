@@ -35,7 +35,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
   /// This visitor visits each tree node at most twice: once via the <see cref="EvaluatableTreeFindingExpressionVisitor"/> for analysis and once
   /// again to replace nodes if possible (unless the parent node has already been replaced).
   /// </remarks>
-  public class PartialEvaluatingExpressionVisitor : RelinqExpressionVisitor
+  public sealed class PartialEvaluatingExpressionVisitor : RelinqExpressionVisitor
   {
     /// <summary>
     /// Takes an expression tree and finds and evaluates all its evaluatable subtrees.
@@ -97,7 +97,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
     /// </summary>
     /// <param name="subtree">The subtree to be evaluated.</param>
     /// <returns>A <see cref="ConstantExpression"/> holding the result of the evaluation.</returns>
-    protected Expression EvaluateSubtree (Expression subtree)
+    private Expression EvaluateSubtree (Expression subtree)
     {
       ArgumentUtility.CheckNotNull ("subtree", subtree);
 

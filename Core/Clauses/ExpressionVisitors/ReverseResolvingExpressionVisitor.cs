@@ -39,7 +39,7 @@ namespace Remotion.Linq.Clauses.ExpressionVisitors
   /// The visitor generates the following <see cref="LambdaExpression"/>: <c>input => input.a.ID + input.b.ID</c>
   /// The lambda's input parameter has the same type as the ItemExpression.
   /// </example>
-  public class ReverseResolvingExpressionVisitor : RelinqExpressionVisitor
+  public sealed class ReverseResolvingExpressionVisitor : RelinqExpressionVisitor
   {
     /// <summary>
     /// Performs a reverse <see cref="IExpressionNode.Resolve"/> operation, i.e. creates a <see cref="LambdaExpression"/> from a given resolved expression, 
