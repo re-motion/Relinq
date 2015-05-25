@@ -41,7 +41,7 @@ namespace Remotion.Linq.Clauses.Expressions
   /// <see cref="VisitChildren"/> methods.
   /// </para>
   /// </remarks>
-  public class VBStringComparisonExpression 
+  public sealed class VBStringComparisonExpression 
 #if !NET_3_5
     : Expression
 #else
