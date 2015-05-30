@@ -15,7 +15,9 @@
 // under the License.
 // 
 using System;
+using System.Reflection;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
@@ -25,12 +27,17 @@ namespace Remotion.Linq.Clauses.ResultOperators
   /// </summary>
   public abstract class SequenceFromSequenceResultOperatorBase : ResultOperatorBase
   {
+    private static readonly MethodInfo s_executeMethod =
+        typeof (SequenceFromSequenceResultOperatorBase).GetRuntimeMethodChecked ("ExecuteInMemory", new[] { typeof (StreamedSequence) });
+
     public abstract StreamedSequence ExecuteInMemory<T> (StreamedSequence input);
 
-    public override IStreamedData ExecuteInMemory (IStreamedData input)
+    public sealed override IStreamedData ExecuteInMemory (IStreamedData input)
     {
-      ArgumentUtility.CheckNotNull ("input", input);
-      return InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (input, ExecuteInMemory<object>);
+      var sequenceInput = ArgumentUtility.CheckNotNullAndType<StreamedSequence> ("input", input);
+
+      var executeMethod = s_executeMethod.MakeGenericMethod (sequenceInput.DataInfo.ResultItemType);
+      return (StreamedSequence) InvokeExecuteMethod (executeMethod, sequenceInput);
     }
   }
 }

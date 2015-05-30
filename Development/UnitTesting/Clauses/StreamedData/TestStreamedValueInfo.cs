@@ -16,7 +16,6 @@
 // 
 
 using System;
-using System.Reflection;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -36,11 +35,6 @@ namespace Remotion.Linq.Development.UnitTesting.Clauses.StreamedData
     public Type DataType
     {
       get { return _dataType; }
-    }
-
-    public MethodInfo MakeClosedGenericExecuteMethod (MethodInfo genericMethodDefinition)
-    {
-      throw new NotImplementedException();
     }
 
     public IStreamedData ExecuteQueryModel (QueryModel queryModel, IQueryExecutor executor)

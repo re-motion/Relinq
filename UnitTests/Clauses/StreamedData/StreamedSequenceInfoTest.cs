@@ -19,11 +19,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Development.UnitTesting.Clauses.StreamedData;
-using Remotion.Linq.UnitTests.Clauses.ResultOperators;
 using Remotion.Linq.UnitTests.TestDomain;
 using Rhino.Mocks;
 
@@ -159,61 +157,6 @@ namespace Remotion.Linq.UnitTests.Clauses.StreamedData
 #endif
               + "Parameter name: dataType"));
 
-    }
-
-    [Test]
-    public void MakeClosedGenericExecuteMethod ()
-    {
-      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) });
-      var result = _infoWithStringSequence.MakeClosedGenericExecuteMethod (executeMethod);
-
-      Assert.That (result.GetGenericArguments(), Is.EqualTo (new[] { typeof (string) }));
-    }
-
-    [Test]
-    public void MakeClosedGenericExecuteMethod_WithCovariantDataType ()
-    {
-      var info = new StreamedSequenceInfo (typeof (IEnumerable<object>), _stringExpression);
-
-      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) });
-      var result = info.MakeClosedGenericExecuteMethod (executeMethod);
-
-      Assert.That (result.GetGenericArguments (), Is.EqualTo (new[] { typeof (object) }));
-    }
-
-    [Test]
-    public void MakeClosedGenericExecuteMethod_NonGenericMethod ()
-    {
-      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (IStreamedData) });
-      Assert.That (
-          () => _infoWithStringSequence.MakeClosedGenericExecuteMethod (executeMethod),
-          Throws.ArgumentException.With.Message.EqualTo (
-              "GenericMethodDefinition must be a generic method definition.\r\n"
-              + "Parameter name: genericMethodDefinition"));
-    }
-
-    [Test]
-    public void MakeClosedGenericExecuteMethod_NonGenericMethodDefinition ()
-    {
-      var executeMethod = typeof (CountResultOperator)
-          .GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) })
-          .MakeGenericMethod (typeof (string));
-      Assert.That (
-          () => _infoWithStringSequence.MakeClosedGenericExecuteMethod (executeMethod),
-          Throws.ArgumentException.With.Message.EqualTo (
-              "GenericMethodDefinition must be a generic method definition.\r\n"
-              + "Parameter name: genericMethodDefinition"));
-    }
-
-    [Test]
-    public void MakeClosedGenericExecuteMethod_WrongNumberOfGenericParameters ()
-    {
-      var executeMethod = typeof (TestResultOperator).GetMethod ("InvalidExecuteInMemory_TooManyGenericParameters");
-      Assert.That (
-          () => _infoWithStringSequence.MakeClosedGenericExecuteMethod (executeMethod),
-          Throws.ArgumentException.With.Message.EqualTo (
-              "GenericMethodDefinition must have exactly one generic parameter.\r\n"
-              + "Parameter name: genericMethodDefinition"));
     }
 
     [Test]

@@ -17,11 +17,14 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Clauses.ResultOperators;
 using Remotion.Linq.UnitTests.TestDomain;
+using Remotion.Linq.UnitTests.Utilities;
+using Remotion.Linq.Utilities;
 using Rhino.Mocks;
 
 namespace Remotion.Linq.UnitTests.Clauses
@@ -50,64 +53,48 @@ namespace Remotion.Linq.UnitTests.Clauses
     }
 
     [Test]
-    public void InvokeGenericExecuteMethod ()
+    public void InvokeExecuteMethod ()
     {
-      var result = _resultOperator.InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (
-          _executeInMemoryInput, 
-          _resultOperator.DistinctExecuteMethod<object>);
+      var result = (StreamedSequence) _resultOperator.InvokeExecuteMethod (
+          ReflectionUtility.GetMethod (() => ((TestResultOperator) null).DistinctExecuteMethod<int> (null)),
+          _executeInMemoryInput);
 
       Assert.That (result.GetTypedSequence<int>().ToArray(), Is.EquivalentTo (new[] { 1, 2, 3, 4 }));
     }
 
     [Test]
-    [ExpectedException (typeof (NotImplementedException), ExpectedMessage = "Test")]
     public void InvokeGenericExecuteMethod_Throws ()
     {
-      _resultOperator.InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (
-          _executeInMemoryInput, 
-          _resultOperator.ThrowingExecuteMethod<object>);
+      var methodInfo =
+          ReflectionUtility.GetMethod (() => ((TestResultOperator) null).ThrowingExecuteMethod<object> (null));
+      Assert.That (
+          () => _resultOperator.InvokeExecuteMethod (methodInfo, _executeInMemoryInput),
+          Throws.Exception.TypeOf<NotImplementedException>().With.Message.EqualTo ("Test"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Method to invoke ('NonGenericExecuteMethod') must be a generic method "
-        + "with exactly one generic argument.\r\nParameter name: genericExecuteCaller")]
-    public void InvokeGenericExecuteMethod_NonGenericMethod ()
-    {
-      _resultOperator.InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (
-          _executeInMemoryInput,
-          _resultOperator.NonGenericExecuteMethod);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Method to invoke ('InvalidExecuteInMemory_TooManyGenericParameters') must be a generic method "
-        + "with exactly one generic argument.\r\nParameter name: genericExecuteCaller")]
-    public void InvokeGenericExecuteMethod_WrongNumberOfGenericArguments ()
-    {
-      _resultOperator.InvokeGenericExecuteMethod<StreamedSequence, StreamedValue> (
-          _executeInMemoryInput,
-          _resultOperator.InvalidExecuteInMemory_TooManyGenericParameters<object, object>);
-    }
-
-    [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Method to invoke ('NonPublicExecuteMethod') must be a public method.\r\n"
-        + "Parameter name: method")]
     public void InvokeGenericExecuteMethod_NonPublicMethod ()
     {
-      _resultOperator.InvokeGenericExecuteMethod<StreamedSequence, StreamedSequence> (
-          _executeInMemoryInput,
-          _resultOperator.NonPublicExecuteMethod<object>);
+      var methodInfo =
+          ReflectionUtility.GetMethod (() => ((TestResultOperator) null).NonPublicExecuteMethod<object> (null));
+      Assert.That (
+          () => _resultOperator.InvokeExecuteMethod (methodInfo, _executeInMemoryInput),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "Method to invoke ('NonPublicExecuteMethod') must be a public method.\r\nParameter name: method"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Cannot call method 'ExecuteMethodWithNonMatchingArgumentType' on input of type "
-        + "'Remotion.Linq.Clauses.StreamedData.StreamedSequence': Object of type 'Remotion.Linq.Clauses.StreamedData."
-        + "StreamedSequence' cannot be converted to type 'Remotion.Linq.Clauses.StreamedData.StreamedValue'."
-        + "\r\nParameter name: method")]
     public void InvokeGenericExecuteMethod_NonMatchingArgument ()
     {
-      _resultOperator.InvokeGenericExecuteMethod<StreamedValue, StreamedValue> (
-          _executeInMemoryInput,
-          _resultOperator.ExecuteMethodWithNonMatchingArgumentType<object>);
+      var methodInfo =
+          ReflectionUtility.GetMethod (() => ((TestResultOperator) null).ExecuteMethodWithNonMatchingArgumentType<object> (null));
+      Assert.That (
+          () => _resultOperator.InvokeExecuteMethod (methodInfo, _executeInMemoryInput),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "Cannot call method 'ExecuteMethodWithNonMatchingArgumentType' on input of type "
+        + "'Remotion.Linq.Clauses.StreamedData.StreamedSequence': Object of type 'Remotion.Linq.Clauses.StreamedData."
+        + "StreamedSequence' cannot be converted to type 'Remotion.Linq.Clauses.StreamedData.StreamedValue'."
+        + "\r\nParameter name: method"));
     }
 
     [Test]

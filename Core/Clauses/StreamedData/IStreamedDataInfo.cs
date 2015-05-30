@@ -16,7 +16,6 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace Remotion.Linq.Clauses.StreamedData
 {
@@ -30,15 +29,6 @@ namespace Remotion.Linq.Clauses.StreamedData
     /// <see cref="IEnumerable{T}"/>, where <c>T</c> is instantiated with a concrete type. For a single value, this is the value type.
     /// </summary>
     Type DataType { get; }
-
-    /// <summary>
-    /// Takes the given <paramref name="genericMethodDefinition"/> and instantiates it, substituting its generic parameter with the value
-    /// or item type of the data described by this object. The method must have exactly one generic parameter.
-    /// </summary>
-    /// <param name="genericMethodDefinition">The generic method definition to instantiate.</param>
-    /// <returns>A closed generic instantiation of <paramref name="genericMethodDefinition"/> with this object's value or item type substituted for
-    /// the generic parameter.</returns>
-    MethodInfo MakeClosedGenericExecuteMethod (MethodInfo genericMethodDefinition);
 
     /// <summary>
     /// Executes the specified <see cref="QueryModel"/> with the given <see cref="IQueryExecutor"/>, calling either 
