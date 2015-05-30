@@ -25,7 +25,7 @@ namespace Remotion.Linq.Clauses.StreamedData
   /// </summary>
   public abstract class StreamedValueInfo : IStreamedDataInfo
   {
-    protected StreamedValueInfo (Type dataType)
+    internal StreamedValueInfo (Type dataType)
     {
       ArgumentUtility.CheckNotNull ("dataType", dataType);
       DataType = dataType;

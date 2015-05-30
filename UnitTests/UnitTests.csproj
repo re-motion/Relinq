@@ -288,7 +288,6 @@
     <Compile Include="Clauses\StreamedData\StreamedSequenceInfoTest.cs" />
     <Compile Include="Clauses\StreamedData\StreamedSequenceTest.cs" />
     <Compile Include="Clauses\StreamedData\StreamedSingleValueInfoTest.cs" />
-    <Compile Include="Clauses\StreamedData\StreamedValueInfoTest.cs" />
     <Compile Include="Clauses\StreamedData\StreamedValueTest.cs" />
     <Compile Include="Clauses\WhereClauseTest.cs" />
     <Compile Include="Collections\ChangeResistantObservableCollectionEnumeratorTest.cs" />

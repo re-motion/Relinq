@@ -16,8 +16,10 @@
 // 
 using System;
 using NUnit.Framework;
+using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.UnitTests.Clauses.ResultOperators;
 using Remotion.Linq.UnitTests.TestDomain;
 using Rhino.Mocks;
 
@@ -35,7 +37,13 @@ namespace Remotion.Linq.UnitTests.Clauses.StreamedData
     }
 
     [Test]
-    public void AdjustDataType ()
+    public void DataType ()
+    {
+      Assert.That (_streamedScalarValueInfo.DataType, Is.SameAs (typeof (int)));
+    }
+
+    [Test]
+    public void AdjustDataType_CompatibleType ()
     {
       var result = _streamedScalarValueInfo.AdjustDataType (typeof (object));
 
@@ -43,7 +51,60 @@ namespace Remotion.Linq.UnitTests.Clauses.StreamedData
       Assert.That (result, Is.TypeOf (typeof (StreamedScalarValueInfo)));
       Assert.That (result.DataType, Is.SameAs (typeof (object)));
     }
-    
+
+    [Test]
+    public void AdjustDataType_IncompatibleType ()
+    {
+      Assert.That (
+          () => _streamedScalarValueInfo.AdjustDataType (typeof (string)),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "'System.String' cannot be used as the new data type for a value of type 'System.Int32'.\r\nParameter name: dataType"));
+    }
+
+    [Test]
+    public void MakeClosedGenericExecuteMethod ()
+    {
+      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) });
+      var result = _streamedScalarValueInfo.MakeClosedGenericExecuteMethod (executeMethod);
+
+      Assert.That (result.GetGenericArguments (), Is.EqualTo (new[] { typeof (int) }));
+    }
+
+    [Test]
+    public void MakeClosedGenericExecuteMethod_NonGenericMethod ()
+    {
+      var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (IStreamedData) });
+      Assert.That (
+          () => _streamedScalarValueInfo.MakeClosedGenericExecuteMethod (executeMethod),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "GenericMethodDefinition must be a generic method definition.\r\n"
+              + "Parameter name: genericMethodDefinition"));
+    }
+
+    [Test]
+    public void MakeClosedGenericExecuteMethod_NonGenericMethodDefinition ()
+    {
+      var executeMethod = typeof (CountResultOperator)
+          .GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) })
+          .MakeGenericMethod (typeof (int));
+      Assert.That (
+          () => _streamedScalarValueInfo.MakeClosedGenericExecuteMethod (executeMethod),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "GenericMethodDefinition must be a generic method definition.\r\n"
+              + "Parameter name: genericMethodDefinition"));
+    }
+
+    [Test]
+    public void MakeClosedGenericExecuteMethod_WrongNumberOfGenericParameters ()
+    {
+      var executeMethod = typeof (TestResultOperator).GetMethod ("InvalidExecuteInMemory_TooManyGenericParameters");
+      Assert.That (
+          () => _streamedScalarValueInfo.MakeClosedGenericExecuteMethod (executeMethod),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "GenericMethodDefinition must have exactly one generic parameter.\r\n"
+              + "Parameter name: genericMethodDefinition"));
+    }
+
     [Test]
     public void ExecuteQueryModel ()
     {

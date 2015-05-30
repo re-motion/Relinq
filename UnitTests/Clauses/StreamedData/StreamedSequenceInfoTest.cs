@@ -51,21 +51,23 @@ namespace Remotion.Linq.UnitTests.Clauses.StreamedData
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "Expected a closed generic type implementing IEnumerable<T>, but found 'System.Int32'.\r\nParameter name: dataType")]
     public void Initialization_DataTypeIsnotAssignableFromIEnumerable ()
     {
-      new StreamedSequenceInfo (typeof (int), _stringExpression);
+      Assert.That (
+          () => new StreamedSequenceInfo (typeof (int), _stringExpression),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "Expected a closed generic type implementing IEnumerable<T>, but found 'System.Int32'.\r\nParameter name: dataType"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "ItemExpression is of type 'System.String', but should be 'System.Int32' (or derived from it).\r\nParameter name: itemExpression")]
     public void Initialization_CurrentSequence_WrongItemExpression ()
     {
-      new StreamedSequenceInfo (typeof (int[]), _stringExpression);
+      Assert.That (
+          () => new StreamedSequenceInfo (typeof (int[]), _stringExpression),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "ItemExpression is of type 'System.String', but should be 'System.Int32' (or derived from it).\r\nParameter name: itemExpression"));
     }
-    
+
     [Test]
     public void Initialization_CurrentSequence_Assignable ()
     {
@@ -100,21 +102,23 @@ namespace Remotion.Linq.UnitTests.Clauses.StreamedData
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "'System.Collections.Generic.IEnumerable`1[System.Int32]' cannot be used as the data type for a sequence with an ItemExpression of type "
-        + "'System.String'.\r\nParameter name: dataType")]
     public void AdjustDataType_IncompatibleType ()
     {
-      _infoWithStringSequence.AdjustDataType (typeof (IEnumerable<int>));
+      Assert.That (
+          () => _infoWithStringSequence.AdjustDataType (typeof (IEnumerable<int>)),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "'System.Collections.Generic.IEnumerable`1[System.Int32]' cannot be used as the data type for a sequence with an ItemExpression of type 'System.String'.\r\n"
+              + "Parameter name: dataType"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "'System.Int32' cannot be used as the data type for a sequence with an ItemExpression of type 'System.String'.\r\n"
-        + "Parameter name: dataType")]
     public void AdjustDataType_NonEnumerableType ()
     {
-      _infoWithStringSequence.AdjustDataType (typeof (int));
+      Assert.That (
+          () => _infoWithStringSequence.AdjustDataType (typeof (int)),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "'System.Int32' cannot be used as the data type for a sequence with an ItemExpression of type 'System.String'.\r\n"
+              + "Parameter name: dataType"));
     }
 
     [Test]
@@ -178,32 +182,38 @@ namespace Remotion.Linq.UnitTests.Clauses.StreamedData
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException),
-        ExpectedMessage = "GenericMethodDefinition must be a generic method definition.\r\nParameter name: genericMethodDefinition")]
     public void MakeClosedGenericExecuteMethod_NonGenericMethod ()
     {
       var executeMethod = typeof (CountResultOperator).GetMethod ("ExecuteInMemory", new[] { typeof (IStreamedData) });
-      _infoWithStringSequence.MakeClosedGenericExecuteMethod (executeMethod);
+      Assert.That (
+          () => _infoWithStringSequence.MakeClosedGenericExecuteMethod (executeMethod),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "GenericMethodDefinition must be a generic method definition.\r\n"
+              + "Parameter name: genericMethodDefinition"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException),
-        ExpectedMessage = "GenericMethodDefinition must be a generic method definition.\r\nParameter name: genericMethodDefinition")]
     public void MakeClosedGenericExecuteMethod_NonGenericMethodDefinition ()
     {
       var executeMethod = typeof (CountResultOperator)
           .GetMethod ("ExecuteInMemory", new[] { typeof (StreamedSequence) })
           .MakeGenericMethod (typeof (string));
-      _infoWithStringSequence.MakeClosedGenericExecuteMethod (executeMethod);
+      Assert.That (
+          () => _infoWithStringSequence.MakeClosedGenericExecuteMethod (executeMethod),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "GenericMethodDefinition must be a generic method definition.\r\n"
+              + "Parameter name: genericMethodDefinition"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException),
-        ExpectedMessage = "GenericMethodDefinition must have exactly one generic parameter.\r\nParameter name: genericMethodDefinition")]
     public void MakeClosedGenericExecuteMethod_WrongNumberOfGenericParameters ()
     {
       var executeMethod = typeof (TestResultOperator).GetMethod ("InvalidExecuteInMemory_TooManyGenericParameters");
-      _infoWithStringSequence.MakeClosedGenericExecuteMethod (executeMethod);
+      Assert.That (
+          () => _infoWithStringSequence.MakeClosedGenericExecuteMethod (executeMethod),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "GenericMethodDefinition must have exactly one generic parameter.\r\n"
+              + "Parameter name: genericMethodDefinition"));
     }
 
     [Test]

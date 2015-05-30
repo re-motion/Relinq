@@ -16,27 +16,63 @@
 // 
 
 using System;
+using System.Reflection;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Development.UnitTesting.Clauses.StreamedData
 {
-  public class TestStreamedValueInfo : StreamedValueInfo
+  public sealed class TestStreamedValueInfo : IStreamedDataInfo
   {
+    private readonly Type _dataType;
+
     public TestStreamedValueInfo (Type dataType)
-        : base (dataType)
     {
+      ArgumentUtility.CheckNotNull ("dataType", dataType);
+
+      _dataType = dataType;
     }
 
-    public override IStreamedData ExecuteQueryModel (QueryModel queryModel, IQueryExecutor executor)
+    public Type DataType
+    {
+      get { return _dataType; }
+    }
+
+    public MethodInfo MakeClosedGenericExecuteMethod (MethodInfo genericMethodDefinition)
     {
       throw new NotImplementedException();
     }
 
-    protected override StreamedValueInfo CloneWithNewDataType (Type dataType)
+    public IStreamedData ExecuteQueryModel (QueryModel queryModel, IQueryExecutor executor)
     {
-      ArgumentUtility.CheckNotNull ("dataType", dataType);
+      throw new NotImplementedException();
+    }
+
+    public IStreamedDataInfo AdjustDataType (Type dataType)
+    {
       return new TestStreamedValueInfo (dataType);
+    }
+
+    public override bool Equals (object obj)
+    {
+      return Equals (obj as IStreamedDataInfo);
+    }
+
+    public bool Equals (IStreamedDataInfo obj)
+    {
+      if (obj == null)
+        return false;
+    
+      if (GetType () != obj.GetType ())
+        return false;
+
+      var other = (TestStreamedValueInfo) obj;
+      return _dataType.Equals (other._dataType);
+    }
+
+    public override int GetHashCode ()
+    {
+      return _dataType.GetHashCode();
     }
   }
 }
