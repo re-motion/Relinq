@@ -174,10 +174,8 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     /// <see cref="ExpressionVisitor"/> has a dedicated Visit method for it; otherwise, <see langword="false"/>. 
     /// Note that <see cref="ExpressionType.Extension"/>-type expressions are considered 'not supported' and will also return <see langword="false"/>.
     /// </returns>
-    protected bool IsSupportedStandardExpression (Expression expression)
+    private bool IsSupportedStandardExpression (Expression expression)
     {
-      ArgumentUtility.CheckNotNull ("expression", expression);
-
       // TODO RMLNQ-72: Extend the check to handle Expressions of type 'Extension' by testing if the Expression CanBeReduced and then Reduce() the Expression.
       // Apply this rule recursivly until the reduced expression is same as the original expression.
       // Precondition: The implementation of the LambdaCompiler must be reviewed to check if it can handle expressions of type 'Extension'.
@@ -198,7 +196,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     /// 	<see langword="true"/> if <paramref name="expression"/> is one of the expressions defined by <see cref="ExpressionType"/> and 
     ///   <see cref="ExpressionVisitor"/> has a Visit method for it; otherwise, <see langword="false"/>.
     /// </returns>
-    protected bool IsSupportedStandardExpression (Expression expression)
+    private bool IsSupportedStandardExpression (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 

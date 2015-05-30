@@ -34,6 +34,7 @@ using Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation;
 using Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests;
 using Remotion.Linq.UnitTests.Parsing.Structure.TestDomain;
 using Remotion.Linq.UnitTests.TestDomain;
+using Rhino.Mocks;
 #if !NET_3_5
 using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
 #endif
@@ -43,14 +44,6 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
   [TestFixture]
   public class EvaluatableTreeFindingExpressionVisitorTest
   {
-    private class TestableEvaluatableTreeFindingExpressionVisitor : EvaluatableTreeFindingExpressionVisitor
-    {
-      public new bool IsSupportedStandardExpression (Expression expression)
-      {
-        return base.IsSupportedStandardExpression (expression);
-      }
-    }
-
 #if !NET_3_5
     private class TestExtensionExpressionWithType : Expression
     {
@@ -71,6 +64,11 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       public override string ToString ()
       {
         return "Test(Extension)";
+      }
+
+      protected override Expression VisitChildren (ExpressionVisitor visitor)
+      {
+        return this;
       }
     }
 #endif
@@ -131,7 +129,16 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
     }
 
     [Test]
-    public void VisitUnknownExpression_NotEvaluatable ()
+    public void VisitQuerySourceReferenceExpression_NotEvaluatable ()
+    {
+      var expression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+    }
+
+    [Test]
+    public void VisitSubQueryExpression_NotEvaluatable ()
     {
       var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook>());
       var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
@@ -144,7 +151,10 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
     {
       var innerExpression = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (0), Expression.Constant (0));
       var extensionExpression = new TestExtensionExpression (innerExpression);
-      
+#if !NET_3_5
+      Assert.That (extensionExpression.NodeType, Is.EqualTo (ExpressionType.Extension));
+#endif
+
       var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (extensionExpression);
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (extensionExpression), Is.False);
@@ -281,22 +291,21 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
     }
 
     [Test]
-    public void IsSupportedStandardExpression_WithNET35ExpressionType_True ()
+    public void VisitEvaluatableStandardExpressions ()
     {
-      var supportedExpressionTypeValues = 
-          new[]
-          {
-              ExpressionType.ArrayLength, ExpressionType.Convert, ExpressionType.ConvertChecked, ExpressionType.Negate, ExpressionType.NegateChecked,
-              ExpressionType.Not, ExpressionType.Quote, ExpressionType.TypeAs, ExpressionType.UnaryPlus, ExpressionType.Add, ExpressionType.AddChecked,
-              ExpressionType.Divide, ExpressionType.Modulo, ExpressionType.Multiply, ExpressionType.MultiplyChecked, ExpressionType.Power,
-              ExpressionType.Subtract, ExpressionType.SubtractChecked, ExpressionType.And, ExpressionType.Or, ExpressionType.ExclusiveOr,
-              ExpressionType.LeftShift, ExpressionType.RightShift, ExpressionType.AndAlso, ExpressionType.OrElse, ExpressionType.Equal,
-              ExpressionType.NotEqual, ExpressionType.GreaterThanOrEqual, ExpressionType.GreaterThan, ExpressionType.LessThan,
-              ExpressionType.LessThanOrEqual, ExpressionType.Coalesce, ExpressionType.ArrayIndex, ExpressionType.Conditional, ExpressionType.Constant,
-              ExpressionType.Invoke, ExpressionType.Lambda, ExpressionType.MemberAccess, ExpressionType.Call, ExpressionType.New,
-              ExpressionType.NewArrayBounds, ExpressionType.NewArrayInit, ExpressionType.MemberInit, ExpressionType.ListInit, ExpressionType.Parameter, 
-              ExpressionType.TypeIs,
-          };
+      var supportedExpressionTypeValues =
+          Enum.GetValues (typeof (ExpressionType))
+              .Cast<ExpressionType>()
+              .Except (
+                  new[]
+                  {
+                      ExpressionType.Parameter,
+#if !NET_3_5
+                      ExpressionType.Extension,
+                      ExpressionType.RuntimeVariables,
+#endif
+                  })
+              .ToArray();
 
       var visitMethodExpressionTypes = new HashSet<Type> (
           from m in typeof (ExpressionVisitor).GetMethods (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
@@ -311,6 +320,9 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       foreach (var expressionType in supportedExpressionTypeValues)
       {
         var expressionInstance = ExpressionInstanceCreator.GetExpressionInstance (expressionType);
+        if (expressionInstance == null)
+          continue;
+
         Assert.That (
             visitMethodExpressionTypes.Any (
                 t =>
@@ -322,44 +334,9 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
             Is.True,
             "Visit method for {0}",
             expressionInstance.GetType());
-        var visitor = new TestableEvaluatableTreeFindingExpressionVisitor();
-        Assert.That (visitor.IsSupportedStandardExpression (expressionInstance), Is.True);
+        var result = EvaluatableTreeFindingExpressionVisitor.Analyze (expressionInstance);
+        Assert.That (result.IsEvaluatableExpression (expressionInstance), Is.True, expressionInstance.NodeType.ToString());
       }
     }
-
-    [Test]
-    public void IsSupportedStandardExpression_WithNET35UnsupportedExpressionType_False ()
-    {
-      var visitor = new TestableEvaluatableTreeFindingExpressionVisitor();
-      var extensionExpression = new TestExtensionExpression (Expression.Constant (0));
-      Assert.That (visitor.IsSupportedStandardExpression (extensionExpression), Is.False);
-
-      var unknownExpression = new UnknownExpression (typeof (int));
-      Assert.That (visitor.IsSupportedStandardExpression (unknownExpression), Is.False);
-
-      var querySourceReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
-      Assert.That (visitor.IsSupportedStandardExpression (querySourceReferenceExpression), Is.False);
-
-      var subQueryExpression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook>());
-      Assert.That (visitor.IsSupportedStandardExpression (subQueryExpression), Is.False);
-    }
-
-#if !NET_3_5
-    [Test]
-    public void IsSupportedStandardExpression_WithNET40Expression_True ()
-    {
-      var visitor = new TestableEvaluatableTreeFindingExpressionVisitor();
-      var expression = Expression.Block (Expression.Constant ("a"));
-      Assert.That (visitor.IsSupportedStandardExpression (expression), Is.True);
-    }
-
-    [Test]
-    public void IsSupportedStandardExpression_WithExtensionExpression_False ()
-    {
-      var visitor = new TestableEvaluatableTreeFindingExpressionVisitor();
-      var extensionExpression = new TestExtensionExpressionWithType();
-      Assert.That (visitor.IsSupportedStandardExpression (extensionExpression), Is.False);
-    }
-#endif
   }
 }

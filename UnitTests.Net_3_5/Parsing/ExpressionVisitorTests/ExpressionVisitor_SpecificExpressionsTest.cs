@@ -192,7 +192,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
     [Test]
     public void VisitLambda_Unchanged ()
     {
-      var expression = (LambdaExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Lambda);
+      var expression = ExpressionInstanceCreator.CreateLambdaWithArguments ();
       var parameter = expression.Parameters.Single();
       Expect.Call (VisitorMock.Visit (expression.Body)).Return (expression.Body);
       Expect.Call (VisitorMock.Visit (parameter)).Return (parameter);
@@ -203,7 +203,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
     [Test]
     public void VisitLambda_ChangedBody ()
     {
-      var expression = (LambdaExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Lambda);
+      var expression = ExpressionInstanceCreator.CreateLambdaWithArguments ();
       var parameter = expression.Parameters.Single();
       Expression newBody = Expression.Constant (1);
       Expect.Call (VisitorMock.Visit (expression.Body)).Return (newBody);
@@ -218,7 +218,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
     [Test]
     public void VisitLambda_ChangedParameters ()
     {
-      var expression = (LambdaExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Lambda);
+      var expression = ExpressionInstanceCreator.CreateLambdaWithArguments ();
       var parameter = expression.Parameters.Single();
       Expression newParameter = Expression.Parameter (typeof (int), "i");
       Expect.Call (VisitorMock.Visit (expression.Body)).Return (expression.Body);
@@ -274,7 +274,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
     [Test]
     public void VisitInvocation_Unchanged ()
     {
-      var expression = (InvocationExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Invoke);
+      var expression = ExpressionInstanceCreator.CreateInvokeWithArguments ();
       var argument = expression.Arguments.Single();
       Expect.Call (VisitorMock.Visit (expression.Expression)).Return (expression.Expression);
       Expect.Call (VisitorMock.Visit (argument)).Return (argument);
@@ -285,7 +285,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
     [Test]
     public void VisitInvocation_ChangedObject ()
     {
-      var expression = (InvocationExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Invoke);
+      var expression = ExpressionInstanceCreator.CreateInvokeWithArguments ();
       var argument = expression.Arguments.Single();
       Expression newExpression = Expression.Lambda (Expression.Constant (1), Expression.Parameter (typeof (int), "i"));
       Expect.Call (VisitorMock.Visit (expression.Expression)).Return (newExpression);
@@ -300,7 +300,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
     [Test]
     public void VisitInvocation_ChangedArguments ()
     {
-      var expression = (InvocationExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Invoke);
+      var expression = ExpressionInstanceCreator.CreateInvokeWithArguments ();
       var argument = expression.Arguments.Single();
       Expression newArgument = Expression.Constant (214578);
       Expect.Call (VisitorMock.Visit (expression.Expression)).Return (expression.Expression);
