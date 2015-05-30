@@ -18,6 +18,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using JetBrains.Annotations;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.StreamedData;
@@ -93,7 +94,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
       var funcLambda = ReverseResolvingExpressionVisitor.ReverseResolveLambda (input.DataInfo.ItemExpression, Func, 1);
       var func = (Func<T, T, T>) funcLambda.Compile ();
       var result = sequence.Aggregate (func);
-      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
+      return new StreamedValue (result, GetOutputDataInfo (input.DataInfo));
     }
 
     /// <inheritdoc />
@@ -107,6 +108,11 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
 
+      return GetOutputDataInfo (sequenceInfo);
+    }
+
+    private StreamedValueInfo GetOutputDataInfo ([NotNull] StreamedSequenceInfo sequenceInfo)
+    {
       var expectedItemType = GetExpectedItemType();
       CheckSequenceItemType (sequenceInfo, expectedItemType);
 

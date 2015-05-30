@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using JetBrains.Annotations;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -60,6 +61,11 @@ namespace Remotion.Linq.Clauses.ResultOperators
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
+      return GetOutputDataInfo (sequenceInfo);
+    }
+
+    private IStreamedDataInfo GetOutputDataInfo ([NotNull] StreamedSequenceInfo sequenceInfo)
+    {
       return new StreamedScalarValueInfo (sequenceInfo.ResultItemType);
     }
 

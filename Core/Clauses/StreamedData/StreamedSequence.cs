@@ -18,6 +18,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.StreamedData
@@ -34,7 +35,7 @@ namespace Remotion.Linq.Clauses.StreamedData
     /// </summary>
     /// <param name="sequence">The sequence.</param>
     /// <param name="streamedSequenceInfo">An instance of <see cref="StreamedSequenceInfo"/> describing the sequence.</param>
-    public StreamedSequence (IEnumerable sequence, StreamedSequenceInfo streamedSequenceInfo)
+    public StreamedSequence ([NotNull] IEnumerable sequence, [NotNull] StreamedSequenceInfo streamedSequenceInfo)
     {
       ArgumentUtility.CheckNotNull ("streamedSequenceInfo", streamedSequenceInfo);
       ArgumentUtility.CheckNotNullAndType ("sequence", sequence, streamedSequenceInfo.DataType);
@@ -43,6 +44,7 @@ namespace Remotion.Linq.Clauses.StreamedData
       Sequence = sequence;
     }
 
+    [NotNull] 
     public StreamedSequenceInfo DataInfo { get; private set; }
 
     object IStreamedData.Value
@@ -60,6 +62,7 @@ namespace Remotion.Linq.Clauses.StreamedData
     /// holds the input sequence for the operation. If the object is used as output, this holds the result of the operation.
     /// </summary>
     /// <value>The current sequence.</value>
+    [NotNull] 
     public IEnumerable Sequence { get; private set; }
 
     /// <summary>
@@ -71,6 +74,7 @@ namespace Remotion.Linq.Clauses.StreamedData
     /// The sequence and an <see cref="Expression"/> describing its items.
     /// </returns>
     /// <exception cref="InvalidOperationException">Thrown when the item type is not the expected type <typeparamref name="T"/>.</exception>
+    [NotNull] 
     public IEnumerable<T> GetTypedSequence<T> ()
     {
       try

@@ -52,7 +52,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       var sequence = input.GetTypedSequence<T> ();
       T result = ReturnDefaultWhenEmpty ? sequence.SingleOrDefault () : sequence.Single ();
-      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
+      return new StreamedValue (result, GetOutputDataInfo (input.DataInfo));
     }
 
     /// <inheritdoc />

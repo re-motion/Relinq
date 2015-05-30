@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using JetBrains.Annotations;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -56,13 +57,18 @@ namespace Remotion.Linq.Clauses.ResultOperators
       Assertion.DebugAssert (GetOutputDataInfo (input.DataInfo).DataType == method.ReturnType, "ReturnType of method matches return type of this operator");
 
       var result = method.Invoke (null, new[] { input.GetTypedSequence<T>() });
-      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
+      return new StreamedValue (result, GetOutputDataInfo (input.DataInfo));
     }
 
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
 
+      return GetOutputDataInfo (sequenceInfo);
+    }
+
+    private StreamedValueInfo GetOutputDataInfo ([NotNull] StreamedSequenceInfo sequenceInfo)
+    {
       Type resultType = GetResultType (sequenceInfo.ResultItemType);
       return new StreamedScalarValueInfo (resultType);
     }

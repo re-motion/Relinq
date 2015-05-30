@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -46,12 +47,19 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       var sequence = input.GetTypedSequence<T> ();
       var result = sequence.Count ();
-      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
+      return new StreamedValue (result, GetOutputDataInfo (input.DataInfo));
     }
 
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
-      ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
+      var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
+
+      return GetOutputDataInfo (sequenceInfo);
+    }
+
+    // ReSharper disable once UnusedParameter.Local
+    private StreamedValueInfo GetOutputDataInfo ([NotNull] StreamedSequenceInfo sequenceInfo)
+    {
       return new StreamedScalarValueInfo (typeof (int));
     }
 
