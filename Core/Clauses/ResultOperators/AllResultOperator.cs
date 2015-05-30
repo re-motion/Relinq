@@ -35,7 +35,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).All();
   /// </code>
   /// </example>
-  public class AllResultOperator : ValueFromSequenceResultOperatorBase
+  public sealed class AllResultOperator : ValueFromSequenceResultOperatorBase
   {
     private Expression _predicate;
 

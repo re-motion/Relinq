@@ -36,7 +36,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Contains (student);
   /// </code>
   /// </example>
-  public class ContainsResultOperator : ValueFromSequenceResultOperatorBase
+  public sealed class ContainsResultOperator : ValueFromSequenceResultOperatorBase
   {
     private Expression _item;
 

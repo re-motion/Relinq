@@ -35,7 +35,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Skip (3);
   /// </code>
   /// </example>
-  public class SkipResultOperator : SequenceTypePreservingResultOperatorBase
+  public sealed class SkipResultOperator : SequenceTypePreservingResultOperatorBase
   {
     private Expression _count;
 

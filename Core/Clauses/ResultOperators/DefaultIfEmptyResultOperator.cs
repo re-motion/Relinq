@@ -36,7 +36,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).DefaultIfEmpty ("student");
   /// </code>
   /// </example>
-  public class DefaultIfEmptyResultOperator : SequenceTypePreservingResultOperatorBase
+  public sealed class DefaultIfEmptyResultOperator : SequenceTypePreservingResultOperatorBase
   {
     public DefaultIfEmptyResultOperator (Expression optionalDefaultValue)
     {

@@ -38,7 +38,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Union(students2);
   /// </code>
   /// </example>
-  public class UnionResultOperator : SequenceFromSequenceResultOperatorBase, IQuerySource
+  public sealed class UnionResultOperator : SequenceFromSequenceResultOperatorBase, IQuerySource
   {
     private string _itemName;
     private Type _itemType;

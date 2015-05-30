@@ -35,7 +35,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Count();
   /// </code>
   /// </example>
-  public class CountResultOperator : ValueFromSequenceResultOperatorBase
+  public sealed class CountResultOperator : ValueFromSequenceResultOperatorBase
   {
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {

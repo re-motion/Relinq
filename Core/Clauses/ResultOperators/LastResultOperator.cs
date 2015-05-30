@@ -35,7 +35,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Last();
   /// </code>
   /// </example>
-  public class LastResultOperator : ChoiceResultOperatorBase
+  public sealed class LastResultOperator : ChoiceResultOperatorBase
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="LastResultOperator"/>.

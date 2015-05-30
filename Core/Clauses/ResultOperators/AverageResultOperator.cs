@@ -35,7 +35,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s.ID).Average();
   /// </code>
   /// </example>
-  public class AverageResultOperator : ValueFromSequenceResultOperatorBase
+  public sealed class AverageResultOperator : ValueFromSequenceResultOperatorBase
   {
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {

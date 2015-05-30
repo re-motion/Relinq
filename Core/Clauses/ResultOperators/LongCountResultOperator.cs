@@ -37,7 +37,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).LongCount();
   /// </code>
   /// </example>
-  public class LongCountResultOperator : ValueFromSequenceResultOperatorBase
+  public sealed class LongCountResultOperator : ValueFromSequenceResultOperatorBase
   {
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {

@@ -37,7 +37,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Aggregate(0, (totalAge, s) => totalAge + s.Age);
   /// </code>
   /// </example>
-  public class AggregateFromSeedResultOperator : ValueFromSequenceResultOperatorBase
+  public sealed class AggregateFromSeedResultOperator : ValueFromSequenceResultOperatorBase
   {
     private static readonly MethodInfo s_executeMethod =
         typeof (AggregateFromSeedResultOperator).GetRuntimeMethodChecked ("ExecuteAggregateInMemory", new[] { typeof (StreamedSequence) });

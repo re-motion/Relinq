@@ -36,7 +36,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s.ID).Min();
   /// </code>
   /// </example>
-  public class MinResultOperator : ChoiceResultOperatorBase
+  public sealed class MinResultOperator : ChoiceResultOperatorBase
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="MinResultOperator"/>.

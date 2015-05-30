@@ -36,7 +36,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Except(students2);
   /// </code>
   /// </example>
-  public class ExceptResultOperator : SequenceTypePreservingResultOperatorBase
+  public sealed class ExceptResultOperator : SequenceTypePreservingResultOperatorBase
   {
     private Expression _source2;
     

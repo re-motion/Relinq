@@ -38,7 +38,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s.Name).Aggregate((allNames, name) => allNames + " " + name);
   /// </code>
   /// </example>
-  public class AggregateResultOperator : ValueFromSequenceResultOperatorBase
+  public sealed class AggregateResultOperator : ValueFromSequenceResultOperatorBase
   {
     private LambdaExpression _func;
 

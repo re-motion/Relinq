@@ -37,7 +37,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Any();
   /// </code>
   /// </example>
-  public class AnyResultOperator : ValueFromSequenceResultOperatorBase
+  public sealed class AnyResultOperator : ValueFromSequenceResultOperatorBase
   {
     /// <inheritdoc cref="ResultOperatorBase.ExecuteInMemory" />
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence input)

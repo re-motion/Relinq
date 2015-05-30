@@ -35,7 +35,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s.ID).Sum();
   /// </code>
   /// </example>
-  public class SumResultOperator : ValueFromSequenceResultOperatorBase
+  public sealed class SumResultOperator : ValueFromSequenceResultOperatorBase
   {
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {

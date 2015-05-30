@@ -32,7 +32,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Single();
   /// </code>
   /// </example>
-  public class SingleResultOperator : ChoiceResultOperatorBase
+  public sealed class SingleResultOperator : ChoiceResultOperatorBase
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="SingleResultOperator"/>.
