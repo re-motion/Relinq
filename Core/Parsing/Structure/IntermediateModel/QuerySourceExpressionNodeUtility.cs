@@ -27,7 +27,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// <summary>
   /// Provides common functionality used by implementors of <see cref="IQuerySourceExpressionNode"/>.
   /// </summary>
-  public class QuerySourceExpressionNodeUtility
+  public static class QuerySourceExpressionNodeUtility
   {
     /// <summary>
     /// Replaces the given parameter with a back-reference to the <see cref="IQuerySource"/> corresponding to <paramref name="referencedNode"/>.

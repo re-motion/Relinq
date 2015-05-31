@@ -32,7 +32,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// When this node is used, it usually follows (or replaces) a <see cref="SelectExpressionNode"/> of an <see cref="IExpressionNode"/> chain that 
   /// represents a query.
   /// </summary>
-  public class TakeExpressionNode : ResultOperatorExpressionNodeBase
+  public sealed class TakeExpressionNode : ResultOperatorExpressionNodeBase
   {
     public static IEnumerable<MethodInfo> GetSupportedMethods()
     {

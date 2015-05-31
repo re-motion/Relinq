@@ -49,7 +49,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       get { return _parsedExpression; }
     }
 
-    protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    protected sealed override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
@@ -58,7 +58,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       return queryModel;
     }
 
-    protected override QueryModel WrapQueryModelAfterEndOfQuery (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    protected sealed override QueryModel WrapQueryModelAfterEndOfQuery (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 

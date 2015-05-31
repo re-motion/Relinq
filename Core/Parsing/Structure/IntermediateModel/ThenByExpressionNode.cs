@@ -32,7 +32,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// When this node is used, it follows an <see cref="OrderByExpressionNode"/>, an <see cref="OrderByDescendingExpressionNode"/>, 
   /// a <see cref="ThenByExpressionNode"/>, or a <see cref="ThenByDescendingExpressionNode"/>.
   /// </summary>
-  public class ThenByExpressionNode : MethodCallExpressionNodeBase
+  public sealed class ThenByExpressionNode : MethodCallExpressionNodeBase
   {
     public static IEnumerable<MethodInfo> GetSupportedMethods()
     {

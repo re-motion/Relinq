@@ -12,18 +12,28 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </summary>
   public abstract class QuerySourceSetOperationExpressionNodeBase : ResultOperatorExpressionNodeBase, IQuerySourceExpressionNode
   {
+    private readonly Expression _source2;
+    private readonly Type _itemType;
+
     protected QuerySourceSetOperationExpressionNodeBase (MethodCallExpressionParseInfo parseInfo, Expression source2)
         : base (parseInfo, null, null)
     {
       ArgumentUtility.CheckNotNull ("source2", source2);
-      Source2 = source2;
-      ItemType = ReflectionUtility.GetItemTypeOfClosedGenericIEnumerable (parseInfo.ParsedExpression.Type, "expression");
+      _source2 = source2;
+      _itemType = ReflectionUtility.GetItemTypeOfClosedGenericIEnumerable (parseInfo.ParsedExpression.Type, "expression");
     }
 
-    public Expression Source2 { get; private set; }
-    public Type ItemType { get; private set; }
+    public Expression Source2
+    {
+      get { return _source2; }
+    }
 
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
+    public Type ItemType
+    {
+      get { return _itemType; }
+    }
+
+    public sealed override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
