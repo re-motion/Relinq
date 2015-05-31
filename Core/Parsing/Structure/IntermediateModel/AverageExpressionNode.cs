@@ -38,8 +38,8 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("Average");
     }
 
-    public AverageExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalPredicate)
-        : base(parseInfo, null, optionalPredicate)
+    public AverageExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression optionalSelector)
+        : base(parseInfo, null, optionalSelector)
     {
     }
 
