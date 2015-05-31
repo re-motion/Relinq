@@ -41,7 +41,7 @@ namespace Remotion.Linq.Clauses
   ///             select new { s, a };
   /// </code>
   /// </example>
-  public class JoinClause : IBodyClause, IQuerySource
+  public sealed class JoinClause : IBodyClause, IQuerySource
   {
     private Type _itemType;
     private string _itemName;
@@ -146,7 +146,7 @@ namespace Remotion.Linq.Clauses
     /// <param name="visitor">The visitor to accept.</param>
     /// <param name="queryModel">The query model in whose context this clause is visited.</param>
     /// <param name="index">The index of this clause in the <paramref name="queryModel"/>'s <see cref="QueryModel.BodyClauses"/> collection.</param>
-   public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
+   public void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
@@ -161,7 +161,7 @@ namespace Remotion.Linq.Clauses
    /// <param name="visitor">The visitor to accept.</param>
    /// <param name="queryModel">The query model in whose context this clause is visited.</param>
    /// <param name="groupJoinClause">The <see cref="GroupJoinClause"/> holding this <see cref="JoinClause"/> instance.</param>
-   public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, GroupJoinClause groupJoinClause)
+   public void Accept (IQueryModelVisitor visitor, QueryModel queryModel, GroupJoinClause groupJoinClause)
    {
      ArgumentUtility.CheckNotNull ("visitor", visitor);
      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
@@ -194,7 +194,7 @@ namespace Remotion.Linq.Clauses
     /// </summary>
     /// <param name="transformation">The transformation object. This delegate is called for each <see cref="Expression"/> within this
     /// clause, and those expressions will be replaced with what the delegate returns.</param>
-    public virtual void TransformExpressions (Func<Expression, Expression> transformation)
+    public void TransformExpressions (Func<Expression, Expression> transformation)
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
       InnerSequence = transformation (InnerSequence);

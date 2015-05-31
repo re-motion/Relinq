@@ -106,18 +106,13 @@ namespace Remotion.Linq.UnitTests.Clauses
     [Test]
     public void TransformExpressions ()
     {
-      var joinClauseMock = MockRepository.GenerateMock<JoinClause> (
-          "x", 
-          typeof (Cook), 
-          ExpressionHelper.CreateExpression(), 
-          ExpressionHelper.CreateExpression(), 
-          ExpressionHelper.CreateExpression());
-      _groupJoinClause.JoinClause = joinClauseMock;
+      var oldExpression = _joinClause.OuterKeySelector;
+      var newExpression = ExpressionHelper.CreateExpression();
+      Func<Expression, Expression> transformation = ex => (ex == oldExpression ? newExpression : ex);
 
-      Func<Expression, Expression> transformation = ex => ex;
       _groupJoinClause.TransformExpressions (transformation);
 
-      joinClauseMock.AssertWasCalled (mock => mock.TransformExpressions (transformation));
+      Assert.That (_joinClause.OuterKeySelector, Is.SameAs (newExpression));
     }
 
     [Test]
