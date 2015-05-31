@@ -15,9 +15,13 @@
 // under the License.
 // 
 using System;
+using System.Linq.Expressions;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 {
+  /// <summary>
+  /// Interface for classes representing query source parts of an <see cref="Expression"/> tree.
+  /// </summary>
   public interface IQuerySourceExpressionNode : IExpressionNode
   {
   }
