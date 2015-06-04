@@ -156,7 +156,7 @@ namespace Remotion.Linq.Development.UnitTesting
       MainFromClause fromClause1 = CreateMainFromClause_Int ("i", typeof (int), CreateIntQueryable());
       MainFromClause fromClause2 = CreateMainFromClause_Int ("j", typeof (int), CreateIntQueryable());
 
-      var keySelector = Resolve<int, string> (fromClause2, j => (j % 3).ToString());
+      var keySelector = Resolve<int, short> (fromClause2, j => (short) (j % 3));
       var elementSelector = Resolve<int, string> (fromClause1, i => i.ToString());
 
       return new GroupResultOperator ("groupings", keySelector, elementSelector);

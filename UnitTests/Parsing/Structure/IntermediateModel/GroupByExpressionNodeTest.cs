@@ -82,11 +82,11 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
       ClauseGenerationContext.AddContextInfo (_nodeWithoutElementSelector, querySource);
 
       var lambdaExpression =
-          ExpressionHelper.CreateLambdaExpression<IGrouping<string, string>, Tuple<string, int>> (g => Tuple.Create (g.Key, g.Count ()));
+          ExpressionHelper.CreateLambdaExpression<IGrouping<short, string>, Tuple<short, int>> (g => Tuple.Create (g.Key, g.Count ()));
       
       var result = _nodeWithoutElementSelector.Resolve (lambdaExpression.Parameters[0], lambdaExpression.Body, ClauseGenerationContext);
 
-      var expectedResult = ExpressionHelper.Resolve<IGrouping<string, string>, Tuple<string, int>> (querySource, g => Tuple.Create (g.Key, g.Count ()));
+      var expectedResult = ExpressionHelper.Resolve<IGrouping<short, string>, Tuple<short, int>> (querySource, g => Tuple.Create (g.Key, g.Count ()));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedResult, result);
     }
 
