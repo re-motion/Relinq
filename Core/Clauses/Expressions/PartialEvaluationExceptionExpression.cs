@@ -48,7 +48,7 @@ namespace Remotion.Linq.Clauses.Expressions
   /// <see cref="VisitChildren"/> methods.
   /// </para>
   /// </remarks>
-  public class PartialEvaluationExceptionExpression
+  public sealed class PartialEvaluationExceptionExpression
 #if !NET_3_5
     : Expression
 #else

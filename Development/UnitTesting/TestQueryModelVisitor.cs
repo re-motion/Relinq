@@ -43,19 +43,19 @@ namespace Remotion.Linq.Development.UnitTesting
     //  }
     //}
 
-    public new void VisitBodyClauses (ObservableCollection<IBodyClause> bodyClauses, QueryModel queryModel)
+    public void InvokeVisitBodyClauses (ObservableCollection<IBodyClause> bodyClauses, QueryModel queryModel)
     {
-      base.VisitBodyClauses (bodyClauses, queryModel);
+      VisitBodyClauses (bodyClauses, queryModel);
     }
 
-    public new void VisitOrderings (ObservableCollection<Ordering> orderings, QueryModel queryModel, OrderByClause orderByClause)
+    public void InvokeVisitOrderings (ObservableCollection<Ordering> orderings, QueryModel queryModel, OrderByClause orderByClause)
     {
-      base.VisitOrderings (orderings, queryModel, orderByClause);
+      VisitOrderings (orderings, queryModel, orderByClause);
     }
 
-    public new void VisitResultOperators (ObservableCollection<ResultOperatorBase> resultOperators, QueryModel queryModel)
+    public void InvokeVisitResultOperators (ObservableCollection<ResultOperatorBase> resultOperators, QueryModel queryModel)
     {
-      base.VisitResultOperators (resultOperators, queryModel);
+      VisitResultOperators (resultOperators, queryModel);
     }
   }
 }

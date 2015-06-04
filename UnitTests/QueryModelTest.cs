@@ -306,19 +306,34 @@ namespace Remotion.Linq.UnitTests
     [Test]
     public void TransformExpressions ()
     {
-      Func<Expression, Expression> transformation = ex => ex;
-      var fromClauseMock = MockRepository.GenerateMock<MainFromClause> ("item", typeof (string), ExpressionHelper.CreateExpression());
+      var fromClause = new MainFromClause ("item", typeof (string), ExpressionHelper.CreateExpression());
+      var selectClause = new SelectClause (ExpressionHelper.CreateExpression());
       var bodyClauseMock = MockRepository.GenerateMock<IBodyClause>();
-      var selectClauseMock = MockRepository.GenerateMock<SelectClause> (ExpressionHelper.CreateExpression());
 
-      var queryModel = new QueryModel (fromClauseMock, selectClauseMock);
+      var oldFromExpression = fromClause.FromExpression;
+      var newFromExpression = ExpressionHelper.CreateExpression();
+
+      var oldSelectorExpression = selectClause.Selector;
+      var newSelectorExpression = ExpressionHelper.CreateExpression();
+
+      Func<Expression, Expression> transformation = ex =>
+      {
+        if (ex == oldFromExpression)
+          return newFromExpression;
+        if (ex == oldSelectorExpression)
+          return newSelectorExpression;
+        else
+          return ex;
+      };
+
+      var queryModel = new QueryModel (fromClause, selectClause);
       queryModel.BodyClauses.Add (bodyClauseMock);
 
       queryModel.TransformExpressions (transformation);
 
-      fromClauseMock.AssertWasCalled (mock => mock.TransformExpressions (transformation));
+      Assert.That (fromClause.FromExpression, Is.SameAs (newFromExpression));
+      Assert.That (selectClause.Selector, Is.SameAs (newSelectorExpression));
       bodyClauseMock.AssertWasCalled (mock => mock.TransformExpressions (transformation));
-      selectClauseMock.AssertWasCalled (mock => mock.TransformExpressions (transformation));
     }
 
     [Test]

@@ -26,7 +26,7 @@ namespace Remotion.Linq.Clauses.StreamedData
   /// Describes a single value streamed out of a <see cref="QueryModel"/> or <see cref="ResultOperatorBase"/>. A single value corresponds to one
   /// item from the result set, as produced by <see cref="FirstResultOperator"/> or <see cref="SingleResultOperator"/>, for instance.
   /// </summary>
-  public class StreamedSingleValueInfo : StreamedValueInfo
+  public sealed class StreamedSingleValueInfo : StreamedValueInfo
   {
     private static readonly MethodInfo s_executeMethod = 
         (typeof (StreamedSingleValueInfo).GetRuntimeMethodChecked ("ExecuteSingleQueryModel", new[] { typeof (QueryModel), typeof (IQueryExecutor) }));

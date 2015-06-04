@@ -35,7 +35,13 @@ namespace Remotion.Linq.UnitTests.Clauses.StreamedData
     }
 
     [Test]
-    public void AdjustDataType ()
+    public void DataType ()
+    {
+      Assert.That (_streamedScalarValueInfo.DataType, Is.SameAs (typeof (int)));
+    }
+
+    [Test]
+    public void AdjustDataType_CompatibleType ()
     {
       var result = _streamedScalarValueInfo.AdjustDataType (typeof (object));
 
@@ -43,7 +49,16 @@ namespace Remotion.Linq.UnitTests.Clauses.StreamedData
       Assert.That (result, Is.TypeOf (typeof (StreamedScalarValueInfo)));
       Assert.That (result.DataType, Is.SameAs (typeof (object)));
     }
-    
+
+    [Test]
+    public void AdjustDataType_IncompatibleType ()
+    {
+      Assert.That (
+          () => _streamedScalarValueInfo.AdjustDataType (typeof (string)),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "'System.String' cannot be used as the new data type for a value of type 'System.Int32'.\r\nParameter name: dataType"));
+    }
+
     [Test]
     public void ExecuteQueryModel ()
     {

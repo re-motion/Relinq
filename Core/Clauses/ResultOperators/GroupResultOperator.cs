@@ -40,7 +40,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///             group s by s.Country;
   /// </code>
   /// </example>
-  public class GroupResultOperator : SequenceFromSequenceResultOperatorBase, IQuerySource
+  public sealed class GroupResultOperator : SequenceFromSequenceResultOperatorBase, IQuerySource
   {
     private static readonly MethodInfo s_executeMethod = 
         typeof (GroupResultOperator).GetRuntimeMethodChecked ("ExecuteGroupingInMemory", new[] { typeof (StreamedSequence) });

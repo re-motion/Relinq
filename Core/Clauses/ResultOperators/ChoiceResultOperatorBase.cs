@@ -15,6 +15,7 @@
 // under the License.
 // 
 using System;
+using JetBrains.Annotations;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
 
@@ -32,9 +33,16 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     public bool ReturnDefaultWhenEmpty { get; set; }
 
-    public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
+    public sealed override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       var inputSequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
+      return GetOutputDataInfo (inputSequenceInfo);
+    }
+
+    protected StreamedValueInfo GetOutputDataInfo ([NotNull] StreamedSequenceInfo inputSequenceInfo)
+    {
+      ArgumentUtility.CheckNotNull ("inputSequenceInfo", inputSequenceInfo);
+
       return new StreamedSingleValueInfo (inputSequenceInfo.ResultItemType, ReturnDefaultWhenEmpty);
     }
   }

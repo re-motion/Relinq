@@ -36,7 +36,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Intersect(students2);
   /// </code>
   /// </example>
-  public class IntersectResultOperator : SequenceTypePreservingResultOperatorBase
+  public sealed class IntersectResultOperator : SequenceTypePreservingResultOperatorBase
   {
     private Expression _source2;
 
@@ -82,7 +82,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
       var sequence = input.GetTypedSequence<T> ();
       var result = sequence.Intersect (GetConstantSource2<T> ());
-      return new StreamedSequence (result.AsQueryable (), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
+      return new StreamedSequence (result.AsQueryable (), GetOutputDataInfo (input.DataInfo));
     }
 
     public override void TransformExpressions (Func<Expression, Expression> transformation)

@@ -34,7 +34,7 @@ namespace Remotion.Linq.Clauses
   ///             select s;
   /// </ode>
   /// </example>
-  public class WhereClause : IBodyClause
+  public sealed class WhereClause : IBodyClause
   {
     private Expression _predicate;
 
@@ -66,7 +66,7 @@ namespace Remotion.Linq.Clauses
     /// <param name="visitor">The visitor to accept.</param>
     /// <param name="queryModel">The query model in whose context this clause is visited.</param>
     /// <param name="index">The index of this clause in the <paramref name="queryModel"/>'s <see cref="QueryModel.BodyClauses"/> collection.</param>
-    public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
+    public void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
@@ -90,7 +90,7 @@ namespace Remotion.Linq.Clauses
     /// </summary>
     /// <param name="cloneContext">The clones of all query source clauses are registered with this <see cref="CloneContext"/>.</param>
     /// <returns></returns>
-    public virtual WhereClause Clone (CloneContext cloneContext)
+    public WhereClause Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 

@@ -16,11 +16,14 @@
 // 
 
 using System;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.Development.UnitTesting.Clauses.Expressions;
+using Remotion.Linq.UnitTests.Parsing.ExpressionVisitors;
 using Remotion.Linq.UnitTests.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Clauses.ExpressionVisitors
@@ -67,6 +70,51 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionVisitors
       Assert.That (newSubQuerySelectClause.Selector, Is.SameAs (newReferenceExpression));
     }
 
-    
+    [Test]
+    public void Replaces_QuerySourceReferenceExpressions ()
+    {
+      var expression = new QuerySourceReferenceExpression (_oldFromClause);
+      var result = CloningExpressionVisitor.AdjustExpressionAfterCloning (expression, _querySourceMapping);
+
+      Assert.That (((QuerySourceReferenceExpression) result).ReferencedQuerySource, Is.SameAs (_newFromClause));
+    }
+
+    [Test]
+    public void Replaces_NestedQuerySourceReferenceExpressions ()
+    {
+      var expression = Expression.Negate (new QuerySourceReferenceExpression (_oldFromClause));
+      var result = (UnaryExpression) CloningExpressionVisitor.AdjustExpressionAfterCloning (expression, _querySourceMapping);
+
+      Assert.That (((QuerySourceReferenceExpression) result.Operand).ReferencedQuerySource, Is.SameAs (_newFromClause));
+    }
+
+    [Test]
+    public void Replaces_UnmappedQuerySourceReferenceExpressions_Ignored ()
+    {
+      var expression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
+      var result = CloningExpressionVisitor.AdjustExpressionAfterCloning (expression, _querySourceMapping);
+
+      Assert.That (result, Is.SameAs (expression));
+    }
+
+    [Test]
+    public void VisitExtensionExpression_ChildrenAreProcessed ()
+    {
+      var extensionExpression = new TestExtensionExpression (new QuerySourceReferenceExpression (_oldFromClause));
+
+      var result = (TestExtensionExpression) CloningExpressionVisitor.AdjustExpressionAfterCloning (extensionExpression, _querySourceMapping);
+
+      var expectedExpression = new TestExtensionExpression (new QuerySourceReferenceExpression (_newFromClause));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, result);
+    }
+
+    [Test]
+    public void VisitUnknownNonExtensionExpression_Ignored ()
+    {
+      var expression = new UnknownExpression (typeof (object));
+      var result = CloningExpressionVisitor.AdjustExpressionAfterCloning (expression, _querySourceMapping);
+
+      Assert.That (result, Is.SameAs (expression));
+    }
   }
 }

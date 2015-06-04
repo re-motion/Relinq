@@ -27,7 +27,7 @@ namespace Remotion.Linq.Clauses.ExpressionVisitors
   /// Takes an expression and replaces all <see cref="QuerySourceReferenceExpression"/> instances, as defined by a given <see cref="QuerySourceMapping"/>.
   /// This is used whenever references to query sources should be replaced by a transformation.
   /// </summary>
-  public class ReferenceReplacingExpressionVisitor : RelinqExpressionVisitor
+  public sealed class ReferenceReplacingExpressionVisitor : RelinqExpressionVisitor
   {
     /// <summary>
     /// Takes an expression and replaces all <see cref="QuerySourceReferenceExpression"/> instances, as defined by a given 
@@ -51,25 +51,20 @@ namespace Remotion.Linq.Clauses.ExpressionVisitors
     private readonly QuerySourceMapping _querySourceMapping;
     private readonly bool _throwOnUnmappedReferences;
 
-    protected ReferenceReplacingExpressionVisitor (QuerySourceMapping querySourceMapping, bool throwOnUnmappedReferences)
+    private ReferenceReplacingExpressionVisitor (QuerySourceMapping querySourceMapping, bool throwOnUnmappedReferences)
     {
       ArgumentUtility.CheckNotNull ("querySourceMapping", querySourceMapping);
       _querySourceMapping = querySourceMapping;
       _throwOnUnmappedReferences = throwOnUnmappedReferences;
     }
 
-    protected QuerySourceMapping QuerySourceMapping
-    {
-      get { return _querySourceMapping; }
-    }
-
     protected internal override Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      if (QuerySourceMapping.ContainsMapping (expression.ReferencedQuerySource))
+      if (_querySourceMapping.ContainsMapping (expression.ReferencedQuerySource))
       {
-        return QuerySourceMapping.GetExpression (expression.ReferencedQuerySource);
+        return _querySourceMapping.GetExpression (expression.ReferencedQuerySource);
       }
       else if (_throwOnUnmappedReferences)
       {

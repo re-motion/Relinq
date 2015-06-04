@@ -102,16 +102,19 @@ namespace Remotion.Linq.UnitTests.Clauses
     public void Clone_ViaInterface_PassesMappingToOrderings ()
     {
       var referencedClause = ExpressionHelper.CreateMainFromClause_Int ();
-      var orderingMock = MockRepository.GenerateMock<Ordering> (new QuerySourceReferenceExpression (referencedClause), OrderingDirection.Asc);
-      _orderByClause.Orderings.Add (orderingMock);
+      var ordering = new Ordering (new QuerySourceReferenceExpression (referencedClause), OrderingDirection.Asc);
+      _orderByClause.Orderings.Add (ordering);
 
       var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
       _cloneContext.QuerySourceMapping.AddMapping (referencedClause, newReferenceExpression);
 
-      orderingMock.Expect (mock => mock.Clone (_cloneContext)).Return (
-          new Ordering (new QuerySourceReferenceExpression (referencedClause), OrderingDirection.Asc));
+      var clone = (OrderByClause) ((IBodyClause) _orderByClause).Clone (_cloneContext);
 
-      ((IBodyClause) _orderByClause).Clone (_cloneContext);
+      Assert.That (clone.Orderings.Count, Is.EqualTo (1));
+
+      Assert.That (clone.Orderings[0], Is.Not.SameAs (ordering));
+      Assert.That (clone.Orderings[0].OrderingDirection, Is.EqualTo (ordering.OrderingDirection));
+      Assert.That (clone.Orderings[0].Expression, Is.SameAs (ordering.Expression));
     }
 
     [Test]

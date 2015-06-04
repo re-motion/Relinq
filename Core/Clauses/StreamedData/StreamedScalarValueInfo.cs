@@ -26,7 +26,7 @@ namespace Remotion.Linq.Clauses.StreamedData
   /// Describes a scalar value streamed out of a <see cref="QueryModel"/> or <see cref="ResultOperatorBase"/>. A scalar value corresponds to a
   /// value calculated from the result set, as produced by <see cref="CountResultOperator"/> or <see cref="ContainsResultOperator"/>, for instance.
   /// </summary>
-  public class StreamedScalarValueInfo : StreamedValueInfo
+  public sealed class StreamedScalarValueInfo : StreamedValueInfo
   {
     private static readonly MethodInfo s_executeMethod = 
         (typeof (StreamedScalarValueInfo).GetRuntimeMethodChecked ("ExecuteScalarQueryModel", new[] { typeof (QueryModel), typeof (IQueryExecutor) }));

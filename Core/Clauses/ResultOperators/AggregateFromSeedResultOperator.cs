@@ -18,6 +18,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using JetBrains.Annotations;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.StreamedData;
@@ -37,7 +38,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Aggregate(0, (totalAge, s) => totalAge + s.Age);
   /// </code>
   /// </example>
-  public class AggregateFromSeedResultOperator : ValueFromSequenceResultOperatorBase
+  public sealed class AggregateFromSeedResultOperator : ValueFromSequenceResultOperatorBase
   {
     private static readonly MethodInfo s_executeMethod =
         typeof (AggregateFromSeedResultOperator).GetRuntimeMethodChecked ("ExecuteAggregateInMemory", new[] { typeof (StreamedSequence) });
@@ -166,7 +167,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
       var func = (Func<TAggregate, TInput, TAggregate>) funcLambda.Compile ();
 
       var aggregated = sequence.Aggregate (seed, func);
-      var outputDataInfo = (StreamedValueInfo) GetOutputDataInfo (input.DataInfo);
+      var outputDataInfo = GetOutputDataInfo (input.DataInfo);
       if (OptionalResultSelector == null)
       {
         return new StreamedValue (aggregated, outputDataInfo);
@@ -188,8 +189,14 @@ namespace Remotion.Linq.Clauses.ResultOperators
     /// <inheritdoc />
     public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
-      ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
+      var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
 
+      return GetOutputDataInfo (sequenceInfo);
+    }
+
+    // ReSharper disable once UnusedParameter.Local
+    private StreamedValueInfo GetOutputDataInfo ([NotNull] StreamedSequenceInfo sequenceInfo)
+    {
       Assertion.DebugAssert (Func.Type.GetTypeInfo().IsGenericTypeDefinition == false);
       var aggregatedType = Func.Type.GetTypeInfo().GenericTypeArguments[0];
       if (!aggregatedType.GetTypeInfo().IsAssignableFrom (Seed.Type.GetTypeInfo()))

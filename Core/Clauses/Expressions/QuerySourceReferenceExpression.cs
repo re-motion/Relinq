@@ -30,7 +30,7 @@ namespace Remotion.Linq.Clauses.Expressions
   /// This particular expression overrides <see cref="Equals"/>, i.e. it can be compared to another <see cref="QuerySourceReferenceExpression"/> based
   /// on the <see cref="ReferencedQuerySource"/>.
   /// </remarks>
-  public class QuerySourceReferenceExpression : Expression
+  public sealed class QuerySourceReferenceExpression : Expression
   {
     public const ExpressionType ExpressionType = (ExpressionType) 100001;
 

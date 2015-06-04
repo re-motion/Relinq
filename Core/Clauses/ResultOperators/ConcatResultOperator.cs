@@ -39,7 +39,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Concat(students2);
   /// </code>
   /// </example>
-  public class ConcatResultOperator : SequenceFromSequenceResultOperatorBase, IQuerySource
+  public sealed class ConcatResultOperator : SequenceFromSequenceResultOperatorBase, IQuerySource
   {
     private string _itemName;
     private Type _itemType;

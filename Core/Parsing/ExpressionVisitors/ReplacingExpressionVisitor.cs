@@ -27,7 +27,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
   /// <see cref="QueryModel"/> is changed by the replacement operations, it is not copied. The replacement node is not recursively searched for 
   /// occurrences of the <see cref="Expression"/> to be replaced.
   /// </summary>
-  public class ReplacingExpressionVisitor : RelinqExpressionVisitor
+  public sealed class ReplacingExpressionVisitor : RelinqExpressionVisitor
   {
     public static Expression Replace (Expression replacedExpression, Expression replacementExpression, Expression sourceTree)
     {

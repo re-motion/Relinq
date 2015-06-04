@@ -43,7 +43,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </code>
   /// where resultSub is the same as result with k and g substituted with grouping.Key and grouping, respectively.
   /// </remarks>
-  public class GroupByWithResultSelectorExpressionNode : IQuerySourceExpressionNode
+  public sealed class GroupByWithResultSelectorExpressionNode : IQuerySourceExpressionNode
   {
     public static IEnumerable<MethodInfo> GetSupportedMethods()
     {

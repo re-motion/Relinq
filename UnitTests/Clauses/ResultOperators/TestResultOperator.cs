@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Utilities;
@@ -46,11 +47,9 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
       throw new NotImplementedException ();
     }
 
-    public new TResult InvokeGenericExecuteMethod<TSource, TResult> (IStreamedData input, Func<TSource, TResult> genericMethodCaller)
-      where TSource : IStreamedData
-      where TResult : IStreamedData 
+    public new object InvokeExecuteMethod (MethodInfo methodInfo, object input)
     {
-      return base.InvokeGenericExecuteMethod (input, genericMethodCaller);
+      return base.InvokeExecuteMethod (methodInfo, input);
     }
 
     public new void CheckSequenceItemType (StreamedSequenceInfo sequenceInfo, Type expectedItemType)

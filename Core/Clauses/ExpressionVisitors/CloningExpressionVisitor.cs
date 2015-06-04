@@ -18,6 +18,7 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
+using Remotion.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ExpressionVisitors
@@ -29,7 +30,7 @@ namespace Remotion.Linq.Clauses.ExpressionVisitors
   /// to cloned clauses in the given <see cref="QuerySourceMapping"/>, otherwise an expression is thrown. This is used by <see cref="QueryModel.Clone()"/>
   /// to adjust references to the old <see cref="QueryModel"/> with references to the new <see cref="QueryModel"/>.
   /// </summary>
-  public class CloningExpressionVisitor : ReferenceReplacingExpressionVisitor
+  public sealed class CloningExpressionVisitor : RelinqExpressionVisitor
   {
     /// <summary>
     /// Adjusts the given expression for cloning, that is replaces <see cref="QuerySourceReferenceExpression"/> and <see cref="SubQueryExpression"/> 
@@ -44,20 +45,40 @@ namespace Remotion.Linq.Clauses.ExpressionVisitors
       ArgumentUtility.CheckNotNull ("expression", expression);
       ArgumentUtility.CheckNotNull ("querySourceMapping", querySourceMapping);
 
-      return new CloningExpressionVisitor (querySourceMapping, false).Visit (expression);
+      return new CloningExpressionVisitor (querySourceMapping).Visit (expression);
     }
-    
-    private CloningExpressionVisitor (QuerySourceMapping querySourceMapping, bool ignoreUnmappedReferences)
-      : base (querySourceMapping, ignoreUnmappedReferences)
+
+    private readonly QuerySourceMapping _querySourceMapping;
+
+    private CloningExpressionVisitor (QuerySourceMapping querySourceMapping)
     {
+      _querySourceMapping = querySourceMapping;
+    }
+
+    protected internal override Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      if (_querySourceMapping.ContainsMapping (expression.ReferencedQuerySource))
+        return _querySourceMapping.GetExpression (expression.ReferencedQuerySource);
+
+      return expression;
     }
 
     protected internal override Expression VisitSubQuery (SubQueryExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      var clonedQueryModel = expression.QueryModel.Clone (QuerySourceMapping);
+      var clonedQueryModel = expression.QueryModel.Clone (_querySourceMapping);
       return new SubQueryExpression (clonedQueryModel);
     }
+
+#if NET_3_5
+    protected override Expression VisitRelinqUnknownNonExtension (Expression expression)
+    {
+      //ignore
+      return expression;
+    }
+#endif
   }
 }

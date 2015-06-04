@@ -39,7 +39,7 @@ namespace Remotion.Linq.Clauses
   ///             select s;
   /// </ode>
   /// </example>
-  public class OrderByClause : IBodyClause
+  public sealed class OrderByClause : IBodyClause
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="OrderByClause"/> class.
@@ -63,7 +63,7 @@ namespace Remotion.Linq.Clauses
     /// <param name="visitor">The visitor to accept.</param>
     /// <param name="queryModel">The query model in whose context this clause is visited.</param>
     /// <param name="index">The index of this clause in the <paramref name="queryModel"/>'s <see cref="QueryModel.BodyClauses"/> collection.</param>
-    public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
+    public void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);

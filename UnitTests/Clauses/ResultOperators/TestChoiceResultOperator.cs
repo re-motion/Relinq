@@ -31,7 +31,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
 
     public override StreamedValue ExecuteInMemory<T> (StreamedSequence sequence)
     {
-      return new StreamedValue (sequence.GetTypedSequence<T> ().First (), (StreamedValueInfo) GetOutputDataInfo (sequence.DataInfo));
+      return new StreamedValue (sequence.GetTypedSequence<T> ().First (), GetOutputDataInfo (sequence.DataInfo));
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)

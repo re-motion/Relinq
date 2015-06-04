@@ -17,8 +17,6 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Linq.Clauses.ExpressionVisitors;
-using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Utilities;
 using Remotion.Utilities;
@@ -37,7 +35,6 @@ namespace Remotion.Linq.Clauses
     /// </summary>
     /// <param name="input">The input for the result operator. This must match the type of <see cref="IStreamedData"/> expected by the operator.</param>
     /// <returns>The result of the operator.</returns>
-    /// <seealso cref="InvokeGenericExecuteMethod{TInput,TResult}"/>
     public abstract IStreamedData ExecuteInMemory (IStreamedData input);
 
     /// <summary>
@@ -63,7 +60,7 @@ namespace Remotion.Linq.Clauses
     /// <param name="visitor">The visitor to accept.</param>
     /// <param name="queryModel">The query model in whose context this clause is visited.</param>
     /// <param name="index">The index of this item in the <paramref name="queryModel"/>'s <see cref="QueryModel.ResultOperators"/> collection.</param>
-    public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
+    public void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
@@ -79,54 +76,6 @@ namespace Remotion.Linq.Clauses
     /// <param name="transformation">The transformation object. This delegate is called for each <see cref="Expression"/> within this
     /// item, and those expressions will be replaced with what the delegate returns.</param>
     public abstract void TransformExpressions (Func<Expression, Expression> transformation);
-
-    /// <summary>
-    /// Invokes a given generic method on an <see cref="IStreamedData"/> input via Reflection. Use this to implement 
-    /// <see cref="ExecuteInMemory(IStreamedData)"/> by defining a strongly typed, generic variant 
-    /// of <see cref="ExecuteInMemory(IStreamedData)"/>; then invoke that strongly typed 
-    /// variant via  <see cref="InvokeGenericExecuteMethod{TInput,TResult}"/>.
-    /// </summary>
-    /// <typeparam name="TInput">The type of <see cref="IStreamedData"/> expected as an input to <paramref name="genericExecuteCaller"/>.</typeparam>
-    /// <typeparam name="TResult">The type of <see cref="IStreamedData"/> expected as the output of <paramref name="genericExecuteCaller"/>.</typeparam>
-    /// <param name="input">The input <see cref="IStreamedData"/> object to invoke the method on..</param>
-    /// <param name="genericExecuteCaller">A delegate holding exactly one public generic method with exactly one generic argument. This method is
-    /// called via Reflection on the given <paramref name="input"/> argument.</param>
-    /// <returns>The result of invoking the method in <paramref name="genericExecuteCaller"/> on <paramref name="input"/>.</returns>
-    /// <example>
-    /// The <see cref="CountResultOperator"/> uses this method as follows:
-    /// <code>
-    /// public IStreamedData ExecuteInMemory (IStreamedData input)
-    /// {
-    ///   ArgumentUtility.CheckNotNull ("input", input);
-    ///   return InvokeGenericExecuteMethod&lt;StreamedSequence, StreamedValue&gt; (input, ExecuteInMemory&lt;object&gt;);
-    /// }
-    ///
-    /// public StreamedValue ExecuteInMemory&lt;T&gt; (StreamedSequence input)
-    /// {
-    ///   var sequence = input.GetTypedSequence&lt;T&gt; ();
-    ///   var result = sequence.Sequence.Count ();
-    ///   return new StreamedValue (result);
-    /// }
-    /// </code>
-    /// </example>
-    protected TResult InvokeGenericExecuteMethod<TInput, TResult> (IStreamedData input, Func<TInput, TResult> genericExecuteCaller)
-      where TInput : IStreamedData
-      where TResult : IStreamedData
-    {
-      ArgumentUtility.CheckNotNull ("input", input);
-      ArgumentUtility.CheckNotNull ("genericExecuteCaller", genericExecuteCaller);
-
-      var method = genericExecuteCaller.GetMethodInfo();
-      if (!method.IsGenericMethod || method.GetGenericArguments ().Length != 1)
-      {
-        throw new ArgumentException (
-            "Method to invoke ('" + method.Name + "') must be a generic method with exactly one generic argument.",
-            "genericExecuteCaller");
-      }
-
-      var closedGenericMethod = input.DataInfo.MakeClosedGenericExecuteMethod (method.GetGenericMethodDefinition ());
-      return (TResult) InvokeExecuteMethod (closedGenericMethod, input);
-    }
 
     /// <summary>
     /// Invokes the given <paramref name="method"/> via reflection on the given <paramref name="input"/>.

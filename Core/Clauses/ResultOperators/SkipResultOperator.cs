@@ -35,7 +35,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Skip (3);
   /// </code>
   /// </example>
-  public class SkipResultOperator : SequenceTypePreservingResultOperatorBase
+  public sealed class SkipResultOperator : SequenceTypePreservingResultOperatorBase
   {
     private Expression _count;
 
@@ -80,7 +80,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       var sequence = input.GetTypedSequence<T> ();
       var result = sequence.Skip (GetConstantCount());
-      return new StreamedSequence (result.AsQueryable (), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
+      return new StreamedSequence (result.AsQueryable (), GetOutputDataInfo (input.DataInfo));
     }
 
     public override void TransformExpressions (Func<Expression, Expression> transformation)

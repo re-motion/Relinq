@@ -23,7 +23,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// <summary>
   /// Caches a resolved expression in the <see cref="IExpressionNode"/> classes.
   /// </summary>
-  public class ResolvedExpressionCache<T>
+  public sealed class ResolvedExpressionCache<T>
       where T : Expression
   {
     private readonly ExpressionResolver _resolver;

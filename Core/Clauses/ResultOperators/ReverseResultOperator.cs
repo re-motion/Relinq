@@ -32,7 +32,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Reverse();
   /// </code>
   /// </example>
-  public class ReverseResultOperator : SequenceTypePreservingResultOperatorBase
+  public sealed class ReverseResultOperator : SequenceTypePreservingResultOperatorBase
   {
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
@@ -43,7 +43,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       var sequence = input.GetTypedSequence<T> ();
       var result = sequence.Reverse();
-      return new StreamedSequence (result.AsQueryable (), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
+      return new StreamedSequence (result.AsQueryable (), GetOutputDataInfo (input.DataInfo));
     }
 
     /// <inheritdoc />

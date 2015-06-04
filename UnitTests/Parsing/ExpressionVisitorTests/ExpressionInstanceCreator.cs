@@ -35,7 +35,6 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
       NewArrayExpression arrayExpression = Expression.NewArrayInit (typeof (int), zero);
       Expression trueExpression = Expression.Constant (true);
       LambdaExpression lambdaExpression = Expression.Lambda<Func<int>> (zero);
-      LambdaExpression lambdaExpressionWithArguments = Expression.Lambda<Func<int, int>> (zero, Expression.Parameter (typeof (int), "i"));
       NewExpression newExpression = Expression.New (typeof (List<int>).GetConstructor (new[] { typeof (int) }), zero);
 
       map[ExpressionType.Add] = Expression.Add (zero, zero);
@@ -55,8 +54,8 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
       map[ExpressionType.ExclusiveOr] = Expression.ExclusiveOr (trueExpression, trueExpression);
       map[ExpressionType.GreaterThan] = Expression.GreaterThan (zero, zero);
       map[ExpressionType.GreaterThanOrEqual] = Expression.GreaterThanOrEqual (zero, zero);
-      map[ExpressionType.Invoke] = Expression.Invoke (lambdaExpressionWithArguments, zero);
-      map[ExpressionType.Lambda] = lambdaExpressionWithArguments;
+      map[ExpressionType.Invoke] = Expression.Invoke (lambdaExpression);
+      map[ExpressionType.Lambda] = lambdaExpression;
       map[ExpressionType.LeftShift] = Expression.LeftShift (zero, zero);
       map[ExpressionType.LessThan] = Expression.LessThan (zero, zero);
       map[ExpressionType.LessThanOrEqual] = Expression.LessThanOrEqual (zero, zero);
@@ -101,7 +100,11 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
 
     public static Expression GetExpressionInstance (ExpressionType type)
     {
-      return s_expressionTypeMap[type];
+      Expression expression;
+      if (s_expressionTypeMap.TryGetValue (type, out expression))
+        return expression;
+
+      return null;
     }
 
     public static ElementInit CreateElementInit ()
@@ -122,6 +125,18 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
     public static MemberListBinding CreateMemberListBinding (IEnumerable<ElementInit> initializers)
     {
       return Expression.ListBind (typeof (SimpleClass).GetField ("ListValue"), initializers);
+    }
+
+    public static LambdaExpression CreateLambdaWithArguments ()
+    {
+      return Expression.Lambda<Func<int, int>> (Expression.Constant (1), Expression.Parameter (typeof (int), "i"));
+    }
+
+    public static InvocationExpression CreateInvokeWithArguments ()
+    {
+      return Expression.Invoke (
+          Expression.Lambda<Func<int, int>> (Expression.Constant (1), Expression.Parameter (typeof (int), "i")),
+          Expression.Constant (2));
     }
 
 #if !NET_3_5

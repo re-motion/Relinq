@@ -42,7 +42,7 @@ namespace Remotion.Linq.Clauses.ExpressionVisitors
   /// </list>
   /// </para>
   /// </example>
-  public class AccessorFindingExpressionVisitor : RelinqExpressionVisitor
+  public sealed class AccessorFindingExpressionVisitor : RelinqExpressionVisitor
   {
     /// <summary>
     /// Constructs a <see cref="LambdaExpression"/> that is able to extract a specific simple <paramref name="searchedExpression"/> from a 
@@ -102,7 +102,7 @@ namespace Remotion.Linq.Clauses.ExpressionVisitors
       _accessorPathStack.Push (_inputParameter);
     }
 
-    public LambdaExpression AccessorPath { get; private set; }
+    private LambdaExpression AccessorPath { get; set; }
 
     public override Expression Visit (Expression expression)
     {

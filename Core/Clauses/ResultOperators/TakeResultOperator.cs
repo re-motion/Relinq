@@ -35,7 +35,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Take(3);
   /// </code>
   /// </example>
-  public class TakeResultOperator : SequenceTypePreservingResultOperatorBase
+  public sealed class TakeResultOperator : SequenceTypePreservingResultOperatorBase
   {
     private Expression _count;
     
@@ -84,7 +84,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       var sequence = input.GetTypedSequence<T> ();
       var result = sequence.Take (GetConstantCount ());
-      return new StreamedSequence (result.AsQueryable (), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
+      return new StreamedSequence (result.AsQueryable (), GetOutputDataInfo (input.DataInfo));
     }
 
     public override void TransformExpressions (Func<Expression, Expression> transformation)

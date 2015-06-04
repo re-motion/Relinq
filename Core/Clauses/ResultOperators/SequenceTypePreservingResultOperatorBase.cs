@@ -27,9 +27,15 @@ namespace Remotion.Linq.Clauses.ResultOperators
   /// </summary>
   public abstract class SequenceTypePreservingResultOperatorBase : SequenceFromSequenceResultOperatorBase
   {
-    public override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
+    public sealed override IStreamedDataInfo GetOutputDataInfo (IStreamedDataInfo inputInfo)
     {
       var inputSequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
+      return GetOutputDataInfo(inputSequenceInfo);
+    }
+
+    protected StreamedSequenceInfo GetOutputDataInfo (StreamedSequenceInfo inputSequenceInfo)
+    {
+      ArgumentUtility.CheckNotNull ("inputSequenceInfo", inputSequenceInfo);
       return new StreamedSequenceInfo (typeof (IQueryable<>).MakeGenericType (inputSequenceInfo.ResultItemType), inputSequenceInfo.ItemExpression);
     }
   }

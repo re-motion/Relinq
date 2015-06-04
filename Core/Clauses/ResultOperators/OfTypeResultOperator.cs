@@ -36,7 +36,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s.ID).OfType&lt;int&gt;();
   /// </code>
   /// </example>
-  public class OfTypeResultOperator : SequenceFromSequenceResultOperatorBase
+  public sealed class OfTypeResultOperator : SequenceFromSequenceResultOperatorBase
   {
     private static readonly MethodInfo s_enumerableOfTypeMethod = 
         typeof (Enumerable).GetRuntimeMethodChecked ("OfType", new[] { typeof (IEnumerable) });
