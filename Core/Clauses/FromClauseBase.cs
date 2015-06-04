@@ -82,7 +82,9 @@ namespace Remotion.Linq.Clauses
     /// <summary>
     /// The expression generating the data items for this from clause.
     /// </summary>
-    [DebuggerDisplay ("{Remotion.Linq.Clauses.ExpressionTreeVisitors.FormattingExpressionTreeVisitor.Format (FromExpression),nq}")]
+#if NET_3_5
+    [DebuggerDisplay ("{Remotion.Linq.Clauses.ExpressionVisitors.FormattingExpressionVisitor.Format (FromExpression),nq}")]
+#endif
     public Expression FromExpression
     {
       get { return _fromExpression; }

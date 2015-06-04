@@ -56,7 +56,9 @@ namespace Remotion.Linq.Clauses
     /// <summary>
     /// Gets the selector defining what parts of the data items are returned by the query.
     /// </summary>
-    [DebuggerDisplay ("{Remotion.Linq.Clauses.ExpressionTreeVisitors.FormattingExpressionTreeVisitor.Format (Selector),nq}")]
+#if NET_3_5
+    [DebuggerDisplay ("{Remotion.Linq.Clauses.ExpressionVisitors.FormattingExpressionVisitor.Format (Selector),nq}")]
+#endif
     public Expression Selector
     {
       get { return _selector; }

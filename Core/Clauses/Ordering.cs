@@ -47,7 +47,9 @@ namespace Remotion.Linq.Clauses
     /// Gets or sets the expression used to order the data items returned by the query.
     /// </summary>
     /// <value>The expression.</value>
-    [DebuggerDisplay ("{Remotion.Linq.Clauses.ExpressionTreeVisitors.FormattingExpressionTreeVisitor.Format (Expression),nq}")]
+#if NET_3_5
+    [DebuggerDisplay ("{Remotion.Linq.Clauses.ExpressionVisitors.FormattingExpressionVisitor.Format (Expression),nq}")]
+#endif
     public Expression Expression
     {
       get { return _expression; }
