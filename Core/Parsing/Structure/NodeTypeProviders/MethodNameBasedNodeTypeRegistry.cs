@@ -39,7 +39,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
     /// <returns>
     /// A <see cref="MethodInfoBasedNodeTypeRegistry"/> with all <see cref="IExpressionNode"/> types in the <b>Remotion.Linq</b> assembly registered.
     /// </returns>
-    public static MethodNameBasedNodeTypeRegistry CreateFromRemotionLinqAssembly ()
+    public static MethodNameBasedNodeTypeRegistry CreateFromRelinqAssembly ()
     {
       var registry = new MethodNameBasedNodeTypeRegistry();
 
