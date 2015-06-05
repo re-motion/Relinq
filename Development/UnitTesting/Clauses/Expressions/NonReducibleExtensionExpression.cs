@@ -29,7 +29,7 @@ using Remotion.Utilities;
 
 namespace Remotion.Linq.Development.UnitTesting.Clauses.Expressions
 {
-  public class TestExtensionExpression
+  public sealed class NonReducibleExtensionExpression
 #if !NET_3_5
     : Expression
 #else
@@ -38,7 +38,7 @@ namespace Remotion.Linq.Development.UnitTesting.Clauses.Expressions
   {
     private readonly Expression _expression;
 
-    public TestExtensionExpression (Expression expression)
+    public NonReducibleExtensionExpression (Expression expression)
 #if NET_3_5
         : base(expression.Type)
 #endif
@@ -46,6 +46,8 @@ namespace Remotion.Linq.Development.UnitTesting.Clauses.Expressions
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       _expression = expression;
+
+      Assertion.IsFalse (CanReduce);
     }
 
 #if !NET_3_5
@@ -65,31 +67,18 @@ namespace Remotion.Linq.Development.UnitTesting.Clauses.Expressions
       get { return _expression; }
     }
 
-    public override bool CanReduce
-    {
-      get
-      {
-        return true;
-      }
-    }
-
-    public override Expression Reduce ()
-    {
-      return _expression;
-    }
-
     protected override Expression VisitChildren (ExpressionVisitor visitor)
     {
       var result = visitor.Visit (_expression);
       if (result != _expression)
-        return new TestExtensionExpression (result);
+        return new NonReducibleExtensionExpression (result);
 
       return this;
     }
 
     public override string ToString ()
     {
-      return "Test(" + _expression.BuildString() + ")";
+      return "NonReducible(" + _expression.BuildString() + ")";
     }
   }
 }

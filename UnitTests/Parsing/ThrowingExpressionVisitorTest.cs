@@ -45,7 +45,7 @@ namespace Remotion.Linq.UnitTests.Parsing
     {
       RelinqExpressionVisitor visitor = new TestThrowingConstantExpressionVisitor();
       var constantExpression = Expression.Constant (0);
-      var expression = new TestExtensionExpression (constantExpression);
+      var expression = new ReducibleExtensionExpression (constantExpression);
 
       var result = visitor.Visit (expression);
 

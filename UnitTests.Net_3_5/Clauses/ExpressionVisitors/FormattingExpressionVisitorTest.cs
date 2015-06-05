@@ -72,10 +72,10 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionVisitors
     [Test]
     public void VisitExtensionExpression ()
     {
-      var expression = new TestExtensionExpression (Expression.Constant (0));
+      var expression = new ReducibleExtensionExpression (Expression.Constant (0));
       var result = FormattingExpressionVisitor.Format (expression);
 
-      Assert.That (result, Is.EqualTo ("Test(0)"));
+      Assert.That (result, Is.EqualTo ("Reducible(0)"));
     }
   }
 }
