@@ -56,8 +56,8 @@ namespace Remotion.Linq.Parsing.Structure
     {
       var innerProviders = new INodeTypeProvider[]
                            {
-                               MethodInfoBasedNodeTypeRegistry.CreateFromRemotionLinqAssembly(),
                                MethodNameBasedNodeTypeRegistry.CreateFromRemotionLinqAssembly()
+                               MethodInfoBasedNodeTypeRegistry.CreateFromRelinqAssembly(),
                            };
       return new CompoundNodeTypeProvider (innerProviders);
     }

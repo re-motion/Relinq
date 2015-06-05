@@ -42,7 +42,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
     [SetUp]
     public void SetUp ()
     {
-      _methodInfoBasedNodeTypeRegistry = MethodInfoBasedNodeTypeRegistry.CreateFromRemotionLinqAssembly();
+      _methodInfoBasedNodeTypeRegistry = MethodInfoBasedNodeTypeRegistry.CreateFromRelinqAssembly();
     }
 
     [Test]
