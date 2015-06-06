@@ -132,6 +132,24 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
     }
 
+    [Test]
+    public void VisitPartiallyEvaluatedExpression_NotEvaluatable ()
+    {
+      var expression = new PartiallyEvaluatedExpression (Expression.Constant (true), Expression.Constant (false));
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+    }
+
+    [Test]
+    public void VisitPartialEvaluationExceptionExpression_NotEvaluatable ()
+    {
+      var expression = new PartialEvaluationExceptionExpression (new Exception(), Expression.Constant (false));
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+    }
+
 #if !NET_3_5
     [Test]
     public void VisitReducibleExtensionExpression_IsEvaluatable ()

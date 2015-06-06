@@ -20,10 +20,11 @@ using System.Linq.Expressions;
 namespace Remotion.Linq.Clauses.Expressions
 {
   /// <summary>
-  /// This interface should be implemented by visitors that handle the <see cref="PartialEvaluationExceptionExpression"/> instances.
+  /// This interface should be implemented by visitors that handle partially evaluated expressions.
   /// </summary>
-  public interface IPartialEvaluationExceptionExpressionVisitor
+  public interface IPartialEvaluationExpressionVisitor
   {
+    Expression VisitPartiallyEvaluated (PartiallyEvaluatedExpression partiallyEvaluatedExpression);
     Expression VisitPartialEvaluationException (PartialEvaluationExceptionExpression partialEvaluationExceptionExpression);
   }
 }

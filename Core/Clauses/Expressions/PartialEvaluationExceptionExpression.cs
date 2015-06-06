@@ -34,16 +34,16 @@ namespace Remotion.Linq.Clauses.Expressions
   /// instance and the <see cref="EvaluatedExpression"/> that caused the exception.
   /// </para>
   /// <para>
-  /// To explicitly support this expression type, implement  <see cref="IPartialEvaluationExceptionExpressionVisitor"/>.
+  /// To explicitly support this expression type, implement  <see cref="IPartialEvaluationExpressionVisitor"/>.
   /// To ignore this wrapper and only handle the inner <see cref="EvaluatedExpression"/>, call the <see cref="Reduce"/> method and visit the result.
   /// </para>
   /// <para>
-  /// Subclasses of <see cref="ThrowingExpressionVisitor"/> that do not implement <see cref="IPartialEvaluationExceptionExpressionVisitor"/> will, 
+  /// Subclasses of <see cref="ThrowingExpressionVisitor"/> that do not implement <see cref="IPartialEvaluationExpressionVisitor"/> will, 
   /// by default, automatically reduce this expression type to the <see cref="EvaluatedExpression"/> in the 
   /// <see cref="ThrowingExpressionVisitor.VisitExtension"/> method.
   /// </para>
   /// <para>
-  /// Subclasses of <see cref="RelinqExpressionVisitor"/> that do not implement <see cref="IPartialEvaluationExceptionExpressionVisitor"/> will, 
+  /// Subclasses of <see cref="RelinqExpressionVisitor"/> that do not implement <see cref="IPartialEvaluationExpressionVisitor"/> will, 
   /// by default, ignore this expression and visit its child expressions via the <see cref="ExpressionVisitor.VisitExtension"/> and 
   /// <see cref="VisitChildren"/> methods.
   /// </para>
@@ -118,7 +118,7 @@ namespace Remotion.Linq.Clauses.Expressions
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
 
-      var specificVisitor = visitor as IPartialEvaluationExceptionExpressionVisitor;
+      var specificVisitor = visitor as IPartialEvaluationExpressionVisitor;
       if (specificVisitor != null)
         return specificVisitor.VisitPartialEvaluationException (this);
       else

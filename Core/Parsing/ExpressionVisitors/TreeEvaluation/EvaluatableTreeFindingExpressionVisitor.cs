@@ -46,7 +46,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
   /// In .NET 4.0, non-standard expressions can be evaluated if they can be reduced to an evaluatable expression.
   /// </para>
   /// </remarks>
-  public sealed class EvaluatableTreeFindingExpressionVisitor : RelinqExpressionVisitor, IPartialEvaluationExceptionExpressionVisitor
+  public sealed class EvaluatableTreeFindingExpressionVisitor : RelinqExpressionVisitor, IPartialEvaluationExpressionVisitor
   {
     public static PartialEvaluationInfo Analyze (Expression expressionTree)
     {
@@ -76,7 +76,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
       // To find these nodes, first assume that the current subtree is evaluatable iff it is one of the standard nodes. Store the evaluatability 
       // of the parent node for later.
       bool isParentNodeEvaluatable = _isCurrentSubtreeEvaluatable;
-      _isCurrentSubtreeEvaluatable = IsSupportedStandardExpression (expression);
+      _isCurrentSubtreeEvaluatable = IsCurrentExpressionEvaluatable (expression);
 
       // Then call the specific Visit... method for this expression. This will determine if this node by itself is not evaluatable by setting 
       // _isCurrentSubtreeEvaluatable to false if it isn't. It will also investigate the evaluatability info of the child nodes and set 
@@ -183,15 +183,18 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     /// <see cref="ExpressionVisitor"/> has a dedicated Visit method for it; otherwise, <see langword="false"/>. 
     /// Note that <see cref="ExpressionType.Extension"/>-type expressions are considered 'not supported' and will also return <see langword="false"/>.
     /// </returns>
-    private bool IsSupportedStandardExpression (Expression expression)
+    private bool IsCurrentExpressionEvaluatable (Expression expression)
     {
       if (expression.NodeType == ExpressionType.Extension)
       {
         if (!expression.CanReduce)
           return false;
 
+        if (expression is PartiallyEvaluatedExpression)
+          return false;
+
         var reducedExpression = expression.ReduceAndCheck();
-        return IsSupportedStandardExpression (reducedExpression);
+        return IsCurrentExpressionEvaluatable (reducedExpression);
       }
 
       // Note: In .NET 4.0, all expressions supplied by System.Core have a dedicated Visit method provided by System.Linq.Parsing.ExpressionVisitor.
@@ -207,7 +210,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     /// 	<see langword="true"/> if <paramref name="expression"/> is one of the expressions defined by <see cref="ExpressionType"/> and 
     ///   <see cref="ExpressionVisitor"/> has a Visit method for it; otherwise, <see langword="false"/>.
     /// </returns>
-    private bool IsSupportedStandardExpression (Expression expression)
+    private bool IsCurrentExpressionEvaluatable (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
@@ -270,6 +273,14 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     private bool IsQueryableExpression (Expression expression)
     {
       return expression != null && typeof (IQueryable).GetTypeInfo().IsAssignableFrom (expression.Type.GetTypeInfo());
+    }
+
+    public Expression VisitPartiallyEvaluated (PartiallyEvaluatedExpression partiallyEvaluatedExpression)
+    {
+      ArgumentUtility.CheckNotNull ("partiallyEvaluatedExpression", partiallyEvaluatedExpression);
+
+      // PartiallyEvaluatedExpression and it's children have already been evaluated (so we don't visit them).
+      return partiallyEvaluatedExpression;
     }
 
     public Expression VisitPartialEvaluationException (PartialEvaluationExceptionExpression partialEvaluationExceptionExpression)
