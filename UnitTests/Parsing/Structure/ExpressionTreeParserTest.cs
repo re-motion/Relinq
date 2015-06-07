@@ -162,7 +162,9 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
 
       var source = ((SelectExpressionNode) result).Source;
       Assert.That (source, Is.InstanceOf (typeof (MainSourceExpressionNode)));
-      Assert.That (((ConstantExpression) ((MainSourceExpressionNode) source).ParsedExpression).Value, Is.SameAs (querySource));
+      Assert.That (
+          ((PartiallyEvaluatedExpression) ((MainSourceExpressionNode) source).ParsedExpression).EvaluatedExpression.Value,
+          Is.SameAs (querySource));
     }
 
     [Test]
@@ -270,7 +272,9 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
 
       var source = ((WhereExpressionNode) where).Source;
       Assert.That (source, Is.InstanceOf (typeof (MainSourceExpressionNode)));
-      Assert.That (((ConstantExpression) ((MainSourceExpressionNode) source).ParsedExpression).Value, Is.SameAs (querySource));
+      Assert.That (
+          ((PartiallyEvaluatedExpression) ((MainSourceExpressionNode) source).ParsedExpression).EvaluatedExpression.Value,
+          Is.SameAs (querySource));
     }
 
     [Test]
@@ -295,7 +299,8 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage =
-        "Could not parse expression 'System.Int32[].Sum()': This overload of the method 'System.Linq.Queryable.Sum' is currently not supported.")]
+        "Could not parse expression 'PartiallyEvaluated(value(Remotion.Linq.UnitTests.Parsing.Structure.ExpressionTreeParserTest)._intSource, System.Int32[]).Sum()': "
+        + "This overload of the method 'System.Linq.Queryable.Sum' is currently not supported.")]
     public void ParseTree_InvalidMethodCall_UnknownMethod ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (() => _intSource.Sum());

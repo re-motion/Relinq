@@ -114,6 +114,13 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
         var compiledLambda = lambdaWithoutParameters.Compile();
 
         object value = compiledLambda ();
+        //return Expression.Constant (value, subtree.Type);
+        //TODO RMLNQ-7: Currently only tested by ExpressionTreeParserTest when the selector is passed as an argument instead of inline. 
+        // See ParseTree_MethodCallExpression(), ParseTree_ComplexMethodCallExpression(), and ParseTree_MethodCallExpression_GetsGeneratedIdentifier()
+        var valueAsExpression = value as Expression;
+        if (valueAsExpression != null && valueAsExpression.NodeType == ExpressionType.Lambda)
+          return Expression.Constant (valueAsExpression, subtree.Type);
+
         return new PartiallyEvaluatedExpression (subtree, Expression.Constant (value, subtree.Type));
       }
     }
