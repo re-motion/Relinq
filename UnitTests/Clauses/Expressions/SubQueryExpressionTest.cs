@@ -56,7 +56,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
 
       var formattedExpression = expression.ToString();
 
-      Assert.That (formattedExpression, Is.EqualTo ("({TestQueryable<Cook>() => Count()} > 2)"));
+      Assert.That (formattedExpression, Is.EqualTo ("({PartiallyEvaluated(CreateQueryable(), TestQueryable<Cook>()) => Count()} > 2)"));
     }
 #endif
   }

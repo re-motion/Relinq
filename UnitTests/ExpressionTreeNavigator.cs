@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Linq.Clauses.Expressions;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.UnitTests
@@ -52,7 +53,14 @@ namespace Remotion.Linq.UnitTests
 
     public object Value
     {
-      get { return ((ConstantExpression) Expression).Value; }
+      get
+      {
+        var constantExpression = Expression as ConstantExpression;
+        if (constantExpression != null)
+          return constantExpression.Value;
+        else
+          return ((PartiallyEvaluatedExpression) Expression).EvaluatedExpression.Value;
+      }
     }
 
     public ArgumentsNavigator Arguments

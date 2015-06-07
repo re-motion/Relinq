@@ -44,7 +44,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
 
       var subQuery = ((SubQueryExpression) whereClause.Predicate).QueryModel;
 
-      CheckConstantQuerySource (subQuery.MainFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (subQuery.MainFromClause.FromExpression, QuerySource);
       CheckResolvedExpression<Cook, Cook> (subQuery.SelectClause.Selector, subQuery.MainFromClause, c => c);
 
       var subQueryWhereClause = (WhereClause) subQuery.BodyClauses[0];

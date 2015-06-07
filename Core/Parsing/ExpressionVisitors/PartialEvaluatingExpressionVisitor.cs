@@ -92,11 +92,9 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
 
     /// <summary>
     /// Evaluates an evaluatable <see cref="Expression"/> subtree, i.e. an independent expression tree that is compilable and executable
-    /// without any data being passed in. The result of the evaluation is returned as a <see cref="ConstantExpression"/>; if the subtree
-    /// is already a <see cref="ConstantExpression"/>, no evaluation is performed.
+    /// without any data being passed in. The result of the evaluation is returned as a <see cref="PartiallyEvaluatedExpression"/> if the value 
+    /// could be computed; if the subtree is already a <see cref="ConstantExpression"/>, no evaluation is performed.
     /// </summary>
-    /// <param name="subtree">The subtree to be evaluated.</param>
-    /// <returns>A <see cref="ConstantExpression"/> holding the result of the evaluation.</returns>
     private Expression EvaluateSubtree (Expression subtree)
     {
       ArgumentUtility.CheckNotNull ("subtree", subtree);
@@ -116,7 +114,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
         var compiledLambda = lambdaWithoutParameters.Compile();
 
         object value = compiledLambda ();
-        return Expression.Constant (value, subtree.Type);
+        return new PartiallyEvaluatedExpression (subtree, Expression.Constant (value, subtree.Type));
       }
     }
 

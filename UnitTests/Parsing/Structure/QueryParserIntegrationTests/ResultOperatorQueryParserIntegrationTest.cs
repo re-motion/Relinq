@@ -180,7 +180,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (double)));
 
       var mainFromClause = queryModel.MainFromClause;
-      CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (mainFromClause.FromExpression, QuerySource);
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (AverageResultOperator)));
@@ -199,7 +199,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (long)));
 
       var mainFromClause = queryModel.MainFromClause;
-      CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (mainFromClause.FromExpression, QuerySource);
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (LongCountResultOperator)));
@@ -232,8 +232,8 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       var queryModel = QueryParser.GetParsedQuery (expression);
 
       var selectClause = queryModel.SelectClause;
-      Assert.That (selectClause.Selector, Is.InstanceOf (typeof (ConstantExpression)));
-      Assert.That (((ConstantExpression) selectClause.Selector).Value, Is.EqualTo (0));
+      Assert.That (selectClause.Selector, Is.InstanceOf (typeof (PartiallyEvaluatedExpression)));
+      Assert.That (((PartiallyEvaluatedExpression) selectClause.Selector).EvaluatedExpression.Value, Is.EqualTo (0));
     }
 
     [Test]
@@ -751,7 +751,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       var queryModel = QueryParser.GetParsedQuery (expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
 
-      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
       
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (AnyResultOperator)));
@@ -766,7 +766,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       var queryModel = QueryParser.GetParsedQuery (expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (bool)));
 
-      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
       Assert.That (queryModel.BodyClauses.Count, Is.EqualTo (1));
       Assert.That (queryModel.BodyClauses[0], Is.InstanceOf (typeof (WhereClause)));
@@ -786,7 +786,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       var queryModel = QueryParser.GetParsedQuery (expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (string)));
 
-      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (AggregateResultOperator)));
@@ -809,7 +809,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       var queryModel = QueryParser.GetParsedQuery (expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (int)));
 
-      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (AggregateFromSeedResultOperator)));
@@ -835,7 +835,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       var queryModel = QueryParser.GetParsedQuery (expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (string)));
 
-      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (AggregateFromSeedResultOperator)));
@@ -863,7 +863,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       var queryModel = QueryParser.GetParsedQuery (expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IConvertible)));
 
-      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (AggregateFromSeedResultOperator)));

@@ -19,12 +19,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Development.UnitTesting.Clauses.Expressions;
 using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.UnitTests.TestDomain;
+using Remotion.Linq.UnitTests.Utilities;
+using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
 {
@@ -35,8 +38,10 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
     public void EvaluateTopBinary ()
     {
       Expression treeRoot = Expression.Add (Expression.Constant (1), Expression.Constant (2));
+
       Expression result = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (treeRoot);
-      Expression expected = Expression.Constant (3);
+
+      Expression expected = new PartiallyEvaluatedExpression (treeRoot, Expression.Constant (3));
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
     }
 
@@ -46,8 +51,10 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
       Tuple<int, int> tuple = Tuple.Create (1, 2);
 
       Expression treeRoot = Expression.MakeMemberAccess (Expression.Constant (tuple), typeof (Tuple<int, int>).GetProperty ("Item1"));
+
       Expression result = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (treeRoot);
-      Expression expected = Expression.Constant (1);
+
+      Expression expected = new PartiallyEvaluatedExpression (treeRoot, Expression.Constant (1));
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
     }
 
@@ -62,10 +69,14 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
     [Test]
     public void EvaluateBinaryInLambdaWithoutParameter ()
     {
-      Expression treeRoot = Expression.Lambda (Expression.Add (Expression.Constant (5), Expression.Constant (1)),
-                                               Expression.Parameter (typeof (string), "s"));
+      var evaluatableExpression = Expression.Add (Expression.Constant (5), Expression.Constant (1));
+      Expression treeRoot = Expression.Lambda (evaluatableExpression, Expression.Parameter (typeof (string), "s"));
+
       Expression result = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (treeRoot);
-      Expression expected = Expression.Lambda (Expression.Constant (6), Expression.Parameter (typeof (string), "s"));
+
+      Expression expected = Expression.Lambda (
+          new PartiallyEvaluatedExpression (evaluatableExpression, Expression.Constant (6)),
+          Expression.Parameter (typeof (string), "s"));
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
     }
 
@@ -82,7 +93,10 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
       Expression treeRoot = Expression.Lambda (typeof (Func<int, int>), add, parameter);
 
       Expression result = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (treeRoot);
-      Expression expected = Expression.Lambda (Expression.Add (Expression.Multiply (parameter, constant1), Expression.Constant (12)), parameter);
+
+      Expression expected = Expression.Lambda (
+          Expression.Add (Expression.Multiply (parameter, constant1), new PartiallyEvaluatedExpression (multiply2, Expression.Constant (12))),
+          parameter);
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
     }
 
@@ -211,14 +225,16 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
 
       Assert.That (evaluatedExpression1, Is.AssignableTo<BinaryExpression> ());
       Assert.That (((BinaryExpression) evaluatedExpression1).Left, Is.TypeOf<PartialEvaluationExceptionExpression>());
-      Assert.That (((BinaryExpression) evaluatedExpression1).Right, Is.InstanceOf<ConstantExpression> ().With.Property ("Value").EqualTo (3));
+      Assert.That (((BinaryExpression) evaluatedExpression1).Right,Is.InstanceOf<PartiallyEvaluatedExpression>());
+      Assert.That (((PartiallyEvaluatedExpression) ((BinaryExpression) evaluatedExpression1).Right).EvaluatedExpression.Value, Is.EqualTo (3));
 
       // Exception (NullReferenceException, null.Length)
       var exceptionExpression2 = (PartialEvaluationExceptionExpression) ((BinaryExpression) evaluatedExpression1).Left;
       Assert.That (exceptionExpression2.Exception, Is.InstanceOf<NullReferenceException> ());
       Assert.That (exceptionExpression2.EvaluatedExpression, Is.InstanceOf<MemberExpression> ());
       var memberExpression = ((MemberExpression) exceptionExpression2.EvaluatedExpression);
-      Assert.That (memberExpression.Expression, Is.InstanceOf<ConstantExpression>().With.Property ("Value").EqualTo (null));
+      Assert.That (memberExpression.Expression, Is.InstanceOf<PartiallyEvaluatedExpression>());
+      Assert.That (((PartiallyEvaluatedExpression) memberExpression.Expression).EvaluatedExpression.Value, Is.EqualTo (null));
       Assert.That (memberExpression.Member, Is.EqualTo (typeof (string).GetProperty ("Length")));
     }
 
@@ -246,9 +262,10 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
       var queryExpression = ExpressionHelper.MakeExpression<int, AnonymousType> (i => new AnonymousType { a = 2, b = 1 });
 
       var partiallyEvaluatedExpression = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (queryExpression);
-      Assert.That (((ConstantExpression) partiallyEvaluatedExpression).Value, Is.InstanceOf (typeof (AnonymousType)));
-      Assert.That (((AnonymousType) ((ConstantExpression) partiallyEvaluatedExpression).Value).a, Is.EqualTo (2));
-      Assert.That (((AnonymousType) ((ConstantExpression) partiallyEvaluatedExpression).Value).b, Is.EqualTo (1));
+      var partiallyEvaluatedValue = ((PartiallyEvaluatedExpression) partiallyEvaluatedExpression).EvaluatedExpression.Value;
+      Assert.That (partiallyEvaluatedValue, Is.InstanceOf (typeof (AnonymousType)));
+      Assert.That (((AnonymousType) partiallyEvaluatedValue).a, Is.EqualTo (2));
+      Assert.That (((AnonymousType) partiallyEvaluatedValue).b, Is.EqualTo (1));
     }
 
     [Test]
@@ -257,8 +274,9 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
       var queryExpression = ExpressionHelper.MakeExpression<int, List<int>> (i => new List<int> { 2, 1 });
 
       var partiallyEvaluatedExpression = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (queryExpression);
-      Assert.That (((ConstantExpression) partiallyEvaluatedExpression).Value, Is.InstanceOf (typeof (List<int>)));
-      Assert.That (((ConstantExpression) partiallyEvaluatedExpression).Value, Is.EqualTo (new[] {2, 1}));
+      var partiallyEvaluatedValue = ((PartiallyEvaluatedExpression) partiallyEvaluatedExpression).EvaluatedExpression.Value;
+      Assert.That (partiallyEvaluatedValue, Is.InstanceOf (typeof (List<int>)));
+      Assert.That (partiallyEvaluatedValue, Is.EqualTo (new[] {2, 1}));
     }
 
     [Test]
@@ -291,14 +309,22 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
 
       var result = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (expression);
 
-      var expectedExpression = querySource.Where (c => true).Expression;
+      var originalExpression = ExpressionHelper.MakeExpression ((Cook c) => "1" == 1.ToString());
+      var whereMethod = ReflectionUtility.GetMethod (() => ((IQueryable<Cook>) null).Where (cook => false));
+      var expectedExpression = Expression.Call (
+          whereMethod,
+          Expression.Constant (querySource),
+          Expression.Lambda<Func<Cook, bool>> (
+              new PartiallyEvaluatedExpression (originalExpression, Expression.Constant (true)),
+              Expression.Parameter (typeof (Cook), "c")));
       ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, result);
     }
 
     [Test]
     public void EvaluateQueryableConstant_InClosureMember ()
     {
-      var innerQuery = from c in ExpressionHelper.CreateQueryable<Cook>() where c != null select c;
+      var querySource = ExpressionHelper.CreateQueryable<Cook>();
+      var innerQuery = from c in querySource where c != null select c;
       var outerExpression = ExpressionHelper.MakeExpression (() => innerQuery);
       Assert.That (outerExpression.NodeType, Is.EqualTo (ExpressionType.MemberAccess));
 
@@ -309,7 +335,9 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
       // transformation 2: constantCookQueryable.Where (c => c != null)
 
       var result = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (outerExpression);
-      Assert.That (result, Is.SameAs (innerQuery.Expression));
+
+      var expectedExpression = new PartiallyEvaluatedExpression (outerExpression, Expression.Constant (innerQuery, typeof (IQueryable<Cook>)));
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, result);
     }
 
     [Test]
@@ -330,7 +358,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
       
       var result = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (extensionExpression);
 
-      var expected = Expression.Constant (true);
+      var expected = new PartiallyEvaluatedExpression (extensionExpression, Expression.Constant (true));
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
     }
 
@@ -342,7 +370,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
       
       var result = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (extensionExpression);
 
-      var expected = new NonReducibleExtensionExpression (Expression.Constant (true));
+      var expected = new NonReducibleExtensionExpression (new PartiallyEvaluatedExpression (innerExpression, Expression.Constant (true)));
       ExpressionTreeComparer.CheckAreEqualTrees (expected, result);
     }
 #else

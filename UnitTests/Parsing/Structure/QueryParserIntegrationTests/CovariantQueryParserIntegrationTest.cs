@@ -81,7 +81,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       var queryModel = QueryParser.GetParsedQuery (expression);
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IComparable)));
 
-      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
       Assert.That (queryModel.ResultOperators.Count, Is.EqualTo (1));
       Assert.That (queryModel.ResultOperators[0], Is.InstanceOf (typeof (AggregateResultOperator)));

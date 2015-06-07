@@ -91,7 +91,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource where list.Contains (s) select s));
       var queryModel = QueryParser.GetParsedQuery (expression);
 
-      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       Assert.That (whereClause.Predicate, Is.TypeOf (typeof (SubQueryExpression)));
@@ -110,7 +110,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       var expression = ExpressionHelper.MakeExpression (() => (from s in QuerySource where s.Courses.Count == 1 select s));
       var queryModel = QueryParser.GetParsedQuery (expression);
 
-      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
 
       var whereClause = (WhereClause) queryModel.BodyClauses[0];
       Assert.That (whereClause.Predicate, Is.InstanceOf (typeof (BinaryExpression)));

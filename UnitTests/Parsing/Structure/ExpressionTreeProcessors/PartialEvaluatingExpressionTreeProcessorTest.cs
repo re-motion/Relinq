@@ -17,6 +17,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 
 namespace Remotion.Linq.UnitTests.Parsing.Structure.ExpressionTreeProcessors
@@ -32,8 +33,8 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.ExpressionTreeProcessors
 
       var result = processor.Process (expression);
 
-      Assert.That (result, Is.TypeOf (typeof (ConstantExpression)));
-      Assert.That (((ConstantExpression) result).Value, Is.EqualTo(2));
+      Assert.That (result, Is.TypeOf (typeof (PartiallyEvaluatedExpression)));
+      Assert.That (((PartiallyEvaluatedExpression) result).EvaluatedExpression.Value, Is.EqualTo(2));
     }
   }
 }

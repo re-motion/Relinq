@@ -91,7 +91,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       var queryModel = QueryParser.GetParsedQuery (expression);
       
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
-      CheckConstantQuerySource (additionalFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (additionalFromClause.FromExpression, QuerySource);
 
       var whereClause = (WhereClause) queryModel.BodyClauses[1];
       CheckResolvedExpression<Cook, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Name == "Garcia");

@@ -19,6 +19,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
+using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.UnitTests.TestDomain;
@@ -57,6 +58,12 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
     {
       Assert.That (expression, Is.InstanceOf (typeof (ConstantExpression)));
       Assert.That (((ConstantExpression) expression).Value, Is.SameAs (expectedQuerySource));
+    }
+
+    protected void CheckPartiallyEvaluatedQuerySource (Expression expression, object expectedQuerySource)
+    {
+      Assert.That (expression, Is.InstanceOf (typeof (PartiallyEvaluatedExpression)));
+      Assert.That (((PartiallyEvaluatedExpression) expression).EvaluatedExpression.Value, Is.SameAs (expectedQuerySource));
     }
   }
 }

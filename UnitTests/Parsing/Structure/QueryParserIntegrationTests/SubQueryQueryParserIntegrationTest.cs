@@ -43,7 +43,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       var subQueryModel = ((SubQueryExpression) subQueryFromClause.FromExpression).QueryModel;
       var subQueryMainFromClause = subQueryModel.MainFromClause;
       Assert.That (subQueryMainFromClause.ItemName, Is.EqualTo ("s3"));
-      CheckConstantQuerySource (subQueryMainFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (subQueryMainFromClause.FromExpression, QuerySource);
 
       var subQuerySelectClause = subQueryModel.SelectClause;
       CheckResolvedExpression<Cook, Cook> (subQuerySelectClause.Selector, subQueryMainFromClause, s3 => s3);
@@ -93,7 +93,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       
       var innerSubQuery = (SubQueryExpression) newExpression.Arguments[0];
       Assert.That (innerSubQuery.QueryModel.IsIdentityQuery (), Is.True);
-      CheckConstantQuerySource (innerSubQuery.QueryModel.MainFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (innerSubQuery.QueryModel.MainFromClause.FromExpression, QuerySource);
     }
 
     [Test]

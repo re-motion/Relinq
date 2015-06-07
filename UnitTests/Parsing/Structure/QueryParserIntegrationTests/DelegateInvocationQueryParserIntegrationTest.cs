@@ -28,7 +28,9 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
   {
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage = 
-        "Could not parse expression 'c.Assistants.Select(value(System.Func`2[Remotion.Linq.UnitTests.TestDomain.Cook,System.String]))': "
+        "Could not parse expression 'c.Assistants.Select(PartiallyEvaluated("
+        + "value(Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests.DelegateInvocationQueryParserIntegrationTest+<>c__DisplayClass2).expression, "
+        + "value(System.Func`2[Remotion.Linq.UnitTests.TestDomain.Cook,System.String])))': "
         + "Object of type 'System.Linq.Expressions.ConstantExpression' cannot be converted to type 'System.Linq.Expressions.LambdaExpression'. "
         + "If you tried to pass a delegate instead of a LambdaExpression, this is not supported because delegates are not parsable expressions.")]
     public void DelegateAsSelector ()

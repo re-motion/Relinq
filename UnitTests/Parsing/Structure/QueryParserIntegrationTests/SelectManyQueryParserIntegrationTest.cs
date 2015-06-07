@@ -37,7 +37,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       CheckConstantQuerySource (mainFromClause.FromExpression, QuerySource);
 
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
-      CheckConstantQuerySource (additionalFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (additionalFromClause.FromExpression, QuerySource);
 
       var whereClause = (WhereClause) queryModel.BodyClauses[1];
       CheckResolvedExpression<Cook, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Name == "Garcia");
@@ -76,7 +76,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       Assert.That (queryModel.BodyClauses[0], Is.InstanceOf (typeof (AdditionalFromClause)));
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[0];
       Assert.That (additionalFromClause.ItemName, Is.EqualTo ("s2"));
-      CheckConstantQuerySource (additionalFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (additionalFromClause.FromExpression, QuerySource);
 
       var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Cook, Cook> (selectClause.Selector, queryModel.MainFromClause, s1 => s1);
@@ -118,7 +118,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
 
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[1];
       Assert.That (additionalFromClause.ItemName, Is.EqualTo ("s2"));
-      CheckConstantQuerySource (additionalFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (additionalFromClause.FromExpression, QuerySource);
 
       var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Cook, Cook> (selectClause.Selector, mainFromClause, s1 => s1);
@@ -138,7 +138,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       CheckResolvedExpression<Cook, bool> (whereClause.Predicate, queryModel.MainFromClause, s1 => s1.Name == "Garcia");
 
       var additionalFromClause = (AdditionalFromClause) queryModel.BodyClauses[1];
-      CheckConstantQuerySource (additionalFromClause.FromExpression, QuerySource);
+      CheckPartiallyEvaluatedQuerySource (additionalFromClause.FromExpression, QuerySource);
       
       var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Cook, string> (selectClause.Selector, (AdditionalFromClause) queryModel.BodyClauses.Last(), s2 => s2.Name);
