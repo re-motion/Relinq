@@ -14,35 +14,38 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
+
 using System;
 using System.Linq.Expressions;
 #if NET_3_5
 using Remotion.Linq.Clauses.Expressions;
+#endif
+#if NET_3_5
 using Remotion.Linq.Parsing;
 #endif
+using Remotion.Utilities;
 
-namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
+namespace Remotion.Linq.Development.UnitTesting.Clauses.Expressions
 {
-  public class ReducibleExtensionExpression
+  public sealed class RecursiveReducibleExtensionExpression
 #if !NET_3_5
     : Expression
 #else
     : ExtensionExpression
 #endif
   {
-#if !NET_3_5
     private readonly Type _type;
 
-    public ReducibleExtensionExpression (Type type)
-    {
-      _type = type;
-    }
-#else
-    public ReducibleExtensionExpression (Type type)
+    public RecursiveReducibleExtensionExpression (Type type)
+#if NET_3_5
         : base(type)
-    {
-    }
 #endif
+    {
+      ArgumentUtility.CheckNotNull ("type", type);
+
+      _type = type;
+      Assertion.IsTrue (CanReduce);
+    }
 
 #if !NET_3_5
     public override Type Type
@@ -58,17 +61,25 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
 
     public override bool CanReduce
     {
-      get { return true; }
+      get
+      {
+        return true;
+      }
     }
 
     public override Expression Reduce ()
     {
-      return Constant (0);
+      return this;
     }
 
     protected override Expression VisitChildren (ExpressionVisitor visitor)
     {
       return this;
+    }
+
+    public override string ToString ()
+    {
+      return "RecursiveReducible(" + _type + ")";
     }
   }
 }

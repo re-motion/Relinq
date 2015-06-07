@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Utilities;
@@ -62,8 +63,8 @@ namespace Remotion.Linq.Clauses.ResultOperators
     }
 
     /// <summary>
-    /// Gets the value of <see cref="Source2"/>, assuming <see cref="Source2"/> holds a <see cref="ConstantExpression"/>. If it doesn't,
-    /// an <see cref="InvalidOperationException"/> is thrown.
+    /// Gets the value of <see cref="Source2"/>, assuming <see cref="Source2"/> can be reduced to a <see cref="ConstantExpression"/>.
+    /// If it doesn't, an <see cref="InvalidOperationException"/> is thrown.
     /// </summary>
     /// <returns>The constant value of <see cref="Source2"/>.</returns>
     public IEnumerable<T> GetConstantSource2<T> ()

@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Utilities;
@@ -62,8 +63,8 @@ namespace Remotion.Linq.Clauses.ResultOperators
     }
 
     /// <summary>
-    /// Gets the constant <see cref="int"/> value of the <see cref="Count"/> property, assuming it is a <see cref="ConstantExpression"/>. If it is
-    /// not, an <see cref="InvalidOperationException"/> is thrown.
+    /// Gets the constant <see cref="int"/> value of the <see cref="Count"/> property, assuming it can be reduced to a <see cref="ConstantExpression"/>.
+    /// If it is not, an <see cref="InvalidOperationException"/> is thrown.
     /// </summary>
     /// <returns>The constant <see cref="int"/> value of the <see cref="Count"/> property.</returns>
     public int GetConstantCount ()

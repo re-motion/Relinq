@@ -24,6 +24,7 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.Development.UnitTesting.Clauses.Expressions;
 
 namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
 {
@@ -67,9 +68,30 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    public void GetConstantCount ()
+    public void GetConstantCount_ConstantExpression ()
     {
       Assert.That (_resultOperator.GetConstantCount (), Is.EqualTo (2));
+    }
+
+    [Test]
+    public void GetConstantCount_ReducibleToConstantExpression ()
+    {
+      var resultOperator = new SkipResultOperator (new ReducibleExtensionExpression (new ReducibleExtensionExpression (Expression.Constant (2))));
+      Assert.That (resultOperator.GetConstantCount (), Is.EqualTo (2));
+    }
+
+    [Test]
+    public void GetConstantCount_ChecksForInfiniteRecursion ()
+    {
+      var resultOperator = new SkipResultOperator (new RecursiveReducibleExtensionExpression (typeof (int)));
+      Assert.That (
+          () => resultOperator.GetConstantCount(),
+#if !NET_3_5
+          Throws.ArgumentException.With.Message.EqualTo ("node cannot reduce to itself or null")
+#else
+          Throws.InvalidOperationException.With.Message.EqualTo ("Reduce cannot return the original expression.")
+#endif
+          );
     }
 
     [Test]

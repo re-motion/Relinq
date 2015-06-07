@@ -24,6 +24,7 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.Development.UnitTesting.Clauses.Expressions;
 
 namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
 {
@@ -41,9 +42,17 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    public void GetConstantOptionalDefaultValue_WithDefaultValue ()
+    public void GetConstantOptionalDefaultValue_WithDefaultValue_IsConstantExpression ()
     {
       Assert.That (_resultOperatorWithDefaultValue.GetConstantOptionalDefaultValue (), Is.EqualTo (100));
+    }
+
+    [Test]
+    public void GetConstantOptionalDefaultValue_WithDefaultValue_IsReducibleToConstantExpression ()
+    {
+      var resultOperator = new DefaultIfEmptyResultOperator (
+          new ReducibleExtensionExpression (new ReducibleExtensionExpression (Expression.Constant (100))));
+      Assert.That (resultOperator.GetConstantOptionalDefaultValue (), Is.EqualTo (100));
     }
 
     [Test]
@@ -53,6 +62,20 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     {
       var resultOperator = new DefaultIfEmptyResultOperator (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()));
       resultOperator.GetConstantOptionalDefaultValue ();
+    }
+
+    [Test]
+    public void GetConstantOptionalDefaultValue_ChecksForInfiniteRecursion ()
+    {
+      var resultOperator = new DefaultIfEmptyResultOperator (new RecursiveReducibleExtensionExpression (typeof (int)));
+      Assert.That (
+          () => resultOperator.GetConstantOptionalDefaultValue(),
+#if !NET_3_5
+          Throws.ArgumentException.With.Message.EqualTo ("node cannot reduce to itself or null")
+#else
+          Throws.InvalidOperationException.With.Message.EqualTo ("Reduce cannot return the original expression.")
+#endif
+          );
     }
 
     [Test]

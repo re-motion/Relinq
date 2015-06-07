@@ -23,6 +23,7 @@ using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.Development.UnitTesting.Clauses.Expressions;
 
 namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
 {
@@ -40,9 +41,16 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    public void GetConstantSource2 ()
+    public void GetConstantSource2_ConstantExpression ()
     {
       Assert.That (_resultOperator.GetConstantSource2<int> (), Is.SameAs (((ConstantExpression) _source2).Value));
+    }
+
+    [Test]
+    public void GetConstantSource2_ReducibleToConstantExpression ()
+    {
+      var resultOperator = new ExceptResultOperator (new ReducibleExtensionExpression (new ReducibleExtensionExpression (_source2)));
+      Assert.That (resultOperator.GetConstantSource2<int> (), Is.SameAs (((ConstantExpression) _source2).Value));
     }
 
     [Test]
@@ -59,6 +67,20 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
                   "The source2 expression ('ss') is no ConstantExpression, it is a ParameterExpression.\r\nParameter name: expression"
 #endif
                   ));
+    }
+
+    [Test]
+    public void GetConstantSource2_ChecksForInfiniteRecursion ()
+    {
+      var resultOperator = new ExceptResultOperator (new RecursiveReducibleExtensionExpression (_source2.Type));
+      Assert.That (
+          () => resultOperator.GetConstantSource2<int>(),
+#if !NET_3_5
+          Throws.ArgumentException.With.Message.EqualTo ("node cannot reduce to itself or null")
+#else
+          Throws.InvalidOperationException.With.Message.EqualTo ("Reduce cannot return the original expression.")
+#endif
+          );
     }
 
     [Test]

@@ -18,6 +18,7 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.Development.UnitTesting.Clauses.Expressions;
 using Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain;
 using Rhino.Mocks;
 
@@ -40,14 +41,14 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     [Test]
     public void CanReduce_True ()
     {
-      var expression = new ReducibleExtensionExpression (typeof (int));
+      var expression = new ReducibleExtensionExpression (Expression.Constant (0));
       Assert.That (expression.CanReduce, Is.True);
     }
 
     [Test]
     public void Reduce ()
     {
-      var expression = new ReducibleExtensionExpression (typeof (int));
+      var expression = new ReducibleExtensionExpression (Expression.Constant (0));
 
       var result = expression.Reduce ();
 

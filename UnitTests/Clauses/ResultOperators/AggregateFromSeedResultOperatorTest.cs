@@ -24,7 +24,9 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.Development.UnitTesting.Clauses.Expressions;
 using Remotion.Linq.Parsing.ExpressionVisitors;
+using Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain;
 using Remotion.Linq.UnitTests.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
@@ -109,9 +111,19 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    public void GetConstantSeed ()
+    public void GetConstantSeed_ConstantExpression ()
     {
       Assert.That (_resultOperatorWithResultSelector.GetConstantSeed<int> (), Is.EqualTo (12));
+    }
+
+    [Test]
+    public void GetConstantSeed_ReducibleToConstantExpression ()
+    {
+      var resultOperator = new AggregateFromSeedResultOperator (
+          new ReducibleExtensionExpression (new ReducibleExtensionExpression (_seed)),
+          _func,
+          _resultSelector);
+      Assert.That (resultOperator.GetConstantSeed<int> (), Is.EqualTo (12));
     }
 
     [Test]
@@ -132,6 +144,20 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     public void GetConstantSeed_NotExpectedType ()
     {
       _resultOperatorWithResultSelector.GetConstantSeed<DateTime> ();
+    }
+
+    [Test]
+    public void GetConstantSeed_ChecksForInfiniteRecursion ()
+    {
+      var resultOperator = new AggregateFromSeedResultOperator (new RecursiveReducibleExtensionExpression (_seed.Type), _func, _resultSelector);
+      Assert.That (
+          () => resultOperator.GetConstantSeed<int>(),
+#if !NET_3_5
+          Throws.ArgumentException.With.Message.EqualTo ("node cannot reduce to itself or null")
+#else
+          Throws.InvalidOperationException.With.Message.EqualTo ("Reduce cannot return the original expression.")
+#endif
+          );
     }
 
     [Test]

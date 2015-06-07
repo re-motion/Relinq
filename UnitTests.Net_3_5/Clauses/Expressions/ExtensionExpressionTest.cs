@@ -21,6 +21,7 @@ using NUnit.Framework;
 using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.Development.UnitTesting.Clauses.Expressions;
 using Remotion.Linq.Parsing;
 using Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain;
 using Rhino.Mocks;
@@ -136,7 +137,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     [Test]
     public void ReduceAndCheck_CallsReduce_IfReducible ()
     {
-      var expression = new ReducibleExtensionExpression (typeof (int));
+      var expression = new ReducibleExtensionExpression (Expression.Constant (0));
 
       var result = expression.ReduceAndCheck ();
       

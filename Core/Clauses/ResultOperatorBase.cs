@@ -17,6 +17,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Utilities;
 using Remotion.Utilities;
@@ -105,8 +106,8 @@ namespace Remotion.Linq.Clauses
     }
 
     /// <summary>
-    /// Gets the constant value of the given expression, assuming it is a <see cref="ConstantExpression"/>. If it is
-    /// not, an <see cref="InvalidOperationException"/> is thrown.
+    /// Gets the constant value of the given expression, assuming it can be reduced to a <see cref="ConstantExpression"/>. 
+    /// If it is not, an <see cref="InvalidOperationException"/> is thrown.
     /// </summary>
     /// <typeparam name="T">The expected value type. If the value is not of this type, an <see cref="InvalidOperationException"/> is thrown.</typeparam>
     /// <param name="expressionName">A string describing the value; this will be included in the exception message if an exception is thrown.</param>
@@ -128,7 +129,8 @@ namespace Remotion.Linq.Clauses
         throw new ArgumentException (message, "expression");
       }
 
-      var itemAsConstantExpression = expression as ConstantExpression;
+      var reducedExpression = expression.ReduceRecursivly();
+      var itemAsConstantExpression = reducedExpression as ConstantExpression;
       if (itemAsConstantExpression != null)
       {
         return (T) itemAsConstantExpression.Value;

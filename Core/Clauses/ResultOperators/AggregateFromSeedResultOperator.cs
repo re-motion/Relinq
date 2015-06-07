@@ -130,8 +130,8 @@ namespace Remotion.Linq.Clauses.ResultOperators
     }
 
     /// <summary>
-    /// Gets the constant value of the <see cref="Seed"/> property, assuming it is a <see cref="ConstantExpression"/>. If it is
-    /// not, an <see cref="InvalidOperationException"/> is thrown.
+    /// Gets the constant value of the <see cref="Seed"/> property, assuming it can be reduced to a <see cref="ConstantExpression"/>.
+    /// If it is not, an <see cref="InvalidOperationException"/> is thrown.
     /// </summary>
     /// <typeparam name="T">The expected seed type. If the item is not of this type, an <see cref="InvalidOperationException"/> is thrown.</typeparam>
     /// <returns>The constant value of the <see cref="Seed"/> property.</returns>

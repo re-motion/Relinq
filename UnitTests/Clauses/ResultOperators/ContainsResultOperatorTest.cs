@@ -23,6 +23,7 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.Development.UnitTesting.Clauses.Expressions;
 using Remotion.Linq.UnitTests.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
@@ -94,9 +95,17 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    public void GetConstantItem ()
+    public void GetConstantItem_ConstantExpression ()
     {
       Assert.That (_resultOperator.GetConstantItem<int> (), Is.EqualTo (2));
+    }
+
+    [Test]
+    public void GetConstantItem_ReducibleToConstantExpression ()
+    {
+      var resultOperator = new ContainsResultOperator (
+          new ReducibleExtensionExpression (new ReducibleExtensionExpression (Expression.Constant (2))));
+      Assert.That (resultOperator.GetConstantItem<int> (), Is.EqualTo (2));
     }
 
     [Test]
@@ -114,6 +123,20 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     public void GetConstantItem_NotExpectedType ()
     {
       _resultOperator.GetConstantItem<DateTime> ();
+    }
+
+    [Test]
+    public void GetConstantItem_ChecksForInfiniteRecursion ()
+    {
+      var resultOperator = new ContainsResultOperator (new RecursiveReducibleExtensionExpression (typeof (int)));
+      Assert.That (
+          () => resultOperator.GetConstantItem<int>(),
+#if !NET_3_5
+          Throws.ArgumentException.With.Message.EqualTo ("node cannot reduce to itself or null")
+#else
+          Throws.InvalidOperationException.With.Message.EqualTo ("Reduce cannot return the original expression.")
+#endif
+          );
     }
 
     [Test]
