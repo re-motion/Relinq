@@ -18,6 +18,7 @@
 using System;
 using System.Linq.Expressions;
 #if NET_3_5
+using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionVisitors;
 #endif
 
@@ -38,6 +39,31 @@ namespace Remotion.Linq.Utilities
 #else
       return FormattingExpressionVisitor.Format(expression);
 #endif
+    }
+
+    /// <summary>
+    /// Reduces the <paramref name="expression"/> to its most basic type.
+    /// </summary>
+    public static Expression ReduceRecursivly (this Expression expression)
+    {
+      var currentExpression = expression;
+      while (true)
+      {
+#if !NET_3_5
+        if (currentExpression.CanReduce)
+          currentExpression = currentExpression.ReduceAndCheck();
+        else
+          break;
+#else
+        var extensionExpression = currentExpression as ExtensionExpression;
+        if (extensionExpression != null && extensionExpression.CanReduce)
+          currentExpression = extensionExpression.ReduceAndCheck();
+        else
+          break;
+#endif
+      }
+
+      return currentExpression;
     }
   }
 }
