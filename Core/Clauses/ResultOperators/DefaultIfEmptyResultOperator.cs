@@ -51,7 +51,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     /// <summary>
     /// Gets the constant <see cref="object"/> value of the <see cref="OptionalDefaultValue"/> property, assuming it is a <see cref="ConstantExpression"/>. If it is
-    /// not, an expression is thrown. If it is <see langword="null" />, <see langword="null" /> is returned.
+    /// not, an <see cref="InvalidOperationException"/> is thrown. If it is <see langword="null" />, <see langword="null" /> is returned.
     /// </summary>
     /// <returns>The constant <see cref="object"/> value of the <see cref="OptionalDefaultValue"/> property.</returns>
     public object GetConstantOptionalDefaultValue ()

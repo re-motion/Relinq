@@ -79,7 +79,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     /// <summary>
     /// Gets the value of <see cref="Source2"/>, assuming <see cref="Source2"/> holds a <see cref="ConstantExpression"/>. If it doesn't,
-    /// an Exception is thrown.
+    /// an <see cref="InvalidOperationException"/> is thrown.
     /// </summary>
     /// <returns>The constant value of <see cref="Source2"/>.</returns>
     public IEnumerable GetConstantSource2 ()
