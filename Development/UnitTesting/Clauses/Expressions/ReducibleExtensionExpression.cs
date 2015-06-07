@@ -20,7 +20,6 @@ using System.Linq.Expressions;
 #if NET_3_5
 using Remotion.Linq.Clauses.Expressions;
 #endif
-using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Utilities;
 #if NET_3_5
 using Remotion.Linq.Parsing;
@@ -37,15 +36,21 @@ namespace Remotion.Linq.Development.UnitTesting.Clauses.Expressions
 #endif
   {
     private readonly Expression _expression;
+#if !NET_3_5
+    private readonly Type _type;
+#endif
 
-    public ReducibleExtensionExpression (Expression expression)
+    public ReducibleExtensionExpression (Expression expression, Type type = null)
 #if NET_3_5
-        : base(expression.Type)
+        : base(_type ?? expression.Type)
 #endif
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       _expression = expression;
+#if !NET_3_5
+      _type = type ?? expression.Type;
+#endif
 
       Assertion.IsTrue (CanReduce);
     }
@@ -53,7 +58,7 @@ namespace Remotion.Linq.Development.UnitTesting.Clauses.Expressions
 #if !NET_3_5
     public override Type Type
     {
-      get { return _expression.Type; }
+      get { return _type; }
     }
 
     public override ExpressionType NodeType

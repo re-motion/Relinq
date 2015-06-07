@@ -270,7 +270,9 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
 
       var source = ((WhereExpressionNode) where).Source;
       Assert.That (source, Is.InstanceOf (typeof (MainSourceExpressionNode)));
-      Assert.That (((ConstantExpression) ((MainSourceExpressionNode) source).ParsedExpression).Value, Is.SameAs (querySource));
+      Assert.That (
+          ((PartiallyEvaluatedExpression) ((MainSourceExpressionNode) source).ParsedExpression).EvaluatedExpression.Value,
+          Is.SameAs (querySource));
     }
 
     [Test]

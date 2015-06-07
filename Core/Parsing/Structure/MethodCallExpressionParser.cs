@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
@@ -82,18 +83,37 @@ namespace Remotion.Linq.Parsing.Structure
 
     private Expression UnwrapArgumentExpression (Expression expression)
     {
-      // Each argument of a MethodCallExpression will either be a UnaryExpression/Quote, which represents an expression passed to a Queryable method,
+      // Each argument of a MethodCallExpression will either be 
+      // a UnaryExpression/Quote, which represents an expression passed to a Queryable method,
       // a LambdaExpression, which represents an expression passed to an Enumerable method,
       // a ConstantExpression that contains the expression passed to the method,
       // or any other expression that represents a constant passed to the method.
       // We only support the former three, to support the latter, PartialEvaluatingExpressionTreeVisitor must be used.
 
+      var unwrappedExpression = TryUnwrapLambdaExpression (expression);
+      if (unwrappedExpression != null)
+        return unwrappedExpression;
+
+      // Special care must be taken for Expressions that can be reduced to a LambdaExpression.
+      // Methods accepting a LambdaExpression as parameter (e.g. projections or predicates) are represented by ExpressionNodes that also accept a LambdaExpression
+      var reducedExpression = expression.ReduceRecursivly();
+      var unwrappedReducedExpression = TryUnwrapLambdaExpression (reducedExpression);
+      if (unwrappedReducedExpression != null)
+        return unwrappedReducedExpression;
+
+      return expression;
+    }
+
+    [CanBeNull]
+    private LambdaExpression TryUnwrapLambdaExpression (Expression expression)
+    {
       if (expression.NodeType == ExpressionType.Quote)
-        return ((UnaryExpression) expression).Operand;
-      else if (expression.NodeType == ExpressionType.Constant && ((ConstantExpression) expression).Value is LambdaExpression)
-        return (Expression) ((ConstantExpression) expression).Value;
-      else
-        return expression;
+        return (LambdaExpression) ((UnaryExpression) expression).Operand;
+
+      if (expression.NodeType == ExpressionType.Constant && ((ConstantExpression) expression).Value is LambdaExpression)
+        return (LambdaExpression) ((ConstantExpression) expression).Value;
+
+      return null;
     }
 
     private IExpressionNode CreateExpressionNode (Type nodeType, MethodCallExpressionParseInfo parseInfo, object[] additionalConstructorParameters)

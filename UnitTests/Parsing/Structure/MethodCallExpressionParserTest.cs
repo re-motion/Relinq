@@ -22,6 +22,7 @@ using NUnit.Framework;
 using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.Development.UnitTesting.Clauses.Expressions;
 using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
@@ -107,7 +108,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     }
 
     [Test]
-    public void Parse_WithConstantExpression ()
+    public void Parse_WithQuoteExpression ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (
           q => q.Join (ExpressionHelper.CreateQueryable<Cook>(), i => i, s => s.ID, (i, s) => i));
@@ -120,6 +121,52 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     }
 
     [Test]
+    public void Parse_WithWrappedQuoteExpression_ParameterRequiresUnwrapping ()
+    {
+      var selectMethod = ReflectionUtility.GetMethod (() => ((IQueryable<Cook>) null).Select (c => c));
+      var p = Expression.Parameter (typeof (Cook), "c");
+      var methodCallExpression = Expression.Call (
+          selectMethod,
+          Expression.Parameter (typeof (IQueryable<Cook>), "e"),
+          new ReducibleExtensionExpression (Expression.Quote (Expression.Lambda<Func<Cook, Cook>> (p, p))));
+
+      var result = ParseMethodCallExpression (methodCallExpression);
+
+      Assert.That (result, Is.InstanceOf (typeof (SelectExpressionNode)));
+      Assert.That (((SelectExpressionNode) result).Source, Is.SameAs (_source));
+      Assert.That (((SelectExpressionNode) result).Selector, Is.InstanceOf (typeof (LambdaExpression)));
+    }
+
+    [Test]
+    public void Parse_WithExpression ()
+    {
+      var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Take (5));
+
+      var result = ParseMethodCallExpression (methodCallExpression);
+
+      Assert.That (result, Is.InstanceOf (typeof (TakeExpressionNode)));
+      Assert.That (((TakeExpressionNode) result).Source, Is.SameAs (_source));
+      Assert.That (((TakeExpressionNode) result).Count, Is.InstanceOf (typeof (ConstantExpression)).With.Property ("Value").EqualTo (5));
+    }
+
+    [Test]
+    public void Parse_WithWrappedExpression_ParameterTypeDoesNotRequireUnwrapping ()
+    {
+      var takeMethod = ReflectionUtility.GetMethod (() => ((IQueryable<int>) null).Take (0));
+      var countExpression = new ReducibleExtensionExpression (Expression.Constant (5));
+      var methodCallExpression = Expression.Call (
+          takeMethod,
+          Expression.Parameter (typeof (IQueryable<int>), "e"),
+          countExpression);
+
+      var result = ParseMethodCallExpression (methodCallExpression);
+
+      Assert.That (result, Is.InstanceOf (typeof (TakeExpressionNode)));
+      Assert.That (((TakeExpressionNode) result).Source, Is.SameAs (_source));
+      Assert.That (((TakeExpressionNode) result).Count, Is.SameAs (countExpression));
+    }
+
+    [Test]
     public void Parse_WithConstantExpression_ContainingAnExpression ()
     {
       var selectMethod = ReflectionUtility.GetMethod (() => ((IQueryable<int>) null).Select (i => i));
@@ -128,6 +175,23 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
           selectMethod,
           Expression.Parameter (typeof (IQueryable<int>), "e"),
           Expression.Constant (Expression.Lambda<Func<int, int>> (p, p)));
+
+      var result = ParseMethodCallExpression (methodCallExpression);
+
+      Assert.That (result, Is.InstanceOf (typeof (SelectExpressionNode)));
+      Assert.That (((SelectExpressionNode) result).Source, Is.SameAs (_source));
+      Assert.That (((SelectExpressionNode) result).Selector, Is.InstanceOf (typeof (LambdaExpression)));
+    }
+
+    [Test]
+    public void Parse_WithWrappedConstantExpression_ContainingAnExpression_ParameterTypeRequiresUnwrapping ()
+    {
+      var selectMethod = ReflectionUtility.GetMethod (() => ((IQueryable<int>) null).Select (i => i));
+      var p = Expression.Parameter (typeof (int), "i");
+      var methodCallExpression = Expression.Call (
+          selectMethod,
+          Expression.Parameter (typeof (IQueryable<int>), "e"),
+          new ReducibleExtensionExpression (new ReducibleExtensionExpression (Expression.Constant (Expression.Lambda<Func<int, int>> (p, p)))));
 
       var result = ParseMethodCallExpression (methodCallExpression);
 
