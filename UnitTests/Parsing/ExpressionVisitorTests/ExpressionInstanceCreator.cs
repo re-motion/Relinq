@@ -87,6 +87,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
 #if !NET_3_5
       map[ExpressionType.Block] = Expression.Block (zero);
       map[ExpressionType.DebugInfo] = Expression.DebugInfo (Expression.SymbolDocument ("test.cs"), 1, 1, 1, 1);
+      map[ExpressionType.Default] = Expression.Default (typeof (int));
       map[ExpressionType.Goto] = Expression.Goto (Expression.Label());
       map[ExpressionType.Index] = Expression.MakeIndex (arrayExpression, typeof (int[]).GetProperty ("Item"), new[] { zero });
       map[ExpressionType.Label] = Expression.Label (Expression.Label());

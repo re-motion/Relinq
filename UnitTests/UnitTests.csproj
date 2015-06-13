@@ -187,6 +187,7 @@
     <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\VBCompareStringExpressionTransformerTest.cs" />
     <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\VBInformationIsNothingExpressionTransformerTest.cs" />
     <Compile Include="Parsing\ExpressionVisitors\TransformingExpressionVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\TreeEvaluation\EvaluatableExpressionFilterBaseTest.cs" />
     <Compile Include="Parsing\ExpressionVisitorTests\RelinqExpressionVisitorTest.cs" />
     <Compile Include="Parsing\ExpressionVisitorTests\RelinqExpressionVisitorTestBase.cs" />
     <Compile Include="Parsing\ExpressionVisitorTests\RelinqExpressionVisitor_NewExpressionsTest.cs" />
