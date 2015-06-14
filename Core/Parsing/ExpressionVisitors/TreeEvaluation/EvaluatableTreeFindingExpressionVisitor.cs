@@ -379,6 +379,19 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
       return vistedExpression;
     }
 
+    protected override CatchBlock VisitCatchBlock (CatchBlock node)
+    {
+      ArgumentUtility.CheckNotNull ("node", node);
+
+      var vistedNode = base.VisitCatchBlock (node);
+
+      // Testing the parent expression is only required if all children are evaluatable
+      if (_isCurrentSubtreeEvaluatable)
+        _isCurrentSubtreeEvaluatable = _evaluatableExpressionFilter.IsEvaluatableCatchBlock (node);
+
+      return vistedNode;
+    }
+
     protected override Expression VisitDebugInfo (DebugInfoExpression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -440,6 +453,72 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
       // Testing the parent expression is only required if all children are evaluatable
       if (_isCurrentSubtreeEvaluatable)
         _isCurrentSubtreeEvaluatable = _evaluatableExpressionFilter.IsEvaluatableLabel (expression);
+
+      return vistedExpression;
+    }
+
+    protected override LabelTarget VisitLabelTarget (LabelTarget node)
+    {
+      var vistedNode = base.VisitLabelTarget (node);
+
+      if (node == null)
+        return vistedNode;
+
+      // Testing the parent expression is only required if all children are evaluatable
+      if (_isCurrentSubtreeEvaluatable)
+        _isCurrentSubtreeEvaluatable = _evaluatableExpressionFilter.IsEvaluatableLabelTarget (node);
+
+      return vistedNode;
+    }
+
+    protected override Expression VisitLoop (LoopExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      var vistedExpression = base.VisitLoop (expression);
+
+      // Testing the parent expression is only required if all children are evaluatable
+      if (_isCurrentSubtreeEvaluatable)
+        _isCurrentSubtreeEvaluatable = _evaluatableExpressionFilter.IsEvaluatableLoop (expression);
+
+      return vistedExpression;
+    }
+
+    protected override Expression VisitSwitch (SwitchExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      var vistedExpression = base.VisitSwitch (expression);
+
+      // Testing the parent expression is only required if all children are evaluatable
+      if (_isCurrentSubtreeEvaluatable)
+        _isCurrentSubtreeEvaluatable = _evaluatableExpressionFilter.IsEvaluatableSwitch (expression);
+
+      return vistedExpression;
+    }
+
+    protected override SwitchCase VisitSwitchCase (SwitchCase node)
+    {
+      ArgumentUtility.CheckNotNull ("node", node);
+
+      var vistedNode = base.VisitSwitchCase (node);
+
+      // Testing the parent expression is only required if all children are evaluatable
+      if (_isCurrentSubtreeEvaluatable)
+        _isCurrentSubtreeEvaluatable = _evaluatableExpressionFilter.IsEvaluatableSwitchCase (node);
+
+      return vistedNode;
+    }
+
+    protected override Expression VisitTry (TryExpression expression)
+    {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      var vistedExpression = base.VisitTry (expression);
+
+      // Testing the parent expression is only required if all children are evaluatable
+      if (_isCurrentSubtreeEvaluatable)
+        _isCurrentSubtreeEvaluatable = _evaluatableExpressionFilter.IsEvaluatableTry (expression);
 
       return vistedExpression;
     }

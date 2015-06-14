@@ -93,8 +93,8 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
       map[ExpressionType.Label] = Expression.Label (Expression.Label(), zero);
       map[ExpressionType.Loop] = Expression.Loop (zero);
       map[ExpressionType.RuntimeVariables] = Expression.RuntimeVariables (Expression.Parameter (typeof (string)));
-      map[ExpressionType.Switch] = Expression.Switch (zero, Expression.SwitchCase (Expression.Default (typeof (void)), zero));
-      map[ExpressionType.Try] = Expression.TryFinally (zero, zero);
+      map[ExpressionType.Switch] = Expression.Switch (zero, Expression.SwitchCase (Expression.Default (typeof (void)), Expression.Constant (1)));
+      map[ExpressionType.Try] = Expression.TryFinally (zero, Expression.Constant (1));
 #endif
       return map;
     }
@@ -143,7 +143,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
 #if !NET_3_5
     public static CatchBlock CreateCatchBlock ()
     {
-      return Expression.Catch (typeof (Exception), Expression.Constant ("test"));
+      return Expression.Catch (typeof (Exception), Expression.Constant (-1));
     }
 
     public static LabelTarget CreateLabelTarget ()

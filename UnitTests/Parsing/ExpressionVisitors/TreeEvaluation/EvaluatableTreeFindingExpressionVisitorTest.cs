@@ -1675,6 +1675,73 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
 
 
     [Test]
+    public void VisitCatchBlock_IsEvaluatable_ReturnsTrueForExpression ()
+    {
+      var body = Expression.Constant (1);
+      var catchBlock = ExpressionInstanceCreator.CreateCatchBlock();
+      var catchBody = (ConstantExpression) catchBlock.Body;
+      var expression = Expression.TryCatch (body, catchBlock);
+
+      var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
+      filterMock.Stub (_ => _.IsEvaluatableTry (expression)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableConstant (body)).Return (true);
+      filterMock.Expect (_ => _.IsEvaluatableConstant (catchBody)).Return (true);
+      filterMock.Expect (_ => _.IsEvaluatableCatchBlock (catchBlock)).Return (true);
+      filterMock.Replay();
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (catchBody), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.True);
+
+      filterMock.VerifyAllExpectations();
+    }
+
+    [Test]
+    public void VisitCatchBlock_IsNotEvaluatable_ReturnsFalseForExpression ()
+    {
+      var body = Expression.Constant (1);
+      var catchBlock = ExpressionInstanceCreator.CreateCatchBlock();
+      var catchBody = (ConstantExpression) catchBlock.Body;
+      var expression = Expression.TryCatch (body, catchBlock);
+
+      var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
+      filterMock.Stub (_ => _.IsEvaluatableTry (expression)).Repeat.Never();
+      filterMock.Stub (_ => _.IsEvaluatableConstant (body)).Return (true);
+      filterMock.Expect (_ => _.IsEvaluatableConstant (catchBody)).Return (true);
+      filterMock.Expect (_ => _.IsEvaluatableCatchBlock (catchBlock)).Return (false);
+      filterMock.Replay();
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (catchBody), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+
+      filterMock.VerifyAllExpectations();
+    }
+
+    [Test]
+    public void VisitCatchBlock_WithCatchBodyNotEvaluatable_ReturnsFalseForExpressionAndCatchBody ()
+    {
+      var body = Expression.Constant (1);
+      var catchBlock = ExpressionInstanceCreator.CreateCatchBlock();
+      var catchBody = (ConstantExpression) catchBlock.Body;
+      var expression = Expression.TryCatch (body, catchBlock);
+
+      var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
+      filterMock.Stub (_ => _.IsEvaluatableTry (expression)).Repeat.Never();
+      filterMock.Stub (_ => _.IsEvaluatableConstant (body)).Return (true);
+      filterMock.Expect (_ => _.IsEvaluatableConstant (catchBody)).Return (false);
+      filterMock.Expect (_ => _.IsEvaluatableCatchBlock (catchBlock)).Repeat.Never();
+      filterMock.Replay();
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (catchBody), Is.False);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+
+      filterMock.VerifyAllExpectations();
+    }
+
+
+    [Test]
     public void VisitDebugInfo_IsEvaluatable_ReturnsTrueForExpression ()
     {
       var expression = (DebugInfoExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.DebugInfo);
@@ -1745,6 +1812,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
       filterMock.Expect (_ => _.IsEvaluatableGoto (expression)).Return (true);
       filterMock.Expect (_ => _.IsEvaluatableConstant (value)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableLabelTarget (expression.Target)).Return (true);
       filterMock.Replay();
 
       var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
@@ -1763,6 +1831,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
       filterMock.Expect (_ => _.IsEvaluatableGoto (expression)).Return (false);
       filterMock.Expect (_ => _.IsEvaluatableConstant (value)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableLabelTarget (expression.Target)).Return (true);
       filterMock.Replay();
 
       var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
@@ -1781,6 +1850,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
       filterMock.Expect (_ => _.IsEvaluatableGoto (expression)).Repeat.Never();
       filterMock.Expect (_ => _.IsEvaluatableConstant (value)).Return (false);
+      filterMock.Stub (_ => _.IsEvaluatableLabelTarget (expression.Target)).Return (true);
       filterMock.Replay();
 
       var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
@@ -1864,6 +1934,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
       filterMock.Expect (_ => _.IsEvaluatableLabel (expression)).Return (true);
       filterMock.Expect (_ => _.IsEvaluatableConstant (defaultValue)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableLabelTarget (expression.Target)).Return (true);
       filterMock.Replay();
 
       var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
@@ -1882,6 +1953,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
       filterMock.Expect (_ => _.IsEvaluatableLabel (expression)).Return (false);
       filterMock.Expect (_ => _.IsEvaluatableConstant (defaultValue)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableLabelTarget (expression.Target)).Return (true);
       filterMock.Replay();
 
       var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
@@ -1900,10 +1972,310 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
       filterMock.Expect (_ => _.IsEvaluatableLabel (expression)).Repeat.Never();
       filterMock.Expect (_ => _.IsEvaluatableConstant (defaultValue)).Return (false);
+      filterMock.Stub (_ => _.IsEvaluatableLabelTarget (expression.Target)).Return (true);
       filterMock.Replay();
 
       var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
       Assert.That (evaluationInfo.IsEvaluatableExpression (defaultValue), Is.False);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+
+      filterMock.VerifyAllExpectations();
+    }
+
+
+    [Test]
+    public void VisitLabelTarget_IsEvaluatable_ReturnsTrueForExpression ()
+    {
+      var expression = (LabelExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Label);
+      var labelTarget = expression.Target;
+      var defaultValue = (ConstantExpression) expression.DefaultValue;
+
+      var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
+      filterMock.Stub (_ => _.IsEvaluatableLabel (expression)).Return (true);
+      filterMock.Expect (_ => _.IsEvaluatableLabelTarget (labelTarget)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableConstant (defaultValue)).Return (true);
+      filterMock.Replay();
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (defaultValue), Is.True);
+
+      filterMock.VerifyAllExpectations();
+    }
+
+    [Test]
+    public void VisitLabelTarget_IsNotEvaluatable_ReturnsFalseForExpression ()
+    {
+      var expression = (LabelExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Label);
+      var labelTarget = expression.Target;
+      var defaultValue = (ConstantExpression) expression.DefaultValue;
+
+      var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
+      filterMock.Stub (_ => _.IsEvaluatableLabel (expression)).Repeat.Never();
+      filterMock.Expect (_ => _.IsEvaluatableLabelTarget (labelTarget)).Return (false);
+      filterMock.Stub (_ => _.IsEvaluatableConstant (defaultValue)).Return (true);
+      filterMock.Replay();
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (defaultValue), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+
+      filterMock.VerifyAllExpectations();
+    }
+
+
+    [Test]
+    public void VisitLoop_IsEvaluatable_ReturnsTrueForExpression ()
+    {
+      var expression = (LoopExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Loop);
+      var body = (ConstantExpression) expression.Body;
+
+      var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
+      filterMock.Expect (_ => _.IsEvaluatableLoop (expression)).Return (true);
+      filterMock.Expect (_ => _.IsEvaluatableConstant (body)).Return (true);
+      filterMock.Replay();
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (body), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.True);
+
+      filterMock.VerifyAllExpectations();
+    }
+
+    [Test]
+    public void VisitLoop_IsNotEvaluatable_ReturnsFalseForExpression ()
+    {
+      var expression = (LoopExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Loop);
+      var body = (ConstantExpression) expression.Body;
+
+      var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
+      filterMock.Expect (_ => _.IsEvaluatableLoop (expression)).Return (false);
+      filterMock.Expect (_ => _.IsEvaluatableConstant (body)).Return (true);
+      filterMock.Replay();
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (body), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+
+      filterMock.VerifyAllExpectations();
+    }
+
+    [Test]
+    public void VisitLoop_WithBodyNotEvaluatable_ReturnsFalseForExpressionAndBody ()
+    {
+      var expression = (LoopExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Loop);
+      var body = (ConstantExpression) expression.Body;
+
+      var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
+      filterMock.Expect (_ => _.IsEvaluatableLoop (expression)).Repeat.Never();
+      filterMock.Expect (_ => _.IsEvaluatableConstant (body)).Return (false);
+      filterMock.Replay();
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (body), Is.False);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+
+      filterMock.VerifyAllExpectations();
+    }
+
+
+    [Test]
+    public void VisitSwitch_IsEvaluatable_ReturnsTrueForExpression ()
+    {
+      var expression = (SwitchExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Switch);
+      var switchValue = (ConstantExpression) expression.SwitchValue;
+      var switchCase = expression.Cases.Single();
+
+      var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
+      filterMock.Expect (_ => _.IsEvaluatableSwitch (expression)).Return (true);
+      filterMock.Expect (_ => _.IsEvaluatableConstant (switchValue)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableSwitchCase (switchCase)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableDefault ((DefaultExpression) switchCase.Body)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableConstant ((ConstantExpression) switchCase.TestValues.Single())).Return (true);
+      filterMock.Replay();
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (switchValue), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.True);
+
+      filterMock.VerifyAllExpectations();
+    }
+
+    [Test]
+    public void VisitSwitch_IsNotEvaluatable_ReturnsFalseForExpression ()
+    {
+      var expression = (SwitchExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Switch);
+      var switchValue = (ConstantExpression) expression.SwitchValue;
+      var switchCase = expression.Cases.Single();
+
+      var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
+      filterMock.Expect (_ => _.IsEvaluatableSwitch (expression)).Return (false);
+      filterMock.Expect (_ => _.IsEvaluatableConstant (switchValue)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableSwitchCase (switchCase)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableDefault ((DefaultExpression) switchCase.Body)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableConstant ((ConstantExpression) switchCase.TestValues.Single())).Return (true);
+      filterMock.Replay();
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (switchValue), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+
+      filterMock.VerifyAllExpectations();
+    }
+
+    [Test]
+    public void VisitSwitch_WithValueNotEvaluatable_ReturnsFalseForExpressionAndValue ()
+    {
+      var expression = (SwitchExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Switch);
+      var switchValue = (ConstantExpression) expression.SwitchValue;
+      var switchCase = expression.Cases.Single();
+
+      var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
+      filterMock.Expect (_ => _.IsEvaluatableSwitch (expression)).Repeat.Never();
+      filterMock.Expect (_ => _.IsEvaluatableConstant (switchValue)).Return (false);
+      filterMock.Stub (_ => _.IsEvaluatableSwitchCase (switchCase)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableDefault ((DefaultExpression) switchCase.Body)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableConstant ((ConstantExpression) switchCase.TestValues.Single())).Return (true);
+      filterMock.Replay();
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (switchValue), Is.False);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+
+      filterMock.VerifyAllExpectations();
+    }
+
+
+    [Test]
+    public void VisitSwitchCase_IsEvaluatable_ReturnsTrueForExpression ()
+    {
+      var expression = (SwitchExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Switch);
+      var switchValue = (ConstantExpression) expression.SwitchValue;
+      var switchCase = expression.Cases.Single();
+      var caseBody = (DefaultExpression) switchCase.Body;
+      var testValue = (ConstantExpression) switchCase.TestValues.Single();
+
+      var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
+      filterMock.Stub (_ => _.IsEvaluatableSwitch (expression)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableConstant (switchValue)).Return (true);
+      filterMock.Expect (_ => _.IsEvaluatableSwitchCase (switchCase)).Return (true);
+      filterMock.Expect (_ => _.IsEvaluatableDefault (caseBody)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableConstant (testValue)).Return (true);
+      filterMock.Replay();
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (caseBody), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (testValue), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.True);
+
+      filterMock.VerifyAllExpectations();
+    }
+
+    [Test]
+    public void VisitSwitchCase_IsNotEvaluatable_ReturnsFalseForExpression ()
+    {
+      var expression = (SwitchExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Switch);
+      var switchValue = (ConstantExpression) expression.SwitchValue;
+      var switchCase = expression.Cases.Single();
+      var caseBody = (DefaultExpression) switchCase.Body;
+      var testValue = (ConstantExpression) switchCase.TestValues.Single();
+
+      var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
+      filterMock.Stub (_ => _.IsEvaluatableSwitch (expression)).Repeat.Never();
+      filterMock.Stub (_ => _.IsEvaluatableConstant (switchValue)).Return (true);
+      filterMock.Expect (_ => _.IsEvaluatableSwitchCase (switchCase)).Return (false);
+      filterMock.Expect (_ => _.IsEvaluatableDefault (caseBody)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableConstant (testValue)).Return (true);
+      filterMock.Replay();
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (caseBody), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (testValue), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+
+      filterMock.VerifyAllExpectations();
+    }
+
+    [Test]
+    public void VisitSwitchCase_WithValueNotEvaluatable_ReturnsFalseForExpressionAndValue ()
+    {
+      var expression = (SwitchExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Switch);
+      var switchValue = (ConstantExpression) expression.SwitchValue;
+      var switchCase = expression.Cases.Single();
+      var caseBody = (DefaultExpression) switchCase.Body;
+      var testValue = (ConstantExpression) switchCase.TestValues.Single();
+
+      var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
+      filterMock.Stub (_ => _.IsEvaluatableSwitch (expression)).Repeat.Never();
+      filterMock.Stub (_ => _.IsEvaluatableConstant (switchValue)).Return (true);
+      filterMock.Expect (_ => _.IsEvaluatableSwitchCase (switchCase)).Repeat.Never();
+      filterMock.Expect (_ => _.IsEvaluatableDefault (caseBody)).Return (false);
+      filterMock.Stub (_ => _.IsEvaluatableConstant (testValue)).Return (true);
+      filterMock.Replay();
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (caseBody), Is.False);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (testValue), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+
+      filterMock.VerifyAllExpectations();
+    }
+
+
+    [Test]
+    public void VisitTry_IsEvaluatable_ReturnsTrueForExpression ()
+    {
+      var expression = (TryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Try);
+      var body = (ConstantExpression) expression.Body;
+      var finallyBlock = (ConstantExpression) expression.Finally;
+
+      var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
+      filterMock.Expect (_ => _.IsEvaluatableTry (expression)).Return (true);
+      filterMock.Expect (_ => _.IsEvaluatableConstant (body)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableConstant (finallyBlock)).Return (true);
+      filterMock.Replay();
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (body), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.True);
+
+      filterMock.VerifyAllExpectations();
+    }
+
+    [Test]
+    public void VisitTry_IsNotEvaluatable_ReturnsFalseForExpression ()
+    {
+      var expression = (TryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Try);
+      var body = (ConstantExpression) expression.Body;
+      var finallyBlock = (ConstantExpression) expression.Finally;
+
+      var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
+      filterMock.Expect (_ => _.IsEvaluatableTry (expression)).Return (false);
+      filterMock.Expect (_ => _.IsEvaluatableConstant (body)).Return (true);
+      filterMock.Stub (_ => _.IsEvaluatableConstant (finallyBlock)).Return (true);
+      filterMock.Replay();
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (body), Is.True);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
+
+      filterMock.VerifyAllExpectations();
+    }
+
+    [Test]
+    public void VisitTry_WithBodyNotEvaluatable_ReturnsFalseForExpressionAndBody ()
+    {
+      var expression = (TryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Try);
+      var body = (ConstantExpression) expression.Body;
+      var finallyBlock = (ConstantExpression) expression.Finally;
+
+      var filterMock = MockRepository.GenerateStrictMock<EvaluatableExpressionFilterBase>();
+      filterMock.Expect (_ => _.IsEvaluatableTry (expression)).Repeat.Never();
+      filterMock.Expect (_ => _.IsEvaluatableConstant (body)).Return (false);
+      filterMock.Stub (_ => _.IsEvaluatableConstant (finallyBlock)).Return (true);
+      filterMock.Replay();
+
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, filterMock);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (body), Is.False);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
 
       filterMock.VerifyAllExpectations();
