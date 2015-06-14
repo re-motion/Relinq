@@ -111,6 +111,7 @@
     <Compile Include="Clauses\Expressions\VBStringComparisonExpression.cs" />
     <Compile Include="Parsing\ExpressionVisitors\TreeEvaluation\EvaluatableExpressionFilterBase.cs" />
     <Compile Include="Parsing\ExpressionVisitors\TreeEvaluation\IEvaluatableExpressionFilter.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\TreeEvaluation\NullEvaluatableExpressionFilter.cs" />
     <Compile Include="Utilities\ExpressionExtensions.cs" />
     <Compile Include="Clauses\ExpressionVisitors\ReverseResolvingExpressionVisitor.cs" />
     <Compile Include="Clauses\ResultOperators\ChoiceResultOperatorBase.cs" />

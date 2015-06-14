@@ -44,7 +44,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
 
-      var partialEvaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expressionTree);
+      var partialEvaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expressionTree, new NullEvaluatableExpressionFilter());
 
       var visitor = new PartialEvaluatingExpressionVisitor (expressionTree, partialEvaluationInfo);
       return visitor.Visit (expressionTree);

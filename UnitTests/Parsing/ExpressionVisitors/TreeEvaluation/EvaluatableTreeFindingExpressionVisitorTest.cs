@@ -43,6 +43,10 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
   [TestFixture]
   public class EvaluatableTreeFindingExpressionVisitorTest
   {
+    private class FakeEvaluatableExpressionFilter : EvaluatableExpressionFilterBase
+    {
+    }
+
 #if !NET_3_5
     private class RecursiveExpression : Expression
     {
@@ -63,7 +67,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
     public void SimpleExpression_IsEvaluatable ()
     {
       var expression = Expression.Constant (0);
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.True);
     }
@@ -74,7 +78,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       var innerExpressionLeft = Expression.Constant (0);
       var innerExpressionRight = Expression.Constant (0);
       var outerExpression = Expression.MakeBinary (ExpressionType.Add, innerExpressionLeft, innerExpressionRight);
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (outerExpression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (outerExpression, new FakeEvaluatableExpressionFilter());
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (outerExpression), Is.True);
       Assert.That (evaluationInfo.IsEvaluatableExpression (innerExpressionLeft), Is.True);
@@ -85,7 +89,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
     public void ParameterExpression_IsNotEvaluatable ()
     {
       var expression = ExpressionHelper.CreateParameterExpression ();
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
     }
@@ -98,7 +102,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
           ExpressionHelper.CreateParameterExpression (), 
           ExpressionHelper.CreateParameterExpression ());
       
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
     }
 
@@ -110,7 +114,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
           ExpressionHelper.CreateParameterExpression (),
           Expression.Constant (0));
 
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression.Right), Is.True);
     }
 
@@ -118,7 +122,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
     public void VisitQuerySourceReferenceExpression_NotEvaluatable ()
     {
       var expression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
     }
@@ -127,7 +131,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
     public void VisitSubQueryExpression_NotEvaluatable ()
     {
       var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook>());
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
     }
@@ -139,7 +143,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       var innerExpression = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (0), Expression.Constant (0));
       var expression = new ReducibleExtensionExpression (innerExpression);
       
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.True);
       Assert.That (evaluationInfo.IsEvaluatableExpression (innerExpression), Is.True);
@@ -151,7 +155,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       var innerExpression = new ReducibleExtensionExpression (Expression.Constant (1));
       var expression = new ReducibleExtensionExpression (Expression.Add (innerExpression, Expression.Constant (1)));
 
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.True);
       Assert.That (evaluationInfo.IsEvaluatableExpression (innerExpression), Is.True);
@@ -163,7 +167,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       var innerExpression = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (0), Expression.Constant (0));
       var extensionExpression = new ReducibleExtensionExpression (innerExpression);
       
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (extensionExpression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (extensionExpression, new FakeEvaluatableExpressionFilter());
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (extensionExpression), Is.False);
       Assert.That (evaluationInfo.IsEvaluatableExpression (innerExpression), Is.True);
@@ -176,7 +180,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       var innerExpression = Expression.MakeBinary (ExpressionType.Equal, Expression.Constant (0), Expression.Constant (0));
       var extensionExpression = new NonReducibleExtensionExpression (innerExpression);
       
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (extensionExpression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (extensionExpression, new FakeEvaluatableExpressionFilter());
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (extensionExpression), Is.False);
       Assert.That (evaluationInfo.IsEvaluatableExpression (innerExpression), Is.True);
@@ -188,7 +192,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       var innerExpression = new NonReducibleExtensionExpression (Expression.Constant (1));
       var expression = new ReducibleExtensionExpression (Expression.Add (innerExpression, Expression.Constant (1)));
 
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
 
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
       Assert.That (evaluationInfo.IsEvaluatableExpression (innerExpression), Is.False);
@@ -200,7 +204,9 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
     {
       var expression = new RecursiveExpression();
 
-      Assert.That (() => EvaluatableTreeFindingExpressionVisitor.Analyze (expression), Throws.InvalidOperationException);
+      Assert.That (
+          () => EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter()),
+          Throws.InvalidOperationException);
     }
 #endif
 
@@ -214,7 +220,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
 
       Assert.That (expression.Conversion, Is.Null);
 
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
       Assert.That (evaluationInfo.Count, Is.EqualTo (0));
     }
 
@@ -224,7 +230,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       var source = ExpressionHelper.CreateQueryable<Cook> ();
       var expression = ExpressionHelper.MakeExpression (() => source.ToString());
 
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
     }
 
@@ -234,7 +240,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       var source = ExpressionHelper.CreateQueryable<Cook> ();
       var expression = ExpressionHelper.MakeExpression (() => source.Count ());
 
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
     }
 
@@ -244,7 +250,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
       var source = new QueryableFakeWithCount<int>();
       var expression = ExpressionHelper.MakeExpression (() => source.Count);
 
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
     }
 
@@ -253,7 +259,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
     {
       var expression = (MemberInitExpression) ExpressionHelper.MakeExpression<int, AnonymousType> (i => new AnonymousType { a = i, b = 1 });
 
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression.NewExpression), Is.False);
     }
@@ -263,7 +269,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
     {
       var expression = (ListInitExpression) ExpressionHelper.MakeExpression<int, List<int>> (i => new List<int> { i, 1 });
 
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression.NewExpression), Is.False);
     }
@@ -273,7 +279,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
     {
       var expression = (MemberInitExpression) ExpressionHelper.MakeExpression<int, AnonymousType> (i => new AnonymousType { a = 1, b = 1 });
 
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.True);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression.NewExpression), Is.True);
     }
@@ -283,7 +289,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
     {
       var expression = (ListInitExpression) ExpressionHelper.MakeExpression<int, List<int>> (i => new List<int> { 2, 1 });
 
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.True);
       Assert.That (evaluationInfo.IsEvaluatableExpression (expression.NewExpression), Is.True);
     }
@@ -292,7 +298,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
     public void VisitUnknownExpression_Ignored ()
     {
       var expression = new UnknownExpression (typeof (object));
-      var result = EvaluatableTreeFindingExpressionVisitor.Analyze (expression);
+      var result = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
 
       Assert.That (result.IsEvaluatableExpression (expression), Is.False);
     }
@@ -315,7 +321,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
 
       var body = Expression.MakeBinary (ExpressionType.Equal, dynamicExpressionWithParameterReference, Expression.Constant ("orange"));
       
-      var result = EvaluatableTreeFindingExpressionVisitor.Analyze (body);
+      var result = EvaluatableTreeFindingExpressionVisitor.Analyze (body, new FakeEvaluatableExpressionFilter());
 
       Assert.That (result.IsEvaluatableExpression (body), Is.False);
     }
@@ -325,11 +331,11 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
     public void PartialEvaluationExceptionExpression_NotEvaluable_AndChildrenNeither ()
     {
       var inner = Expression.Constant (0);
-      var partialEvaluationExceptionExpression = new PartialEvaluationExceptionExpression (new Exception(), inner);
+      var expression = new PartialEvaluationExceptionExpression (new Exception(), inner);
 
-      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (partialEvaluationExceptionExpression);
+      var evaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expression, new FakeEvaluatableExpressionFilter());
 
-      Assert.That (evaluationInfo.IsEvaluatableExpression (partialEvaluationExceptionExpression), Is.False);
+      Assert.That (evaluationInfo.IsEvaluatableExpression (expression), Is.False);
       Assert.That (evaluationInfo.IsEvaluatableExpression (inner), Is.False);
     }
 
@@ -377,7 +383,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
             Is.True,
             "Visit method for {0}",
             expressionInstance.GetType());
-        var result = EvaluatableTreeFindingExpressionVisitor.Analyze (expressionInstance);
+        var result = EvaluatableTreeFindingExpressionVisitor.Analyze (expressionInstance, new FakeEvaluatableExpressionFilter());
         Assert.That (result.IsEvaluatableExpression (expressionInstance), Is.True, expressionInstance.NodeType.ToString());
       }
     }

@@ -19,6 +19,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using JetBrains.Annotations;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Utilities;
 
@@ -48,26 +49,31 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
   /// </remarks>
   public sealed class EvaluatableTreeFindingExpressionVisitor : RelinqExpressionVisitor, IPartialEvaluationExceptionExpressionVisitor
   {
-    public static PartialEvaluationInfo Analyze (Expression expressionTree)
+    public static PartialEvaluationInfo Analyze (
+        [NotNull] Expression expressionTree,
+        [NotNull] IEvaluatableExpressionFilter evaluatableExpressionFilter)
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
+      ArgumentUtility.CheckNotNull ("evaluatableExpressionFilter", evaluatableExpressionFilter);
 
-      var visitor = new EvaluatableTreeFindingExpressionVisitor();
+      var visitor = new EvaluatableTreeFindingExpressionVisitor (evaluatableExpressionFilter);
       visitor.Visit (expressionTree);
       return visitor._partialEvaluationInfo;
     }
 
+    private readonly IEvaluatableExpressionFilter _evaluatableExpressionFilter;
     private readonly PartialEvaluationInfo _partialEvaluationInfo = new PartialEvaluationInfo();
     private bool _isCurrentSubtreeEvaluatable;
 
-    private EvaluatableTreeFindingExpressionVisitor ()
+    private EvaluatableTreeFindingExpressionVisitor (IEvaluatableExpressionFilter evaluatableExpressionFilter)
     {
+      _evaluatableExpressionFilter = evaluatableExpressionFilter;
     }
 
     public override Expression Visit (Expression expression)
     {
       if (expression == null)
-        return base.Visit (expression);
+        return base.Visit ((Expression) null);
 
       // An expression node/subtree is evaluatable iff:
       // - by itself it would be evaluatable, and
