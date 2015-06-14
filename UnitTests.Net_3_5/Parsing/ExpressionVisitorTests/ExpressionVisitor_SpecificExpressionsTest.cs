@@ -648,7 +648,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
     public void VisitMemberAssignment_Changed ()
     {
       MemberAssignment memberAssignment = ExpressionInstanceCreator.CreateMemberAssignment ();
-      MemberAssignment newMemberAssignment = Expression.Bind (typeof (SimpleClass).GetField ("Value"), Expression.Constant ("2"));
+      MemberAssignment newMemberAssignment = Expression.Bind (typeof (List<int>).GetProperty ("Capacity"), Expression.Constant (2));
 
       Expect.Call (VisitorMock.Visit (memberAssignment.Expression)).Return (newMemberAssignment.Expression);
 

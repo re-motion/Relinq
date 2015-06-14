@@ -88,9 +88,9 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
       map[ExpressionType.Block] = Expression.Block (zero);
       map[ExpressionType.DebugInfo] = Expression.DebugInfo (Expression.SymbolDocument ("test.cs"), 1, 1, 1, 1);
       map[ExpressionType.Default] = Expression.Default (typeof (int));
-      map[ExpressionType.Goto] = Expression.Goto (Expression.Label());
+      map[ExpressionType.Goto] = Expression.Goto (Expression.Label(), zero);
       map[ExpressionType.Index] = Expression.MakeIndex (arrayExpression, typeof (int[]).GetProperty ("Item"), new[] { zero });
-      map[ExpressionType.Label] = Expression.Label (Expression.Label());
+      map[ExpressionType.Label] = Expression.Label (Expression.Label(), zero);
       map[ExpressionType.Loop] = Expression.Loop (zero);
       map[ExpressionType.RuntimeVariables] = Expression.RuntimeVariables (Expression.Parameter (typeof (string)));
       map[ExpressionType.Switch] = Expression.Switch (zero, Expression.SwitchCase (Expression.Default (typeof (void)), zero));
@@ -115,7 +115,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
 
     public static MemberAssignment CreateMemberAssignment ()
     {
-      return Expression.Bind (typeof (SimpleClass).GetField ("Value"), Expression.Constant ("test"));
+      return Expression.Bind (typeof (List<int>).GetProperty ("Capacity"), Expression.Constant (0));
     }
 
     public static MemberMemberBinding CreateMemberMemberBinding (IEnumerable<MemberBinding> memberBindings)
