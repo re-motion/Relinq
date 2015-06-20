@@ -22,6 +22,7 @@ using NUnit.Framework;
 using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.Development.UnitTesting.Parsing;
 using Remotion.Linq.Parsing.ExpressionVisitors.Transformation;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
@@ -51,7 +52,9 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
       _methodInfoBasedNodeTypeRegistry.Register (CountExpressionNode.GetSupportedMethods(), typeof (CountExpressionNode));
       _methodInfoBasedNodeTypeRegistry.Register (ContainsExpressionNode.GetSupportedMethods(), typeof (ContainsExpressionNode));
 
-      _expressionTreeParser = new ExpressionTreeParser (_methodInfoBasedNodeTypeRegistry, new PartialEvaluatingExpressionTreeProcessor() );
+      _expressionTreeParser = new ExpressionTreeParser (
+          _methodInfoBasedNodeTypeRegistry,
+          new PartialEvaluatingExpressionTreeProcessor (new TestEvaluatableExpressionFilter()));
 
       _intSource = new[] { 1, 2, 3 }.AsQueryable ();
     }

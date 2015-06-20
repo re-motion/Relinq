@@ -31,11 +31,25 @@ namespace Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors
   /// </remarks>
   public sealed class PartialEvaluatingExpressionTreeProcessor : IExpressionTreeProcessor
   {
+    private readonly IEvaluatableExpressionFilter _filter;
+
+    public PartialEvaluatingExpressionTreeProcessor (IEvaluatableExpressionFilter filter)
+    {
+      ArgumentUtility.CheckNotNull ("filter", filter);
+
+      _filter = filter;
+    }
+
+    public IEvaluatableExpressionFilter Filter
+    {
+      get { return _filter; }
+    }
+
     public Expression Process (Expression expressionTree)
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
 
-      return PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (expressionTree, new NullEvaluatableExpressionFilter());
+      return PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (expressionTree, _filter);
     }
   }
 }

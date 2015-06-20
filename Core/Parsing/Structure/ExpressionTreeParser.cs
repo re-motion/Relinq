@@ -19,9 +19,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.Parsing.ExpressionVisitors.Transformation;
+using Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
@@ -84,7 +84,7 @@ namespace Remotion.Linq.Parsing.Structure
       ArgumentUtility.CheckNotNull ("tranformationProvider", tranformationProvider);
 
       return new CompoundExpressionTreeProcessor (new IExpressionTreeProcessor[] { 
-          new PartialEvaluatingExpressionTreeProcessor(), 
+          new PartialEvaluatingExpressionTreeProcessor (new NullEvaluatableExpressionFilter()), 
           new TransformingExpressionTreeProcessor (tranformationProvider) });
     }
 
