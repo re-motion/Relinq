@@ -17,6 +17,7 @@
 using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Parsing.ExpressionVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors
@@ -34,7 +35,7 @@ namespace Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
 
-      return PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (expressionTree);
+      return PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (expressionTree, new NullEvaluatableExpressionFilter());
     }
   }
 }

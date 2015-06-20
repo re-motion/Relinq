@@ -40,25 +40,30 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
     /// <summary>
     /// Takes an expression tree and finds and evaluates all its evaluatable subtrees.
     /// </summary>
-    public static Expression EvaluateIndependentSubtrees (Expression expressionTree)
+    public static Expression EvaluateIndependentSubtrees (Expression expressionTree, IEvaluatableExpressionFilter evaluatableExpressionFilter)
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
+      ArgumentUtility.CheckNotNull ("evaluatableExpressionFilter", evaluatableExpressionFilter);
 
-      var partialEvaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expressionTree, new NullEvaluatableExpressionFilter());
+      var partialEvaluationInfo = EvaluatableTreeFindingExpressionVisitor.Analyze (expressionTree, evaluatableExpressionFilter);
 
-      var visitor = new PartialEvaluatingExpressionVisitor (expressionTree, partialEvaluationInfo);
+      var visitor = new PartialEvaluatingExpressionVisitor (partialEvaluationInfo, evaluatableExpressionFilter);
       return visitor.Visit (expressionTree);
     }
 
     // _partialEvaluationInfo contains a list of the expressions that are safe to be evaluated.
     private readonly PartialEvaluationInfo _partialEvaluationInfo;
+    private readonly IEvaluatableExpressionFilter _evaluatableExpressionFilter;
 
-    private PartialEvaluatingExpressionVisitor (Expression treeRoot, PartialEvaluationInfo partialEvaluationInfo)
+    private PartialEvaluatingExpressionVisitor (
+        PartialEvaluationInfo partialEvaluationInfo,
+        IEvaluatableExpressionFilter evaluatableExpressionFilter)
     {
-      ArgumentUtility.CheckNotNull ("treeRoot", treeRoot);
       ArgumentUtility.CheckNotNull ("partialEvaluationInfo", partialEvaluationInfo);
+      ArgumentUtility.CheckNotNull ("evaluatableExpressionFilter", evaluatableExpressionFilter);
 
       _partialEvaluationInfo = partialEvaluationInfo;
+      _evaluatableExpressionFilter = evaluatableExpressionFilter;
     }
 
     public override Expression Visit (Expression expression)
@@ -85,7 +90,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
       }
 
       if (evaluatedExpression != expression)
-        return EvaluateIndependentSubtrees (evaluatedExpression);
+        return EvaluateIndependentSubtrees (evaluatedExpression, _evaluatableExpressionFilter);
       
       return evaluatedExpression;
     }
