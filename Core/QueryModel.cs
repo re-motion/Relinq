@@ -23,9 +23,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Parsing;
 #if NET_3_5
 using Remotion.Linq.Collections;
 #endif
@@ -47,6 +47,38 @@ namespace Remotion.Linq
   /// </remarks>
   public sealed class QueryModel
   {
+    private sealed class CloningExpressionVisitor : RelinqExpressionVisitor
+    {
+      private readonly QuerySourceMapping _querySourceMapping;
+
+      public CloningExpressionVisitor (QuerySourceMapping querySourceMapping)
+      {
+        _querySourceMapping = querySourceMapping;
+      }
+
+      protected internal override Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
+      {
+        if (_querySourceMapping.ContainsMapping (expression.ReferencedQuerySource))
+          return _querySourceMapping.GetExpression (expression.ReferencedQuerySource);
+
+        return expression;
+      }
+
+      protected internal override Expression VisitSubQuery (SubQueryExpression expression)
+      {
+        var clonedQueryModel = expression.QueryModel.Clone (_querySourceMapping);
+        return new SubQueryExpression (clonedQueryModel);
+      }
+
+#if NET_3_5
+      protected override Expression VisitRelinqUnknownNonExtension (Expression expression)
+      {
+        //ignore
+        return expression;
+      }
+#endif
+    }
+
     private readonly UniqueIdentifierGenerator _uniqueIdentifierGenerator;
 
     private MainFromClause _mainFromClause;
@@ -233,7 +265,8 @@ namespace Remotion.Linq
       }
 
       var clone = queryModelBuilder.Build ();
-      clone.TransformExpressions (ex => CloningExpressionVisitor.AdjustExpressionAfterCloning (ex, cloneContext.QuerySourceMapping));
+      var cloningExpressionVisitor = new CloningExpressionVisitor (cloneContext.QuerySourceMapping);
+      clone.TransformExpressions (cloningExpressionVisitor.Visit);
       clone.ResultTypeOverride = ResultTypeOverride;
       return clone;
     }

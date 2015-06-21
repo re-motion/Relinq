@@ -241,7 +241,6 @@
     <Compile Include="Clauses\Expressions\TestDomain\TestableExtensionExpression.cs" />
     <Compile Include="Clauses\Expressions\TestDomain\TestableExtensionExpressionWithSpecificVisitor.cs" />
     <Compile Include="Clauses\ExpressionVisitors\AccessorFindingExpressionVisitorTest.cs" />
-    <Compile Include="Clauses\ExpressionVisitors\CloningExpressionVisitorTest.cs" />
     <Compile Include="Clauses\ExpressionVisitors\ReferenceReplacingExpressionVisitorTest.cs" />
     <Compile Include="Clauses\ExpressionVisitors\ReverseResolvingExpressionVisitorTest.cs" />
     <Compile Include="Clauses\FromClauseBaseTest.cs" />
