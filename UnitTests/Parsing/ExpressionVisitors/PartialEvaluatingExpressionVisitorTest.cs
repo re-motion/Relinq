@@ -383,6 +383,36 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
       filterMock.VerifyAllExpectations();
     }
 
+    [Test]
+    public void Evaluate_PartialEvaluationExceptionExpression_NotEvaluatable ()
+    {
+      var expression = new PartialEvaluationExceptionExpression (new Exception(), Expression.Constant (1));
+      var result = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (expression, new TestEvaluatableExpressionFilter());
+
+      Assert.That (result, Is.SameAs (expression));
+    }
+
+#if !NET_3_5
+    [Test]
+    public void Evaluate_VBStringComparisonExpression_IsPartiallyEvaluated ()
+    {
+      var expression = new VBStringComparisonExpression (Expression.Equal (Expression.Constant ("a"), Expression.Constant ("b")), true);
+      var result = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (expression, new TestEvaluatableExpressionFilter());
+
+      var expectedExpression = Expression.Constant (false);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedExpression, result);
+    }
+#else
+    [Test]
+    public void Evaluate_VBStringComparisonExpression_IsNotPartiallyEvaluated ()
+    {
+      var expression = new VBStringComparisonExpression (Expression.Equal (Expression.Constant ("a"), Expression.Constant ("b")), true);
+      var result = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (expression, new TestEvaluatableExpressionFilter());
+
+      ExpressionTreeComparer.CheckAreEqualTrees (new VBStringComparisonExpression (Expression.Constant (false), true), result);
+    }
+#endif
+
 #if !NET_3_5
     [Test]
     public void VisitReducibleExtensionExpression ()
