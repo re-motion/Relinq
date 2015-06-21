@@ -214,6 +214,8 @@
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\EmptyParametersQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\NullableQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\PartialEvaluationQueryParserIntegrationTest.cs" />
+    <Compile Include="Parsing\Structure\TestDomain\NonEvaluated.cs" />
+    <Compile Include="Parsing\Structure\TestDomain\QueryParserIntegrationTestsEvaluatableExpressionFilter.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\VBSpecificQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\NewWithAddedMembersQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\SubQueryQueryParserIntegrationTest.cs" />

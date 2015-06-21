@@ -20,7 +20,9 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.Parsing.ExpressionVisitors.Transformation;
 using Remotion.Linq.Parsing.Structure;
+using Remotion.Linq.UnitTests.Parsing.Structure.TestDomain;
 using Remotion.Linq.UnitTests.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
@@ -29,6 +31,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
   {
     public IQueryable<Cook> QuerySource { get; private set; }
     public QueryParser QueryParser { get; private set; }
+    public QueryParser QueryParserWithCustomizedPartialEvaluation { get; private set; }
     public IQueryable<Restaurant> IndustrialSectorQuerySource { get; private set; }
     public IQueryable<Kitchen> DetailQuerySource { get; private set; }
 
@@ -39,6 +42,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       IndustrialSectorQuerySource = ExpressionHelper.CreateQueryable<Restaurant>();
       DetailQuerySource = ExpressionHelper.CreateQueryable<Kitchen> ();
       QueryParser = QueryParser.CreateDefault();
+      QueryParserWithCustomizedPartialEvaluation = CreateQueryParserWithCustimizedPartialEvaluation();
     }
 
     protected void CheckResolvedExpression<TParameter, TResult> (Expression expressionToCheck, IQuerySource clauseToReference, Expression<Func<TParameter, TResult>> expectedUnresolvedExpression)
@@ -57,6 +61,16 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
     {
       Assert.That (expression, Is.InstanceOf (typeof (ConstantExpression)));
       Assert.That (((ConstantExpression) expression).Value, Is.SameAs (expectedQuerySource));
+    }
+
+    private QueryParser CreateQueryParserWithCustimizedPartialEvaluation ()
+    {
+      var transformerRegistry = ExpressionTransformerRegistry.CreateDefault();
+      var evaluatableExpressionFilter = new QueryParserIntegrationTestsEvaluatableExpressionFilter();
+      var expressionTreeParser = new ExpressionTreeParser (
+          ExpressionTreeParser.CreateDefaultNodeTypeProvider (), 
+          ExpressionTreeParser.CreateDefaultProcessor (transformerRegistry, evaluatableExpressionFilter));
+      return new QueryParser(expressionTreeParser);
     }
   }
 }
