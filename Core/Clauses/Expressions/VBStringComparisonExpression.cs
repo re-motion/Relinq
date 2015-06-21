@@ -40,14 +40,16 @@ namespace Remotion.Linq.Clauses.Expressions
   /// <see cref="VisitChildren"/> methods.
   /// </para>
   /// </remarks>
-  public sealed class VBStringComparisonExpression 
+  public sealed class VBStringComparisonExpression
 #if !NET_3_5
-    : Expression
+      : Expression
 #else
     : ExtensionExpression
 #endif
   {
+#if NET_3_5
     public const ExpressionType ExpressionType = (ExpressionType) 100003;
+#endif
 
     private readonly Expression _comparison;
     private readonly bool _textCompare;
@@ -71,7 +73,7 @@ namespace Remotion.Linq.Clauses.Expressions
 
     public override ExpressionType NodeType
     {
-      get { return ExpressionType; }
+      get { return ExpressionType.Extension; }
     }
 #endif
 

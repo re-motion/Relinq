@@ -41,6 +41,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       _exceptionExpression = new PartialEvaluationExceptionExpression (_exception, _evaluatedExpression);
     }
 
+#if NET_3_5
     [Test]
     public void NodeType ()
     {
@@ -48,12 +49,17 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       ExtensionExpressionTestHelper.CheckUniqueNodeType (
           typeof (PartialEvaluationExceptionExpression), PartialEvaluationExceptionExpression.ExpressionType);
     }
-    
+#endif
+
     [Test]
     public void Initialization ()
     {
       Assert.That (_exceptionExpression.Type, Is.SameAs (typeof (double)));
+#if !NET_3_5
+      Assert.That (_exceptionExpression.NodeType, Is.EqualTo (ExpressionType.Extension));
+#else
       Assert.That (_exceptionExpression.NodeType, Is.EqualTo (PartialEvaluationExceptionExpression.ExpressionType));
+#endif
       Assert.That (_exceptionExpression.Exception, Is.SameAs (_exception));
       Assert.That (_exceptionExpression.EvaluatedExpression, Is.SameAs (_evaluatedExpression));
     }

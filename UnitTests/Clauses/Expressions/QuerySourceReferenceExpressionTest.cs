@@ -27,19 +27,25 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
   [TestFixture]
   public class QuerySourceReferenceExpressionTest : ExpressionNodeTestBase
   {
+#if NET_3_5
     [Test]
     public void NodeType ()
     {
       Assert.That (QuerySourceReferenceExpression.ExpressionType, Is.EqualTo ((ExpressionType) 100001));
       ExtensionExpressionTestHelper.CheckUniqueNodeType (typeof (QuerySourceReferenceExpression), QuerySourceReferenceExpression.ExpressionType);
     }
+#endif
 
     [Test]
     public void Initialization ()
     {
       var referenceExpression = new QuerySourceReferenceExpression (SourceClause);
       Assert.That (referenceExpression.Type, Is.SameAs (typeof (int)));
+#if !NET_3_5
+      Assert.That (referenceExpression.NodeType, Is.EqualTo (ExpressionType.Extension));
+#else
       Assert.That (referenceExpression.NodeType, Is.EqualTo (QuerySourceReferenceExpression.ExpressionType));
+#endif
     }
 
     [Test]

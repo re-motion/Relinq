@@ -39,17 +39,23 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       _expression = new VBStringComparisonExpression (_comparisonExpression, true);
     }
 
+#if NET_3_5
     [Test]
     public void NodeType ()
     {
       Assert.That (VBStringComparisonExpression.ExpressionType, Is.EqualTo ((ExpressionType) 100003));
       ExtensionExpressionTestHelper.CheckUniqueNodeType (typeof (VBStringComparisonExpression), VBStringComparisonExpression.ExpressionType);
     }
+#endif
 
     [Test]
     public void Initialization ()
     {
+#if !NET_3_5
+      Assert.That (_expression.NodeType, Is.EqualTo (ExpressionType.Extension));
+#else
       Assert.That (_expression.NodeType, Is.EqualTo (VBStringComparisonExpression.ExpressionType));
+#endif
     }
 
     [Test]
