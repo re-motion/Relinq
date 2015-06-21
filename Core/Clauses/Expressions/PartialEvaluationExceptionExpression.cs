@@ -54,7 +54,9 @@ namespace Remotion.Linq.Clauses.Expressions
     : ExtensionExpression
 #endif
   {
+#if NET_3_5
     public const ExpressionType ExpressionType = (ExpressionType) 100004;
+#endif
 
     private readonly Exception _exception;
     private readonly Expression _evaluatedExpression;
@@ -78,7 +80,7 @@ namespace Remotion.Linq.Clauses.Expressions
 
     public override ExpressionType NodeType
     {
-      get { return ExpressionType; }
+      get { return ExpressionType.Extension; }
     }
 #endif
 

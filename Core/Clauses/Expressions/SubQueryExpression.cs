@@ -26,7 +26,9 @@ namespace Remotion.Linq.Clauses.Expressions
   /// </summary>
   public sealed class SubQueryExpression : Expression
   {
+#if NET_3_5
     public const ExpressionType ExpressionType = (ExpressionType) 100002;
+#endif
 
 #if !NET_3_5
     private readonly Type _type;
@@ -48,7 +50,7 @@ namespace Remotion.Linq.Clauses.Expressions
 #if !NET_3_5
     public override ExpressionType NodeType
     {
-      get { return ExpressionType; }
+      get { return ExpressionType.Extension; }
     }
 
     public override Type Type

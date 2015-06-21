@@ -28,12 +28,14 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
   [TestFixture]
   public class SubQueryExpressionTest : ExpressionNodeTestBase
   {
+#if NET_3_5
     [Test]
     public void NodeType ()
     {
       Assert.That (SubQueryExpression.ExpressionType, Is.EqualTo ((ExpressionType) 100002));
       ExtensionExpressionTestHelper.CheckUniqueNodeType (typeof (SubQueryExpression), SubQueryExpression.ExpressionType);
     }
+#endif
 
     [Test]
     public void Initialization ()
@@ -42,7 +44,11 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       var expression = new SubQueryExpression (queryModel);
       Assert.That (expression.Type, Is.SameAs (typeof(IQueryable<Cook>)));
       Assert.That (expression.QueryModel, Is.SameAs (queryModel));
+#if !NET_3_5
+      Assert.That (expression.NodeType, Is.EqualTo (ExpressionType.Extension));
+#else
       Assert.That (expression.NodeType, Is.EqualTo (SubQueryExpression.ExpressionType));
+#endif
     }
 
 
