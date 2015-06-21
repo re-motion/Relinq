@@ -17,13 +17,11 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Clauses.ResultOperators;
 using Remotion.Linq.UnitTests.TestDomain;
-using Remotion.Linq.UnitTests.Utilities;
 using Remotion.Linq.Utilities;
 using Rhino.Mocks;
 

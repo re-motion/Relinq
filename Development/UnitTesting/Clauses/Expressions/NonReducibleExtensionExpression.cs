@@ -20,7 +20,6 @@ using System.Linq.Expressions;
 #if NET_3_5
 using Remotion.Linq.Clauses.Expressions;
 #endif
-using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Utilities;
 #if NET_3_5
 using Remotion.Linq.Parsing;

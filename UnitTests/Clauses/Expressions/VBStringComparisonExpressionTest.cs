@@ -18,7 +18,9 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.Expressions;
+#if NET_3_5
 using Remotion.Linq.Clauses.ExpressionVisitors;
+#endif
 using Remotion.Linq.Parsing;
 using Rhino.Mocks;
 

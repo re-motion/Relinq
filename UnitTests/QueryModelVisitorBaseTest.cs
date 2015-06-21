@@ -19,7 +19,6 @@ using System;
 using System.Collections.ObjectModel;
 #endif
 using NUnit.Framework;
-using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses;
 #if NET_3_5
 using Remotion.Linq.Collections;

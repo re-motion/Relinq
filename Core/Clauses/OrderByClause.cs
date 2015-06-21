@@ -15,16 +15,16 @@
 // under the License.
 // 
 using System;
+using System.Linq.Expressions;
+using Remotion.Linq.Utilities;
+using Remotion.Utilities;
 #if !NET_3_5
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 #endif
-using System.Linq.Expressions;
-using Remotion.Linq.Utilities;
 #if NET_3_5
 using Remotion.Linq.Collections;
 #endif
-using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses
 {

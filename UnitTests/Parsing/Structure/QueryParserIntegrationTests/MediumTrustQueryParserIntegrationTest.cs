@@ -16,7 +16,6 @@
 // 
 using System;
 using System.Linq;
-using System.Security;
 using System.Security.Permissions;
 using NUnit.Framework;
 using Remotion.Linq.Development.UnitTesting.Sandboxing;

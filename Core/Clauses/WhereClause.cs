@@ -15,9 +15,10 @@
 // under the License.
 // 
 using System;
+#if NET_3_5
 using System.Diagnostics;
+#endif
 using System.Linq.Expressions;
-using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
