@@ -22,6 +22,7 @@ using NUnit.Framework;
 using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.Development.UnitTesting.Parsing;
 using Remotion.Linq.Parsing.ExpressionVisitors.Transformation;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
@@ -51,7 +52,9 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
       _methodInfoBasedNodeTypeRegistry.Register (CountExpressionNode.GetSupportedMethods(), typeof (CountExpressionNode));
       _methodInfoBasedNodeTypeRegistry.Register (ContainsExpressionNode.GetSupportedMethods(), typeof (ContainsExpressionNode));
 
-      _expressionTreeParser = new ExpressionTreeParser (_methodInfoBasedNodeTypeRegistry, new PartialEvaluatingExpressionTreeProcessor() );
+      _expressionTreeParser = new ExpressionTreeParser (
+          _methodInfoBasedNodeTypeRegistry,
+          new PartialEvaluatingExpressionTreeProcessor (new TestEvaluatableExpressionFilter()));
 
       _intSource = new[] { 1, 2, 3 }.AsQueryable ();
     }
@@ -73,17 +76,32 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     public void CreateDefaultProcessor ()
     {
       var inputTransformerRegistry = ExpressionTransformerRegistry.CreateDefault();
-      var processor = ExpressionTreeParser.CreateDefaultProcessor (inputTransformerRegistry);
+      var evaluatableExpressionFilter = new TestEvaluatableExpressionFilter();
+      var processor = ExpressionTreeParser.CreateDefaultProcessor (inputTransformerRegistry, evaluatableExpressionFilter);
 
       Assert.That (processor.InnerProcessors.Count, Is.EqualTo (2));
       Assert.That (processor.InnerProcessors[0], Is.TypeOf (typeof (PartialEvaluatingExpressionTreeProcessor)));
       Assert.That (processor.InnerProcessors[1], Is.TypeOf (typeof (TransformingExpressionTreeProcessor)));
+      Assert.That (
+          ((PartialEvaluatingExpressionTreeProcessor) processor.InnerProcessors[0]).Filter,
+          Is.SameAs (evaluatableExpressionFilter));
       Assert.That (
           ((TransformingExpressionTreeProcessor) processor.InnerProcessors[1]).Provider,
           Is.TypeOf (typeof (ExpressionTransformerRegistry)));
 
       var createdTransformerRegistry = ((ExpressionTransformerRegistry) ((TransformingExpressionTreeProcessor) processor.InnerProcessors[1]).Provider);
       Assert.That (createdTransformerRegistry, Is.SameAs (inputTransformerRegistry));
+    }
+
+    [Test]
+    public void CreateDefaultProcessor_WithoutEvaluatableExpressionFilter_UsesANullImplementation ()
+    {
+      var inputTransformerRegistry = ExpressionTransformerRegistry.CreateDefault();
+      var processor = ExpressionTreeParser.CreateDefaultProcessor (inputTransformerRegistry);
+
+      Assert.That (processor.InnerProcessors.Count, Is.EqualTo (2));
+      Assert.That (processor.InnerProcessors[0], Is.TypeOf (typeof (PartialEvaluatingExpressionTreeProcessor)));
+      Assert.That (((PartialEvaluatingExpressionTreeProcessor) processor.InnerProcessors[0]).Filter, Is.Not.Null);
     }
 
     [Test]

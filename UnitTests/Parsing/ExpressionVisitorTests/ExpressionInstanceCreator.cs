@@ -87,13 +87,14 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
 #if !NET_3_5
       map[ExpressionType.Block] = Expression.Block (zero);
       map[ExpressionType.DebugInfo] = Expression.DebugInfo (Expression.SymbolDocument ("test.cs"), 1, 1, 1, 1);
-      map[ExpressionType.Goto] = Expression.Goto (Expression.Label());
+      map[ExpressionType.Default] = Expression.Default (typeof (int));
+      map[ExpressionType.Goto] = Expression.Goto (Expression.Label(), zero);
       map[ExpressionType.Index] = Expression.MakeIndex (arrayExpression, typeof (int[]).GetProperty ("Item"), new[] { zero });
-      map[ExpressionType.Label] = Expression.Label (Expression.Label());
+      map[ExpressionType.Label] = Expression.Label (Expression.Label(), zero);
       map[ExpressionType.Loop] = Expression.Loop (zero);
       map[ExpressionType.RuntimeVariables] = Expression.RuntimeVariables (Expression.Parameter (typeof (string)));
-      map[ExpressionType.Switch] = Expression.Switch (zero, Expression.SwitchCase (Expression.Default (typeof (void)), zero));
-      map[ExpressionType.Try] = Expression.TryFinally (zero, zero);
+      map[ExpressionType.Switch] = Expression.Switch (zero, Expression.SwitchCase (Expression.Default (typeof (void)), Expression.Constant (1)));
+      map[ExpressionType.Try] = Expression.TryFinally (zero, Expression.Constant (1));
 #endif
       return map;
     }
@@ -114,7 +115,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
 
     public static MemberAssignment CreateMemberAssignment ()
     {
-      return Expression.Bind (typeof (SimpleClass).GetField ("Value"), Expression.Constant ("test"));
+      return Expression.Bind (typeof (List<int>).GetProperty ("Capacity"), Expression.Constant (0));
     }
 
     public static MemberMemberBinding CreateMemberMemberBinding (IEnumerable<MemberBinding> memberBindings)
@@ -142,7 +143,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
 #if !NET_3_5
     public static CatchBlock CreateCatchBlock ()
     {
-      return Expression.Catch (typeof (Exception), Expression.Constant ("test"));
+      return Expression.Catch (typeof (Exception), Expression.Constant (-1));
     }
 
     public static LabelTarget CreateLabelTarget ()

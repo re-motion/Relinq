@@ -22,6 +22,7 @@ using NUnit.Framework;
 using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.Development.UnitTesting.Parsing;
 using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
@@ -252,7 +253,8 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
       Func<int, int> func = i => i;
       var methodCallExpression = (MethodCallExpression)
           PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (
-              ExpressionHelper.MakeExpression<IQueryable<int>, IEnumerable<int>> (q => q.Select (func)));
+              ExpressionHelper.MakeExpression<IQueryable<int>, IEnumerable<int>> (q => q.Select (func)),
+              new TestEvaluatableExpressionFilter());
 
       ParseMethodCallExpression (methodCallExpression);
     }
@@ -263,7 +265,8 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
       Func<int, int> func = i => i;
       var methodCallExpression = (MethodCallExpression)
           PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (
-              ExpressionHelper.MakeExpression<IQueryable<int>, IEnumerable<int>> (q => q.Select (func)));
+              ExpressionHelper.MakeExpression<IQueryable<int>, IEnumerable<int>> (q => q.Select (func)),
+              new TestEvaluatableExpressionFilter());
 
       var exception = Assert.Throws<NotSupportedException> (() => ParseMethodCallExpression (methodCallExpression));
       var deserialized = Serializer.SerializeAndDeserialize (exception);

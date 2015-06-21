@@ -94,6 +94,7 @@
     <Compile Include="UnitTesting\ExpressionHelper.cs" />
     <Compile Include="UnitTesting\ExpressionTreeComparerBase.cs" />
     <Compile Include="UnitTesting\ExpressionTreeComparer.cs" />
+    <Compile Include="UnitTesting\Parsing\TestEvaluatableExpressionFilter.cs" />
     <Compile Include="UnitTesting\Sandboxing\PermissionSets.cs" />
     <Compile Include="UnitTesting\Sandboxing\Sandbox.cs" />
     <Compile Include="UnitTesting\Sandboxing\SandboxTestRunner.cs" />

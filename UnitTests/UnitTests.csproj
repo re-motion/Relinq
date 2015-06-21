@@ -187,6 +187,7 @@
     <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\VBCompareStringExpressionTransformerTest.cs" />
     <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\VBInformationIsNothingExpressionTransformerTest.cs" />
     <Compile Include="Parsing\ExpressionVisitors\TransformingExpressionVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\TreeEvaluation\EvaluatableExpressionFilterBaseTest.cs" />
     <Compile Include="Parsing\ExpressionVisitorTests\RelinqExpressionVisitorTest.cs" />
     <Compile Include="Parsing\ExpressionVisitorTests\RelinqExpressionVisitorTestBase.cs" />
     <Compile Include="Parsing\ExpressionVisitorTests\RelinqExpressionVisitor_NewExpressionsTest.cs" />
@@ -213,6 +214,8 @@
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\EmptyParametersQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\NullableQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\PartialEvaluationQueryParserIntegrationTest.cs" />
+    <Compile Include="Parsing\Structure\TestDomain\NonEvaluated.cs" />
+    <Compile Include="Parsing\Structure\TestDomain\QueryParserIntegrationTestsEvaluatableExpressionFilter.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\VBSpecificQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\NewWithAddedMembersQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\SubQueryQueryParserIntegrationTest.cs" />

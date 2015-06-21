@@ -19,9 +19,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.Parsing.ExpressionVisitors.Transformation;
+using Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
@@ -66,8 +66,14 @@ namespace Remotion.Linq.Parsing.Structure
     /// Creates a default <see cref="CompoundExpressionTreeProcessor"/> that already has the expression tree processing steps defined by the re-linq assembly
     /// registered. Users can insert additional processing steps.
     /// </summary>
-    /// <param name="tranformationProvider">The tranformation provider to be used by the <see cref="TransformingExpressionTreeProcessor"/> included
-    /// in the result set. Use <see cref="ExpressionTransformerRegistry.CreateDefault"/> to create a default provider.</param>
+    /// <param name="tranformationProvider">
+    /// The tranformation provider to be used by the <see cref="TransformingExpressionTreeProcessor"/> included
+    /// in the result set. Use <see cref="ExpressionTransformerRegistry.CreateDefault"/> to create a default provider.
+    /// </param>
+    /// <param name="evaluatableExpressionFilter">
+    /// The expression filter used by the <see cref="PartialEvaluatingExpressionTreeProcessor"/> included in the result set.
+    /// Use <see langword="null" /> to indicate that no custom filtering should be applied.
+    /// </param>
     /// <returns>
     /// A default <see cref="CompoundExpressionTreeProcessor"/> that already has all expression tree processing steps defined by the re-linq assembly
     /// registered.
@@ -79,13 +85,18 @@ namespace Remotion.Linq.Parsing.Structure
     /// 		<item><see cref="TransformingExpressionTreeProcessor"/> (parameterized with <paramref name="tranformationProvider"/>)</item>
     /// 	</list>
     /// </remarks>
-    public static CompoundExpressionTreeProcessor CreateDefaultProcessor (IExpressionTranformationProvider tranformationProvider)
+    public static CompoundExpressionTreeProcessor CreateDefaultProcessor (
+        IExpressionTranformationProvider tranformationProvider,
+        IEvaluatableExpressionFilter evaluatableExpressionFilter = null)
     {
       ArgumentUtility.CheckNotNull ("tranformationProvider", tranformationProvider);
 
-      return new CompoundExpressionTreeProcessor (new IExpressionTreeProcessor[] { 
-          new PartialEvaluatingExpressionTreeProcessor(), 
-          new TransformingExpressionTreeProcessor (tranformationProvider) });
+      return new CompoundExpressionTreeProcessor (
+          new IExpressionTreeProcessor[]
+          {
+              new PartialEvaluatingExpressionTreeProcessor (evaluatableExpressionFilter ?? new NullEvaluatableExpressionFilter()),
+              new TransformingExpressionTreeProcessor (tranformationProvider)
+          });
     }
 
     private readonly UniqueIdentifierGenerator _identifierGenerator = new UniqueIdentifierGenerator ();

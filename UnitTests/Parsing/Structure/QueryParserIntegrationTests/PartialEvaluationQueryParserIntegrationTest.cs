@@ -22,6 +22,7 @@ using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.UnitTests.Parsing.Structure.TestDomain;
 using Remotion.Linq.UnitTests.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
@@ -79,6 +80,17 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
           Is.TypeOf<PartialEvaluationExceptionExpression>().With.Property ("Exception").InstanceOf<NullReferenceException>());
       CheckResolvedExpression<Cook, int> (
           ((PartialEvaluationExceptionExpression) innerBinary.Right).EvaluatedExpression, queryModel.MainFromClause, c => ((string) null).Length);
+    }
+
+    [Test]
+    public void EvaluatableExpressionFilter_DisablesPartialEvaluation ()
+    {
+      var query = from c in QuerySource where c.ID == NonEvaluated.GetFixedID() select c;
+
+      var queryModel = QueryParserWithCustomizedPartialEvaluation.GetParsedQuery (query.Expression);
+
+      var whereClause = (WhereClause) queryModel.BodyClauses[0];
+      CheckResolvedExpression<Cook, bool> (whereClause.Predicate, queryModel.MainFromClause, c => c.ID == NonEvaluated.GetFixedID());
     }
   }
 }
