@@ -135,7 +135,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       return ReplacingExpressionVisitor.Replace (inputParameter, resolvedResultSelector, expressionToBeResolved);
     }
 
-    protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    protected override void ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       // The resolved inner key selector has a back-reference to the clause, so we need to create the clause with a dummy selector before we can 
       // get the real inner key selector.
@@ -144,8 +144,6 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
       var selectClause = queryModel.SelectClause;
       selectClause.Selector = GetResolvedResultSelector (clauseGenerationContext);
-
-      return queryModel;
     }
 
     public JoinClause CreateJoinClause (ClauseGenerationContext clauseGenerationContext)

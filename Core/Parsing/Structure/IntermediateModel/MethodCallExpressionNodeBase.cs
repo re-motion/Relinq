@@ -59,14 +59,14 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
     public abstract Expression Resolve (
         ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext);
 
-    protected abstract QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext);
+    protected abstract void ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext);
 
     public QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       queryModel = WrapQueryModelAfterEndOfQuery (queryModel, clauseGenerationContext);
-      queryModel = ApplyNodeSpecificSemantics (queryModel, clauseGenerationContext);
+      ApplyNodeSpecificSemantics (queryModel, clauseGenerationContext);
       SetResultTypeOverride (queryModel);
       return queryModel;
     }

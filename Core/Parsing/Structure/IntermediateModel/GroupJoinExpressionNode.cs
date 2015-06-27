@@ -104,7 +104,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       return ReplacingExpressionVisitor.Replace (inputParameter, resolvedResultSelector, expressionToBeResolved);
     }
 
-    protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    protected override void ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
@@ -116,8 +116,6 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
       var selectClause = queryModel.SelectClause;
       selectClause.Selector = GetResolvedResultSelector (clauseGenerationContext);
-
-      return queryModel;
     }
   }
 }

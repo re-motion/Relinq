@@ -74,13 +74,12 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       return Source.Resolve (inputParameter, expressionToBeResolved, clauseGenerationContext);
     }
 
-    protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    protected override void ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       var clause = new WhereClause (GetResolvedPredicate (clauseGenerationContext));
       queryModel.BodyClauses.Add (clause);
-      return queryModel;
     }
   }
 }
