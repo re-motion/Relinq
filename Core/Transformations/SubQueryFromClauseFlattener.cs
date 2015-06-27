@@ -95,8 +95,7 @@ namespace Remotion.Linq.Transformations
       base.VisitAdditionalFromClause (fromClause, queryModel, index);
     }
 
-    protected virtual void FlattenSubQuery (
-        SubQueryExpression subQueryExpression, FromClauseBase fromClause, QueryModel queryModel, int destinationIndex)
+    protected virtual void FlattenSubQuery (SubQueryExpression subQueryExpression, IFromClause fromClause, QueryModel queryModel, int destinationIndex)
     {
       ArgumentUtility.CheckNotNull ("subQueryExpression", subQueryExpression);
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
@@ -105,7 +104,7 @@ namespace Remotion.Linq.Transformations
       CheckFlattenable (subQueryExpression.QueryModel);
 
       var innerMainFromClause = subQueryExpression.QueryModel.MainFromClause;
-      CopyFromClauseData (innerMainFromClause, fromClause);
+      fromClause.CopyFromSource (innerMainFromClause);
 
       var innerSelectorMapping = new QuerySourceMapping();
       innerSelectorMapping.AddMapping (fromClause, subQueryExpression.QueryModel.SelectClause.Selector);
@@ -137,16 +136,6 @@ namespace Remotion.Linq.Transformations
             subQueryModel);
         throw new NotSupportedException (message);
       }
-    }
-
-    protected void CopyFromClauseData (FromClauseBase source, FromClauseBase destination)
-    {
-      ArgumentUtility.CheckNotNull ("source", source);
-      ArgumentUtility.CheckNotNull ("destination", destination);
-
-      destination.FromExpression = source.FromExpression;
-      destination.ItemName = source.ItemName;
-      destination.ItemType = source.ItemType;
     }
 
     protected void InsertBodyClauses (ObservableCollection<IBodyClause> bodyClauses, QueryModel destinationQueryModel, int destinationIndex)
