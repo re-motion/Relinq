@@ -310,7 +310,7 @@ namespace Remotion.Linq
 
       if (e.NewItems != null)
       {
-        foreach (var fromClause in e.NewItems.OfType<FromClauseBase>())
+        foreach (var fromClause in e.NewItems.OfType<IFromClause>())
           _uniqueIdentifierGenerator.AddKnownIdentifier (fromClause.ItemName);
       }
     }

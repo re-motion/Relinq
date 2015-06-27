@@ -26,10 +26,10 @@ using Remotion.Utilities;
 namespace Remotion.Linq.Clauses
 {
   /// <summary>
-  /// Base class for from clauses (<see cref="AdditionalFromClause"/> and <see cref="MainFromClause"/>). From clauses define query sources that
-  /// provide data items to the query which are filtered, ordered, projected, or otherwise processed by the following clauses.
+  /// Base class for <see cref="AdditionalFromClause"/> and <see cref="MainFromClause"/>.
   /// </summary>
-  public abstract class FromClauseBase : IClause, IQuerySource
+  /// <seealso cref="IFromClause"/>
+  public abstract class FromClauseBase : IFromClause
   {
     private string _itemName;
     private Type _itemType;
@@ -90,6 +90,15 @@ namespace Remotion.Linq.Clauses
     {
       get { return _fromExpression; }
       set { _fromExpression = ArgumentUtility.CheckNotNull ("value", value); }
+    }
+
+    public void CopyFromSource (IFromClause source)
+    {
+      ArgumentUtility.CheckNotNull ("source", source);
+
+      _fromExpression = source.FromExpression;
+      _itemName = source.ItemName;
+      _itemType = source.ItemType;
     }
 
     /// <summary>
