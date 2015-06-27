@@ -109,6 +109,7 @@
     <Compile Include="Clauses\Expressions\IPartialEvaluationExceptionExpressionVisitor.cs" />
     <Compile Include="Clauses\Expressions\IVBSpecificExpressionVisitor.cs" />
     <Compile Include="Clauses\Expressions\VBStringComparisonExpression.cs" />
+    <Compile Include="Clauses\IFromClause.cs" />
     <Compile Include="Parsing\ExpressionVisitors\TreeEvaluation\EvaluatableExpressionFilterBase.cs" />
     <Compile Include="Parsing\ExpressionVisitors\TreeEvaluation\IEvaluatableExpressionFilter.cs" />
     <Compile Include="Parsing\ExpressionVisitors\TreeEvaluation\NullEvaluatableExpressionFilter.cs" />
