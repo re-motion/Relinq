@@ -92,13 +92,13 @@ namespace Remotion.Linq.Clauses
       set { _fromExpression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public void CopyFromSource (IFromClause source)
+    public virtual void CopyFromSource (IFromClause source)
     {
       ArgumentUtility.CheckNotNull ("source", source);
 
-      _fromExpression = source.FromExpression;
-      _itemName = source.ItemName;
-      _itemType = source.ItemType;
+      FromExpression = source.FromExpression;
+      ItemName = source.ItemName;
+      ItemType = source.ItemType;
     }
 
     /// <summary>
