@@ -49,8 +49,9 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       get { return _parsedExpression; }
     }
 
-    protected override sealed void ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    protected override void ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
+      //NOTE: Do not seal ApplyNodeSpecificSemantics() in ResultOperatorExpressionNodeBase. It is overridden by e.g. Fetch-operators.
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       var resultOperator = CreateResultOperator (clauseGenerationContext);
