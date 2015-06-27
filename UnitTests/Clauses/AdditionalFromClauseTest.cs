@@ -49,6 +49,25 @@ namespace Remotion.Linq.UnitTests.Clauses
     }
 
     [Test]
+    public void CopyFromSource ()
+    {
+      var fromExpression = ExpressionHelper.CreateExpression ();
+      var fromClause = new AdditionalFromClause ("s", typeof (Cook), fromExpression);
+
+      var newExpression = ExpressionHelper.CreateExpression ();
+      var sourceStub = MockRepository.GenerateStub<IFromClause>();
+      sourceStub.Stub (_ => _.ItemName).Return ("newItemName");
+      sourceStub.Stub (_ => _.ItemType).Return (typeof (Kitchen));
+      sourceStub.Stub (_ => _.FromExpression).Return (newExpression);
+
+      fromClause.CopyFromSource (sourceStub);
+
+      Assert.That (fromClause.ItemName, Is.EqualTo ("newItemName"));
+      Assert.That (fromClause.ItemType, Is.SameAs (typeof (Kitchen)));
+      Assert.That (fromClause.FromExpression, Is.SameAs (newExpression));
+    }
+
+    [Test]
     public void ImplementInterface_IFromLetWhereClause ()
     {
       Assert.That (_additionalFromClause, Is.InstanceOf (typeof (IBodyClause)));

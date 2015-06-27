@@ -92,6 +92,15 @@ namespace Remotion.Linq.Clauses
       set { _fromExpression = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
+    public void CopyFromSource (IFromClause source)
+    {
+      ArgumentUtility.CheckNotNull ("source", source);
+
+      _fromExpression = source.FromExpression;
+      _itemName = source.ItemName;
+      _itemType = source.ItemType;
+    }
+
     /// <summary>
     /// Transforms all the expressions in this clause and its child objects via the given <paramref name="transformation"/> delegate.
     /// </summary>

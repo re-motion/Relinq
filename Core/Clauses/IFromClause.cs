@@ -31,5 +31,12 @@ namespace Remotion.Linq.Clauses
     /// The expression generating the data items for this from clause.
     /// </summary>
     Expression FromExpression { get; }
+
+    /// <summary>
+    /// Copies the <paramref name="source"/>'s attributes, i.e. the <see cref="IQuerySource.ItemName"/>, <see cref="IQuerySource.ItemType"/>, and
+    /// <see cref="FromExpression"/>.
+    /// </summary>
+    /// <param name="source"></param>
+    void CopyFromSource ([NotNull] IFromClause source);
   }
 }
