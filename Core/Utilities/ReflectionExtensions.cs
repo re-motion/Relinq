@@ -18,7 +18,6 @@
 using System;
 using JetBrains.Annotations;
 #if !NET_4_0 && !NET_3_5
-using System.Linq;
 using Remotion.Utilities;
 #endif
 
@@ -34,20 +33,6 @@ namespace System.Reflection
       Assertion.DebugAssert (nonPublic == true, "Parameter 'nonPublic' must be invoked with 'true'.");
 
       return propertyInfo.GetMethod;
-    }
-
-    [NotNull]
-    public static Type[] GetDefinedTypes ([NotNull] this Assembly assembly)
-    {
-      return assembly.DefinedTypes.Select (ti => ti.AsType()).ToArray();
-    }
-#endif
-
-#if NET_4_0 || NET_3_5
-    [NotNull]
-    public static Type[] GetDefinedTypes ([NotNull] this Assembly assembly)
-    {
-      return assembly.GetExportedTypes();
     }
 #endif
   }
