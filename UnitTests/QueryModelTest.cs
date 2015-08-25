@@ -124,6 +124,26 @@ namespace Remotion.Linq.UnitTests
     }
 
     [Test]
+    public void GetOutputDataInfo_WithIncompatibleResultTypeOverride_AndSetsResultTypeOverrideToNull ()
+    {
+      _queryModel.ResultTypeOverride = typeof (int);
+
+      var invalidOperationException = Assert.Throws<InvalidOperationException> (() => _queryModel.GetOutputDataInfo());
+
+      Assert.That (_queryModel.ResultTypeOverride, Is.Null);
+
+      Assert.That (
+          invalidOperationException.Message,
+          Is.EqualTo (
+              "The query model's result type cannot be changed to 'System.Int32'. "
+              + "The result type may only be overridden and set to values compatible with the ResultOperators' current data type ('System.Linq.IQueryable`1[System.Int32]')."));
+      Assert.That (invalidOperationException.InnerException, Is.InstanceOf<ArgumentException>());
+      Assert.That (
+          invalidOperationException.InnerException.Message,
+          Is.EqualTo ("'System.Int32' cannot be used as the data type for a sequence with an ItemExpression of type 'System.Int32'.\r\nParameter name: dataType"));
+    }
+
+    [Test]
     public new void ToString ()
     {
       var queryModel = new QueryModel (new MainFromClause ("x", typeof (Cook), Expression.Constant (0)), 

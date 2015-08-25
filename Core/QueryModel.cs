@@ -128,15 +128,32 @@ namespace Remotion.Linq
     /// query ends with a <see cref="ResultOperatorBase"/>. For example, if the query ends with a <see cref="CountResultOperator"/>, the
     /// result type will be <see cref="int"/>.
     /// </remarks>
+    /// <exception cref="InvalidOperationException">
+    /// The <see cref="ResultTypeOverride"/> is not compatible with the calculated <see cref="IStreamedDataInfo"/> calculated from the <see cref="ResultOperators"/>.
+    /// </exception>
     public IStreamedDataInfo GetOutputDataInfo ()
     {
       var outputDataInfo = ResultOperators
           .Aggregate ((IStreamedDataInfo) SelectClause.GetOutputDataInfo (), (current, resultOperator) => resultOperator.GetOutputDataInfo (current));
 
-      if (ResultTypeOverride != null)
-        return outputDataInfo.AdjustDataType (ResultTypeOverride);
-      else
+      if (ResultTypeOverride == null)
         return outputDataInfo;
+
+      try
+      {
+        return outputDataInfo.AdjustDataType (ResultTypeOverride);
+      }
+      catch (Exception ex)
+      {
+        var resultTypeOverride = ResultTypeOverride;
+        ResultTypeOverride = null;
+        throw new InvalidOperationException (
+            string.Format (
+                "The query model's result type cannot be changed to '{0}'. The result type may only be overridden and set to values compatible with the ResultOperators' current data type ('{1}').",
+                resultTypeOverride,
+                outputDataInfo.DataType),
+            ex);
+      }
     }
 
     /// <summary>
