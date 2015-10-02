@@ -16,17 +16,45 @@
 // 
 using System;
 using System.Linq.Expressions;
+#if NET_3_5
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing;
+#endif
 
 namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
 {
-  public class ReducibleExtensionExpression : ExtensionExpression
+  public class ReducibleExtensionExpression
+#if !NET_3_5
+    : Expression
+#else
+    : ExtensionExpression
+#endif
   {
+#if !NET_3_5
+    private readonly Type _type;
+
+    public ReducibleExtensionExpression (Type type)
+    {
+      _type = type;
+    }
+#else
     public ReducibleExtensionExpression (Type type)
         : base(type)
     {
     }
+#endif
+
+#if !NET_3_5
+    public override Type Type
+    {
+      get { return _type; }
+    }
+
+    public override ExpressionType NodeType
+    {
+      get { return ExpressionType.Extension; }
+    }
+#endif
 
     public override bool CanReduce
     {
@@ -38,7 +66,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
       return Constant (0);
     }
 
-    protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    protected override Expression VisitChildren (ExpressionVisitor visitor)
     {
       return this;
     }

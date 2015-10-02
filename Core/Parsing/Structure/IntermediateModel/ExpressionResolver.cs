@@ -16,7 +16,7 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -26,16 +26,21 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// in the process. This is used by methods such as <see cref="SelectExpressionNode.GetResolvedSelector"/>, which are
   /// used when a clause is created from an <see cref="IExpressionNode"/>.
   /// </summary>
-  public class ExpressionResolver
+  public sealed class ExpressionResolver
   {
+    private readonly IExpressionNode _currentNode;
+
     public ExpressionResolver (IExpressionNode currentNode)
     {
       ArgumentUtility.CheckNotNull ("currentNode", currentNode);
 
-      CurrentNode = currentNode;
+      _currentNode = currentNode;
     }
 
-    public IExpressionNode CurrentNode { get; set; }
+    public IExpressionNode CurrentNode
+    {
+      get { return _currentNode; }
+    }
 
     public Expression GetResolvedExpression (
         Expression unresolvedExpression, ParameterExpression parameterToBeResolved, ClauseGenerationContext clauseGenerationContext)
@@ -43,9 +48,9 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       ArgumentUtility.CheckNotNull ("unresolvedExpression", unresolvedExpression);
       ArgumentUtility.CheckNotNull ("parameterToBeResolved", parameterToBeResolved);
 
-      var sourceNode = CurrentNode.Source;
+      var sourceNode = _currentNode.Source;
       var resolvedExpression = sourceNode.Resolve (parameterToBeResolved, unresolvedExpression, clauseGenerationContext);
-      resolvedExpression = TransparentIdentifierRemovingExpressionTreeVisitor.ReplaceTransparentIdentifiers (resolvedExpression);
+      resolvedExpression = TransparentIdentifierRemovingExpressionVisitor.ReplaceTransparentIdentifiers (resolvedExpression);
       return resolvedExpression;
     }
   }

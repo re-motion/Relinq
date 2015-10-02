@@ -56,7 +56,7 @@ namespace Remotion.Linq
     {
       ArgumentUtility.CheckTypeIsAssignableFrom ("queryableType", queryableType, typeof (IQueryable));
 
-      TypeInfo queryableTypeInfo = queryableType.GetTypeInfo();
+      var queryableTypeInfo = queryableType.GetTypeInfo();
       if (!queryableTypeInfo.IsGenericTypeDefinition)
       {
         var message = string.Format (

@@ -41,7 +41,7 @@ namespace Remotion.Linq.Clauses
   ///             select new { s, a };
   /// </code>
   /// </example>
-  public class GroupJoinClause : IQuerySource, IBodyClause
+  public sealed class GroupJoinClause : IQuerySource, IBodyClause
   {
     private string _itemName;
     private Type _itemType;

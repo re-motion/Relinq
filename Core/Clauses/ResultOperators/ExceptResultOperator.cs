@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Utilities;
 using Remotion.Utilities;
@@ -36,7 +35,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Except(students2);
   /// </code>
   /// </example>
-  public class ExceptResultOperator : SequenceTypePreservingResultOperatorBase
+  public sealed class ExceptResultOperator : SequenceTypePreservingResultOperatorBase
   {
     private Expression _source2;
     
@@ -63,7 +62,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     /// <summary>
     /// Gets the value of <see cref="Source2"/>, assuming <see cref="Source2"/> holds a <see cref="ConstantExpression"/>. If it doesn't,
-    /// an exception is thrown.
+    /// an <see cref="InvalidOperationException"/> is thrown.
     /// </summary>
     /// <returns>The constant value of <see cref="Source2"/>.</returns>
     public IEnumerable<T> GetConstantSource2<T> ()
@@ -82,7 +81,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
       var sequence = input.GetTypedSequence<T> ();
       var result = sequence.Except (GetConstantSource2<T>());
-      return new StreamedSequence (result.AsQueryable (), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
+      return new StreamedSequence (result.AsQueryable (), GetOutputDataInfo (input.DataInfo));
     }
 
     public override void TransformExpressions (Func<Expression, Expression> transformation)
@@ -93,7 +92,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return "Except(" + FormattingExpressionTreeVisitor.Format (Source2) + ")";
+      return "Except(" + Source2.BuildString() + ")";
     }
     
   }

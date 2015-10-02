@@ -15,10 +15,12 @@
 // under the License.
 // 
 using System;
+#if NET_3_5
 using System.Diagnostics;
+#endif
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses
@@ -40,7 +42,7 @@ namespace Remotion.Linq.Clauses
   ///             select new { s, a };
   /// </code>
   /// </example>
-  public class JoinClause : IBodyClause, IQuerySource
+  public sealed class JoinClause : IBodyClause, IQuerySource
   {
     private Type _itemType;
     private string _itemName;
@@ -103,7 +105,9 @@ namespace Remotion.Linq.Clauses
     /// Gets or sets the inner sequence, the expression that generates the inner sequence, i.e. the items of this <see cref="JoinClause"/>.
     /// </summary>
     /// <value>The inner sequence.</value>
-    [DebuggerDisplay ("{Remotion.Linq.Clauses.ExpressionTreeVisitors.FormattingExpressionTreeVisitor.Format (InnerSequence),nq}")]
+#if NET_3_5
+    [DebuggerDisplay ("{Remotion.Linq.Clauses.ExpressionVisitors.FormattingExpressionVisitor.Format (InnerSequence),nq}")]
+#endif
     public Expression InnerSequence
     {
       get { return _innerSequence; }
@@ -114,7 +118,9 @@ namespace Remotion.Linq.Clauses
     /// Gets or sets the outer key selector, an expression that selects the right side of the comparison by which source items and inner items are joined.
     /// </summary>
     /// <value>The outer key selector.</value>
-    [DebuggerDisplay ("{Remotion.Linq.Clauses.ExpressionTreeVisitors.FormattingExpressionTreeVisitor.Format (OuterKeySelector),nq}")]
+#if NET_3_5
+    [DebuggerDisplay ("{Remotion.Linq.Clauses.ExpressionVisitors.FormattingExpressionVisitor.Format (OuterKeySelector),nq}")]
+#endif
     public Expression OuterKeySelector
     {
       get { return _outerKeySelector; }
@@ -125,7 +131,9 @@ namespace Remotion.Linq.Clauses
     /// Gets or sets the inner key selector, an expression that selects the left side of the comparison by which source items and inner items are joined.
     /// </summary>
     /// <value>The inner key selector.</value>
-    [DebuggerDisplay ("{Remotion.Linq.Clauses.ExpressionTreeVisitors.FormattingExpressionTreeVisitor.Format (InnerKeySelector),nq}")]
+#if NET_3_5
+    [DebuggerDisplay ("{Remotion.Linq.Clauses.ExpressionVisitors.FormattingExpressionVisitor.Format (InnerKeySelector),nq}")]
+#endif
     public Expression InnerKeySelector
     {
       get { return _innerKeySelector; }
@@ -139,7 +147,7 @@ namespace Remotion.Linq.Clauses
     /// <param name="visitor">The visitor to accept.</param>
     /// <param name="queryModel">The query model in whose context this clause is visited.</param>
     /// <param name="index">The index of this clause in the <paramref name="queryModel"/>'s <see cref="QueryModel.BodyClauses"/> collection.</param>
-   public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
+   public void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
@@ -154,7 +162,7 @@ namespace Remotion.Linq.Clauses
    /// <param name="visitor">The visitor to accept.</param>
    /// <param name="queryModel">The query model in whose context this clause is visited.</param>
    /// <param name="groupJoinClause">The <see cref="GroupJoinClause"/> holding this <see cref="JoinClause"/> instance.</param>
-   public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, GroupJoinClause groupJoinClause)
+   public void Accept (IQueryModelVisitor visitor, QueryModel queryModel, GroupJoinClause groupJoinClause)
    {
      ArgumentUtility.CheckNotNull ("visitor", visitor);
      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
@@ -187,7 +195,7 @@ namespace Remotion.Linq.Clauses
     /// </summary>
     /// <param name="transformation">The transformation object. This delegate is called for each <see cref="Expression"/> within this
     /// clause, and those expressions will be replaced with what the delegate returns.</param>
-    public virtual void TransformExpressions (Func<Expression, Expression> transformation)
+    public void TransformExpressions (Func<Expression, Expression> transformation)
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
       InnerSequence = transformation (InnerSequence);
@@ -201,9 +209,9 @@ namespace Remotion.Linq.Clauses
           "join {0} {1} in {2} on {3} equals {4}",
           ItemType.Name,
           ItemName,
-          FormattingExpressionTreeVisitor.Format (InnerSequence),
-          FormattingExpressionTreeVisitor.Format (OuterKeySelector),
-          FormattingExpressionTreeVisitor.Format (InnerKeySelector));
+          InnerSequence.BuildString(),
+          OuterKeySelector.BuildString(),
+          InnerKeySelector.BuildString());
     }
   }
 }

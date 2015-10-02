@@ -23,7 +23,7 @@ using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Utilities;
 using Remotion.Utilities;
@@ -156,7 +156,7 @@ namespace Remotion.Linq.Development.UnitTesting
       MainFromClause fromClause1 = CreateMainFromClause_Int ("i", typeof (int), CreateIntQueryable());
       MainFromClause fromClause2 = CreateMainFromClause_Int ("j", typeof (int), CreateIntQueryable());
 
-      var keySelector = Resolve<int, string> (fromClause2, j => (j % 3).ToString());
+      var keySelector = Resolve<int, short> (fromClause2, j => (short) (j % 3));
       var elementSelector = Resolve<int, string> (fromClause1, i => i.ToString());
 
       return new GroupResultOperator ("groupings", keySelector, elementSelector);
@@ -165,6 +165,11 @@ namespace Remotion.Linq.Development.UnitTesting
     public static UnionResultOperator CreateUnionResultOperator ()
     {
       return new UnionResultOperator ("union", typeof (int), Expression.Constant (new[] { 1, 2 }));
+    }
+
+    public static UnionResultOperator CreateConcatResultOperator ()
+    {
+      return new UnionResultOperator ("concat", typeof (int), Expression.Constant (new[] { 1, 2 }));
     }
 
     public static Ordering CreateOrdering ()
@@ -301,7 +306,7 @@ namespace Remotion.Linq.Development.UnitTesting
       ArgumentUtility.CheckNotNull ("sourceToReference", sourceToReference);
       ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
 
-      return ReplacingExpressionTreeVisitor.Replace (
+      return ReplacingExpressionVisitor.Replace (
           expressionToBeResolved.Parameters[0],
           new QuerySourceReferenceExpression (sourceToReference),
           expressionToBeResolved.Body);
@@ -321,7 +326,7 @@ namespace Remotion.Linq.Development.UnitTesting
                                   { expressionToBeResolved.Parameters[0], new QuerySourceReferenceExpression (sourceToReference1) },
                                   { expressionToBeResolved.Parameters[1], new QuerySourceReferenceExpression (sourceToReference2) }
                               };
-      var result = MultiReplacingExpressionTreeVisitor.Replace (expressionMapping, expressionToBeResolved.Body);
+      var result = MultiReplacingExpressionVisitor.Replace (expressionMapping, expressionToBeResolved.Body);
       return result;
     }
 
@@ -342,7 +347,7 @@ namespace Remotion.Linq.Development.UnitTesting
                                   { expressionToBeResolved.Parameters[1], new QuerySourceReferenceExpression (sourceToReference2) },
                                   { expressionToBeResolved.Parameters[2], new QuerySourceReferenceExpression (sourceToReference3) },
                               };
-      var result = MultiReplacingExpressionTreeVisitor.Replace (expressionMapping, expressionToBeResolved.Body);
+      var result = MultiReplacingExpressionVisitor.Replace (expressionMapping, expressionToBeResolved.Body);
       return result;
     }
 
@@ -356,7 +361,7 @@ namespace Remotion.Linq.Development.UnitTesting
       
       var parameterToResolve = expressionToBeResolved.Parameters[parameterToResolveIndex];
 
-      var resolvedBody = ReplacingExpressionTreeVisitor.Replace (
+      var resolvedBody = ReplacingExpressionVisitor.Replace (
           parameterToResolve,
           new QuerySourceReferenceExpression (source),
           expressionToBeResolved.Body);

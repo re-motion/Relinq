@@ -41,6 +41,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       _exceptionExpression = new PartialEvaluationExceptionExpression (_exception, _evaluatedExpression);
     }
 
+#if NET_3_5
     [Test]
     public void NodeType ()
     {
@@ -48,12 +49,17 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       ExtensionExpressionTestHelper.CheckUniqueNodeType (
           typeof (PartialEvaluationExceptionExpression), PartialEvaluationExceptionExpression.ExpressionType);
     }
-    
+#endif
+
     [Test]
     public void Initialization ()
     {
       Assert.That (_exceptionExpression.Type, Is.SameAs (typeof (double)));
+#if !NET_3_5
+      Assert.That (_exceptionExpression.NodeType, Is.EqualTo (ExpressionType.Extension));
+#else
       Assert.That (_exceptionExpression.NodeType, Is.EqualTo (PartialEvaluationExceptionExpression.ExpressionType));
+#endif
       Assert.That (_exceptionExpression.Exception, Is.SameAs (_exception));
       Assert.That (_exceptionExpression.EvaluatedExpression, Is.SameAs (_evaluatedExpression));
     }
@@ -75,10 +81,10 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     [Test]
     public void VisitChildren_ReturnsSameExpression ()
     {
-      var visitorMock = MockRepository.GenerateStrictMock<ExpressionTreeVisitor> ();
+      var visitorMock = MockRepository.GenerateStrictMock<RelinqExpressionVisitor> ();
 
       visitorMock
-          .Expect (mock => mock.VisitExpression (_evaluatedExpression))
+          .Expect (mock => mock.Visit (_evaluatedExpression))
           .Return (_evaluatedExpression);
       visitorMock.Replay ();
 
@@ -92,10 +98,10 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     public void VisitChildren_ReturnsNewExpression ()
     {
       var newExpression = Expression.Equal (Expression.Constant ("string1"), Expression.Constant ("string"));
-      var visitorMock = MockRepository.GenerateStrictMock<ExpressionTreeVisitor> ();
+      var visitorMock = MockRepository.GenerateStrictMock<RelinqExpressionVisitor> ();
 
       visitorMock
-          .Expect (mock => mock.VisitExpression (_evaluatedExpression))
+          .Expect (mock => mock.Visit (_evaluatedExpression))
           .Return (newExpression);
       visitorMock.Replay ();
 
@@ -112,7 +118,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     {
       ExtensionExpressionTestHelper.CheckAcceptForVisitorSupportingType<PartialEvaluationExceptionExpression, IPartialEvaluationExceptionExpressionVisitor> (
           _exceptionExpression,
-          mock => mock.VisitPartialEvaluationExceptionExpression (_exceptionExpression));
+          mock => mock.VisitPartialEvaluationException (_exceptionExpression));
     }
 
     [Test]

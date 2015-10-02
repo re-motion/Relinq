@@ -37,124 +37,56 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethod_WithoutSelector_OnDecimal ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_NonGeneric (AverageExpressionNode.SupportedMethods, q => ((IQueryable<decimal>) q).Average (), e => ((IEnumerable<decimal>) e).Average ());
+      Assert.That (
+          AverageExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.Average ((IQueryable<decimal>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Average ((IQueryable<decimal?>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Average ((IQueryable<double>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Average ((IQueryable<double?>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Average ((IQueryable<int>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Average ((IQueryable<int?>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Average ((IQueryable<long>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Average ((IQueryable<long?>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Average ((IQueryable<float>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Average ((IQueryable<float?>) null)),
+                  GetGenericMethodDefinition (() => Queryable.Average<object> (null, o => (decimal) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Average<object> (null, o => (decimal?) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Average<object> (null, o => (double) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Average<object> (null, o => (double?) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Average<object> (null, o => (int) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Average<object> (null, o => (int?) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Average<object> (null, o => (long) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Average<object> (null, o => (long?) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Average<object> (null, o => (float) 0)),
+                  GetGenericMethodDefinition (() => Queryable.Average<object> (null, o => (float?) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Average ((IEnumerable<decimal>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Average ((IEnumerable<decimal?>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Average ((IEnumerable<double>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Average ((IEnumerable<double?>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Average ((IEnumerable<int>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Average ((IEnumerable<int?>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Average ((IEnumerable<long>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Average ((IEnumerable<long?>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Average ((IEnumerable<float>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Average ((IEnumerable<float?>) null)),
+                  GetGenericMethodDefinition (() => Enumerable.Average<object> (null, o => (decimal) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Average<object> (null, o => (decimal?) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Average<object> (null, o => (double) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Average<object> (null, o => (double?) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Average<object> (null, o => (int) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Average<object> (null, o => (int?) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Average<object> (null, o => (long) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Average<object> (null, o => (long?) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Average<object> (null, o => (float) 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Average<object> (null, o => (float?) 0))
+              }));
     }
 
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnNDecimal ()
-    {
-      AssertSupportedMethod_NonGeneric (AverageExpressionNode.SupportedMethods, q => ((IQueryable<decimal?>) q).Average (), e => ((IEnumerable<decimal?>) e).Average ());
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnDouble ()
-    {
-      AssertSupportedMethod_NonGeneric (AverageExpressionNode.SupportedMethods, q => ((IQueryable<double>) q).Average (), e => ((IEnumerable<double>) e).Average ());
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnNDouble ()
-    {
-      AssertSupportedMethod_NonGeneric (AverageExpressionNode.SupportedMethods, q => ((IQueryable<double?>) q).Average (), e => ((IEnumerable<double?>) e).Average ());
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnSingle ()
-    {
-      AssertSupportedMethod_NonGeneric (AverageExpressionNode.SupportedMethods, q => ((IQueryable<float>) q).Average (), e => ((IEnumerable<float>) e).Average ());
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnNSingle ()
-    {
-      AssertSupportedMethod_NonGeneric (AverageExpressionNode.SupportedMethods, q => ((IQueryable<float?>) q).Average (), e => ((IEnumerable<float?>) e).Average ());
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnInt32 ()
-    {
-      AssertSupportedMethod_NonGeneric (AverageExpressionNode.SupportedMethods, q => ((IQueryable<int>) q).Average (), e => ((IEnumerable<int>) e).Average ());
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnNInt32 ()
-    {
-      AssertSupportedMethod_NonGeneric (AverageExpressionNode.SupportedMethods, q => ((IQueryable<int?>) q).Average (), e => ((IEnumerable<int?>) e).Average ());
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnInt64 ()
-    {
-      AssertSupportedMethod_NonGeneric (AverageExpressionNode.SupportedMethods, q => ((IQueryable<long>) q).Average (), e => ((IEnumerable<long>) e).Average ());
-    }
-
-    [Test]
-    public void SupportedMethod_WithoutSelector_OnNInt64 ()
-    {
-      AssertSupportedMethod_NonGeneric (AverageExpressionNode.SupportedMethods, q => ((IQueryable<long?>) q).Average (), e => ((IEnumerable<long?>) e).Average ());
-    }
-
-    [Test]
-    public void SupportedMethod_WithDecimalSelector ()
-    {
-      AssertSupportedMethod_Generic (AverageExpressionNode.SupportedMethods, q => q.Average (i => 0.0m), e => e.Average (i => 0.0m));
-    }
-
-    [Test]
-    public void SupportedMethod_WithNDecimalSelector ()
-    {
-      AssertSupportedMethod_Generic (AverageExpressionNode.SupportedMethods, q => q.Average (i => (decimal?) 0.0m), e => e.Average (i => (decimal?) 0.0m));
-    }
-
-    [Test]
-    public void SupportedMethod_WithDoubleSelector ()
-    {
-      AssertSupportedMethod_Generic (AverageExpressionNode.SupportedMethods, q => q.Average (i => 0.0), e => e.Average (i => 0.0));
-    }
-
-    [Test]
-    public void SupportedMethod_WithNDoubleSelector ()
-    {
-      AssertSupportedMethod_Generic (AverageExpressionNode.SupportedMethods, q => q.Average (i => (double?) 0.0), e => e.Average (i => (double?) 0.0));
-    }
-
-    [Test]
-    public void SupportedMethod_WithSingleSelector ()
-    {
-      AssertSupportedMethod_Generic (AverageExpressionNode.SupportedMethods, q => q.Average (i => 0.0f), e => e.Average (i => 0.0f));
-    }
-
-    [Test]
-    public void SupportedMethod_WithNSingleSelector ()
-    {
-      AssertSupportedMethod_Generic (AverageExpressionNode.SupportedMethods, q => q.Average (i => (float?) 0.0f), e => e.Average (i => (float?) 0.0f));
-    }
-
-    [Test]
-    public void SupportedMethod_WithInt32Selector ()
-    {
-      AssertSupportedMethod_Generic (AverageExpressionNode.SupportedMethods, q => q.Average (i => 0), e => e.Average (i => 0));
-    }
-
-    [Test]
-    public void SupportedMethod_WithNInt32Selector ()
-    {
-      AssertSupportedMethod_Generic (AverageExpressionNode.SupportedMethods, q => q.Average (i => (int?) 0), e => e.Average (i => (int?) 0));
-    }
-
-    [Test]
-    public void SupportedMethod_WithInt64Selector ()
-    {
-      AssertSupportedMethod_Generic (AverageExpressionNode.SupportedMethods, q => q.Average (i => 0L), e => e.Average (i => 0L));
-    }
-
-    [Test]
-    public void SupportedMethod_WithNInt64Selector ()
-    {
-      AssertSupportedMethod_Generic (AverageExpressionNode.SupportedMethods, q => q.Average (i => (long?) 0L), e => e.Average (i => (long?) 0L));
-    }
 
     [Test]
     [ExpectedException (typeof (NotSupportedException), ExpectedMessage =

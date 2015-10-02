@@ -27,7 +27,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     public override StreamedSequence ExecuteInMemory<T> (StreamedSequence input)
     {
       var sequenceInfo = input.GetTypedSequence<T> ();
-      return new StreamedSequence (sequenceInfo.Distinct ().AsQueryable (), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
+      return new StreamedSequence (sequenceInfo.Distinct ().AsQueryable (), GetOutputDataInfo (input.DataInfo));
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)

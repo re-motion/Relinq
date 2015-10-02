@@ -36,7 +36,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s.ID).Cast&lt;int&gt;();
   /// </code>
   /// </example>
-  public class CastResultOperator : SequenceFromSequenceResultOperatorBase
+  public sealed class CastResultOperator : SequenceFromSequenceResultOperatorBase
   {
     private static readonly MethodInfo s_enumerableCastMethod = 
         typeof (Enumerable).GetRuntimeMethodChecked ("Cast", new[] { typeof (IEnumerable) });

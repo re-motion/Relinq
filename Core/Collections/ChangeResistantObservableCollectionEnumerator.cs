@@ -17,8 +17,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+#if !NET_3_5
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+#endif
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Collections
@@ -35,7 +37,7 @@ namespace Remotion.Linq.Collections
   /// including the newly inserted item and not including the removed item. If an item is moved or replaced, the enumeration will also continue 
   /// with the item located at the next position in the sequence.
   /// </remarks>
-  public class ChangeResistantObservableCollectionEnumerator<T> : IEnumerator<T>
+  internal class ChangeResistantObservableCollectionEnumerator<T> : IEnumerator<T>
   {
     private readonly ObservableCollection<T> _collection;
     private int _index;
@@ -125,9 +127,11 @@ namespace Remotion.Linq.Collections
         case NotifyCollectionChangedAction.Replace:
           // NOP
           break;
+#if !NET_3_5
         case NotifyCollectionChangedAction.Move:
           // NOP
           break;
+#endif
         case NotifyCollectionChangedAction.Reset:
           _index = 0;
           break;

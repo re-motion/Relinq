@@ -1,61 +1,112 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
-<!-- This file is part of the re-motion Core Framework (www.re-motion.org)
- ! Copyright (c) rubicon IT GmbH, www.rubicon.eu
- ! 
- ! The re-motion Core Framework is free software; you can redistribute it 
- ! and/or modify it under the terms of the GNU Lesser General Public License 
- ! as published by the Free Software Foundation; either version 2.1 of the 
- ! License, or (at your option) any later version.
- ! 
- ! re-motion is distributed in the hope that it will be useful, 
- ! but WITHOUT ANY WARRANTY; without even the implied warranty of 
- ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- ! GNU Lesser General Public License for more details.
- ! 
- ! You should have received a copy of the GNU Lesser General Public License
- ! along with re-motion; if not, see http://www.gnu.org/licenses.
+
+<!-- Copyright (c) rubicon IT GmbH, www.rubicon.eu
+ !
+ ! See the NOTICE file distributed with this work for additional information
+ ! regarding copyright ownership.  rubicon licenses this file to you under 
+ ! the Apache License, Version 2.0 (the "License"); you may not use this 
+ ! file except in compliance with the License.  You may obtain a copy of the 
+ ! License at
+ !
+ !   http://www.apache.org/licenses/LICENSE-2.0
+ !
+ ! Unless required by applicable law or agreed to in writing, software 
+ ! distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
+ ! WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the 
+ ! License for the specific language governing permissions and limitations
+ ! under the License.
 -->
+
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   
   <Import Project="Remotion.build" />
-  
-  <PropertyGroup>
-    <SolutionBuildFile>Remotion.build</SolutionBuildFile>
-    <ReleaseType>LOCAL</ReleaseType>
-    <SvnBranchFolder>local</SvnBranchFolder>  
-    <SvnRevision>0</SvnRevision>
 
-    <DependDBProjectImportNotificationMailAddress>noreply@localhost</DependDBProjectImportNotificationMailAddress>
+  <Import Project="$(CustomizationsDirectory)Local\*.props" />
+
+  <PropertyGroup>
+    <DependDBProjectImportNotificationMailAddress Condition="'$(DependDBProjectImportNotificationMailAddress)' == ''">noreply@localhost.net</DependDBProjectImportNotificationMailAddress>
+    <VcsUrlTemplate Condition="'$(VcsUrlTemplate)' == ''">http://localost/{0}</VcsUrlTemplate>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <SkipTests>True</SkipTests>
+    <SkipDocumentation>True</SkipDocumentation>
+    <SkipNuGetOrg>True</SkipNuGetOrg>
+    <SkipSourceLinks>True</SkipSourceLinks>
+    <SkipNuGet>True</SkipNuGet>
+    <SkipDependDB>True</SkipDependDB>
   </PropertyGroup>
   
   <Target Name="TestBuild_Configuration">
     <PropertyGroup>
       <Platforms>x86</Platforms>
       <DatabaseSystems>SqlServerDefault</DatabaseSystems>
+      <Browsers></Browsers>
+      <TestCategoriesToExclude></TestCategoriesToExclude>
+      <SkipTests>False</SkipTests>
     </PropertyGroup>
   </Target>
   
   <Target Name="FullBuild_Configuration">
     <PropertyGroup>
-      <Platforms>x86+x64</Platforms>
+      <!-- Skip x86 -->
+      <Platforms>x64</Platforms>
       <DatabaseSystems>SqlServerDefault</DatabaseSystems>
+      <!-- Skip Internet Explorer -->
+      <Browsers>Chrome</Browsers>
+      <TestCategoriesToExclude></TestCategoriesToExclude>
+      <SkipTests>False</SkipTests>
+      <SkipNuGet>False</SkipNuGet>
+      <SkipDependDB>False</SkipDependDB>
     </PropertyGroup>
   </Target>
- 
-  <Target Name="TestBuild" DependsOnTargets="TestBuild_Configuration;TestBuildDebugOnly" />
-  <Target Name="FullBuild" DependsOnTargets="FullBuild_Configuration;TestBuildAllConfigurations" />
   
-  <Target Name="DocumentationTestBuild">
-    <MSBuild Projects="$(SolutionBuildFile)"
-             BuildInParallel="false"
-             Targets="DocumentationTestBuild"
-             Properties="Platforms=x86;DatabaseSystems=SqlServerDefault"/>
+  <Target Name="DocumentationBuild_Configuration">
+    <PropertyGroup>
+      <SkipDocumentation>False</SkipDocumentation>
+    </PropertyGroup>
   </Target>
-  
-  <Target Name="ZipPackageAll">
-    <MSBuild Projects="$(SolutionBuildFile)"
-             BuildInParallel="false"
-             Targets="ZipPackageAll"/>
+
+  <Target Name="PackageBuild_Configuration">
+    <PropertyGroup>
+      <SkipNuGet>False</SkipNuGet>
+    </PropertyGroup>
   </Target>
-  
+
+  <Target Name="DependDBBuild_Configuration">
+    <PropertyGroup>
+      <SkipNuGet>False</SkipNuGet>
+      <SkipDependDB>False</SkipDependDB>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="SetVersion" DependsOnTargets="PrepareVersion;CheckVersion" />
+
+  <Target Name="PrepareVersion" Condition="'$(Version)' != ''">
+    <MSBuild.ExtensionPack.Framework.DateAndTime TaskAction="Get" Format="yyMMdd-HHmmss"> 
+      <Output TaskParameter="Result" PropertyName="_formattedDateTime"/> 
+    </MSBuild.ExtensionPack.Framework.DateAndTime>
+
+    <PropertyGroup>
+      <Version>$(Version).9.$(_formattedDateTime)</Version>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="SetVersionTestBuild">
+    <PropertyGroup>
+      <!-- With local test builds, no version update is needed. -->
+      <Version></Version>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="TestBuild" DependsOnTargets="TestBuild_Configuration;SetVersionTestBuild;TestBuildDebugOnly;" />
+  <Target Name="FullBuildWithoutDocumentation" DependsOnTargets="FullBuild_Configuration;SetVersion;BuildAll;" />
+  <Target Name="DocumentationBuild" DependsOnTargets="DocumentationBuild_Configuration;SetVersion;BuildAll;" />
+  <Target Name="PackageBuild" DependsOnTargets="PackageBuild_Configuration;SetVersion;BuildAll;" />
+  <Target Name="DependDBBuild" DependsOnTargets="DependDBBuild_Configuration;SetVersion;BuildAll;" />
+
+  <!-- Customization Targets -->
+
+  <Import Project="$(CustomizationsDirectory)Local\*.targets" />
+
 </Project>

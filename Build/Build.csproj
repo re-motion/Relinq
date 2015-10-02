@@ -11,7 +11,7 @@
     <AssemblyName>Build</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>124f8b8d</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>79539c15</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Remotion.BuildScript">
+      <HintPath>..\packages\Remotion.BuildScript.2.0.0-alpha007\lib\net45\Remotion.BuildScript.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,47 +43,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ContentLayout.content" />
-    <None Include="NuGet.ConfigurationTemplate.nuspec" />
-    <None Include="packages.config" />
-    <None Include="Remotion.AssembleBuildOutput.include.build" />
-    <None Include="Remotion.build">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Remotion.BuildTargets.include.build" />
-    <None Include="Remotion.BuildTargets.Properties.include.build" />
-    <None Include="Remotion.BuildTargets.Testing.include.build" />
-    <None Include="Remotion.Configurations.include.build" />
-    <None Include="Remotion.DebugSymbols.include.build">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Remotion.DependDB.include.build" />
-    <None Include="Remotion.Documentation.include.build" />
-    <None Include="Remotion.Documentation.Relinq.build" />
-    <None Include="Remotion.Local.build" />
-    <None Include="Remotion.NuGet.include.build">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Remotion.Packages.include.build" />
-    <None Include="Remotion.Packaging.base.build" />
-    <None Include="Remotion.Packaging.include.build" />
-    <None Include="Remotion.Packaging.Relinq.build" />
-    <None Include="Remotion.Projects.include.build" />
-    <None Include="Remotion.Server.build">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Remotion.Tasks.include.build" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="DependDB.ConfigurationTemplate.xml" />
-    <Content Include="NUnitErrors.xslt" />
-    <Content Include="SandcastleProjectTemplate.shfbproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="SecureFileLoggerRules.rules" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customizations\Local\Configuration.targets" />
+    <None Include="Customizations\Projects.props" />
+    <None Include="Customizations\Properties.props" />
+    <None Include="Customizations\Server\Configuration.targets" />
+    <None Include="Customizations\Version.props">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Remotion.build" />
+    <None Include="Remotion.Local.build" />
+    <None Include="Remotion.Server.build" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\NuGet.for.MSBuild.1.4.3\build\NuGet.for.MSBuild.targets" Condition="Exists('..\packages\NuGet.for.MSBuild.1.4.3\build\NuGet.for.MSBuild.targets')" />

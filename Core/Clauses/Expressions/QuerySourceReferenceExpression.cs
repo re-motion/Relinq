@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.Expressions
@@ -29,29 +30,41 @@ namespace Remotion.Linq.Clauses.Expressions
   /// This particular expression overrides <see cref="Equals"/>, i.e. it can be compared to another <see cref="QuerySourceReferenceExpression"/> based
   /// on the <see cref="ReferencedQuerySource"/>.
   /// </remarks>
-  public class QuerySourceReferenceExpression : Expression
+  public sealed class QuerySourceReferenceExpression : Expression
   {
-    private readonly Type _type;
+#if NET_3_5
     public const ExpressionType ExpressionType = (ExpressionType) 100001;
+#endif
+
+#if !NET_3_5
+    private readonly Type _type;
+#endif
 
     public QuerySourceReferenceExpression (IQuerySource querySource)
+#if NET_3_5
+        : base (ExpressionType, ArgumentUtility.CheckNotNull ("querySource", querySource).ItemType)
+#endif
     {
       ArgumentUtility.CheckNotNull ("querySource", querySource);
 
+#if !NET_3_5
       _type = querySource.ItemType;
+#endif
       ReferencedQuerySource = querySource;
     }
 
+#if !NET_3_5
     public override ExpressionType NodeType
     {
-      get { return ExpressionType; }
+      get { return ExpressionType.Extension; }
     }
 
     public override Type Type
     {
       get { return _type; }
     }
-    
+#endif
+
     /// <summary>
     /// Gets the query source referenced by this expression.
     /// </summary>
@@ -77,5 +90,23 @@ namespace Remotion.Linq.Clauses.Expressions
     {
       return ReferencedQuerySource.GetHashCode ();
     }
+
+#if !NET_3_5
+    public override string ToString ()
+    {
+      return "[" + ReferencedQuerySource.ItemName + "]";
+    }
+
+    protected override Expression Accept (ExpressionVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+
+      var relinqVisitor = visitor as RelinqExpressionVisitor;
+      if (relinqVisitor == null)
+        return base.Accept (visitor);
+
+      return relinqVisitor.VisitQuerySourceReference (this);
+    }
+#endif
   }
 }

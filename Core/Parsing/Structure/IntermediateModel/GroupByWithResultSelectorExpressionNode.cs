@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
@@ -43,35 +43,29 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// </code>
   /// where resultSub is the same as result with k and g substituted with grouping.Key and grouping, respectively.
   /// </remarks>
-  public class GroupByWithResultSelectorExpressionNode : SelectExpressionNode, IQuerySourceExpressionNode
+  public sealed class GroupByWithResultSelectorExpressionNode : IQuerySourceExpressionNode
   {
-    public new static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.GroupBy<object, object, object, object> (null, o => null, o => null, (k, g) => null)),
-                                                               GetSupportedMethod (() => Queryable.GroupBy<object, object, object> (null, o => null, (k, g) => null)),
-                                                               GetSupportedMethod (() => Enumerable.GroupBy<object, object, object, object> (null, o => null, o => null, (k, g) => null)),
-                                                               GetSupportedMethod (() => Enumerable.GroupBy<object, object, object> (null, o => null, (k, g) => null)),
-                                                           };
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("GroupBy").WithResultSelector().WithoutEqualityComparer();
+    }
+
+    private readonly SelectExpressionNode _selectExpressionNode;
 
     public GroupByWithResultSelectorExpressionNode (
         MethodCallExpressionParseInfo parseInfo, 
         LambdaExpression keySelector, 
         LambdaExpression elementSelectorOrResultSelector, 
         LambdaExpression resultSelectorOrNull)
-      : base (
-          CreateParseInfoWithGroupNode (
-              parseInfo,
-              ArgumentUtility.CheckNotNull ("keySelector", keySelector),
-              ArgumentUtility.CheckNotNull ("elementSelectorOrResultSelector", elementSelectorOrResultSelector),
-              resultSelectorOrNull), 
-          CreateSelectorForSelectNode (
-              keySelector,
-              elementSelectorOrResultSelector,
-              resultSelectorOrNull))
     {
+      ArgumentUtility.CheckNotNull ("keySelector", keySelector);
+      ArgumentUtility.CheckNotNull ("elementSelectorOrResultSelector", elementSelectorOrResultSelector);
+
+      _selectExpressionNode = new SelectExpressionNode (
+          CreateParseInfoWithGroupNode (parseInfo, keySelector, elementSelectorOrResultSelector, resultSelectorOrNull),
+          CreateSelectorForSelectNode (keySelector, elementSelectorOrResultSelector, resultSelectorOrNull));
     }
 
-  
     private static MethodCallExpressionParseInfo CreateParseInfoWithGroupNode (
         MethodCallExpressionParseInfo parseInfo, 
         LambdaExpression keySelector, 
@@ -132,7 +126,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
                                   { resultSelector.Parameters[1], groupParameter },
                                   { resultSelector.Parameters[0], keyExpression }
                               };
-      var bodyWithGroupingAndKeyReplaced = MultiReplacingExpressionTreeVisitor.Replace (expressionMapping, resultSelector.Body);
+      var bodyWithGroupingAndKeyReplaced = MultiReplacingExpressionVisitor.Replace (expressionMapping, resultSelector.Body);
       return Expression.Lambda (bodyWithGroupingAndKeyReplaced, groupParameter);
     }
 
@@ -156,6 +150,36 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
           throw new ArgumentException ("ResultSelector must have exactly two parameters.", "elementSelectorOrResultSelector");
         return elementSelectorOrResultSelector;
       }
+    }
+
+    public IExpressionNode Source
+    {
+      get { return _selectExpressionNode.Source; }
+    }
+
+    public string AssociatedIdentifier
+    {
+      get { return _selectExpressionNode.AssociatedIdentifier; }
+    }
+
+    public Expression Selector
+    {
+      get { return _selectExpressionNode.Selector; }
+    }
+
+    public Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
+    {
+      ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
+      ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
+
+      return _selectExpressionNode.Resolve (inputParameter, expressionToBeResolved, clauseGenerationContext);
+    }
+
+    public QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    {
+      ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      return _selectExpressionNode.Apply (queryModel, clauseGenerationContext);
     }
   }
 }

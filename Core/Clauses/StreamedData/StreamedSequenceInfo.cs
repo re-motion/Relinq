@@ -29,7 +29,7 @@ namespace Remotion.Linq.Clauses.StreamedData
   /// Describes sequence data streamed out of a <see cref="QueryModel"/> or <see cref="ResultOperatorBase"/>. Sequence data can be held by an object
   /// implementing <see cref="IEnumerable{T}"/>, and its items are described via a <see cref="ItemExpression"/>.
   /// </summary>
-  public class StreamedSequenceInfo : IStreamedDataInfo
+  public sealed class StreamedSequenceInfo : IStreamedDataInfo
   {
     private static readonly MethodInfo s_executeMethod = 
         (typeof (StreamedSequenceInfo).GetRuntimeMethodChecked ("ExecuteCollectionQueryModel", new[] { typeof (QueryModel), typeof (IQueryExecutor) }));
@@ -80,7 +80,7 @@ namespace Remotion.Linq.Clauses.StreamedData
     /// </returns>
     /// <exception cref="ArgumentException">The <paramref name="dataType"/> is not compatible with the items described by this
     /// <see cref="StreamedSequenceInfo"/>.</exception>
-    public virtual IStreamedDataInfo AdjustDataType (Type dataType)
+    public IStreamedDataInfo AdjustDataType (Type dataType)
     {
       ArgumentUtility.CheckNotNull ("dataType", dataType);
 
@@ -119,28 +119,6 @@ namespace Remotion.Linq.Clauses.StreamedData
       }
     }
 
-    /// <summary>
-    /// Takes the given <paramref name="genericMethodDefinition"/> and instantiates it, substituting its generic parameter with the 
-    /// item type of the sequence described by this object. The method must have exactly one generic parameter.
-    /// </summary>
-    /// <param name="genericMethodDefinition">The generic method definition to instantiate.</param>
-    /// <returns>
-    /// A closed generic instantiation of <paramref name="genericMethodDefinition"/> with this object's item type substituted for
-    /// the generic parameter.
-    /// </returns>
-    public virtual MethodInfo MakeClosedGenericExecuteMethod (MethodInfo genericMethodDefinition)
-    {
-      ArgumentUtility.CheckNotNull ("genericMethodDefinition", genericMethodDefinition);
-
-      if (!genericMethodDefinition.IsGenericMethodDefinition)
-        throw new ArgumentException ("GenericMethodDefinition must be a generic method definition.", "genericMethodDefinition");
-
-      if (genericMethodDefinition.GetGenericArguments ().Length != 1)
-        throw new ArgumentException ("GenericMethodDefinition must have exactly one generic parameter.", "genericMethodDefinition");
-
-      return genericMethodDefinition.MakeGenericMethod (ResultItemType);
-    }
-
     public IStreamedData ExecuteQueryModel (QueryModel queryModel, IQueryExecutor executor)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
@@ -156,7 +134,7 @@ namespace Remotion.Linq.Clauses.StreamedData
       return new StreamedSequence (result, new StreamedSequenceInfo (result.GetType(), ItemExpression));
     }
 
-    public virtual IEnumerable ExecuteCollectionQueryModel<T> (QueryModel queryModel, IQueryExecutor executor)
+    public IEnumerable ExecuteCollectionQueryModel<T> (QueryModel queryModel, IQueryExecutor executor)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("executor", executor);
@@ -170,7 +148,7 @@ namespace Remotion.Linq.Clauses.StreamedData
       return Equals (other);
     }
 
-    public virtual bool Equals (IStreamedDataInfo obj)
+    public bool Equals (IStreamedDataInfo obj)
     {
       if (obj == null)
         return false;

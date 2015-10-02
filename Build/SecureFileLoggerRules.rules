@@ -1,6 +1,0 @@
-\('[^']*' == '' AND 'Password' == 'Password'\)
---password [^ ]*
-CodeplexPassword=[^ ]*
-/password:[^ ]*
-NuGet.exe push "[^"]*" [^ ]*
-NuGetApiKey=[^ ]*

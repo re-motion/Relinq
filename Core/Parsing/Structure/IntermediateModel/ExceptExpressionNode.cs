@@ -15,11 +15,13 @@
 // under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -31,23 +33,27 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// When this node is used, it usually follows (or replaces) a <see cref="SelectExpressionNode"/> of an <see cref="IExpressionNode"/> chain that 
   /// represents a query.
   /// </summary>
-  public class ExceptExpressionNode : ResultOperatorExpressionNodeBase
+  public sealed class ExceptExpressionNode : ResultOperatorExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.Except<object> (null, null)),
-                                                               GetSupportedMethod (() => Enumerable.Except<object> (null, null)),
-                                                           };
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("Except").WithoutEqualityComparer();
+    }
+
+    private readonly Expression _source2;
 
     public ExceptExpressionNode (MethodCallExpressionParseInfo parseInfo, Expression source2)
         : base (parseInfo, null, null)
     {
       ArgumentUtility.CheckNotNull ("source2", source2);
-      Source2 = source2;
+      _source2 = source2;
     }
 
-    public Expression Source2 { get; private set; }
-    
+    public Expression Source2
+    {
+      get { return _source2; }
+    }
+
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
@@ -59,7 +65,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
-      return new ExceptResultOperator (Source2);
+      return new ExceptResultOperator (_source2);
     }
   }
 }

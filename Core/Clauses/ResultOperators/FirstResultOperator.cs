@@ -35,7 +35,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).First();
   /// </code>
   /// </example>
-  public class FirstResultOperator : ChoiceResultOperatorBase
+  public sealed class FirstResultOperator : ChoiceResultOperatorBase
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="DistinctResultOperator"/>.
@@ -55,7 +55,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       var sequence = input.GetTypedSequence<T> ();
       T result = ReturnDefaultWhenEmpty ? sequence.FirstOrDefault () : sequence.First ();
-      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
+      return new StreamedValue (result, GetOutputDataInfo (input.DataInfo));
     }
 
     /// <inheritdoc />

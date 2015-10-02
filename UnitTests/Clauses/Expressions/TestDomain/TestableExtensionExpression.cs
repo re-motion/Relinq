@@ -16,13 +16,35 @@
 // 
 using System;
 using System.Linq.Expressions;
+#if NET_3_5
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Parsing;
+#endif
 
 namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
 {
-  public class TestableExtensionExpression : ExtensionExpression
+  public class TestableExtensionExpression 
+#if !NET_3_5
+    : Expression
+#else
+    : ExtensionExpression
+#endif
   {
+#if !NET_3_5
+    private readonly Type _type;
+    private readonly ExpressionType _nodeType;
+
+    public TestableExtensionExpression (Type type)
+        : this (type, ExpressionType.Extension)
+    {
+    }
+
+    public TestableExtensionExpression (Type type, ExpressionType nodeType)
+    {
+      _type = type;
+      _nodeType = nodeType;
+    }
+#else
     public TestableExtensionExpression (Type type)
         : base (type)
     {
@@ -32,8 +54,21 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions.TestDomain
         : base (type, nodeType)
     {
     }
-    
-    protected override Expression VisitChildren (ExpressionTreeVisitor visitor)
+#endif
+
+#if !NET_3_5
+    public override Type Type
+    {
+      get { return _type; }
+    }
+
+    public override ExpressionType NodeType
+    {
+      get { return _nodeType; }
+    }
+#endif
+
+    protected override Expression VisitChildren (ExpressionVisitor visitor)
     {
       return this;
     }

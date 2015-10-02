@@ -18,8 +18,9 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using JetBrains.Annotations;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
@@ -35,7 +36,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Contains (student);
   /// </code>
   /// </example>
-  public class ContainsResultOperator : ValueFromSequenceResultOperatorBase
+  public sealed class ContainsResultOperator : ValueFromSequenceResultOperatorBase
   {
     private Expression _item;
 
@@ -78,7 +79,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
       var sequence = input.GetTypedSequence<T> ();
       var item = GetConstantItem<T> ();
       var result = sequence.Contains (item);
-      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
+      return new StreamedValue (result, GetOutputDataInfo (input.DataInfo));
     }
 
     public override ResultOperatorBase Clone (CloneContext cloneContext)
@@ -90,11 +91,16 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       var sequenceInfo = ArgumentUtility.CheckNotNullAndType<StreamedSequenceInfo> ("inputInfo", inputInfo);
 
-      if (!sequenceInfo.ResultItemType.GetTypeInfo().IsAssignableFrom (Item.Type.GetTypeInfo()))
+      return GetOutputDataInfo (sequenceInfo);
+    }
+
+    private StreamedValueInfo GetOutputDataInfo ([NotNull] StreamedSequenceInfo inputInfo)
+    {
+      if (!inputInfo.ResultItemType.GetTypeInfo().IsAssignableFrom (Item.Type.GetTypeInfo()))
       {
         var message = string.Format (
             "The items of the input sequence of type '{0}' are not compatible with the item expression of type '{1}'.",
-            sequenceInfo.ResultItemType,
+            inputInfo.ResultItemType,
             Item.Type);
 
         throw new ArgumentException (message, "inputInfo");
@@ -111,7 +117,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return "Contains(" + FormattingExpressionTreeVisitor.Format (Item) + ")";
+      return "Contains(" + Item.BuildString() + ")";
     }
   }
 }

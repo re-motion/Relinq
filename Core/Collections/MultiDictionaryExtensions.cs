@@ -24,7 +24,7 @@ namespace Remotion.Linq.Collections
   /// <summary>
   /// Defines extension methods that simplify working with a dictionary that has a collection-values item-type.
   /// </summary>
-  public static class MultiDictionaryExtensions
+  internal static class MultiDictionaryExtensions
   {
     public static void Add<TKey, TValue> (this IDictionary<TKey, ICollection<TValue>> dictionary, TKey key, TValue item)
     {

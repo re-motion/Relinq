@@ -29,4 +29,8 @@ using System.Security;
 [assembly: AssemblyDescription ("Library for unit testing, building and other development-time activities.")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
+#if !NET_3_5
 [assembly: SecurityTransparent] // required to allow assembly to be linked from assemblies having the AllowPartiallyTrustedCallersAttribute applied
+#else
+[assembly: AllowPartiallyTrustedCallers] // required to allow assembly to be linked from assemblies having the AllowPartiallyTrustedCallersAttribute applied
+#endif

@@ -15,11 +15,13 @@
 // under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -33,23 +35,25 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// When this node is used, it usually follows (or replaces) a <see cref="SelectExpressionNode"/> of an <see cref="IExpressionNode"/> chain that 
   /// represents a query.
   /// </summary>
-  public class DefaultIfEmptyExpressionNode : ResultOperatorExpressionNodeBase
+  public sealed class DefaultIfEmptyExpressionNode : ResultOperatorExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.DefaultIfEmpty<object> (null)),
-                                                               GetSupportedMethod (() => Queryable.DefaultIfEmpty<object> (null,null)),
-                                                               GetSupportedMethod (() => Enumerable.DefaultIfEmpty<object> (null)),
-                                                               GetSupportedMethod (() => Enumerable.DefaultIfEmpty<object> (null, null)),
-                                                           };
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("DefaultIfEmpty");
+    }
+
+    private readonly Expression _optionalDefaultValue;
 
     public DefaultIfEmptyExpressionNode (MethodCallExpressionParseInfo parseInfo, Expression optionalDefaultValue)
         : base(parseInfo, null, null)
     {
-      OptionalDefaultValue = optionalDefaultValue;
+      _optionalDefaultValue = optionalDefaultValue;
     }
 
-    public Expression OptionalDefaultValue { get; set; }
+    public Expression OptionalDefaultValue
+    {
+      get { return _optionalDefaultValue; }
+    }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
@@ -62,7 +66,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
-      return new DefaultIfEmptyResultOperator (OptionalDefaultValue);
+      return new DefaultIfEmptyResultOperator (_optionalDefaultValue);
     }
   }
 }

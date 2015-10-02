@@ -19,12 +19,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
+using Remotion.Linq.Parsing.ExpressionVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors.Transformation;
+using Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure
@@ -35,7 +36,7 @@ namespace Remotion.Linq.Parsing.Structure
   /// </summary>
   public sealed class ExpressionTreeParser
   {
-    private static readonly MethodInfo s_getArrayLengthMethod = typeof (Array).GetRuntimeProperty ("Length").GetMethod;
+    private static readonly MethodInfo s_getArrayLengthMethod = typeof (Array).GetRuntimeProperty ("Length").GetGetMethod (true);
 
     [Obsolete (
         "This method has been removed. Use QueryParser.CreateDefault, or create a customized ExpressionTreeParser using the constructor. (1.13.93)", 
@@ -53,11 +54,10 @@ namespace Remotion.Linq.Parsing.Structure
     /// registered.</returns>
     public static CompoundNodeTypeProvider CreateDefaultNodeTypeProvider ()
     {
-      var searchedTypes = typeof (MethodInfoBasedNodeTypeRegistry).GetTypeInfo().Assembly.DefinedTypes.Select (ti => ti.AsType()).ToList();
       var innerProviders = new INodeTypeProvider[]
                            {
-                               MethodInfoBasedNodeTypeRegistry.CreateFromTypes (searchedTypes),
-                               MethodNameBasedNodeTypeRegistry.CreateFromTypes(searchedTypes)
+                               MethodInfoBasedNodeTypeRegistry.CreateFromRelinqAssembly(),
+                               MethodNameBasedNodeTypeRegistry.CreateFromRelinqAssembly()
                            };
       return new CompoundNodeTypeProvider (innerProviders);
     }
@@ -66,8 +66,14 @@ namespace Remotion.Linq.Parsing.Structure
     /// Creates a default <see cref="CompoundExpressionTreeProcessor"/> that already has the expression tree processing steps defined by the re-linq assembly
     /// registered. Users can insert additional processing steps.
     /// </summary>
-    /// <param name="tranformationProvider">The tranformation provider to be used by the <see cref="TransformingExpressionTreeProcessor"/> included
-    /// in the result set. Use <see cref="ExpressionTransformerRegistry.CreateDefault"/> to create a default provider.</param>
+    /// <param name="tranformationProvider">
+    /// The tranformation provider to be used by the <see cref="TransformingExpressionTreeProcessor"/> included
+    /// in the result set. Use <see cref="ExpressionTransformerRegistry.CreateDefault"/> to create a default provider.
+    /// </param>
+    /// <param name="evaluatableExpressionFilter">
+    /// The expression filter used by the <see cref="PartialEvaluatingExpressionTreeProcessor"/> included in the result set.
+    /// Use <see langword="null" /> to indicate that no custom filtering should be applied.
+    /// </param>
     /// <returns>
     /// A default <see cref="CompoundExpressionTreeProcessor"/> that already has all expression tree processing steps defined by the re-linq assembly
     /// registered.
@@ -79,13 +85,18 @@ namespace Remotion.Linq.Parsing.Structure
     /// 		<item><see cref="TransformingExpressionTreeProcessor"/> (parameterized with <paramref name="tranformationProvider"/>)</item>
     /// 	</list>
     /// </remarks>
-    public static CompoundExpressionTreeProcessor CreateDefaultProcessor (IExpressionTranformationProvider tranformationProvider)
+    public static CompoundExpressionTreeProcessor CreateDefaultProcessor (
+        IExpressionTranformationProvider tranformationProvider,
+        IEvaluatableExpressionFilter evaluatableExpressionFilter = null)
     {
       ArgumentUtility.CheckNotNull ("tranformationProvider", tranformationProvider);
 
-      return new CompoundExpressionTreeProcessor (new IExpressionTreeProcessor[] { 
-          new PartialEvaluatingExpressionTreeProcessor(), 
-          new TransformingExpressionTreeProcessor (tranformationProvider) });
+      return new CompoundExpressionTreeProcessor (
+          new IExpressionTreeProcessor[]
+          {
+              new PartialEvaluatingExpressionTreeProcessor (evaluatableExpressionFilter ?? new NullEvaluatableExpressionFilter()),
+              new TransformingExpressionTreeProcessor (tranformationProvider)
+          });
     }
 
     private readonly UniqueIdentifierGenerator _identifierGenerator = new UniqueIdentifierGenerator ();
@@ -146,7 +157,7 @@ namespace Remotion.Linq.Parsing.Structure
       if (expressionTree.Type == typeof (void))
       {
         throw new NotSupportedException (
-            string.Format ("Expressions of type void ('{0}') are not supported.", FormattingExpressionTreeVisitor.Format (expressionTree)));
+            string.Format ("Expressions of type void ('{0}') are not supported.", expressionTree.BuildString()));
       }
 
       var processedExpressionTree = _processor.Process (expressionTree);
@@ -175,7 +186,7 @@ namespace Remotion.Linq.Parsing.Structure
         if (propertyInfo == null)
           return null;
 
-        var getterMethod = propertyInfo.GetMethod;
+        var getterMethod = propertyInfo.GetGetMethod (true);
         if (getterMethod == null || !_nodeTypeProvider.IsRegistered (getterMethod))
           return null;
 
@@ -227,7 +238,7 @@ namespace Remotion.Linq.Parsing.Structure
 
     private IExpressionNode ParseNonQueryOperatorExpression (Expression expression, string associatedIdentifier)
     {
-      var preprocessedExpression = SubQueryFindingExpressionTreeVisitor.Process (expression, _nodeTypeProvider);
+      var preprocessedExpression = SubQueryFindingExpressionVisitor.Process (expression, _nodeTypeProvider);
 
       try
       {
@@ -242,7 +253,7 @@ namespace Remotion.Linq.Parsing.Structure
         var message = string.Format (
             "Cannot parse expression '{0}' as it has an unsupported type. Only query sources (that is, expressions that implement IEnumerable) "
             + "and query operators can be parsed.",
-            FormattingExpressionTreeVisitor.Format (preprocessedExpression));
+            preprocessedExpression.BuildString());
         throw new NotSupportedException (message, ex);
       }
     }

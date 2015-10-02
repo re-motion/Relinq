@@ -15,10 +15,16 @@
 // under the License.
 // 
 using System;
+using System.Linq.Expressions;
+using Remotion.Linq.Utilities;
+using Remotion.Utilities;
+#if !NET_3_5
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq.Expressions;
-using Remotion.Utilities;
+#endif
+#if NET_3_5
+using Remotion.Linq.Collections;
+#endif
 
 namespace Remotion.Linq.Clauses
 {
@@ -33,7 +39,7 @@ namespace Remotion.Linq.Clauses
   ///             select s;
   /// </ode>
   /// </example>
-  public class OrderByClause : IBodyClause
+  public sealed class OrderByClause : IBodyClause
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="OrderByClause"/> class.
@@ -57,7 +63,7 @@ namespace Remotion.Linq.Clauses
     /// <param name="visitor">The visitor to accept.</param>
     /// <param name="queryModel">The query model in whose context this clause is visited.</param>
     /// <param name="index">The index of this clause in the <paramref name="queryModel"/>'s <see cref="QueryModel.BodyClauses"/> collection.</param>
-    public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
+    public void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
@@ -104,7 +110,7 @@ namespace Remotion.Linq.Clauses
 
     public override string ToString ()
     {
-      var result = "orderby " + string.Join (", ", Orderings);
+      var result = "orderby " + StringUtility.Join (", ", Orderings);
 
       return result;
     }

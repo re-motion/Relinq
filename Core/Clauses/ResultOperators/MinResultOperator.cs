@@ -36,7 +36,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s.ID).Min();
   /// </code>
   /// </example>
-  public class MinResultOperator : ChoiceResultOperatorBase
+  public sealed class MinResultOperator : ChoiceResultOperatorBase
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="MinResultOperator"/>.
@@ -55,7 +55,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       var sequence = input.GetTypedSequence<T> ();
       var result = sequence.Min ();
-      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
+      return new StreamedValue (result, GetOutputDataInfo (input.DataInfo));
     }
 
     /// <inheritdoc />

@@ -24,7 +24,7 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Development.UnitTesting;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.UnitTests.TestDomain;
 
 namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
@@ -50,7 +50,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
 
       var originalFunc = ExpressionHelper.CreateLambdaExpression<int, int, int> ((total, i) => total + i);
       _func = Expression.Lambda (
-          ReplacingExpressionTreeVisitor.Replace (originalFunc.Parameters[1], _sourceExpression, originalFunc.Body), 
+          ReplacingExpressionVisitor.Replace (originalFunc.Parameters[1], _sourceExpression, originalFunc.Body), 
           originalFunc.Parameters[0]);
       _resultSelector = ExpressionHelper.CreateLambdaExpression<int, string> (total => total.ToString ());
 

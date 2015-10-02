@@ -18,6 +18,9 @@ using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Remotion.Linq.Clauses.Expressions;
+#if NET_3_5
+using Remotion.Linq.Clauses.ExpressionVisitors;
+#endif
 using Remotion.Linq.Parsing;
 using Rhino.Mocks;
 
@@ -36,17 +39,23 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       _expression = new VBStringComparisonExpression (_comparisonExpression, true);
     }
 
+#if NET_3_5
     [Test]
     public void NodeType ()
     {
       Assert.That (VBStringComparisonExpression.ExpressionType, Is.EqualTo ((ExpressionType) 100003));
       ExtensionExpressionTestHelper.CheckUniqueNodeType (typeof (VBStringComparisonExpression), VBStringComparisonExpression.ExpressionType);
     }
+#endif
 
     [Test]
     public void Initialization ()
     {
+#if !NET_3_5
+      Assert.That (_expression.NodeType, Is.EqualTo (ExpressionType.Extension));
+#else
       Assert.That (_expression.NodeType, Is.EqualTo (VBStringComparisonExpression.ExpressionType));
+#endif
     }
 
     [Test]
@@ -76,10 +85,10 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     [Test]
     public void VisitChildren_ReturnsSameExpression ()
     {
-      var visitorMock = MockRepository.GenerateStrictMock<ExpressionTreeVisitor> ();
+      var visitorMock = MockRepository.GenerateStrictMock<RelinqExpressionVisitor> ();
 
       visitorMock
-          .Expect (mock => mock.VisitExpression (_comparisonExpression))
+          .Expect (mock => mock.Visit (_comparisonExpression))
           .Return (_comparisonExpression);
       visitorMock.Replay ();
 
@@ -93,10 +102,10 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     public void VisitChildren_ReturnsNewExpression ()
     {
       var newExpression = Expression.Equal (Expression.Constant ("string1"), Expression.Constant ("string"));
-      var visitorMock = MockRepository.GenerateStrictMock<ExpressionTreeVisitor> ();
+      var visitorMock = MockRepository.GenerateStrictMock<RelinqExpressionVisitor> ();
 
       visitorMock
-          .Expect (mock => mock.VisitExpression (_comparisonExpression))
+          .Expect (mock => mock.Visit (_comparisonExpression))
           .Return (newExpression);
       visitorMock.Replay ();
 
@@ -113,7 +122,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     {
       ExtensionExpressionTestHelper.CheckAcceptForVisitorSupportingType<VBStringComparisonExpression, IVBSpecificExpressionVisitor> (
           _expression,
-          mock => mock.VisitVBStringComparisonExpression (_expression));
+          mock => mock.VisitVBStringComparison (_expression));
     }
 
     [Test]
@@ -123,11 +132,29 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
     }
 
     [Test]
-    public void To_String ()
+    public void ToString_Directly ()
     {
       var result = _expression.ToString();
 
+#if !NET_3_5
       Assert.That (result, Is.EqualTo ("VBCompareString((\"string1\" == \"string2\"), True)"));
+#else
+      Assert.That (result, Is.EqualTo ("VBCompareString((\"string1\" = \"string2\"), True)"));
+#endif
+    }
+
+    [Test]
+    public void ToString_Nested ()
+    {
+      var expression = Expression.Not (_expression);
+
+#if !NET_3_5
+      var result = expression.ToString();
+      Assert.That (result, Is.EqualTo ("Not(VBCompareString((\"string1\" == \"string2\"), True))"));
+#else
+      var result = FormattingExpressionVisitor.Format (expression);
+      Assert.That (result, Is.EqualTo ("Not(VBCompareString((\"string1\" = \"string2\"), True))"));
+#endif
     }
 
   }

@@ -64,6 +64,25 @@ namespace Remotion.Linq.UnitTests.Clauses
     }
 
     [Test]
+    public void CopyFromSource ()
+    {
+      ConstantExpression constantExpression = Expression.Constant (ExpressionHelper.CreateQueryable<Cook> ());
+      var fromClause = new MainFromClause ("s", typeof (Cook), constantExpression);
+
+      ConstantExpression newExpression = Expression.Constant (ExpressionHelper.CreateQueryable<Kitchen>());
+      var sourceStub = MockRepository.GenerateStub<IFromClause>();
+      sourceStub.Stub (_ => _.ItemName).Return ("newItemName");
+      sourceStub.Stub (_ => _.ItemType).Return (typeof (Kitchen));
+      sourceStub.Stub (_ => _.FromExpression).Return (newExpression);
+
+      fromClause.CopyFromSource (sourceStub);
+
+      Assert.That (fromClause.ItemName, Is.EqualTo ("newItemName"));
+      Assert.That (fromClause.ItemType, Is.SameAs (typeof (Kitchen)));
+      Assert.That (fromClause.FromExpression, Is.SameAs (newExpression));
+    }
+
+    [Test]
     public void Accept ()
     {
       var repository = new MockRepository ();

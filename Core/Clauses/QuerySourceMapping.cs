@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses
@@ -25,7 +25,7 @@ namespace Remotion.Linq.Clauses
   /// <summary>
   /// Maps <see cref="IQuerySource"/> instances to <see cref="Expression"/> instances. This is used by <see cref="QueryModel.Clone()"/>
   /// in order to be able to correctly update references to old clauses to point to the new clauses. Via 
-  /// <see cref="ReferenceReplacingExpressionTreeVisitor"/> and <see cref="CloningExpressionTreeVisitor"/>, it can also be used manually.
+  /// <see cref="ReferenceReplacingExpressionVisitor"/>, it can also be used manually.
   /// </summary>
   public sealed class QuerySourceMapping
   {
@@ -48,7 +48,7 @@ namespace Remotion.Linq.Clauses
       }
       catch (ArgumentException)
       {
-        throw new InvalidOperationException ("Query source has already been associated with an expression.");
+        throw new InvalidOperationException (string.Format ("Query source ({0}) has already been associated with an expression.", querySource));
       }
     }
 
@@ -58,7 +58,10 @@ namespace Remotion.Linq.Clauses
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       if (!ContainsMapping (querySource))
-        throw new InvalidOperationException ("Query source has not been associated with an expression, cannot replace its mapping.");
+      {
+        throw new InvalidOperationException (
+            string.Format ("Query source ({0}) has not been associated with an expression, cannot replace its mapping.", querySource));
+      }
 
       _lookup[querySource] = expression;
     }
@@ -66,14 +69,12 @@ namespace Remotion.Linq.Clauses
     public Expression GetExpression (IQuerySource querySource)
     {
       ArgumentUtility.CheckNotNull ("querySource", querySource);
-      try
-      {
-        return _lookup[querySource];
-      }
-      catch (KeyNotFoundException)
-      {
-        throw new KeyNotFoundException ("Query source has not been associated with an expression.");
-      }
+
+      Expression expression;
+      if (!_lookup.TryGetValue (querySource, out expression))
+        throw new KeyNotFoundException (string.Format ("Query source ({0}) has not been associated with an expression.", querySource));
+
+      return expression;
     }
   }
 }

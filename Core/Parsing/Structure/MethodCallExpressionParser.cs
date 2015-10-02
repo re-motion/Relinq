@@ -18,9 +18,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure
@@ -73,7 +73,7 @@ namespace Remotion.Linq.Parsing.Structure
       // First, convert the argument expressions to their actual values - this unwraps ConstantantExpressions and UnaryExpressions
       var convertedParameters = UnwrapArgumentExpression (argumentExpression);
       // Then, detect subqueries
-      var parametersWithSubQueriesDetected = SubQueryFindingExpressionTreeVisitor.Process (convertedParameters, _nodeTypeProvider);
+      var parametersWithSubQueriesDetected = SubQueryFindingExpressionVisitor.Process (convertedParameters, _nodeTypeProvider);
 
       return parametersWithSubQueriesDetected;
     }
@@ -110,7 +110,7 @@ namespace Remotion.Linq.Parsing.Structure
     private NotSupportedException CreateParsingErrorException ( MethodCallExpression expression, string message, params object[] args)
     {
       return new NotSupportedException (
-          string.Format ("Could not parse expression '{0}': ", FormattingExpressionTreeVisitor.Format (expression))
+          string.Format ("Could not parse expression '{0}': ", expression.BuildString())
           + string.Format (message, args));
     }
   }

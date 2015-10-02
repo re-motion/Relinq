@@ -17,11 +17,12 @@
 
 using System;
 using System.Linq.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Development.UnitTesting
 {
+
   /// <summary>
   /// Compares two <see cref="Expression"/> trees constructed from <b>System.Linq</b> expressions.
   /// </summary>
@@ -33,8 +34,8 @@ namespace Remotion.Linq.Development.UnitTesting
       ArgumentUtility.CheckNotNull ("actualTree", actualTree);
 
       var comparer = new ExpressionTreeComparer (
-          FormattingExpressionTreeVisitor.Format (expectedTree),
-          FormattingExpressionTreeVisitor.Format (actualTree));
+          expectedTree.BuildString(),
+          actualTree.BuildString());
       comparer.CheckAreEqualNodes (expectedTree, actualTree);
     }
 

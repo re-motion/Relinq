@@ -15,12 +15,17 @@
 // under the License.
 // 
 using System;
+#if !NET_3_5
 using System.Collections.ObjectModel;
+#endif
 using System.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.ResultOperators;
+#if NET_3_5
+using Remotion.Linq.Collections;
+#endif
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Utilities;
 
@@ -90,8 +95,7 @@ namespace Remotion.Linq.Transformations
       base.VisitAdditionalFromClause (fromClause, queryModel, index);
     }
 
-    protected virtual void FlattenSubQuery (
-        SubQueryExpression subQueryExpression, FromClauseBase fromClause, QueryModel queryModel, int destinationIndex)
+    protected virtual void FlattenSubQuery (SubQueryExpression subQueryExpression, IFromClause fromClause, QueryModel queryModel, int destinationIndex)
     {
       ArgumentUtility.CheckNotNull ("subQueryExpression", subQueryExpression);
       ArgumentUtility.CheckNotNull ("fromClause", fromClause);
@@ -100,17 +104,17 @@ namespace Remotion.Linq.Transformations
       CheckFlattenable (subQueryExpression.QueryModel);
 
       var innerMainFromClause = subQueryExpression.QueryModel.MainFromClause;
-      CopyFromClauseData (innerMainFromClause, fromClause);
+      fromClause.CopyFromSource (innerMainFromClause);
 
       var innerSelectorMapping = new QuerySourceMapping();
       innerSelectorMapping.AddMapping (fromClause, subQueryExpression.QueryModel.SelectClause.Selector);
-      queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, innerSelectorMapping, false));
+      queryModel.TransformExpressions (ex => ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (ex, innerSelectorMapping, false));
 
       InsertBodyClauses (subQueryExpression.QueryModel.BodyClauses, queryModel, destinationIndex);
 
       var innerBodyClauseMapping = new QuerySourceMapping();
       innerBodyClauseMapping.AddMapping (innerMainFromClause, new QuerySourceReferenceExpression (fromClause));
-      queryModel.TransformExpressions (ex => ReferenceReplacingExpressionTreeVisitor.ReplaceClauseReferences (ex, innerBodyClauseMapping, false));
+      queryModel.TransformExpressions (ex => ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (ex, innerBodyClauseMapping, false));
     }
 
     protected virtual void CheckFlattenable (QueryModel subQueryModel)
@@ -132,16 +136,6 @@ namespace Remotion.Linq.Transformations
             subQueryModel);
         throw new NotSupportedException (message);
       }
-    }
-
-    protected void CopyFromClauseData (FromClauseBase source, FromClauseBase destination)
-    {
-      ArgumentUtility.CheckNotNull ("source", source);
-      ArgumentUtility.CheckNotNull ("destination", destination);
-
-      destination.FromExpression = source.FromExpression;
-      destination.ItemName = source.ItemName;
-      destination.ItemType = source.ItemType;
     }
 
     protected void InsertBodyClauses (ObservableCollection<IBodyClause> bodyClauses, QueryModel destinationQueryModel, int destinationIndex)

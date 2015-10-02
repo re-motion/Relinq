@@ -33,7 +33,7 @@ namespace Remotion.Linq.Clauses
   ///             select f;
   /// </ode>
   /// </example>
-  public class MainFromClause : FromClauseBase
+  public sealed class MainFromClause : FromClauseBase
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="MainFromClause"/> class.
@@ -54,7 +54,7 @@ namespace Remotion.Linq.Clauses
     /// </summary>
     /// <param name="visitor">The visitor to accept.</param>
     /// <param name="queryModel">The query model in whose context this clause is visited.</param>
-    public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel)
+    public void Accept (IQueryModelVisitor visitor, QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);

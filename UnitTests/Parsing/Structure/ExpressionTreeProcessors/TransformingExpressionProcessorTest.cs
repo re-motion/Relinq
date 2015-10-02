@@ -17,7 +17,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
+using Remotion.Linq.Parsing.ExpressionVisitors.Transformation;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Rhino.Mocks;
 

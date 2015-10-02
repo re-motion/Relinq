@@ -16,11 +16,8 @@
 // 
 using System;
 using System.Linq.Expressions;
-using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
-using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -31,55 +28,45 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   public abstract class MethodCallExpressionNodeBase : IExpressionNode
   {
     private IExpressionNode _source;
-
-    /// <summary>
-    /// Gets the <see cref="MethodInfo"/> from a given <see cref="LambdaExpression"/> that has to wrap a <see cref="MethodCallExpression"/>.
-    /// If the method is a generic method, its open generic method definition is returned.
-    /// This method can be used for registration of the node type with an <see cref="MethodInfoBasedNodeTypeRegistry"/>.
-    /// </summary>
-    /// <typeparam name="T">The return type of the <paramref name="methodCall"/>.</typeparam>
-    /// <param name="methodCall">The method call.</param>
-    /// <returns>The normalized <see cref="MethodInfo"/> that corresponds to the method call.</returns>
-    /// <exception cref="NotSupportedException">
-    /// Thrown if the <paramref name="methodCall"/> cannot be resolved to a normalized <see cref="MethodInfo"/>. This can happen if the method if part of
-    /// a generic type, uses type parameters from the generic type, and has an overload that is only distinguishable via the type parameters from the generic type.
-    /// </exception>
-    protected static MethodInfo GetSupportedMethod<T> (Expression<Func<T>> methodCall)
-    {
-      ArgumentUtility.CheckNotNull ("methodCall", methodCall);
-
-      var method = ReflectionUtility.GetMethod (methodCall);
-      return MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method, throwOnAmbiguousMatch: true);
-    }
+    private readonly Type _nodeResultType;
+    private readonly string _associatedIdentifier;
 
     protected MethodCallExpressionNodeBase (MethodCallExpressionParseInfo parseInfo)
     {
-      AssociatedIdentifier = parseInfo.AssociatedIdentifier;
-      Source = parseInfo.Source;
-      NodeResultType = parseInfo.ParsedExpression.Type;
+      if (parseInfo.AssociatedIdentifier == null)
+        throw new ArgumentException ("Unitialized struct.", "parseInfo");
+
+      _associatedIdentifier = parseInfo.AssociatedIdentifier;
+      _source = parseInfo.Source;
+      _nodeResultType = parseInfo.ParsedExpression.Type;
     }
 
-    public string AssociatedIdentifier { get; private set; }
+    public string AssociatedIdentifier
+    {
+      get { return _associatedIdentifier; }
+    }
 
     public IExpressionNode Source
     {
       get { return _source; }
-      protected set { _source = ArgumentUtility.CheckNotNull ("value", value); }
     }
 
-    public Type NodeResultType { get; private set; }
-    
+    public Type NodeResultType
+    {
+      get { return _nodeResultType; }
+    }
+
     public abstract Expression Resolve (
         ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext);
 
-    protected abstract QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext);
+    protected abstract void ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext);
 
     public QueryModel Apply (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
       queryModel = WrapQueryModelAfterEndOfQuery (queryModel, clauseGenerationContext);
-      queryModel = ApplyNodeSpecificSemantics (queryModel, clauseGenerationContext);
+      ApplyNodeSpecificSemantics (queryModel, clauseGenerationContext);
       SetResultTypeOverride (queryModel);
       return queryModel;
     }
@@ -121,7 +108,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      var sourceAsResultOperatorNode = Source as ResultOperatorExpressionNodeBase;
+      var sourceAsResultOperatorNode = _source as ResultOperatorExpressionNodeBase;
       if (sourceAsResultOperatorNode != null)
         return WrapQueryModel(queryModel, sourceAsResultOperatorNode.AssociatedIdentifier, clauseGenerationContext);
       else
@@ -146,14 +133,13 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       queryModel.ResultTypeOverride = NodeResultType;
     }
 
-
     private QueryModel WrapQueryModel (QueryModel queryModel, string associatedIdentifier, ClauseGenerationContext clauseGenerationContext)
     {
       var subQueryExpression = new SubQueryExpression (queryModel);
 
       // change the Source of this node so that Resolve will later correctly go to the new main from clause we create for the sub query
       var newMainSourceNode = new MainSourceExpressionNode (associatedIdentifier, subQueryExpression);
-      Source = newMainSourceNode;
+      _source = newMainSourceNode;
 
       return newMainSourceNode.Apply (null, clauseGenerationContext);
     }

@@ -18,8 +18,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
@@ -35,7 +35,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).DefaultIfEmpty ("student");
   /// </code>
   /// </example>
-  public class DefaultIfEmptyResultOperator : SequenceTypePreservingResultOperatorBase
+  public sealed class DefaultIfEmptyResultOperator : SequenceTypePreservingResultOperatorBase
   {
     public DefaultIfEmptyResultOperator (Expression optionalDefaultValue)
     {
@@ -50,7 +50,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     /// <summary>
     /// Gets the constant <see cref="object"/> value of the <see cref="OptionalDefaultValue"/> property, assuming it is a <see cref="ConstantExpression"/>. If it is
-    /// not, an expression is thrown. If it is <see langword="null" />, <see langword="null" /> is returned.
+    /// not, an <see cref="InvalidOperationException"/> is thrown. If it is <see langword="null" />, <see langword="null" /> is returned.
     /// </summary>
     /// <returns>The constant <see cref="object"/> value of the <see cref="OptionalDefaultValue"/> property.</returns>
     public object GetConstantOptionalDefaultValue ()
@@ -71,7 +71,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
       var sequence = input.GetTypedSequence<T> ();
       IEnumerable<T> result = 
           OptionalDefaultValue != null ? sequence.DefaultIfEmpty ((T) GetConstantOptionalDefaultValue ()) : sequence.DefaultIfEmpty ();
-      return new StreamedSequence (result.AsQueryable(), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
+      return new StreamedSequence (result.AsQueryable(), GetOutputDataInfo (input.DataInfo));
     }
 
     public override void TransformExpressions (Func<Expression, Expression> transformation)
@@ -87,7 +87,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
       if (OptionalDefaultValue == null)
         return "DefaultIfEmpty()";
       else
-        return "DefaultIfEmpty(" + FormattingExpressionTreeVisitor.Format (OptionalDefaultValue) + ")";
+        return "DefaultIfEmpty(" + OptionalDefaultValue.BuildString() + ")";
     }
   }
 }

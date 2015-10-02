@@ -32,7 +32,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Distinct();
   /// </code>
   /// </example>
-  public class DistinctResultOperator : SequenceTypePreservingResultOperatorBase
+  public sealed class DistinctResultOperator : SequenceTypePreservingResultOperatorBase
   {
     public override ResultOperatorBase Clone (CloneContext cloneContext)
     {
@@ -43,7 +43,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       var sequence = input.GetTypedSequence<T> ();
       var result = sequence.Distinct();
-      return new StreamedSequence (result.AsQueryable (), (StreamedSequenceInfo) GetOutputDataInfo (input.DataInfo));
+      return new StreamedSequence (result.AsQueryable (), GetOutputDataInfo (input.DataInfo));
     }
 
     /// <inheritdoc />

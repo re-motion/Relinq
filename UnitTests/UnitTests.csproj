@@ -120,6 +120,27 @@
     <Compile Include="..\AssemblyInfoShared.cs">
       <Link>Properties\AssemblyInfoShared.cs</Link>
     </Compile>
+    <Compile Include="..\Core\Collections\ChangeResistantObservableCollectionEnumerator.cs">
+      <Link>Collections\ChangeResistantObservableCollectionEnumerator.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Collections\IndexValuePair.cs">
+      <Link>Collections\IndexValuePair.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Collections\MultiDictionaryExtensions.cs">
+      <Link>Collections\MultiDictionaryExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Collections\ObservableCollectionExtensions.cs">
+      <Link>Collections\ObservableCollectionExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Utilities\ReflectionUtility.cs">
+      <Link>Utilities\ReflectionUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Utilities\StringUtility.cs">
+      <Link>Utilities\StringUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\UnitTests.Net_4_0\Utilities\TypeInfoTest.cs">
+      <Link>Utilities\TypeInfoTest.cs</Link>
+    </Compile>
     <Compile Include="App_Packages\Remotion.Development.UnitTesting.PrivateInvoke.Sources.1.15.23.0\PrivateInvoke.cs" />
     <Compile Include="App_Packages\Remotion.Development.UnitTesting.Serializer.Sources.1.15.23.0\Serializer.cs" />
     <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\AssertionConditionAttribute.cs" />
@@ -146,32 +167,40 @@
     <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\TerminatesProgramAttribute.cs" />
     <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\UsedImplicitlyAttribute.cs" />
     <Compile Include="App_Packages\Remotion.Utilities.ArgumentUtility.Sources.1.15.23.0\ArgumentUtility.cs" />
+    <Compile Include="App_Packages\Remotion.Utilities.Assertion.Sources.1.15.23.0\Assertion.cs" />
     <Compile Include="App_Packages\Remotion.Utilities.ExceptionUtility.Sources.1.15.23.0\ExceptionUtility.cs" />
     <Compile Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\NullableTypeUtility.cs" />
     <Compile Include="Clauses\Expressions\SubQueryExpressionTest.cs" />
     <Compile Include="Clauses\Expressions\VBStringComparisonExpressionTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\MultiReplacingExpressionTreeVisitorTest.cs" />
+    <Compile Include="Clauses\ExpressionVisitors\IntegrationTests\AccessorFindingExpressionTreeVisitorIntegrationTest.cs" />
+    <Compile Include="Clauses\ResultOperators\ConcatResultOperatorTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\MultiReplacingExpressionVisitorTest.cs" />
     <Compile Include="Clauses\Expressions\PartialEvaluationExceptionExpressionTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\ExpressionTransformerRegistryTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\AttributeEvaluatingExpressionTransformerTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\MethodCallExpressionTransformerAttributeTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\TupleNewExpressionTransformerTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\DictionaryEntryNewExpressionTransformerTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\InvocationOfLambdaExpressionTransformerTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\KeyValuePairNewExpressionTransformerTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\NullableValueTransformerTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBCompareStringExpressionTransformerTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\Transformation\PredefinedTransformations\VBInformationIsNothingExpressionTransformerTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\TransformingExpressionTreeVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitorTests\TypeForNewExpression.cs">
+    <Compile Include="Parsing\ExpressionVisitors\Transformation\ExpressionTransformerRegistryTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\AttributeEvaluatingExpressionTransformerTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\MethodCallExpressionTransformerAttributeTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\TupleNewExpressionTransformerTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\DictionaryEntryNewExpressionTransformerTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\InvocationOfLambdaExpressionTransformerTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\KeyValuePairNewExpressionTransformerTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\NullableValueTransformerTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\VBCompareStringExpressionTransformerTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\VBInformationIsNothingExpressionTransformerTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\TransformingExpressionVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\TreeEvaluation\EvaluatableExpressionFilterBaseTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitorTests\RelinqExpressionVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitorTests\RelinqExpressionVisitorTestBase.cs" />
+    <Compile Include="Parsing\ExpressionVisitorTests\RelinqExpressionVisitor_NewExpressionsTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitorTests\TypeForNewExpression.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Parsing\NewExpressionIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\TestDomain\ExpressionNodeWithOnePublicInstanceCtor.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\ConcatExpressionNodeTest.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\CompoundNodeTypeProviderTest.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\CompoundExpressionTreeProcessorTest.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeProcessors\NullExpressionTreeProcessorTest.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\GetRegisterableMethodDefinition_MIBNTRT.cs" />
-    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\CreateFromTypes_MIBNTRT.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\GetNodeType_MIBNTRT.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\Register_MIBNTRT.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\IsRegistered_MIBNTRT.cs" />
@@ -185,21 +214,25 @@
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\EmptyParametersQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\NullableQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\PartialEvaluationQueryParserIntegrationTest.cs" />
+    <Compile Include="Parsing\Structure\TestDomain\NonEvaluated.cs" />
+    <Compile Include="Parsing\Structure\TestDomain\QueryParserIntegrationTestsEvaluatableExpressionFilter.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\VBSpecificQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\NewWithAddedMembersQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\SubQueryQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\QueryParserIntegrationTests\MediumTrustQueryParserIntegrationTest.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\TestDomain\GenericClass2.cs" />
-    <Compile Include="Parsing\TestThrowingConstantExpressionTreeVisitor.cs" />
+    <Compile Include="Parsing\TestThrowingConstantExpressionVisitor.cs" />
+    <Compile Include="Parsing\TestThrowingExpressionVisitorForLambda.cs" />
     <Compile Include="Parsing\TupleExpressionBuilderTest.cs" />
+    <Compile Include="TestDomain\BaseValue.cs" />
     <Compile Include="TestDomain\Course.cs" />
+    <Compile Include="TestDomain\DerivedValue.cs" />
     <Compile Include="TestDomain\Knife.cs" />
     <Compile Include="TestDomain\ISpecificCook.cs" />
     <Compile Include="TestDomain\MetaID.cs" />
+    <Compile Include="TestDomain\Result.cs" />
     <Compile Include="TestUtilities\NonTransformedTuple.cs" />
     <Compile Include="Clauses\AdditionalFromClauseTest.cs" />
-    <Compile Include="Clauses\Expressions\ExtensionExpressionIntegrationTest.cs" />
-    <Compile Include="Clauses\Expressions\ExtensionExpressionTest.cs" />
     <Compile Include="Clauses\Expressions\QuerySourceReferenceExpressionTest.cs" />
     <Compile Include="Clauses\Expressions\TestDomain\ReducibleExtensionExpressionNotOverridingReduce.cs" />
     <Compile Include="Clauses\Expressions\TestDomain\ISpecificVisitor.cs" />
@@ -207,11 +240,9 @@
     <Compile Include="Clauses\Expressions\TestDomain\SpecificVisitor.cs" />
     <Compile Include="Clauses\Expressions\TestDomain\TestableExtensionExpression.cs" />
     <Compile Include="Clauses\Expressions\TestDomain\TestableExtensionExpressionWithSpecificVisitor.cs" />
-    <Compile Include="Clauses\ExpressionTreeVisitors\AccessorFindingExpressionTreeVisitorTest.cs" />
-    <Compile Include="Clauses\ExpressionTreeVisitors\CloningExpressionTreeVisitorTest.cs" />
-    <Compile Include="Clauses\ExpressionTreeVisitors\FormattingExpressionTreeVisitorTest.cs" />
-    <Compile Include="Clauses\ExpressionTreeVisitors\ReferenceReplacingExpressionTreeVisitorTest.cs" />
-    <Compile Include="Clauses\ExpressionTreeVisitors\ReverseResolvingExpressionTreeVisitorTest.cs" />
+    <Compile Include="Clauses\ExpressionVisitors\AccessorFindingExpressionVisitorTest.cs" />
+    <Compile Include="Clauses\ExpressionVisitors\ReferenceReplacingExpressionVisitorTest.cs" />
+    <Compile Include="Clauses\ExpressionVisitors\ReverseResolvingExpressionVisitorTest.cs" />
     <Compile Include="Clauses\FromClauseBaseTest.cs" />
     <Compile Include="Clauses\GroupJoinClauseTest.cs" />
     <Compile Include="Clauses\JoinClauseTest.cs" />
@@ -259,7 +290,6 @@
     <Compile Include="Clauses\StreamedData\StreamedSequenceInfoTest.cs" />
     <Compile Include="Clauses\StreamedData\StreamedSequenceTest.cs" />
     <Compile Include="Clauses\StreamedData\StreamedSingleValueInfoTest.cs" />
-    <Compile Include="Clauses\StreamedData\StreamedValueInfoTest.cs" />
     <Compile Include="Clauses\StreamedData\StreamedValueTest.cs" />
     <Compile Include="Clauses\WhereClauseTest.cs" />
     <Compile Include="Collections\ChangeResistantObservableCollectionEnumeratorTest.cs" />
@@ -268,24 +298,20 @@
     <Compile Include="DefaultQueryProviderTest.cs" />
     <Compile Include="ExpressionTreeNavigator.cs" />
     <Compile Include="Parsing\AnonymousType.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\FieldInfoBindingTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\MemberBindingTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\MemberBindingTestBase.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\MethodInfoBindingTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\MemberBindings\PropertyInfoBindingTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\PartialEvaluatingExpressionTreeVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\ReplacingExpressionTreeVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\SubQueryFindingExpressionTreeVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\TransparentIdentifierRemovingExpressionTreeVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionTreeVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitors\UnknownExpression.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitorTests\ExpressionInstanceCreator.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitorTests\ExpressionTreeVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitorTests\ExpressionTreeVisitor_BinaryExpressionsTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitorTests\ExpressionTreeVisitor_SpecificExpressionsTest.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitorTests\ExpressionTreeVisitorTestBase.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitorTests\SimpleClass.cs" />
-    <Compile Include="Parsing\ExpressionTreeVisitorTests\SpecialExpressionNode.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\MemberBindings\FieldInfoBindingTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\MemberBindings\MemberBindingTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\MemberBindings\MemberBindingTestBase.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\MemberBindings\MethodInfoBindingTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\MemberBindings\PropertyInfoBindingTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\PartialEvaluatingExpressionVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\ReplacingExpressionVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\SubQueryFindingExpressionVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\TransparentIdentifierRemovingExpressionVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionVisitorTest.cs" />
+    <Compile Include="Parsing\ExpressionVisitors\UnknownExpression.cs" />
+    <Compile Include="Parsing\ExpressionVisitorTests\ExpressionInstanceCreator.cs" />
+    <Compile Include="Parsing\ExpressionVisitorTests\SimpleClass.cs" />
+    <Compile Include="Parsing\ExpressionVisitorTests\SpecialExpressionNode.cs" />
     <Compile Include="Parsing\Structure\ExpressionTreeParserTest.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\AverageExpressionNodeTest.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\CastExpressionNodeTest.cs" />
@@ -348,8 +374,8 @@
     <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\TestDomain\GenericClass.cs" />
     <Compile Include="Parsing\Structure\TestDomain\NonGenericFakeCollection.cs" />
     <Compile Include="Parsing\Structure\TestDomain\QueryableFakeWithCount.cs" />
-    <Compile Include="Parsing\TestThrowingExpressionTreeVisitor.cs" />
-    <Compile Include="Parsing\ThrowingExpressionTreeVisitorTest.cs" />
+    <Compile Include="Parsing\TestThrowingExpressionVisitor.cs" />
+    <Compile Include="Parsing\ThrowingExpressionVisitorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -358,6 +384,7 @@
     <Compile Include="QueryModelTest.cs" />
     <Compile Include="QueryModelVisitorBaseTest.cs" />
     <Compile Include="QueryProviderBaseTest.cs" />
+    <Compile Include="Utilities\ItemTypeReflectionUtilityTest.cs" />
     <Compile Include="Utilities\ReflectionUtilityTest.cs" />
     <Compile Include="Clauses\Expressions\ExtensionExpressionTestHelper.cs" />
     <Compile Include="TestDomain\Chef.cs" />
@@ -387,6 +414,7 @@
     </None>
     <None Include="App_Packages\Remotion.Development.UnitTesting.PrivateInvoke.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
     <None Include="App_Packages\Remotion.Development.UnitTesting.Serializer.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
+    <None Include="App_Packages\Remotion.Utilities.Assertion.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
     <None Include="App_Packages\Remotion.Utilities.ExceptionUtility.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
     <None Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
     <None Include="packages.config" />

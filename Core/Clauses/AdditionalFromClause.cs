@@ -32,7 +32,7 @@ namespace Remotion.Linq.Clauses
   ///             select f;
   /// </ode>
   /// </example>
-  public class AdditionalFromClause : FromClauseBase, IBodyClause
+  public sealed class AdditionalFromClause : FromClauseBase, IBodyClause
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="AdditionalFromClause"/> class.
@@ -54,7 +54,7 @@ namespace Remotion.Linq.Clauses
     /// <param name="visitor">The visitor to accept.</param>
     /// <param name="queryModel">The query model in whose context this clause is visited.</param>
     /// <param name="index">The index of this clause in the <paramref name="queryModel"/>'s <see cref="QueryModel.BodyClauses"/> collection.</param>
-    public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
+    public void Accept (IQueryModelVisitor visitor, QueryModel queryModel, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
@@ -67,7 +67,7 @@ namespace Remotion.Linq.Clauses
     /// </summary>
     /// <param name="cloneContext">The clones of all query source clauses are registered with this <see cref="CloneContext"/>.</param>
     /// <returns>A clone of this clause.</returns>
-    public virtual AdditionalFromClause Clone (CloneContext cloneContext)
+    public AdditionalFromClause Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 

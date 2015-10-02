@@ -56,7 +56,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
       var newQueryModel = newSourceNode.Apply (null, ClauseGenerationContext);
       var newSourceReference = ((QuerySourceReferenceExpression) newQueryModel.SelectClause.Selector);
 
-      PrivateInvoke.InvokeNonPublicMethod (_currentNode, "set_Source", newSourceNode);
+      PrivateInvoke.SetNonPublicField (_currentNode, "_source", newSourceNode);
       var result = _expressionResolver.GetResolvedExpression (_unresolvedLambda.Body, _unresolvedLambda.Parameters[0], ClauseGenerationContext);
 
       var expectedResult = Expression.MakeBinary (ExpressionType.GreaterThan, newSourceReference, Expression.Constant (5));

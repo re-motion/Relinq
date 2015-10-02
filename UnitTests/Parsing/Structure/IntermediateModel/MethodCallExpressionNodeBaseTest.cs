@@ -17,7 +17,6 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using NUnit.Framework;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
@@ -34,11 +33,6 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
   {
     private abstract class TestableMethodCallExpressionNodeBase : MethodCallExpressionNodeBase
     {
-      public new static MethodInfo GetSupportedMethod<T> (Expression<Func<T>> methodCall)
-      {
-        return MethodCallExpressionNodeBase.GetSupportedMethod (methodCall);
-      }
-
       protected TestableMethodCallExpressionNodeBase (MethodCallExpressionParseInfo parseInfo)
           : base(parseInfo)
       {
@@ -154,25 +148,5 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
       var newQueryModel = _node.Apply (QueryModel, ClauseGenerationContext);
       Assert.That (newQueryModel.ResultTypeOverride, Is.SameAs (typeof (int)));
     }
-
-    [Test]
-    public void GetSupportedMethod_WithExactMatch_ReturnsMethod ()
-    {
-      var expectedMethod = typeof (Generic<,>).GetMethod ("NonAmbiguousMethod");
-
-      var result = TestableMethodCallExpressionNodeBase.GetSupportedMethod (() => ((Generic<int, string>) null).NonAmbiguousMethod (0));
-
-      Assert.That (result, Is.SameAs (expectedMethod));
-    }
-
-
-    [Test]
-    public void GetSupportedMethod_WithAmbiguousMatch_ThrowsNotSupportedException ()
-    {
-      Assert.That (
-          () => TestableMethodCallExpressionNodeBase.GetSupportedMethod (() => ((Generic<int, string>) null).AmbiguousMethod (0)),
-          Throws.TypeOf<NotSupportedException>());
-    }
-
   }
 }

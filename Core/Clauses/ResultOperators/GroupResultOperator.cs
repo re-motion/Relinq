@@ -19,7 +19,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.ExpressionVisitors;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Utilities;
 using Remotion.Utilities;
@@ -40,7 +40,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///             group s by s.Country;
   /// </code>
   /// </example>
-  public class GroupResultOperator : SequenceFromSequenceResultOperatorBase, IQuerySource
+  public sealed class GroupResultOperator : SequenceFromSequenceResultOperatorBase, IQuerySource
   {
     private static readonly MethodInfo s_executeMethod = 
         typeof (GroupResultOperator).GetRuntimeMethodChecked ("ExecuteGroupingInMemory", new[] { typeof (StreamedSequence) });
@@ -156,10 +156,10 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
       var inputSequence = input.GetTypedSequence<TSource> ();
 
-      var keySelectorLambda = ReverseResolvingExpressionTreeVisitor.ReverseResolve (input.DataInfo.ItemExpression, KeySelector);
+      var keySelectorLambda = ReverseResolvingExpressionVisitor.ReverseResolve (input.DataInfo.ItemExpression, KeySelector);
       var keySelector = (Func<TSource, TKey>) keySelectorLambda.Compile ();
 
-      var elementSelectorLambda = ReverseResolvingExpressionTreeVisitor.ReverseResolve (input.DataInfo.ItemExpression, ElementSelector);
+      var elementSelectorLambda = ReverseResolvingExpressionVisitor.ReverseResolve (input.DataInfo.ItemExpression, ElementSelector);
       var elementSelector = (Func<TSource, TElement>) elementSelectorLambda.Compile ();
 
       var resultSequence = inputSequence.GroupBy (keySelector, elementSelector);
@@ -176,8 +176,8 @@ namespace Remotion.Linq.Clauses.ResultOperators
     {
       return string.Format (
           "GroupBy({0}, {1})", 
-          FormattingExpressionTreeVisitor.Format (KeySelector), 
-          FormattingExpressionTreeVisitor.Format (ElementSelector));
+          KeySelector.BuildString(), 
+          ElementSelector.BuildString());
     }
   }
 }

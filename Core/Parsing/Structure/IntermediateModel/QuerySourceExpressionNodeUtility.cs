@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -27,7 +27,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// <summary>
   /// Provides common functionality used by implementors of <see cref="IQuerySourceExpressionNode"/>.
   /// </summary>
-  public class QuerySourceExpressionNodeUtility
+  public static class QuerySourceExpressionNodeUtility
   {
     /// <summary>
     /// Replaces the given parameter with a back-reference to the <see cref="IQuerySource"/> corresponding to <paramref name="referencedNode"/>.
@@ -52,7 +52,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       var clause = GetQuerySourceForNode (referencedNode, context);
       var referenceExpression = new QuerySourceReferenceExpression (clause);
 
-      return ReplacingExpressionTreeVisitor.Replace (parameterToReplace, referenceExpression, expression);
+      return ReplacingExpressionVisitor.Replace (parameterToReplace, referenceExpression, expression);
     }
 
     /// <summary>

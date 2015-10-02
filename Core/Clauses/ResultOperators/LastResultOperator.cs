@@ -35,7 +35,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Last();
   /// </code>
   /// </example>
-  public class LastResultOperator : ChoiceResultOperatorBase
+  public sealed class LastResultOperator : ChoiceResultOperatorBase
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="LastResultOperator"/>.
@@ -56,7 +56,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
       var sequence = input.GetTypedSequence<T> ();
 
       T result = ReturnDefaultWhenEmpty ? sequence.LastOrDefault() : sequence.Last ();
-      return new StreamedValue (result, (StreamedValueInfo) GetOutputDataInfo (input.DataInfo));
+      return new StreamedValue (result, GetOutputDataInfo (input.DataInfo));
     }
 
     /// <inheritdoc />

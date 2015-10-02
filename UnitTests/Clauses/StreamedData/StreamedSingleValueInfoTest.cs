@@ -37,7 +37,13 @@ namespace Remotion.Linq.UnitTests.Clauses.StreamedData
     }
 
     [Test]
-    public void AdjustDataType ()
+    public void DataType ()
+    {
+      Assert.That (_streamedSingleValueInfoNoDefault.DataType, Is.SameAs (typeof (Cook)));
+    }
+
+    [Test]
+    public void AdjustDataType_CompatibleType ()
     {
       var result = _streamedSingleValueInfoWithDefault.AdjustDataType (typeof (object));
 
@@ -47,6 +53,16 @@ namespace Remotion.Linq.UnitTests.Clauses.StreamedData
       Assert.That (((StreamedSingleValueInfo) result).ReturnDefaultWhenEmpty, Is.True);
 
       Assert.That (((StreamedSingleValueInfo) _streamedSingleValueInfoNoDefault.AdjustDataType (typeof (object))).ReturnDefaultWhenEmpty, Is.False);
+    }
+
+    [Test]
+    public void AdjustDataType_IncompatibleType ()
+    {
+      Assert.That (
+          () => _streamedSingleValueInfoNoDefault.AdjustDataType (typeof (string)),
+          Throws.ArgumentException.With.Message.EqualTo (
+              "'System.String' cannot be used as the new data type for a value of type 'Remotion.Linq.UnitTests.TestDomain.Cook'.\r\n"
+              + "Parameter name: dataType"));
     }
 
     [Test]

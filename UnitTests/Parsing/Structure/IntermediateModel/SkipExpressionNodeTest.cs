@@ -37,9 +37,16 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethod ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (SkipExpressionNode.SupportedMethods, q => q.Skip (3), e => e.Skip (3));
+      Assert.That (
+          SkipExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.Skip<object> (null, 0)),
+                  GetGenericMethodDefinition (() => Enumerable.Skip<object> (null, 0))
+              }));
     }
 
     [Test]

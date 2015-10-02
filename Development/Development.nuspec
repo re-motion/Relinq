@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package >
+<package>
   <metadata>
     <id>$id$</id>
     <version>$version$</version>
@@ -10,9 +10,15 @@
     <projectUrl>http://relinq.codeplex.com</projectUrl>
     <description>$description$</description>
     <copyright>$copyright$</copyright>
-    <tags>re-motion LiNQ UnitTesting $extraTags$</tags>
+    <tags>re-motion LINQ UnitTesting $extraTags$</tags>
   </metadata>
   <files>
     <file src="bin\$configuration$\$id$.pdb" target="lib\net45" />
+    <file src="..\Development.Net_3_5\bin\$configuration$\$id$.*" target="lib\net35" />
+    <file src="..\Development.Net_4_0\bin\$configuration$\$id$.*" target="lib\net40" />
+    <file src="..\Core.Net_3_5\**\*.cs" target="src\Core.Net_3_5" />
+    <file src="..\Core.Net_4_0\**\*.cs" target="src\Core.Net_4_0" />
+    <file src="..\Development.Net_3_5\**\*.cs" target="src\Development.Net_3_5" />
+    <file src="..\Development.Net_4_0\**\*.cs" target="src\Development.Net_4_0" />
   </files>
 </package>

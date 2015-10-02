@@ -18,7 +18,8 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
+using Remotion.Linq.Parsing.ExpressionVisitors.Transformation;
+using Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Utilities;
 
@@ -43,9 +44,10 @@ namespace Remotion.Linq.Parsing.Structure
     public static QueryParser CreateDefault ()
     {
       var transformerRegistry = ExpressionTransformerRegistry.CreateDefault();
+      var evaluatableExpressionFilter = new NullEvaluatableExpressionFilter();
       var expressionTreeParser = new ExpressionTreeParser (
           ExpressionTreeParser.CreateDefaultNodeTypeProvider (), 
-          ExpressionTreeParser.CreateDefaultProcessor (transformerRegistry));
+          ExpressionTreeParser.CreateDefaultProcessor (transformerRegistry, evaluatableExpressionFilter));
       return new QueryParser(expressionTreeParser);
     }
 

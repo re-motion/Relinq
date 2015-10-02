@@ -15,13 +15,13 @@
 // under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Utilities;
-using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 {
@@ -32,40 +32,21 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// When this node is used, it usually follows (or replaces) a <see cref="SelectExpressionNode"/> of an <see cref="IExpressionNode"/> chain that 
   /// represents a query.
   /// </summary>
-  public class UnionExpressionNode : ResultOperatorExpressionNodeBase, IQuerySourceExpressionNode
+  public sealed class UnionExpressionNode : QuerySourceSetOperationExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.Union<object> (null, null)),
-                                                               GetSupportedMethod (() => Enumerable.Union<object> (null, null))
-                                                           };
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("Union").WithoutEqualityComparer();
+    }
 
     public UnionExpressionNode (MethodCallExpressionParseInfo parseInfo, Expression source2)
-      : base (parseInfo, null, null)
+      : base(parseInfo, source2)
     {
-      ArgumentUtility.CheckNotNull ("source2", source2);
-      Source2 = source2;
-      ItemType = ReflectionUtility.GetItemTypeOfClosedGenericIEnumerable (parseInfo.ParsedExpression.Type, "expression");
     }
 
-
-    public Expression Source2 { get; private set; }
-    public Type ItemType { get; private set; }
-
-    public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
+    protected override ResultOperatorBase CreateSpecificResultOperator ()
     {
-      ArgumentUtility.CheckNotNull ("inputParameter", inputParameter);
-      ArgumentUtility.CheckNotNull ("expressionToBeResolved", expressionToBeResolved);
-
-      // UnionResultOperator is a query source, so expressions reolve their input parameter with the UnionResultOperator created by this node.
-      return QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (this, inputParameter, expressionToBeResolved, clauseGenerationContext);
-    }
-
-    protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
-    {
-      var resultOperator = new UnionResultOperator (AssociatedIdentifier, ItemType, Source2);
-      clauseGenerationContext.AddContextInfo (this, resultOperator);
-      return resultOperator;
+      return new UnionResultOperator (AssociatedIdentifier, ItemType, Source2);
     }
   }
 }

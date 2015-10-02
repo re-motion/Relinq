@@ -15,16 +15,22 @@
 // under the License.
 // 
 using System;
+#if !NET_3_5
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+#endif
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Parsing;
+#if NET_3_5
+using Remotion.Linq.Collections;
+#endif
 using Remotion.Linq.Parsing.Structure;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq
@@ -41,6 +47,38 @@ namespace Remotion.Linq
   /// </remarks>
   public sealed class QueryModel
   {
+    private sealed class CloningExpressionVisitor : RelinqExpressionVisitor
+    {
+      private readonly QuerySourceMapping _querySourceMapping;
+
+      public CloningExpressionVisitor (QuerySourceMapping querySourceMapping)
+      {
+        _querySourceMapping = querySourceMapping;
+      }
+
+      protected internal override Expression VisitQuerySourceReference (QuerySourceReferenceExpression expression)
+      {
+        if (_querySourceMapping.ContainsMapping (expression.ReferencedQuerySource))
+          return _querySourceMapping.GetExpression (expression.ReferencedQuerySource);
+
+        return expression;
+      }
+
+      protected internal override Expression VisitSubQuery (SubQueryExpression expression)
+      {
+        var clonedQueryModel = expression.QueryModel.Clone (_querySourceMapping);
+        return new SubQueryExpression (clonedQueryModel);
+      }
+
+#if NET_3_5
+      protected override Expression VisitRelinqUnknownNonExtension (Expression expression)
+      {
+        //ignore
+        return expression;
+      }
+#endif
+    }
+
     private readonly UniqueIdentifierGenerator _uniqueIdentifierGenerator;
 
     private MainFromClause _mainFromClause;
@@ -90,15 +128,32 @@ namespace Remotion.Linq
     /// query ends with a <see cref="ResultOperatorBase"/>. For example, if the query ends with a <see cref="CountResultOperator"/>, the
     /// result type will be <see cref="int"/>.
     /// </remarks>
+    /// <exception cref="InvalidOperationException">
+    /// The <see cref="ResultTypeOverride"/> is not compatible with the calculated <see cref="IStreamedDataInfo"/> calculated from the <see cref="ResultOperators"/>.
+    /// </exception>
     public IStreamedDataInfo GetOutputDataInfo ()
     {
       var outputDataInfo = ResultOperators
           .Aggregate ((IStreamedDataInfo) SelectClause.GetOutputDataInfo (), (current, resultOperator) => resultOperator.GetOutputDataInfo (current));
 
-      if (ResultTypeOverride != null)
-        return outputDataInfo.AdjustDataType (ResultTypeOverride);
-      else
+      if (ResultTypeOverride == null)
         return outputDataInfo;
+
+      try
+      {
+        return outputDataInfo.AdjustDataType (ResultTypeOverride);
+      }
+      catch (Exception ex)
+      {
+        var resultTypeOverride = ResultTypeOverride;
+        ResultTypeOverride = null;
+        throw new InvalidOperationException (
+            string.Format (
+                "The query model's result type cannot be changed to '{0}'. The result type may only be overridden and set to values compatible with the ResultOperators' current data type ('{1}').",
+                resultTypeOverride,
+                outputDataInfo.DataType),
+            ex);
+      }
     }
 
     /// <summary>
@@ -176,7 +231,7 @@ namespace Remotion.Linq
       string mainQueryString;
       if (IsIdentityQuery ())
       {
-        mainQueryString = FormattingExpressionTreeVisitor.Format (MainFromClause.FromExpression);
+        mainQueryString = MainFromClause.FromExpression.BuildString();
       }
       else
       {
@@ -227,7 +282,8 @@ namespace Remotion.Linq
       }
 
       var clone = queryModelBuilder.Build ();
-      clone.TransformExpressions (ex => CloningExpressionTreeVisitor.AdjustExpressionAfterCloning (ex, cloneContext.QuerySourceMapping));
+      var cloningExpressionVisitor = new CloningExpressionVisitor (cloneContext.QuerySourceMapping);
+      clone.TransformExpressions (cloningExpressionVisitor.Visit);
       clone.ResultTypeOverride = ResultTypeOverride;
       return clone;
     }
@@ -271,7 +327,7 @@ namespace Remotion.Linq
 
       if (e.NewItems != null)
       {
-        foreach (var fromClause in e.NewItems.OfType<FromClauseBase>())
+        foreach (var fromClause in e.NewItems.OfType<IFromClause>())
           _uniqueIdentifierGenerator.AddKnownIdentifier (fromClause.ItemName);
       }
     }

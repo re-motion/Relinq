@@ -16,8 +16,8 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.Expressions
@@ -31,31 +31,51 @@ namespace Remotion.Linq.Clauses.Expressions
   /// To treat this expression as if it were an ordinary <see cref="BinaryExpression"/>, call its <see cref="Reduce"/> method and visit the result.
   /// </para>
   /// <para>
-  /// Subclasses of <see cref="ThrowingExpressionTreeVisitor"/> that do not implement <see cref="IVBSpecificExpressionVisitor"/> will, by default, 
-  /// automatically reduce this expression type to <see cref="BinaryExpression"/> in the 
-  /// <see cref="ThrowingExpressionTreeVisitor.VisitExtensionExpression"/> method.
+  /// Subclasses of <see cref="ThrowingExpressionVisitor"/> that do not implement <see cref="IVBSpecificExpressionVisitor"/> will, by default, 
+  /// automatically reduce this expression type to <see cref="BinaryExpression"/> in the <see cref="ThrowingExpressionVisitor.VisitExtension"/> method.
   /// </para>
   /// <para>
-  /// Subclasses of <see cref="ExpressionTreeVisitor"/> that do not implement <see cref="IVBSpecificExpressionVisitor"/> will, by default, 
-  /// ignore this expression and visit its child expressions via the <see cref="ExpressionTreeVisitor.VisitExtensionExpression"/> and 
+  /// Subclasses of <see cref="RelinqExpressionVisitor"/> that do not implement <see cref="IVBSpecificExpressionVisitor"/> will, by default, 
+  /// ignore this expression and visit its child expressions via the <see cref="ExpressionVisitor.VisitExtension"/> and 
   /// <see cref="VisitChildren"/> methods.
   /// </para>
   /// </remarks>
-  public class VBStringComparisonExpression : ExtensionExpression
+  public sealed class VBStringComparisonExpression
+#if !NET_3_5
+      : Expression
+#else
+    : ExtensionExpression
+#endif
   {
+#if NET_3_5
     public const ExpressionType ExpressionType = (ExpressionType) 100003;
+#endif
 
     private readonly Expression _comparison;
     private readonly bool _textCompare;
 
     public VBStringComparisonExpression (Expression comparison, bool textCompare)
-        : base(comparison.Type, ExpressionType)
+#if NET_3_5
+      : base (comparison.Type, ExpressionType)
+#endif
     {
       ArgumentUtility.CheckNotNull ("comparison", comparison);
 
       _comparison = comparison;
       _textCompare = textCompare;
     }
+
+#if !NET_3_5
+    public override Type Type
+    {
+      get { return _comparison.Type; }
+    }
+
+    public override ExpressionType NodeType
+    {
+      get { return ExpressionType.Extension; }
+    }
+#endif
 
     public Expression Comparison
     {
@@ -77,31 +97,31 @@ namespace Remotion.Linq.Clauses.Expressions
       return _comparison;
     }
 
-    protected internal override Expression VisitChildren (ExpressionTreeVisitor visitor)
+    protected override Expression VisitChildren (ExpressionVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
 
-      var newExpression = visitor.VisitExpression (_comparison);
+      var newExpression = visitor.Visit (_comparison);
       if (newExpression != _comparison)
         return new VBStringComparisonExpression (newExpression, _textCompare);
       else
         return this;
     }
 
-    public override Expression Accept (ExpressionTreeVisitor visitor)
+    protected override Expression Accept (ExpressionVisitor visitor)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
 
       var specificVisitor = visitor as IVBSpecificExpressionVisitor;
       if (specificVisitor != null)
-        return specificVisitor.VisitVBStringComparisonExpression (this);
+        return specificVisitor.VisitVBStringComparison (this);
       else
         return base.Accept (visitor);
     }
 
     public override string ToString ()
     {
-      return string.Format ("VBCompareString({0}, {1})", FormattingExpressionTreeVisitor.Format(Comparison), TextCompare);
+      return string.Format ("VBCompareString({0}, {1})", Comparison.BuildString(), TextCompare);
     }
     
   }

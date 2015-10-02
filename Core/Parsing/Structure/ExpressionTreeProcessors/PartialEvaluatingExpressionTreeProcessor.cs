@@ -16,7 +16,8 @@
 // 
 using System;
 using System.Linq.Expressions;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors;
+using Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors
@@ -25,16 +26,30 @@ namespace Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors
   /// Analyzes an <see cref="Expression"/> tree for sub-trees that are evaluatable in-memory, and evaluates those sub-trees.
   /// </summary>
   /// <remarks>
-  /// The <see cref="PartialEvaluatingExpressionTreeProcessor"/> uses the <see cref="PartialEvaluatingExpressionTreeVisitor"/> for partial evaluation.
+  /// The <see cref="PartialEvaluatingExpressionTreeProcessor"/> uses the <see cref="PartialEvaluatingExpressionVisitor"/> for partial evaluation.
   /// It performs two visiting runs over the <see cref="Expression"/> tree.
   /// </remarks>
   public sealed class PartialEvaluatingExpressionTreeProcessor : IExpressionTreeProcessor
   {
+    private readonly IEvaluatableExpressionFilter _filter;
+
+    public PartialEvaluatingExpressionTreeProcessor (IEvaluatableExpressionFilter filter)
+    {
+      ArgumentUtility.CheckNotNull ("filter", filter);
+
+      _filter = filter;
+    }
+
+    public IEvaluatableExpressionFilter Filter
+    {
+      get { return _filter; }
+    }
+
     public Expression Process (Expression expressionTree)
     {
       ArgumentUtility.CheckNotNull ("expressionTree", expressionTree);
 
-      return PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (expressionTree);
+      return PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (expressionTree, _filter);
     }
   }
 }

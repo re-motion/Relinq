@@ -15,12 +15,14 @@
 // under the License.
 // 
 using System;
+#if NET_3_5
 using System.Diagnostics;
+#endif
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses
@@ -37,7 +39,7 @@ namespace Remotion.Linq.Clauses
   ///             select s;
   /// </code>
   /// </example>
-  public class SelectClause : IClause
+  public sealed class SelectClause : IClause
   {
     private Expression _selector;
 
@@ -55,7 +57,9 @@ namespace Remotion.Linq.Clauses
     /// <summary>
     /// Gets the selector defining what parts of the data items are returned by the query.
     /// </summary>
-    [DebuggerDisplay ("{Remotion.Linq.Clauses.ExpressionTreeVisitors.FormattingExpressionTreeVisitor.Format (Selector),nq}")]
+#if NET_3_5
+    [DebuggerDisplay ("{Remotion.Linq.Clauses.ExpressionVisitors.FormattingExpressionVisitor.Format (Selector),nq}")]
+#endif
     public Expression Selector
     {
       get { return _selector; }
@@ -67,7 +71,7 @@ namespace Remotion.Linq.Clauses
     /// </summary>
     /// <param name="visitor">The visitor to accept.</param>
     /// <param name="queryModel">The query model in whose context this clause is visited.</param>
-    public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel)
+    public void Accept (IQueryModelVisitor visitor, QueryModel queryModel)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
@@ -93,7 +97,7 @@ namespace Remotion.Linq.Clauses
     /// </summary>
     /// <param name="transformation">The transformation object. This delegate is called for each <see cref="Expression"/> within this
     /// clause, and those expressions will be replaced with what the delegate returns.</param>
-    public virtual void TransformExpressions (Func<Expression, Expression> transformation)
+    public void TransformExpressions (Func<Expression, Expression> transformation)
     {
       ArgumentUtility.CheckNotNull ("transformation", transformation);
       Selector = transformation (Selector);
@@ -101,7 +105,7 @@ namespace Remotion.Linq.Clauses
 
     public override string ToString ()
     {
-      return "select " + FormattingExpressionTreeVisitor.Format (Selector);
+      return "select " + Selector.BuildString();
     }
 
     /// <summary>

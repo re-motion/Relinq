@@ -17,7 +17,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+#if !NET_3_5
 using System.Collections.ObjectModel;
+#endif
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Collections
@@ -25,7 +27,7 @@ namespace Remotion.Linq.Collections
   /// <summary>
   /// Extension methods for <see cref="ObservableCollection{T}"/>
   /// </summary>
-  public static class ObservableCollectionExtensions
+  internal static class ObservableCollectionExtensions
   {
     private class ChangeResistantEnumerable<T> : IEnumerable<T>
     {

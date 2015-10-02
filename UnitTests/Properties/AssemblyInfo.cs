@@ -16,6 +16,9 @@
 // 
 using System;
 using System.Reflection;
+#if NET_3_5
+using System.Security;
+#endif
 
 //
 // General Information about an assembly is controlled through the following 
@@ -27,3 +30,6 @@ using System.Reflection;
 [assembly: AssemblyDescription("Unit Tests for Remotion Linq Library")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
+#if NET_3_5
+[assembly: AllowPartiallyTrustedCallers] // required for MediumTrustQueryParserIntegrationTest
+#endif

@@ -14,12 +14,12 @@
     &lt;/SearchInParts&gt;
     &lt;LinkFormats&gt;
       &lt;GitExtLinkFormat&gt;
-        &lt;Caption&gt;JIRA {1}&lt;/Caption&gt;
-        &lt;Format&gt;https://www.re-motion.org/jira/browse/{1}&lt;/Format&gt;
+        &lt;Caption&gt;JIRA {0}&lt;/Caption&gt;
+        &lt;Format&gt;https://www.re-motion.org/jira/browse/{0}&lt;/Format&gt;
       &lt;/GitExtLinkFormat&gt;
     &lt;/LinkFormats&gt;
     &lt;Name&gt;JIRA&lt;/Name&gt;
-    &lt;SearchPattern&gt;(^|\s|\(|#)(RM[A-Z]{0,8}-\d{1,6})(\-|\)|\s|$)&lt;/SearchPattern&gt;
+    &lt;SearchPattern&gt;(?:^|\s|\(|#|feature/|bugfix/|hotfix/)(RM[A-Z]{0,8}-\d{1,6})(?:\-|\)|\s|$)&lt;/SearchPattern&gt;
     &lt;Enabled&gt;true&lt;/Enabled&gt;
   &lt;/GitExtLinkDef&gt;
 &lt;/ArrayOfGitExtLinkDef&gt;</string>

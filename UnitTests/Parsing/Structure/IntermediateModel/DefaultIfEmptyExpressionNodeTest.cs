@@ -41,15 +41,18 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethod_NoDefaultValue ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (DefaultIfEmptyExpressionNode.SupportedMethods,  q => q.DefaultIfEmpty (), e => e.DefaultIfEmpty ());
-    }
-
-    [Test]
-    public void SupportedMethod_WithDefaultValue ()
-    {
-      AssertSupportedMethod_Generic (DefaultIfEmptyExpressionNode.SupportedMethods, q => q.DefaultIfEmpty (null), e => e.DefaultIfEmpty (null));
+      Assert.That (
+          DefaultIfEmptyExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.DefaultIfEmpty<object> (null)),
+                  GetGenericMethodDefinition (() => Queryable.DefaultIfEmpty<object> (null, null)),
+                  GetGenericMethodDefinition (() => Enumerable.DefaultIfEmpty<object> (null)),
+                  GetGenericMethodDefinition (() => Enumerable.DefaultIfEmpty<object> (null, null)),
+              }));
     }
 
     [Test]

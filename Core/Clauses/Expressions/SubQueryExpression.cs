@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Linq.Expressions;
+using Remotion.Linq.Parsing;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.Expressions
@@ -23,29 +24,59 @@ namespace Remotion.Linq.Clauses.Expressions
   /// <summary>
   /// Represents an <see cref="Expression"/> that holds a subquery. The subquery is held by <see cref="QueryModel"/> in its parsed form.
   /// </summary>
-  public class SubQueryExpression : Expression
+  public sealed class SubQueryExpression : Expression
   {
-    private readonly Type _type;
+#if NET_3_5
     public const ExpressionType ExpressionType = (ExpressionType) 100002;
-    
+#endif
+
+#if !NET_3_5
+    private readonly Type _type;
+#endif
+
     public SubQueryExpression (QueryModel queryModel)
+#if NET_3_5
+        : base (ExpressionType, queryModel.GetOutputDataInfo().DataType)
+#endif
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      QueryModel = queryModel;
+#if !NET_3_5
       _type = queryModel.GetOutputDataInfo().DataType;
+#endif
+      QueryModel = queryModel;
     }
 
+#if !NET_3_5
     public override ExpressionType NodeType
     {
-      get { return ExpressionType; }
+      get { return ExpressionType.Extension; }
     }
 
     public override Type Type
     {
       get { return _type; }
     }
+#endif
 
     public QueryModel QueryModel { get; private set; }
+
+#if !NET_3_5
+    public override string ToString ()
+    {
+      return "{" + QueryModel + "}";
+    }
+
+    protected override Expression Accept (ExpressionVisitor visitor)
+    {
+      ArgumentUtility.CheckNotNull ("visitor", visitor);
+
+      var relinqVisitor = visitor as RelinqExpressionVisitor;
+      if (relinqVisitor == null)
+        return base.Accept (visitor);
+
+      return relinqVisitor.VisitSubQuery (this);
+    }
+#endif
   }
 }

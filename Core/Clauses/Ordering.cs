@@ -15,9 +15,11 @@
 // under the License.
 // 
 using System;
+#if NET_3_5
 using System.Diagnostics;
+#endif
 using System.Linq.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses
@@ -25,7 +27,7 @@ namespace Remotion.Linq.Clauses
   /// <summary>
   /// Represents a single ordering instruction in an <see cref="OrderByClause"/>.
   /// </summary>
-  public class Ordering
+  public sealed class Ordering
   {
     private Expression _expression;
 
@@ -46,7 +48,9 @@ namespace Remotion.Linq.Clauses
     /// Gets or sets the expression used to order the data items returned by the query.
     /// </summary>
     /// <value>The expression.</value>
-    [DebuggerDisplay ("{Remotion.Linq.Clauses.ExpressionTreeVisitors.FormattingExpressionTreeVisitor.Format (Expression),nq}")]
+#if NET_3_5
+    [DebuggerDisplay ("{Remotion.Linq.Clauses.ExpressionVisitors.FormattingExpressionVisitor.Format (Expression),nq}")]
+#endif
     public Expression Expression
     {
       get { return _expression; }
@@ -65,7 +69,7 @@ namespace Remotion.Linq.Clauses
     /// <param name="queryModel">The query model in whose context this clause is visited.</param>
     /// <param name="orderByClause">The <see cref="OrderByClause"/> in whose context this item is visited.</param>
     /// <param name="index">The index of this item in the <paramref name="orderByClause"/>'s <see cref="OrderByClause.Orderings"/> collection.</param>
-    public virtual void Accept (IQueryModelVisitor visitor, QueryModel queryModel, OrderByClause orderByClause, int index)
+    public void Accept (IQueryModelVisitor visitor, QueryModel queryModel, OrderByClause orderByClause, int index)
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
@@ -79,7 +83,7 @@ namespace Remotion.Linq.Clauses
     /// </summary>
     /// <param name="cloneContext">The clones of all query source clauses are registered with this <see cref="CloneContext"/>.</param>
     /// <returns>A clone of this item.</returns>
-    public virtual Ordering Clone (CloneContext cloneContext)
+    public Ordering Clone (CloneContext cloneContext)
     {
       ArgumentUtility.CheckNotNull ("cloneContext", cloneContext);
 
@@ -100,7 +104,7 @@ namespace Remotion.Linq.Clauses
 
     public override string ToString ()
     {
-      return FormattingExpressionTreeVisitor.Format (Expression) + (OrderingDirection == OrderingDirection.Asc ? " asc" : " desc");
+      return Expression.BuildString() + (OrderingDirection == OrderingDirection.Asc ? " asc" : " desc");
     }
   }
 }

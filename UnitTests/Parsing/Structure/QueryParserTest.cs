@@ -22,7 +22,7 @@ using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Development.UnitTesting;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
+using Remotion.Linq.Parsing.ExpressionVisitors.Transformation;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.ExpressionTreeProcessors;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;

@@ -15,10 +15,12 @@
 // under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -30,15 +32,15 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// When this node is used, it follows an <see cref="OrderByExpressionNode"/>, an <see cref="OrderByDescendingExpressionNode"/>, 
   /// a <see cref="ThenByExpressionNode"/>, or a <see cref="ThenByDescendingExpressionNode"/>.
   /// </summary>
-  public class ThenByExpressionNode : MethodCallExpressionNodeBase
+  public sealed class ThenByExpressionNode : MethodCallExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.ThenBy<object, object> (null, null)),
-                                                               GetSupportedMethod (() => Enumerable.ThenBy<object, object> (null, null)),
-                                                           };
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("ThenBy").WithoutComparer();
+    }
 
     private readonly ResolvedExpressionCache<Expression> _cachedSelector;
+    private readonly LambdaExpression _keySelector;
 
     public ThenByExpressionNode (MethodCallExpressionParseInfo parseInfo, LambdaExpression keySelector)
         : base (parseInfo)
@@ -48,15 +50,18 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       if (keySelector.Parameters.Count != 1)
         throw new ArgumentException ("KeySelector must have exactly one parameter.", "keySelector");
 
-      KeySelector = keySelector;
+      _keySelector = keySelector;
       _cachedSelector = new ResolvedExpressionCache<Expression> (this);
     }
 
-    public LambdaExpression KeySelector { get; private set; }
+    public LambdaExpression KeySelector
+    {
+      get { return _keySelector; }
+    }
 
     public Expression GetResolvedKeySelector (ClauseGenerationContext clauseGenerationContext)
     {
-      return _cachedSelector.GetOrCreate (r => r.GetResolvedExpression (KeySelector.Body, KeySelector.Parameters[0], clauseGenerationContext));
+      return _cachedSelector.GetOrCreate (r => r.GetResolvedExpression (_keySelector.Body, _keySelector.Parameters[0], clauseGenerationContext));
     }
 
     public override Expression Resolve (
@@ -69,7 +74,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       return Source.Resolve (inputParameter, expressionToBeResolved, clauseGenerationContext);
     }
 
-    protected override QueryModel ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    protected override void ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       var orderByClause = GetOrderByClause (queryModel);
@@ -78,7 +83,6 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
         throw new NotSupportedException ("ThenByDescending expressions must follow OrderBy, OrderByDescending, ThenBy, or ThenByDescending expressions.");
 
       orderByClause.Orderings.Add (new Ordering (GetResolvedKeySelector (clauseGenerationContext), OrderingDirection.Asc));
-      return queryModel;
     }
 
     private OrderByClause GetOrderByClause (QueryModel queryModel)

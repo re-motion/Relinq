@@ -15,11 +15,13 @@
 // under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Parsing.Structure.IntermediateModel
@@ -30,21 +32,25 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// When this node is used, it usually follows (or replaces) a <see cref="SelectExpressionNode"/> of an <see cref="IExpressionNode"/> chain that 
   /// represents a query.
   /// </summary>
-  public class SkipExpressionNode : ResultOperatorExpressionNodeBase
+  public sealed class SkipExpressionNode : ResultOperatorExpressionNodeBase
   {
-    public static readonly MethodInfo[] SupportedMethods = new[]
-                                                           {
-                                                               GetSupportedMethod (() => Queryable.Skip<object> (null, 0)),
-                                                               GetSupportedMethod (() => Enumerable.Skip<object> (null, 0)),
-                                                           };
+    public static IEnumerable<MethodInfo> GetSupportedMethods()
+    {
+      return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("Skip");
+    }
+
+    private readonly Expression _count;
 
     public SkipExpressionNode (MethodCallExpressionParseInfo parseInfo, Expression count)
         : base (parseInfo, null, null)
     {
-      Count = count;
+      _count = count;
     }
 
-    public Expression Count { get; set; }
+    public Expression Count
+    {
+      get { return _count; }
+    }
 
     public override Expression Resolve (ParameterExpression inputParameter, Expression expressionToBeResolved, ClauseGenerationContext clauseGenerationContext)
     {
@@ -57,7 +63,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
 
     protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
-      return new SkipResultOperator(Count);
+      return new SkipResultOperator(_count);
     }
   }
 }

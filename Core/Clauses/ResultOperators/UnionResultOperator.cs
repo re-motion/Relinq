@@ -20,8 +20,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq.Clauses.Expressions;
-using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses.StreamedData;
+using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.ResultOperators
@@ -37,7 +37,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s).Union(students2);
   /// </code>
   /// </example>
-  public class UnionResultOperator : SequenceFromSequenceResultOperatorBase, IQuerySource
+  public sealed class UnionResultOperator : SequenceFromSequenceResultOperatorBase, IQuerySource
   {
     private string _itemName;
     private Type _itemType;
@@ -78,7 +78,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     /// <summary>
     /// Gets the value of <see cref="Source2"/>, assuming <see cref="Source2"/> holds a <see cref="ConstantExpression"/>. If it doesn't,
-    /// an Exception is thrown.
+    /// an <see cref="InvalidOperationException"/> is thrown.
     /// </summary>
     /// <returns>The constant value of <see cref="Source2"/>.</returns>
     public IEnumerable GetConstantSource2 ()
@@ -113,7 +113,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
 
     public override string ToString ()
     {
-      return "Union(" + FormattingExpressionTreeVisitor.Format (Source2) + ")";
+      return "Union(" + Source2.BuildString() + ")";
     }
   }
 }

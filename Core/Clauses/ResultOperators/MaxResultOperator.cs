@@ -36,7 +36,7 @@ namespace Remotion.Linq.Clauses.ResultOperators
   ///              select s.ID).Max();
   /// </code>
   /// </example>
-  public class MaxResultOperator : ChoiceResultOperatorBase
+  public sealed class MaxResultOperator : ChoiceResultOperatorBase
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="MaxResultOperator"/>.

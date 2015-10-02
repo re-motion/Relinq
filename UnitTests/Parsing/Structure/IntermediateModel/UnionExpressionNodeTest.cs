@@ -21,6 +21,7 @@ using NUnit.Framework;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
+using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
 {
@@ -35,13 +36,21 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
       base.SetUp ();
       _source2 = Expression.Constant (new[] { "test1", "test2" });
       _node = new UnionExpressionNode (
-          CreateParseInfo (SourceNode, "u", UnionExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (int))), _source2);
+          CreateParseInfo (SourceNode, "u", ReflectionUtility.GetMethod (() => Queryable.Union<int> (null, null))),
+          _source2);
     }
 
     [Test]
-    public void SupportedMethod_WithoutComparer ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (UnionExpressionNode.SupportedMethods, q => q.Union (null), e => e.Union (null));
+      Assert.That (
+          UnionExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.Union<object> (null, null)),
+                  GetGenericMethodDefinition (() => Enumerable.Union<object> (null, null))
+              }));
     }
 
     [Test]

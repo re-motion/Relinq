@@ -19,8 +19,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors.Transformation.PredefinedTransformations;
+using Remotion.Linq.Parsing.ExpressionVisitors.Transformation;
+using Remotion.Linq.Parsing.ExpressionVisitors.Transformation.PredefinedTransformations;
 
 namespace Remotion.Linq.UnitTests.TestDomain
 {

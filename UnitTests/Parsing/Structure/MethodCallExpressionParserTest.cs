@@ -22,7 +22,8 @@ using NUnit.Framework;
 using Remotion.Development.UnitTesting;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Development.UnitTesting;
-using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Remotion.Linq.Development.UnitTesting.Parsing;
+using Remotion.Linq.Parsing.ExpressionVisitors;
 using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Parsing.Structure.NodeTypeProviders;
@@ -44,11 +45,11 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     {
       _methodInfoBasedNodeTypeRegistry = new MethodInfoBasedNodeTypeRegistry ();
 
-      _methodInfoBasedNodeTypeRegistry.Register (WhereExpressionNode.SupportedMethods, typeof (WhereExpressionNode));
-      _methodInfoBasedNodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
-      _methodInfoBasedNodeTypeRegistry.Register (TakeExpressionNode.SupportedMethods, typeof (TakeExpressionNode));
-      _methodInfoBasedNodeTypeRegistry.Register (CountExpressionNode.SupportedMethods, typeof (CountExpressionNode));
-      _methodInfoBasedNodeTypeRegistry.Register (JoinExpressionNode.SupportedMethods, typeof (JoinExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (WhereExpressionNode.GetSupportedMethods(), typeof (WhereExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (TakeExpressionNode.GetSupportedMethods(), typeof (TakeExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (CountExpressionNode.GetSupportedMethods(), typeof (CountExpressionNode));
+      _methodInfoBasedNodeTypeRegistry.Register (JoinExpressionNode.GetSupportedMethods(), typeof (JoinExpressionNode));
 
       _parser = new MethodCallExpressionParser (_methodInfoBasedNodeTypeRegistry);
 
@@ -187,7 +188,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     public void Parse_WithSubQuery_UsesNodeTypeRegistry ()
     {
       var emptyNodeTypeRegistry = new MethodInfoBasedNodeTypeRegistry ();
-      emptyNodeTypeRegistry.Register (SelectExpressionNode.SupportedMethods, typeof (SelectExpressionNode));
+      emptyNodeTypeRegistry.Register (SelectExpressionNode.GetSupportedMethods(), typeof (SelectExpressionNode));
       var parser = new MethodCallExpressionParser (emptyNodeTypeRegistry);
 
       var expression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<Cook>, IQueryable<int>> (
@@ -251,8 +252,9 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     {
       Func<int, int> func = i => i;
       var methodCallExpression = (MethodCallExpression)
-          PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (
-              ExpressionHelper.MakeExpression<IQueryable<int>, IEnumerable<int>> (q => q.Select (func)));
+          PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (
+              ExpressionHelper.MakeExpression<IQueryable<int>, IEnumerable<int>> (q => q.Select (func)),
+              new TestEvaluatableExpressionFilter());
 
       ParseMethodCallExpression (methodCallExpression);
     }
@@ -262,8 +264,9 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     {
       Func<int, int> func = i => i;
       var methodCallExpression = (MethodCallExpression)
-          PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees (
-              ExpressionHelper.MakeExpression<IQueryable<int>, IEnumerable<int>> (q => q.Select (func)));
+          PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (
+              ExpressionHelper.MakeExpression<IQueryable<int>, IEnumerable<int>> (q => q.Select (func)),
+              new TestEvaluatableExpressionFilter());
 
       var exception = Assert.Throws<NotSupportedException> (() => ParseMethodCallExpression (methodCallExpression));
       var deserialized = Serializer.SerializeAndDeserialize (exception);

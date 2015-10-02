@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0A45F945-D79B-4898-BCE7-67B0AD481C5D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Remotion.Linq</RootNamespace>
+    <AssemblyName>Remotion.Linq</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET_3_5</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Remotion.Linq.XML</DocumentationFile>
+    <NoWarn>1591;419</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NET_3_5</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Remotion.Linq.XML</DocumentationFile>
+    <NoWarn>1591;419</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\remotion.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\AssemblyInfoShared.cs">
+      <Link>Properties\AssemblyInfoShared.cs</Link>
+    </Compile>
+    <Compile Include="..\Core.Net_4_0\Utilities\MethodInfoExtensions.cs">
+      <Link>Utilities\MethodInfoExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Core.Net_4_0\Utilities\TypeExtensions.cs">
+      <Link>Utilities\TypeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Core.Net_4_0\Utilities\TypeInfo.cs">
+      <Link>Utilities\TypeInfo.cs</Link>
+    </Compile>
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\AssertionConditionAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\AssertionConditionType.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\AssertionMethodAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\BaseTypeRequiredAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\CanBeNullAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\CannotApplyEqualityOperatorAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\ContractAnnotationAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\ImplicitUseKindFlags.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\ImplicitUseTargetFlags.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\InstantHandleAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\InvokerParameterNameAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\LinqTunnelAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\LocalizationRequiredAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\MeansImplicitUseAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\NoEnumerationAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\NotifyPropertyChangedInvocatorAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\NotNullAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\PathReferenceAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\PublicAPIAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\PureAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\StringFormatMethodAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\TerminatesProgramAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\UsedImplicitlyAttribute.cs" />
+    <Compile Include="App_Packages\Remotion.Utilities.ArgumentUtility.Sources.1.15.23.0\ArgumentUtility.cs" />
+    <Compile Include="App_Packages\Remotion.Utilities.Assertion.Sources.1.15.23.0\Assertion.cs" />
+    <Compile Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\NullableTypeUtility.cs" />
+    <Compile Include="..\Core\**\*.cs" Exclude="..\Core\App_Packages\**\*.*;..\Core\bin\**\*.*;..\Core\obj\**\*.*">
+      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="Clauses\Expressions\ExtensionExpression.cs" />
+    <Compile Include="Clauses\ExpressionVisitors\FormattingExpressionVisitor.cs" />
+    <Compile Include="Collections\NotifyCollectionChangedAction.cs" />
+    <Compile Include="Collections\ObservableCollection.cs" />
+    <Compile Include="Collections\NotifyCollectionChangedEventArgs.cs" />
+    <Compile Include="Parsing\ExpressionVisitor.cs" />
+    <Compile Include="Utilities\Lazy.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Apache-2.0.licenseheader">
+      <Link>Apache-2.0.licenseheader</Link>
+    </None>
+    <None Include="..\remotion.snk">
+      <Link>remotion.snk</Link>
+    </None>
+    <None Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\ReSharperAnnotations Apache-2.0.licenseheader" />
+    <None Include="App_Packages\Remotion.Utilities.ArgumentUtility.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
+    <None Include="App_Packages\Remotion.Utilities.Assertion.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
+    <None Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
+    <None Include="packages.config" />
+    <Compile Include="Parsing\ThrowingExpressionVisitor.NET_3_5.cs" />
+    <Compile Include="Parsing\RelinqExpressionVisitor.NET_3_5.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

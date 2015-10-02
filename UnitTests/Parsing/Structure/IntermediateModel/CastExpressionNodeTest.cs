@@ -49,9 +49,16 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethods ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (CastExpressionNode.SupportedMethods, q => q.Cast<int> (), e => e.Cast<int> ());
+      Assert.That (
+          CastExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.Cast<object> (null)),
+                  GetGenericMethodDefinition (() => Enumerable.Cast<object> (null)),
+              }));
     }
 
     [Test]

@@ -24,6 +24,8 @@ using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.Development.UnitTesting.Clauses.Expressions;
+using Remotion.Linq.UnitTests.Parsing.ExpressionVisitors;
 using Remotion.Linq.UnitTests.TestDomain;
 using Rhino.Mocks;
 
@@ -35,7 +37,6 @@ namespace Remotion.Linq.UnitTests
     private MainFromClause _mainFromClause;
     private SelectClause _selectClause;
     private QueryModel _queryModel;
-    private QuerySourceMapping _querySourceMapping;
 
     [SetUp]
     public void SetUp ()
@@ -43,7 +44,6 @@ namespace Remotion.Linq.UnitTests
       _mainFromClause = ExpressionHelper.CreateMainFromClause_Int();
       _selectClause = ExpressionHelper.CreateSelectClause();
       _queryModel = new QueryModel (_mainFromClause, _selectClause);
-      _querySourceMapping = new QuerySourceMapping();
     }
 
     [Test]
@@ -121,6 +121,26 @@ namespace Remotion.Linq.UnitTests
       Assert.That (outputDataInfo, Is.InstanceOf (typeof (StreamedSequenceInfo)));
       Assert.That (outputDataInfo.DataType, Is.SameAs (typeof (IQueryable<int>)));
       Assert.That (((StreamedSequenceInfo) outputDataInfo).ItemExpression, Is.SameAs (_queryModel.SelectClause.Selector));
+    }
+
+    [Test]
+    public void GetOutputDataInfo_WithIncompatibleResultTypeOverride_AndSetsResultTypeOverrideToNull ()
+    {
+      _queryModel.ResultTypeOverride = typeof (int);
+
+      var invalidOperationException = Assert.Throws<InvalidOperationException> (() => _queryModel.GetOutputDataInfo());
+
+      Assert.That (_queryModel.ResultTypeOverride, Is.Null);
+
+      Assert.That (
+          invalidOperationException.Message,
+          Is.EqualTo (
+              "The query model's result type cannot be changed to 'System.Int32'. "
+              + "The result type may only be overridden and set to values compatible with the ResultOperators' current data type ('System.Linq.IQueryable`1[System.Int32]')."));
+      Assert.That (invalidOperationException.InnerException, Is.InstanceOf<ArgumentException>());
+      Assert.That (
+          invalidOperationException.InnerException.Message,
+          Is.EqualTo ("'System.Int32' cannot be used as the data type for a sequence with an ItemExpression of type 'System.Int32'.\r\nParameter name: dataType"));
     }
 
     [Test]
@@ -205,10 +225,60 @@ namespace Remotion.Linq.UnitTests
     [Test]
     public void Clone_HasCloneForMainFromClause_PassesMapping ()
     {
-      var clone = _queryModel.Clone (_querySourceMapping);
+      var querySourceMapping = new QuerySourceMapping();
+
+      var clone = _queryModel.Clone (querySourceMapping);
+
       Assert.That (
-          ((QuerySourceReferenceExpression) _querySourceMapping.GetExpression (_queryModel.MainFromClause)).ReferencedQuerySource,
+          ((QuerySourceReferenceExpression) querySourceMapping.GetExpression (_queryModel.MainFromClause)).ReferencedQuerySource,
           Is.SameAs (clone.MainFromClause));
+    }
+
+    [Test]
+    public void Clone_ReplacesQuerySourceReferenceExpression ()
+    {
+      var originalExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
+      _queryModel.BodyClauses.Add (new AdditionalFromClause ("inner", typeof (int), originalExpression));
+
+      var querySourceMapping = new QuerySourceMapping();
+      var newExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
+      querySourceMapping.AddMapping (originalExpression.ReferencedQuerySource, newExpression);
+
+      var clone = _queryModel.Clone (querySourceMapping);
+
+      Assert.That (
+          ((AdditionalFromClause) clone.BodyClauses[0]).FromExpression,
+          Is.SameAs (newExpression));
+    }
+
+    [Test]
+    public void Clone_ReplacesNestedQuerySourceReferenceExpression ()
+    {
+      var originalExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
+      _queryModel.BodyClauses.Add (new AdditionalFromClause ("inner", typeof (int), Expression.Not (originalExpression)));
+
+      var querySourceMapping = new QuerySourceMapping();
+      var newExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
+      querySourceMapping.AddMapping (originalExpression.ReferencedQuerySource, newExpression);
+
+      var clone = _queryModel.Clone (querySourceMapping);
+
+      Assert.That (
+          ((UnaryExpression) ((AdditionalFromClause) clone.BodyClauses[0]).FromExpression).Operand,
+          Is.SameAs (newExpression));
+    }
+
+    [Test]
+    public void Clone_DoesNotHaveMappingForQuerySourceReferenceExpression_IgnoresExpression ()
+    {
+      var unmappedExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
+      _queryModel.BodyClauses.Add (new AdditionalFromClause ("inner", typeof (int), unmappedExpression));
+
+      var clone = _queryModel.Clone (new QuerySourceMapping());
+
+      Assert.That (
+          ((AdditionalFromClause) clone.BodyClauses[0]).FromExpression,
+          Is.SameAs (unmappedExpression));
     }
 
     [Test]
@@ -228,10 +298,11 @@ namespace Remotion.Linq.UnitTests
       var oldReferencedClause = ExpressionHelper.CreateMainFromClause_Int();
       _queryModel.SelectClause.Selector = new QuerySourceReferenceExpression (oldReferencedClause);
 
+      var querySourceMapping = new QuerySourceMapping();
       var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
-      _querySourceMapping.AddMapping (oldReferencedClause, newReferenceExpression);
+      querySourceMapping.AddMapping (oldReferencedClause, newReferenceExpression);
 
-      var clone = _queryModel.Clone (_querySourceMapping);
+      var clone = _queryModel.Clone (querySourceMapping);
       Assert.That (clone.SelectClause.Selector, Is.SameAs (newReferenceExpression));
     }
 
@@ -262,10 +333,11 @@ namespace Remotion.Linq.UnitTests
       bodyClause.Predicate = new QuerySourceReferenceExpression (oldReferencedClause);
       _queryModel.BodyClauses.Add (bodyClause);
 
+      var querySourceMapping = new QuerySourceMapping();
       var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
-      _querySourceMapping.AddMapping (oldReferencedClause, newReferenceExpression);
+      querySourceMapping.AddMapping (oldReferencedClause, newReferenceExpression);
 
-      var clone = _queryModel.Clone (_querySourceMapping);
+      var clone = _queryModel.Clone (querySourceMapping);
       Assert.That (((WhereClause) clone.BodyClauses[0]).Predicate, Is.SameAs (newReferenceExpression));
     }
 
@@ -289,36 +361,114 @@ namespace Remotion.Linq.UnitTests
     [Test]
     public void Clone_ResultOperators_PassesMapping ()
     {
+      var querySourceMapping = new QuerySourceMapping();
+
       var resultOperatorMock = MockRepository.GenerateMock<ResultOperatorBase> ();
       _queryModel.ResultOperators.Add (resultOperatorMock);
 
       resultOperatorMock
-          .Expect (mock => mock.Clone (Arg<CloneContext>.Matches (cc => cc.QuerySourceMapping == _querySourceMapping)))
+          .Expect (mock => mock.Clone (Arg<CloneContext>.Matches (cc => cc.QuerySourceMapping == querySourceMapping)))
           .Return (ExpressionHelper.CreateResultOperator ());
       resultOperatorMock.Replay ();
 
-      _queryModel.Clone (_querySourceMapping);
+      _queryModel.Clone (querySourceMapping);
 
       resultOperatorMock.VerifyAllExpectations ();
+    }
+
+    [Test]
+    public void Clone_ReplacesSubQueryExpression ()
+    {
+      var subQueryModel = ExpressionHelper.CreateQueryModel<Cook>();
+      var expression = new SubQueryExpression (subQueryModel);
+      var queryModel = new QueryModel (_mainFromClause, new SelectClause (expression));
+      var clone = queryModel.Clone();
+
+      Assert.That (((SubQueryExpression) clone.SelectClause.Selector).QueryModel, Is.Not.SameAs (subQueryModel));
+    }
+
+    [Test]
+    public void Clone_ReplacesSubQueryExpression_WithCorrectCloneContext ()
+    {
+      var subQueryModel = ExpressionHelper.CreateQueryModel<Cook>();
+      var referencedClause = ExpressionHelper.CreateMainFromClause_Int();
+      subQueryModel.MainFromClause.FromExpression = new QuerySourceReferenceExpression (referencedClause);
+      var expression = new SubQueryExpression (subQueryModel);
+
+      var querySourceMapping = new QuerySourceMapping();
+      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
+      querySourceMapping.AddMapping (referencedClause, newReferenceExpression);
+
+      var queryModel = new QueryModel (_mainFromClause, new SelectClause (expression));
+      var clone = queryModel.Clone (querySourceMapping);
+
+      var clonedSubQueryModel = ((SubQueryExpression) clone.SelectClause.Selector).QueryModel;
+      Assert.That (clonedSubQueryModel, Is.Not.SameAs (subQueryModel));
+      Assert.That (clonedSubQueryModel.MainFromClause.FromExpression, Is.SameAs (newReferenceExpression));
+    }
+
+    [Test]
+    public void Clone_VisitsExtensionExpression_AndChildren ()
+    {
+      var referencedClause = ExpressionHelper.CreateMainFromClause_Int();
+      var expression = new ReducibleExtensionExpression (new QuerySourceReferenceExpression (referencedClause));
+
+      var querySourceMapping = new QuerySourceMapping();
+      var newReferenceExpression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int());
+      querySourceMapping.AddMapping (referencedClause, newReferenceExpression);
+      
+      var queryModel = new QueryModel (_mainFromClause, new SelectClause (expression));
+      var clone = queryModel.Clone (querySourceMapping);
+
+      Assert.That (((ReducibleExtensionExpression) clone.SelectClause.Selector), Is.Not.SameAs (expression));
+      Assert.That (
+          ((QuerySourceReferenceExpression) ((ReducibleExtensionExpression) clone.SelectClause.Selector).Expression),
+          Is.SameAs (newReferenceExpression));
+    }
+
+    [Test]
+    public void Clone_VisitsUnknownExtensionExpression_Ignored ()
+    {
+      var expression = new UnknownExpression (typeof (object));
+
+      var queryModel = new QueryModel (_mainFromClause, new SelectClause (expression));
+      var clone = queryModel.Clone();
+
+      Assert.That (clone.SelectClause.Selector, Is.SameAs (expression));
     }
 
 
     [Test]
     public void TransformExpressions ()
     {
-      Func<Expression, Expression> transformation = ex => ex;
-      var fromClauseMock = MockRepository.GenerateMock<MainFromClause> ("item", typeof (string), ExpressionHelper.CreateExpression());
+      var fromClause = new MainFromClause ("item", typeof (string), ExpressionHelper.CreateExpression());
+      var selectClause = new SelectClause (ExpressionHelper.CreateExpression());
       var bodyClauseMock = MockRepository.GenerateMock<IBodyClause>();
-      var selectClauseMock = MockRepository.GenerateMock<SelectClause> (ExpressionHelper.CreateExpression());
 
-      var queryModel = new QueryModel (fromClauseMock, selectClauseMock);
+      var oldFromExpression = fromClause.FromExpression;
+      var newFromExpression = ExpressionHelper.CreateExpression();
+
+      var oldSelectorExpression = selectClause.Selector;
+      var newSelectorExpression = ExpressionHelper.CreateExpression();
+
+      Func<Expression, Expression> transformation = ex =>
+      {
+        if (ex == oldFromExpression)
+          return newFromExpression;
+        if (ex == oldSelectorExpression)
+          return newSelectorExpression;
+        else
+          return ex;
+      };
+
+      var queryModel = new QueryModel (fromClause, selectClause);
       queryModel.BodyClauses.Add (bodyClauseMock);
 
       queryModel.TransformExpressions (transformation);
 
-      fromClauseMock.AssertWasCalled (mock => mock.TransformExpressions (transformation));
+      Assert.That (fromClause.FromExpression, Is.SameAs (newFromExpression));
+      Assert.That (selectClause.Selector, Is.SameAs (newSelectorExpression));
       bodyClauseMock.AssertWasCalled (mock => mock.TransformExpressions (transformation));
-      selectClauseMock.AssertWasCalled (mock => mock.TransformExpressions (transformation));
     }
 
     [Test]

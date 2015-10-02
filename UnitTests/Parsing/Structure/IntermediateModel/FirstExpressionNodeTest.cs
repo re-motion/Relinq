@@ -21,6 +21,7 @@ using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.UnitTests.TestDomain;
+using Remotion.Linq.Utilities;
 
 namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
 {
@@ -38,27 +39,22 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    public void SupportedMethod_WithoutPredicate ()
+    public void GetSupportedMethods ()
     {
-      AssertSupportedMethod_Generic (FirstExpressionNode.SupportedMethods, q => q.First(), e => e.First());
-    }
-
-    [Test]
-    public void SupportedMethod_WithPredicate ()
-    {
-      AssertSupportedMethod_Generic (FirstExpressionNode.SupportedMethods, q => q.First (o => o == null), e => e.First (o => o == null));
-    }
-
-    [Test]
-    public void SupportedMethod_FirstOrDefault_WithoutPredicate ()
-    {
-      AssertSupportedMethod_Generic (FirstExpressionNode.SupportedMethods, q => q.FirstOrDefault (), e => e.FirstOrDefault ());
-    }
-
-    [Test]
-    public void SupportedMethod_FirstOrDefault_WithPredicate ()
-    {
-      AssertSupportedMethod_Generic (FirstExpressionNode.SupportedMethods, q => q.FirstOrDefault (o => o == null), e => e.FirstOrDefault (o => o == null));
+      Assert.That (
+          FirstExpressionNode.GetSupportedMethods(),
+          Is.EquivalentTo (
+              new[]
+              {
+                  GetGenericMethodDefinition (() => Queryable.First<object> (null)),
+                  GetGenericMethodDefinition (() => Queryable.First<object> (null, null)),
+                  GetGenericMethodDefinition (() => Queryable.FirstOrDefault<object> (null)),
+                  GetGenericMethodDefinition (() => Queryable.FirstOrDefault<object> (null, null)),
+                  GetGenericMethodDefinition (() => Enumerable.First<object> (null)),
+                  GetGenericMethodDefinition (() => Enumerable.First<object> (null, null)),
+                  GetGenericMethodDefinition (() => Enumerable.FirstOrDefault<object> (null)),
+                  GetGenericMethodDefinition (() => Enumerable.FirstOrDefault<object> (null, null)),
+              }));
     }
 
     [Test]
@@ -78,7 +74,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_NoDefaultAllowed ()
     {
-      var node = new FirstExpressionNode (CreateParseInfo (FirstExpressionNode.SupportedMethods[0].MakeGenericMethod (typeof (Cook))), null);
+      var node = new FirstExpressionNode (CreateParseInfo (ReflectionUtility.GetMethod (() => Queryable.First<Cook> (null))), null);
       node.Apply (QueryModel, ClauseGenerationContext);
       
       Assert.That (((FirstResultOperator) QueryModel.ResultOperators[0]).ReturnDefaultWhenEmpty, Is.False);
@@ -87,7 +83,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     [Test]
     public void Apply_DefaultAllowed ()
     {
-      var node = new FirstExpressionNode (CreateParseInfo (FirstExpressionNode.SupportedMethods[3].MakeGenericMethod (typeof (Cook))), null);
+      var node = new FirstExpressionNode (CreateParseInfo (ReflectionUtility.GetMethod (() => Queryable.FirstOrDefault<Cook> (null, null))), null);
       node.Apply (QueryModel, ClauseGenerationContext);
       
       Assert.That (((FirstResultOperator) QueryModel.ResultOperators[0]).ReturnDefaultWhenEmpty, Is.True);
