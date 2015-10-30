@@ -96,12 +96,27 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       if (parameters.Length <= parameterPosition)
         return false;
 
-      var selectorType = parameters[parameterPosition].ParameterType.GetTypeInfo();
-      // Enumerable taks a Func<...> but Querable takes an Expression<Func<...>>
-      if (typeof (Expression).GetTypeInfo().IsAssignableFrom (selectorType))
-        selectorType = selectorType.GenericTypeArguments[0].GetTypeInfo();
+      var selectorType = parameters[parameterPosition].ParameterType.GetTypeInfo().UnwrapEnumerable();
 
       return selectorType.GenericTypeArguments[1] == typeof (int);
+    }
+
+    private static TypeInfo UnwrapEnumerable (this TypeInfo typeInfo)
+    {
+      var comparedTypeInfo = typeInfo;
+
+#if !NET_4_0 && !NET_3_5
+      // Workaround for a corner case in .Net Native because
+      // IsAssignableFrom throws for open generics.
+      while (comparedTypeInfo.ContainsGenericParameters)
+        comparedTypeInfo = comparedTypeInfo.BaseType.GetTypeInfo();
+#endif
+
+      // Enumerable taks a Func<...> but Querable takes an Expression<Func<...>>
+      if (typeof (Expression).GetTypeInfo().IsAssignableFrom (comparedTypeInfo))
+        return typeInfo.GenericTypeArguments[0].GetTypeInfo();
+
+      return typeInfo;
     }
   }
 }
