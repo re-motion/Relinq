@@ -10,6 +10,10 @@
       <ExcludeFromDocumentation>True</ExcludeFromDocumentation>
     </ReleaseProjectFiles>
 
+    <ReleaseProjectFiles Include="$(SolutionDirectory)Core.Net_4_5\Core.Net_4_5.csproj">
+      <ExcludeFromDocumentation>True</ExcludeFromDocumentation>
+    </ReleaseProjectFiles>
+
     <ReleaseProjectFiles Include="$(SolutionDirectory)Core\Core.csproj">
       <CreateNuGetPackageWithSymbolServerSupport>True</CreateNuGetPackageWithSymbolServerSupport>
       <CreateDocumentationFile>True</CreateDocumentationFile>
@@ -43,6 +47,10 @@
 
     <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests.Net_4_0\UnitTests.Net_4_0.csproj">
       <ExecutionRuntime>net-4.0</ExecutionRuntime>
+    </UnitTestProjectFiles>
+
+    <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests.Net_4_5\UnitTests.Net_4_5.csproj">
+      <ExecutionRuntime>net-4.5</ExecutionRuntime>
     </UnitTestProjectFiles>
 
     <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests\UnitTests.csproj"/>
