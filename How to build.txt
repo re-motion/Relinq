@@ -20,6 +20,8 @@ Building re-linq from Visual Studio
 After getting the sources and a remotion.snk, just load Relinq.sln in 
 Visual Studio and build it. It should work.
 
+To run the tests from the Test Explorer you must install the "NUnit Test Adapter."
+Use the "Extensions and Updates..." menu item under the "Tools" menu to do this.
 
 Building re-linq with MSBuild
 -------------------------------
