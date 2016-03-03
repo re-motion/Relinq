@@ -20,6 +20,13 @@ Building re-linq from Visual Studio
 After getting the sources and a remotion.snk, just load Relinq.sln in 
 Visual Studio and build it. It should work.
 
+Running the tests you can use:
+* NUnit GUI (available on http://nunit.org/, free stand-alone application)
+* Visual Studio's integrated Test Explorer
+  To run the tests with Test Explorer, you must install the free "NUnit Test Adapter" extension. 
+  Use the "Extensions and Updates..." menu item under the "Tools" menu to do this.
+* JetBrains ReSharper Test Runner (https://www.jetbrains.com/resharper, commercial product)
+* Test Driven .NET (http://testdriven.net/, commercial product)
 
 Building re-linq with MSBuild
 -------------------------------
@@ -40,6 +47,8 @@ The installation package of the version of Sandcastle Help File Builder used by
 re-motion is located in the prereq folder, under the following path: 
 
 https://svn.re-motion.org/svn/Remotion/tags/1.16.0/prereq/Tools/SandcastleHelpFileBuilderInstall/v1.9.5.0/
+Note: v1.9.5.0 is no longer available on https://shfb.codeplex.com or https://github.com/EWSoftware/SHFB; 
+the closest official download (v1.9.7.0) is available at https://shfb.codeplex.com/releases/view/99462.
 
 Run Sandcastle Installer and click through the wizard.
 - When asked whether to proceed without the Microsoft Help 2 Compiler 
