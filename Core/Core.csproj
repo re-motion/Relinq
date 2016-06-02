@@ -43,11 +43,11 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\pcl\</OutputPath>
     <DefineConstants>TRACE;DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Remotion.Linq.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\pcl\Remotion.Linq.xml</DocumentationFile>
     <NoWarn>1591;419</NoWarn>
     <WarningsAsErrors>
     </WarningsAsErrors>
@@ -57,11 +57,11 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release\pcl\</OutputPath>
     <DefineConstants>TRACE;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Remotion.Linq.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\pcl\Remotion.Linq.xml</DocumentationFile>
     <NoWarn>1591;419</NoWarn>
     <WarningsAsErrors>
     </WarningsAsErrors>
@@ -296,15 +296,18 @@
     <None Include="App_Packages\Remotion.Utilities.ArgumentUtility.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
     <None Include="App_Packages\Remotion.Utilities.Assertion.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
     <None Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
+    <None Include="Build.targets" />
     <None Include="Doc\include\GettingStarted.aml" />
     <None Include="Core.nuspec" />
     <None Include="packages.config" />
+    <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Doc\include\NamespaceDoc.xml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Import Project="$(MSBuildProjectDirectory)\Build.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -312,4 +315,15 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <!-- Hooks must be defined after Microsft.CSharp.targets have been imported. -->
+    <CleanDependsOn>
+      $(CleanDependsOn);
+      DotNetCore_Clean;
+    </CleanDependsOn>
+    <BuildDependsOn>
+      $(BuildDependsOn);
+      DotNetCore_Build
+    </BuildDependsOn>
+  </PropertyGroup>
 </Project>

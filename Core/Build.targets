@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <PackagesDirectory Condition="'$(PackagesDirectory)' == ''">$(MSBuildProjectDirectory)\..\packages\</PackagesDirectory>
+    <MSBuildExtensionPackPath Condition="'$(MSBuildExtensionPackPath)' == ''">$(PackagesDirectory)MSBuild.Extension.Pack.1.5.0\tools\net40\</MSBuildExtensionPackPath>
+    <ExtensionTasksPath>$(MSBuildExtensionPackPath)</ExtensionTasksPath>
+    <DotNetCorePublicKeyPath>obj\netstandard1.0\RemotionPublic.snk</DotNetCorePublicKeyPath>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildExtensionPackPath)MSBuild.ExtensionPack.tasks" />
+
+  <Target Name="DotNetCore_Build" DependsOnTargets="DotNetCore_PreparePaths;DotNetCore_GetSNPath">
+    <Error Text="Property 'AssemblyOriginatorKeyFile' was not set." Condition="'$(AssemblyOriginatorKeyFile)' == ''" />
+
+    <!-- Extract public key -->
+    <PropertyGroup>
+      <_dotNetCoreIntermediateBasePath>$([System.IO.Path]::GetDirectoryName($(DotNetCorePublicKeyPath)))</_dotNetCoreIntermediateBasePath>
+    </PropertyGroup>
+    <MakeDir Directories="$(_dotNetCoreIntermediateBasePath)" />
+    <Exec Command="&quot;$(SNPath)&quot; -p &quot;$(AssemblyOriginatorKeyFile)&quot; &quot;$(DotNetCorePublicKeyPath)&quot;" />
+
+    <!-- Build -->
+    <Exec Command="dotnet restore project.json" />
+    <Exec Command="dotnet build project.json --configuration $(Configuration) --framework NetStandard1.0 --output &quot;$(DotNetCoreOutputPath).&quot; --build-base-path &quot;$(DotNetCoreIntermediateOutputPath).&quot;" />
+
+    <!-- Delay-Sign with official key -->
+    <Exec Command="&quot;$(SNPath)&quot; -R &quot;$(DotNetCoreAssemblyPath)&quot; &quot;$(AssemblyOriginatorKeyFile)&quot;" />
+
+    <PropertyGroup>
+      <TargetPath>$(TargetPath);$(DotNetCoreAssemblyPath)</TargetPath>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="DotNetCore_Clean" DependsOnTargets="DotNetCore_PreparePaths">
+    <ItemGroup>
+      <DotNetCoreFiles Remove="@(DotNetCoreFiles)"/>
+      <DotNetCoreFiles Include="$(DotNetCoreIntermediateOutputPath)**\*.*" />
+      <DotNetCoreFiles Include="$(DotNetCoreOutputPath)**\*.*" />
+      <DotNetCoreFiles Include="$(DotNetCorePublicKeyPath)" />
+    </ItemGroup>
+    <Delete Files="@(DotNetCoreFiles)" />
+  </Target>
+
+  <Target Name="DotNetCore_PreparePaths">
+    <PropertyGroup>
+      <DotNetCoreOutputPath>$(MSBuildProjectDirectory)\bin\$(Configuration)\netstandard1.0\</DotNetCoreOutputPath>
+      <DotNetCoreIntermediateOutputPath>$(MSBuildProjectDirectory)\$(BaseIntermediateOutputPath)$(Configuration)\netstandard1.0\</DotNetCoreIntermediateOutputPath>
+      <DotNetCoreAssemblyPath>$(DotNetCoreOutputPath)$(AssemblyName).dll</DotNetCoreAssemblyPath>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="DotNetCore_GetSNPath">
+    <GetFrameworkSdkPath>
+      <Output TaskParameter="Path" PropertyName="_frameworkSdkPath" />
+    </GetFrameworkSdkPath>
+    <ItemGroup>
+      <_firstSNPath Remove="@(_firstSNPath)" />
+      <_snPath Remove="@(_snPath)" />
+      <_snPath Include="$(_frameworkSdkPath)**\sn.exe" />
+    </ItemGroup>
+    <Error Text="No paths found for 'sn.exe': @(_snPath)" Condition="'@(_snPath->Count())' == '0'" />
+    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="GetItem" InputItems1="@(_snPath)" Position = "0" >
+      <Output TaskParameter="OutputItems" ItemName="_firstSNPath" />
+    </MSBuild.ExtensionPack.Framework.MsBuildHelper>
+
+    <PropertyGroup>
+      <SNPath>@(_firstSNPath)</SNPath>
+    </PropertyGroup>
+    <Message Text="Found sn.exe at '$(SNPath)'." Importance="High" />
+  </Target>
+
+</Project>
