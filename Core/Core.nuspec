@@ -11,6 +11,7 @@
     <description>$description$</description>
     <copyright>$copyright$</copyright>
     <tags>re-motion LINQ ExpressionTrees $extraTags$</tags>
+    <!--
     <dependencies>
       <group targetFramework=".NETStandard1.0">
         <dependency id="System.Collections" version="[4.0.11-rc2-24015, )" />
@@ -26,6 +27,7 @@
         <dependency id="System.Threading" version="[4.0.11-rc2-24015, )" />
       </group>
     </dependencies>
+    -->
   </metadata>
   <files>
     <file src="bin\$configuration$\pcl\$id$.pdb" target="lib\portable-net45+win+wpa81+wp80" />
