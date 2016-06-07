@@ -51,6 +51,7 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Customizations\DisableDependDB.targets" />
     <None Include="Customizations\Local\Configuration.targets" />
     <None Include="Customizations\Projects.props" />
     <None Include="Customizations\Properties.props" />
