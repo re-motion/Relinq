@@ -7,11 +7,12 @@
     <MSBuildExtensionPackPath Condition="'$(MSBuildExtensionPackPath)' == ''">$(PackagesDirectory)MSBuild.Extension.Pack.1.5.0\tools\net40\</MSBuildExtensionPackPath>
     <ExtensionTasksPath>$(MSBuildExtensionPackPath)</ExtensionTasksPath>
     <DotNetCorePublicKeyPath>obj\netstandard1.0\RemotionPublic.snk</DotNetCorePublicKeyPath>
+    <DotNetCoreCliBootstrapScriptUrl>https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1</DotNetCoreCliBootstrapScriptUrl>
   </PropertyGroup>
 
   <Import Project="$(MSBuildExtensionPackPath)MSBuild.ExtensionPack.tasks" />
 
-  <Target Name="DotNetCore_Build" DependsOnTargets="DotNetCore_PreparePaths;DotNetCore_GetSNPath">
+  <Target Name="DotNetCore_Build" DependsOnTargets="DotNetCore_PreparePaths;DotNetCore_GetSNPath;DotNetCore_InstallCli">
     <Error Text="Property 'AssemblyOriginatorKeyFile' was not set." Condition="'$(AssemblyOriginatorKeyFile)' == ''" />
 
     <!-- Extract public key -->
@@ -22,8 +23,8 @@
     <Exec Command="&quot;$(SNPath)&quot; -p &quot;$(AssemblyOriginatorKeyFile)&quot; &quot;$(DotNetCorePublicKeyPath)&quot;" />
 
     <!-- Build -->
-    <Exec Command="dotnet restore project.json" />
-    <Exec Command="dotnet build project.json --configuration $(Configuration) --framework NetStandard1.0 --output &quot;$(DotNetCoreOutputPath).&quot; --build-base-path &quot;$(DotNetCoreIntermediateOutputPath).&quot;" />
+    <Exec Command="&quot;$(DotNetCoreCliExe)&quot; restore project.json" />
+    <Exec Command="&quot;$(DotNetCoreCliExe)&quot; build project.json --configuration $(Configuration) --framework NetStandard1.0 --output &quot;$(DotNetCoreOutputPath).&quot; --build-base-path &quot;$(DotNetCoreIntermediateOutputPath).&quot;" />
 
     <!-- Delay-Sign with official key -->
     <Exec Command="&quot;$(SNPath)&quot; -R &quot;$(DotNetCoreAssemblyPath)&quot; &quot;$(AssemblyOriginatorKeyFile)&quot;" />
@@ -48,7 +49,42 @@
       <DotNetCoreOutputPath>$(MSBuildProjectDirectory)\bin\$(Configuration)\netstandard1.0\</DotNetCoreOutputPath>
       <DotNetCoreIntermediateOutputPath>$(MSBuildProjectDirectory)\$(BaseIntermediateOutputPath)$(Configuration)\netstandard1.0\</DotNetCoreIntermediateOutputPath>
       <DotNetCoreAssemblyPath>$(DotNetCoreOutputPath)$(AssemblyName).dll</DotNetCoreAssemblyPath>
+      <DotNetCoreCliBasePath>$(MSBuildProjectDirectory)\$(BaseIntermediateOutputPath)cli</DotNetCoreCliBasePath>
+      <DotNetCoreCliVersionPath>$(DotNetCoreCliBasePath)\version.chk</DotNetCoreCliVersionPath>
+      <DotNetCoreCliBootstrapScriptPath>$(DotNetCoreCliBasePath)\dotnet-install.ps1</DotNetCoreCliBootstrapScriptPath>
+      <DotNetCoreCliInstallPath>$(DotNetCoreCliBasePath)\bin</DotNetCoreCliInstallPath>
+      <DotNetCoreCliExe>$(DotNetCoreCliInstallPath)\dotnet.exe</DotNetCoreCliExe>
     </PropertyGroup>
+  </Target>
+
+  <Target Name="DotNetCore_InstallCli" DependsOnTargets="DotNetCore_PreparePaths">
+    <PropertyGroup>
+      <_downloadBootstrapCommand>-Command "Invoke-WebRequest -Uri '$(DotNetCoreCliBootstrapScriptUrl)' -OutFile '$(DotNetCoreCliBootstrapScriptPath)'"</_downloadBootstrapCommand>
+      <_installCommand>-File "$(DotNetCoreCliBootstrapScriptPath)" -Channel preview -InstallDir "$(DotNetCoreCliInstallPath)" -NoPath</_installCommand>
+      <_oldVersion></_oldVersion>
+      <_oldVersion Condition="Exists('$(DotNetCoreCliVersionPath)')">$([System.IO.File]::ReadAllText($(DotNetCoreCliVersionPath)))</_oldVersion>
+    </PropertyGroup>
+
+    <!-- Get CLI bootstrap script -->
+    <MakeDir Directories="$(DotNetCoreCliBasePath)" />
+    <Exec Command="powershell -ExecutionPolicy Bypass $(_downloadBootstrapCommand)" />
+
+    <!-- Get CLI version -->
+    <Exec Command="powershell -ExecutionPolicy Bypass $(_installCommand) -DryRun &gt; &quot;$(DotNetCoreCliVersionPath)&quot;" />
+    
+    <!-- Check CLI version -->
+    <PropertyGroup>
+      <_newVersion>$([System.IO.File]::ReadAllText($(DotNetCoreCliVersionPath)))</_newVersion>
+      <_isCliUpdateRequired>False</_isCliUpdateRequired>
+      <_isCliUpdateRequired Condition="'$(_oldVersion)' != '$(_newVersion)' OR !Exists('$(DotNetCoreCliInstallPath)')">True</_isCliUpdateRequired>
+    </PropertyGroup>
+
+    <!-- Update CLI version -->
+    <Message Text="dotnet CLI update is required." Importance="High" Condition="'$(_isCliUpdateRequired)' == 'True'" />
+    <Message Text="dotnet CLI is up to date." Importance="High" Condition="'$(_isCliUpdateRequired)' != 'True'" />
+    <Exec Command="RMDIR &quot;$(DotNetCoreCliInstallPath)&quot; /q /s" Condition="'$(_isCliUpdateRequired)' == 'True'" />
+    <Exec Command="powershell -ExecutionPolicy Bypass $(_installCommand)" Condition="'$(_isCliUpdateRequired)' == 'True'" />
+    <Error Text="dotnet CLI was not found at '$(DotNetCoreCliExe)'." Condition="!Exists('$(DotNetCoreCliExe)')" />
   </Target>
 
   <Target Name="DotNetCore_GetSNPath">
