@@ -14,16 +14,21 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 // 
-
 using System;
 using System.Reflection;
 using System.Security;
 
-[assembly: AssemblyTitle ("re-linq - re-motion Linq Library")]
-[assembly: AssemblyDescription ("With re-linq, it's now easier than ever to create full-featured LINQ providers.")]
+[assembly: AssemblyTitle ("re-linq Frontend")]
+[assembly: AssemblyDescription (@"re-linq Frontend: A foundation for parsing LINQ expression trees and generating queries in SQL or other languages.
+Key features:
+- Transforms expression trees into abstract syntax trees resemblying LINQ query expressions (from ... select syntax)
+- Simplifies many aspects of this tree (sub queries, transparent identifieres, pre-evaluation ...)
+- Provides basic infrastructure for backend development (e.g. SQL generation) 
+- Provides a framework for user-defined query extensions and transformations")]
 [assembly: AssemblyCulture ("")]
 [assembly: CLSCompliant (true)]
 #if !NET_3_5
+
 [assembly: SecurityTransparent] // required to allow assembly to be linked from assemblies having the AllowPartiallyTrustedCallersAttribute applied
 #else
 [assembly: AllowPartiallyTrustedCallers] // required to allow assembly to be linked from assemblies having the AllowPartiallyTrustedCallersAttribute applied
