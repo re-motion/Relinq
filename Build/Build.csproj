@@ -31,8 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Remotion.BuildScript">
-      <HintPath>..\packages\Remotion.BuildScript.2.0.0-alpha007\lib\net45\Remotion.BuildScript.dll</HintPath>
+    <Reference Include="Remotion.BuildScript, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Remotion.BuildScript.2.0.0-alpha012\lib\net45\Remotion.BuildScript.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
