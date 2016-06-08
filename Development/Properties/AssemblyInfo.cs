@@ -26,7 +26,7 @@ using System.Security;
 //
 
 [assembly: AssemblyTitle ("Development Support Library for Remotion.Linq")]
-[assembly: AssemblyDescription ("Library for unit testing, building and other development-time activities.")]
+[assembly: AssemblyDescription ("Support for unit testing of libraries based on the re-linq Frontend.")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
 #if !NET_3_5
