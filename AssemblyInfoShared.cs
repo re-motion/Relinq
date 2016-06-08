@@ -1,4 +1,4 @@
-﻿// Copyright (c) rubicon IT GmbH, www.rubicon.eu
+// Copyright (c) rubicon IT GmbH, www.rubicon.eu
 //
 // See the NOTICE file distributed with this work for additional information
 // regarding copyright ownership.  rubicon licenses this file to you under 
@@ -24,5 +24,5 @@ using System.Reflection;
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyConfiguration ("Build type: Debug")]
 [assembly: AssemblyVersion ("2.1.0.0")]
-[assembly: AssemblyFileVersion ("2.1.0.0")]
-[assembly: AssemblyInformationalVersion ("2.1.0 Debug; ")]
+[assembly: AssemblyFileVersion ("2.1.1.24009")]
+[assembly: AssemblyInformationalVersion ("2.1.1-x.9 Debug; ")]
