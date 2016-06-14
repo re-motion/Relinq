@@ -10,9 +10,16 @@
       <ExcludeFromDocumentation>True</ExcludeFromDocumentation>
     </ReleaseProjectFiles>
 
+    <ReleaseProjectFiles Include="$(SolutionDirectory)Core.Net_4_5\Core.Net_4_5.csproj">
+      <ExcludeFromDocumentation>False</ExcludeFromDocumentation>
+      <CreateDocumentationFile>True</CreateDocumentationFile>
+    </ReleaseProjectFiles>
+
     <ReleaseProjectFiles Include="$(SolutionDirectory)Core\Core.csproj">
       <CreateNuGetPackageWithSymbolServerSupport>True</CreateNuGetPackageWithSymbolServerSupport>
-      <CreateDocumentationFile>True</CreateDocumentationFile>
+      <!-- Disabled here and moved to Core.Net_4_5 to support generating two assemblies in the Core.csproj -->
+      <ExcludeFromDocumentation>True</ExcludeFromDocumentation>
+      <CreateDocumentationFile>False</CreateDocumentationFile>
     </ReleaseProjectFiles>
 
     <ReleaseProjectFiles Include="$(SolutionDirectory)Development.Net_3_5\Development.Net_3_5.csproj">
@@ -43,6 +50,10 @@
 
     <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests.Net_4_0\UnitTests.Net_4_0.csproj">
       <ExecutionRuntime>net-4.0</ExecutionRuntime>
+    </UnitTestProjectFiles>
+
+    <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests.Net_4_5\UnitTests.Net_4_5.csproj">
+      <ExecutionRuntime>net-4.5</ExecutionRuntime>
     </UnitTestProjectFiles>
 
     <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests\UnitTests.csproj"/>

@@ -3,7 +3,7 @@
   <metadata>
     <id>$id$</id>
     <version>$version$</version>
-    <title>$title$</title>
+    <title>$id$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
@@ -11,16 +11,36 @@
     <description>$description$</description>
     <copyright>$copyright$</copyright>
     <tags>re-motion LINQ ExpressionTrees $extraTags$</tags>
+    <!--
+    <dependencies>
+      <group targetFramework=".NETStandard1.0">
+        <dependency id="System.Collections" version="[4.0.11-rc2-24015, )" />
+        <dependency id="System.Diagnostics.Debug" version="[4.0.11-rc2-24015, )" />
+        <dependency id="System.Linq" version="[4.1.0-rc2-24015, )" />
+        <dependency id="System.Linq.Expressions" version="[4.0.11-rc2-24015, )" />
+        <dependency id="System.Linq.Queryable" version="[4.0.1-rc2-24015, )" />
+        <dependency id="System.ObjectModel" version="[4.0.12-rc2-24015, )" />
+        <dependency id="System.Reflection" version="[4.1.0-rc2-24015, )" />
+        <dependency id="System.Reflection.Extensions" version="[4.0.1-rc2-24015, )" />
+        <dependency id="System.Runtime" version="[4.1.0-rc2-24015, )" />
+        <dependency id="System.Runtime.Extensions" version="[4.1.0-rc2-24015, )" />
+        <dependency id="System.Threading" version="[4.0.11-rc2-24015, )" />
+      </group>
+    </dependencies>
+    -->
   </metadata>
   <files>
-    <file src="bin\$configuration$\$id$.pdb" target="lib\portable-net45+win+wpa81+wp80" />
+    <file src="bin\$configuration$\pcl\$id$.pdb" target="lib\portable-net45+win+wpa81+wp80" />
+    <file src="bin\$configuration$\netstandard1.0\$id$.dll" target="lib\netstandard1.0\" />
+    <file src="bin\$configuration$\netstandard1.0\$id$.pdb" target="lib\netstandard1.0\" />
+    <file src="bin\$configuration$\netstandard1.0\$id$.xml" target="lib\netstandard1.0\" />
     <file src="..\Core.Net_3_5\bin\$configuration$\$id$.*" target="lib\net35" />
     <file src="..\Core.Net_4_0\bin\$configuration$\$id$.*" target="lib\net40" />
-    <!-- Dedicated entry for .NET 4.5 to force NuGet to prefer the portable build over the .NET 4.0 build-->
-    <file src="bin\$configuration$\$id$.*" target="lib\net45" />
+    <file src="..\Core.Net_4_5\bin\$configuration$\$id$.*" target="lib\net45" />
     <!-- By using a wildcard, the file-inclusion does not fail if no documentation file was found. -->
     <file src="$documentationFile$" target="doc" />
     <file src="..\Core.Net_3_5\**\*.cs" target="src\Core.Net_3_5" />
     <file src="..\Core.Net_4_0\**\*.cs" target="src\Core.Net_4_0" />
+    <file src="..\Core.Net_4_5\**\*.cs" target="src\Core.Net_4_5" />
   </files>
 </package>

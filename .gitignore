@@ -124,6 +124,12 @@ publish/
 ## TODO: If you have NuGet Package Restore enabled, uncomment the next line
 packages/
 
+# DotNet Core
+project.lock.json
+
+# Visual Stduio 2015
+.vs/
+
 # Windows Azure Build Output
 csx
 *.build.csdef

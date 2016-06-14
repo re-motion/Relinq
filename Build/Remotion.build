@@ -23,13 +23,13 @@
     <PackagesDirectory Condition="'$(PackagesDirectory)' == ''">$(MSBuildProjectDirectory)\..\packages\</PackagesDirectory>
     <MSBuildExtensionPackPath Condition="'$(MSBuildExtensionPackPath)' == ''">$(PackagesDirectory)MSBuild.Extension.Pack.1.5.0\tools\net40\</MSBuildExtensionPackPath>
     <ExtensionTasksPath>$(MSBuildExtensionPackPath)</ExtensionTasksPath>
-    <DependDBBuildProcessorToolPath Condition="'$(NuGetToolPath)' == ''">$(PackagesDirectory)DependDB.BuildProcessor.1.7.2.0\tools\</DependDBBuildProcessorToolPath>
-    <DependDBNuGetPreProcessorToolPath Condition="'$(NuGetToolPath)' == ''">$(PackagesDirectory)DependDB.BuildProcessor.NuGetPreProcessor.1.7.2.0\tools\</DependDBNuGetPreProcessorToolPath>
+    <DependDBBuildProcessorToolPath Condition="'$(NuGetToolPath)' == ''">$(PackagesDirectory)DependDB.BuildProcessor.1.7.3.0\tools\</DependDBBuildProcessorToolPath>
+    <DependDBNuGetPreProcessorToolPath Condition="'$(NuGetToolPath)' == ''">$(PackagesDirectory)DependDB.BuildProcessor.NuGetPreProcessor.1.7.3.0\tools\</DependDBNuGetPreProcessorToolPath>
     <NUnitToolPath Condition="'$(NUnitToolPath)' == ''">$(PackagesDirectory)NUnit.Runners.2.6.3\tools\</NUnitToolPath>
-    <NuGetToolPath Condition="'$(NuGetToolPath)' == ''">$(PackagesDirectory)NuGet.CommandLine.2.8.2\tools\</NuGetToolPath>
+    <NuGetToolPath Condition="'$(NuGetToolPath)' == ''">$(PackagesDirectory)NuGet.CommandLine.2.8.6\tools\</NuGetToolPath>
     <NuGetForMSBuildPath Condition="'$(NuGetForMSBuildPath)' == ''">$(PackagesDirectory)NuGet.for.MSBuild.1.4.3\build\</NuGetForMSBuildPath>
-    <RemotionBuildTasksPath Condition="'$(RemotionBuildTasksPath)' == ''">$(PackagesDirectory)Remotion.BuildTools.MSBuildTasks.1.0.5412.36795\tools\</RemotionBuildTasksPath>
-    <RemotionBuildScriptPath Condition="'$(RemotionBuildScriptPath)' == ''">$(PackagesDirectory)Remotion.BuildScript.2.0.0-alpha007\BuildTargets\</RemotionBuildScriptPath>
+    <RemotionBuildTasksPath Condition="'$(RemotionBuildTasksPath)' == ''">$(PackagesDirectory)Remotion.BuildTools.MSBuildTasks.1.0.5827.25795\tools\</RemotionBuildTasksPath>
+    <RemotionBuildScriptPath Condition="'$(RemotionBuildScriptPath)' == ''">$(PackagesDirectory)Remotion.BuildScript.2.0.0-alpha012\BuildTargets\</RemotionBuildScriptPath>
   </PropertyGroup>
 
   <Import Project="$(RemotionBuildScriptPath)*.targets" />
@@ -65,6 +65,7 @@
     <SolutionKeyFile>$(SolutionDirectory)remotion.snk</SolutionKeyFile>
 
     <VcsUrlTemplate></VcsUrlTemplate>
+    <VcsUrlRequiresWindowsCredentials Condition="'$(VcsUrlRequiresWindowsCredentials)' == ''">False</VcsUrlRequiresWindowsCredentials>
   </PropertyGroup>
 
   <Target Name="PrepareBuildProperties">
@@ -78,6 +79,7 @@
           Version=$(Version);
           AdditionalBuildMetadata=$(AdditionalBuildMetadata);
           VcsUrlTemplate=$(VcsUrlTemplate);
+          VcsUrlRequiresWindowsCredentials=$(VcsUrlRequiresWindowsCredentials);
           Platforms=$(Platforms);
           DatabaseSystems=$(DatabaseSystems);
           Browsers=$(Browsers);
@@ -154,11 +156,11 @@
              Properties="ConfigurationID=Debug;$(BuildProperties);"/>
   </Target>
 
-  <Target Name="UpdateAssemblyInfosLocalBuild" DependsOnTargets="CheckVersion;PrepareBuildProperties">
+  <Target Name="UpdateAssemblyInfosLocalBuild" DependsOnTargets="CheckVersion;PrepareBuildProperties;UpdateVersionProps">
     <MSBuild Projects="$(MSBuildProjectFile)"
              BuildInParallel="false"
-             Targets="UpdateAssemblyInfos"
-             Properties="ConfigurationID=Debug;"/>
+             Targets="UpdateAssemblyInfos;CleanAssemblyBackup"
+             Properties="ConfigurationID=Debug;$(BuildProperties);"/>
   </Target>
 
   <!-- Customization Targets -->
