@@ -5,7 +5,7 @@
     <!-- The dependency list must only be updated based on the list in Core.nuspec.
     -->
     <DotNetCore_Dependencies>
-      <group targetFramework=".NETStandard1.0" xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+      <group targetFramework=".NETStandard1.0" xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
         <dependency id="System.Collections" version="[4.0.11, )" />
         <dependency id="System.Diagnostics.Debug" version="[4.0.11, )" />
         <dependency id="System.Linq" version="[4.1.0, )" />
@@ -48,15 +48,23 @@
         ExtractPath="%(_nuGetFiles.ExtractionPath)" 
         ZipFileName="%(_nuGetFiles.Identity)" />
 
-    <PropertyGroup>
-      <_nuSpecFile>$(_nuGetTempDirectory)Remotion.Linq.nuspec</_nuSpecFile>
-    </PropertyGroup>
+    <MSBuild.ExtensionPack.FileSystem.File
+        TaskAction="Replace" 
+        RegexPattern="xmlns=&quot;http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd&quot;"
+        Replacement="xmlns=&quot;http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd&quot;"
+        Files="%(_nuGetFiles.ExtractionPath)\Remotion.Linq.nuspec"/>
+
+    <MSBuild.ExtensionPack.FileSystem.File
+        TaskAction="Replace" 
+        RegexPattern="xmlns=&quot;http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd&quot;"
+        Replacement="xmlns=&quot;http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd&quot;"
+        Files="%(_nuGetFiles.ExtractionPath)\Remotion.Linq.nuspec"/>
 
     <ItemGroup>
       <_namespaces Remove="@(_namespaces)" />
       <_namespaces Include="NuSpec">
         <Prefix>nuspec</Prefix>
-        <Uri>http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd</Uri>
+        <Uri>http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd</Uri>
       </_namespaces>
     </ItemGroup>
 
