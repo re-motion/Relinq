@@ -11,20 +11,23 @@
     <description>$description$</description>
     <copyright>$copyright$</copyright>
     <tags>re-motion LINQ ExpressionTrees $extraTags$</tags>
+    <!-- The dependency list must only be updated based on the generated dependency list from the project.json-based nupgk file. 
+         After updating this list, the PatchNuGetOutput.targets file must also be updated.
+    -->
     <!--
     <dependencies>
       <group targetFramework=".NETStandard1.0">
-        <dependency id="System.Collections" version="[4.0.11-rc2-24015, )" />
-        <dependency id="System.Diagnostics.Debug" version="[4.0.11-rc2-24015, )" />
-        <dependency id="System.Linq" version="[4.1.0-rc2-24015, )" />
-        <dependency id="System.Linq.Expressions" version="[4.0.11-rc2-24015, )" />
-        <dependency id="System.Linq.Queryable" version="[4.0.1-rc2-24015, )" />
-        <dependency id="System.ObjectModel" version="[4.0.12-rc2-24015, )" />
-        <dependency id="System.Reflection" version="[4.1.0-rc2-24015, )" />
-        <dependency id="System.Reflection.Extensions" version="[4.0.1-rc2-24015, )" />
-        <dependency id="System.Runtime" version="[4.1.0-rc2-24015, )" />
-        <dependency id="System.Runtime.Extensions" version="[4.1.0-rc2-24015, )" />
-        <dependency id="System.Threading" version="[4.0.11-rc2-24015, )" />
+        <dependency id="System.Collections" version="[4.0.11, )" />
+        <dependency id="System.Diagnostics.Debug" version="[4.0.11, )" />
+        <dependency id="System.Linq" version="[4.1.0, )" />
+        <dependency id="System.Linq.Expressions" version="[4.1.0, )" />
+        <dependency id="System.Linq.Queryable" version="[4.0.1, )" />
+        <dependency id="System.ObjectModel" version="[4.0.12, )" />
+        <dependency id="System.Reflection" version="[4.1.0, )" />
+        <dependency id="System.Reflection.Extensions" version="[4.0.1, )" />
+        <dependency id="System.Runtime" version="[4.1.0, )" />
+        <dependency id="System.Runtime.Extensions" version="[4.1.0, )" />
+        <dependency id="System.Threading" version="[4.0.11, )" />
       </group>
     </dependencies>
     -->
