@@ -13,6 +13,7 @@
   },
   "frameworks": {
     "netstandard1.0": {
+      "// comment" :  "WARNING: When updating this list, the dependency list in Core.nuspec and the list in PatchNuGetOutput.targets must also be updated.",
       "dependencies": {
         "System.Collections": "4.0.11",
         "System.Diagnostics.Debug": "4.0.11",
