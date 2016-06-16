@@ -120,12 +120,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{028E7899-0D5F-49C8-9EB6-8B051E02F1E0}</Project>
-      <Name>Core</Name>
+    <ProjectReference Include="..\Core.Net_4_5\Core.Net_4_5.csproj">
+      <Project>{6c16becb-ddc2-4464-a959-35f0f5beaab1}</Project>
+      <Name>Core.Net_4_5</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
