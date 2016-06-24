@@ -1,1 +1,1 @@
-start Build-Remotion.cmd run_test_build
+start Build.cmd run_test_build
