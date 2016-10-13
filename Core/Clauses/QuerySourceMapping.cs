@@ -52,6 +52,19 @@ namespace Remotion.Linq.Clauses
       }
     }
 
+    public void RemoveMapping (IQuerySource querySource)
+    {
+      ArgumentUtility.CheckNotNull ("querySource", querySource);
+
+      if (!ContainsMapping (querySource))
+      {
+        throw new InvalidOperationException (
+            string.Format ("Query source ({0}) has not been associated with an expression, cannot remove its mapping.", querySource));
+      }
+
+      _lookup.Remove(querySource);
+    }
+
     public void ReplaceMapping (IQuerySource querySource, Expression expression)
     {
       ArgumentUtility.CheckNotNull ("querySource", querySource);
