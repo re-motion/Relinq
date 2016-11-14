@@ -61,6 +61,11 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
       return visitor._partialEvaluationInfo;
     }
 
+    // PERF: Avoids using Enum.IsDefined, which is really slow. We can hard-code ExpressionType.Add
+    // because it will never change. 
+    private const ExpressionType c_minExpressionType = ExpressionType.Add;
+    private static readonly ExpressionType s_maxExpressionType = Enum.GetValues (typeof (ExpressionType)).Cast<ExpressionType>().Max();
+
     private readonly IEvaluatableExpressionFilter _evaluatableExpressionFilter;
     private readonly PartialEvaluationInfo _partialEvaluationInfo = new PartialEvaluationInfo();
     private bool _isCurrentSubtreeEvaluatable;
@@ -552,8 +557,9 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
         return IsCurrentExpressionEvaluatable (reducedExpression);
       }
 
-      // Note: In .NET 4.0, all expressions supplied by System.Core have a dedicated Visit method provided by System.Linq.Parsing.ExpressionVisitor.
-      return Enum.IsDefined (typeof (ExpressionType), expression.NodeType);
+      // PERF: We don't use Enum.IsDefined because it is too slow.
+      return expression.NodeType >= c_minExpressionType
+          && expression.NodeType <= s_maxExpressionType;
     }
 #else
     /// <summary>
