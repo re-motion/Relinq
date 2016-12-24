@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <!-- Copyright (c) rubicon IT GmbH, www.rubicon.eu
  !
@@ -26,10 +26,10 @@
     <DependDBBuildProcessorToolPath Condition="'$(NuGetToolPath)' == ''">$(PackagesDirectory)DependDB.BuildProcessor.1.7.3.0\tools\</DependDBBuildProcessorToolPath>
     <DependDBNuGetPreProcessorToolPath Condition="'$(NuGetToolPath)' == ''">$(PackagesDirectory)DependDB.BuildProcessor.NuGetPreProcessor.1.7.3.0\tools\</DependDBNuGetPreProcessorToolPath>
     <NUnitToolPath Condition="'$(NUnitToolPath)' == ''">$(PackagesDirectory)NUnit.Runners.2.6.3\tools\</NUnitToolPath>
-    <NuGetToolPath Condition="'$(NuGetToolPath)' == ''">$(PackagesDirectory)NuGet.CommandLine.2.8.6\tools\</NuGetToolPath>
+    <NuGetToolPath Condition="'$(NuGetToolPath)' == ''">$(PackagesDirectory)NuGet.CommandLine.3.5.0\tools\</NuGetToolPath>
     <NuGetForMSBuildPath Condition="'$(NuGetForMSBuildPath)' == ''">$(PackagesDirectory)NuGet.for.MSBuild.1.4.3\build\</NuGetForMSBuildPath>
-    <RemotionBuildTasksPath Condition="'$(RemotionBuildTasksPath)' == ''">$(PackagesDirectory)Remotion.BuildTools.MSBuildTasks.1.0.5827.25795\tools\</RemotionBuildTasksPath>
-    <RemotionBuildScriptPath Condition="'$(RemotionBuildScriptPath)' == ''">$(PackagesDirectory)Remotion.BuildScript.2.0.0-alpha012\BuildTargets\</RemotionBuildScriptPath>
+    <RemotionBuildTasksPath Condition="'$(RemotionBuildTasksPath)' == ''">$(PackagesDirectory)Remotion.BuildTools.MSBuildTasks.1.0.6180.28602\tools\</RemotionBuildTasksPath>
+    <RemotionBuildScriptPath Condition="'$(RemotionBuildScriptPath)' == ''">$(PackagesDirectory)Remotion.BuildScript.2.0.0-alpha017\BuildTargets\</RemotionBuildScriptPath>
   </PropertyGroup>
 
   <Import Project="$(RemotionBuildScriptPath)*.targets" />
@@ -156,7 +156,15 @@
              Properties="ConfigurationID=Debug;$(BuildProperties);"/>
   </Target>
 
-  <Target Name="UpdateAssemblyInfosLocalBuild" DependsOnTargets="CheckVersion;PrepareBuildProperties;UpdateVersionProps">
+  <Target Name="UpdateAssemblyInfosForDevelopment" DependsOnTargets="CheckVersion;PrepareBuildProperties;UpdateVersionProps">
+    <!-- Re-defines the version to append the local build pre-release tag after UpdateVersionProps has been performed. -->
+    <MSBuild Projects="$(MSBuildProjectFile)"
+             BuildInParallel="false"
+             Targets="UpdateAssemblyInfos;CleanAssemblyBackup"
+             Properties="ConfigurationID=Debug;$(BuildProperties);Version=$(Version)-x.9"/>
+  </Target>
+
+  <Target Name="UpdateAssemblyInfosForRelease" DependsOnTargets="CheckVersion;PrepareBuildProperties;UpdateVersionProps">
     <MSBuild Projects="$(MSBuildProjectFile)"
              BuildInParallel="false"
              Targets="UpdateAssemblyInfos;CleanAssemblyBackup"
