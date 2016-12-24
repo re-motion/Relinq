@@ -32,11 +32,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Remotion.BuildScript, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Remotion.BuildScript.2.0.0-alpha012\lib\net45\Remotion.BuildScript.dll</HintPath>
+      <HintPath>..\packages\Remotion.BuildScript.2.0.0-alpha017\lib\net45\Remotion.BuildScript.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Remotion.ReleaseProcessScript, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Remotion.ReleaseProcessScript.2.0.0-alpha012\lib\net45\Remotion.ReleaseProcessScript.dll</HintPath>
+      <HintPath>..\packages\Remotion.ReleaseProcessScript.2.0.0-alpha017\lib\net45\Remotion.ReleaseProcessScript.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -51,6 +51,9 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.BuildProject">
+      <Link>.BuildProject</Link>
+    </None>
     <None Include="Customizations\PatchNuGetOutput.targets" />
     <None Include="Customizations\DisableDependDB.targets" />
     <None Include="Customizations\Local\Configuration.targets" />
