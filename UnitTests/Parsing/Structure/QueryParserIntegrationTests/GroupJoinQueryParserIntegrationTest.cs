@@ -62,7 +62,6 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
     }
 
     [Test]
-    [Explicit ("TODO RMLNQ-105")]
     public void GroupJoin_WithSubQueryAsFirstQuerySource ()
     {
       var query = from s in QuerySource.Take (2)

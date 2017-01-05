@@ -114,8 +114,11 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
       Assert.That (clause.JoinClause.ItemName, Is.EqualTo ("i"));
       Assert.That (clause.JoinClause.ItemType, Is.SameAs (typeof (string)));
       Assert.That (clause.JoinClause.InnerSequence, Is.SameAs (_innerSequence));
-      Assert.That (clause.JoinClause.OuterKeySelector, Is.SameAs (_node.JoinExpressionNode.GetResolvedOuterKeySelector (ClauseGenerationContext)));
-      Assert.That (clause.JoinClause.InnerKeySelector, Is.SameAs (_node.JoinExpressionNode.GetResolvedInnerKeySelector (ClauseGenerationContext)));
+
+      var expectedOuterKeySelector = ExpressionHelper.Resolve (SourceClause, _outerKeySelector);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedOuterKeySelector, clause.JoinClause.OuterKeySelector);
+      var expectedInnerKeySelector = ExpressionHelper.Resolve (clause.JoinClause, _innerKeySelector);
+      ExpressionTreeComparer.CheckAreEqualTrees (expectedInnerKeySelector, clause.JoinClause.InnerKeySelector);
     }
 
     [Test]

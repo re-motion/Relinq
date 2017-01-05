@@ -39,9 +39,14 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       return ReflectionUtility.EnumerableAndQueryableMethods.WhereNameMatches ("GroupJoin").WithoutEqualityComparer();
     }
 
-    private readonly ResolvedExpressionCache<Expression> _cachedResultSelector;
-    private readonly JoinExpressionNode _joinExpressionNode;
+    private readonly MethodCallExpression _parsedExpression;
+    private readonly Expression _innerSequence;
+    private readonly LambdaExpression _outerKeySelector;
+    private readonly LambdaExpression _innerKeySelector;
     private readonly LambdaExpression _resultSelector;
+    [Obsolete ("The _joinExpressionNode property contains cached information which will become stale after processing a subquery and should not be used for this purpose.")]
+    private readonly JoinExpressionNode _joinExpressionNode;
+    private readonly ResolvedExpressionCache<Expression> _cachedResultSelector;
 
     public GroupJoinExpressionNode (
         MethodCallExpressionParseInfo parseInfo, 
@@ -64,14 +69,41 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
         throw new ArgumentException ("Result selector must have exactly two parameters.", "resultSelector");
 
       var joinResultSelector = Expression.Lambda (Expression.Constant (null), outerKeySelector.Parameters[0], innerKeySelector.Parameters[0]);
+#pragma warning disable 618
       _joinExpressionNode = new JoinExpressionNode (parseInfo, innerSequence, outerKeySelector, innerKeySelector, joinResultSelector);
+#pragma warning restore 618
+      _parsedExpression = parseInfo.ParsedExpression;
+      _innerSequence = innerSequence;
+      _outerKeySelector = outerKeySelector;
+      _innerKeySelector = innerKeySelector;
       _resultSelector = resultSelector;
       _cachedResultSelector = new ResolvedExpressionCache<Expression> (this);
     }
 
+    [Obsolete ("The JoinExpressionNode property contains cached information which will become stale after processing a subquery and should not be used for this purpose.")]
     public JoinExpressionNode JoinExpressionNode
     {
       get { return _joinExpressionNode; }
+    }
+
+    public MethodCallExpression ParsedExpression
+    {
+      get { return _parsedExpression; }
+    }
+
+    public Expression InnerSequence
+    {
+      get { return _innerSequence; }
+    }
+
+    public LambdaExpression OuterKeySelector
+    {
+      get { return _outerKeySelector; }
+    }
+
+    public LambdaExpression InnerKeySelector
+    {
+      get { return _innerKeySelector; }
     }
 
     public LambdaExpression ResultSelector
@@ -108,7 +140,11 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
     {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
 
-      var joinClause = _joinExpressionNode.CreateJoinClause (clauseGenerationContext);
+      var joinResultSelector = Expression.Lambda (Expression.Constant (null), _outerKeySelector.Parameters[0], _innerKeySelector.Parameters[0]);
+      var joinParseInfo = new MethodCallExpressionParseInfo (AssociatedIdentifier, Source, _parsedExpression);
+      var joinExpressionNode = new JoinExpressionNode (joinParseInfo, _innerSequence, _outerKeySelector, _innerKeySelector, joinResultSelector);
+
+      var joinClause = joinExpressionNode.CreateJoinClause (clauseGenerationContext);
       var groupJoinClause = new GroupJoinClause (_resultSelector.Parameters[1].Name, _resultSelector.Parameters[1].Type, joinClause);
 
       clauseGenerationContext.AddContextInfo (this, groupJoinClause);
