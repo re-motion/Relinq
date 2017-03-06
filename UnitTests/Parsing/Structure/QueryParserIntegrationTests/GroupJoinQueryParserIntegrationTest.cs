@@ -70,13 +70,6 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
 
-      //Assert.That (
-      //  queryModel.ToString(),
-      //  Is.EqualTo (
-      //    "from Cook s in {TestQueryable<Cook>() => Take(2)} " 
-      //    + "join Kitchen sd in TestQueryable<Kitchen>() on [s].ID equals [sd].RoomNumber into IEnumerable`1 sds " 
-      //    + "select Create([s], [sds])"));
-
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Tuple<Cook, IEnumerable<Kitchen>>>)));
 
       var mainFromClause = queryModel.MainFromClause;
@@ -114,14 +107,6 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
         select k;
 
       var queryModel = QueryParser.GetParsedQuery (query.Expression);
-
-      //Assert.That (
-      //  queryModel.ToString(),
-      //  Is.EqualTo (
-      //    "from Cook s in TestQueryable<Cook>() "
-      //    + "join Kitchen sd in TestQueryable<Kitchen>() on [s].ID equals [sd].RoomNumber into IEnumerable`1 sds "
-      //    + "from Kitchen k in {[sds] => DefaultIfEmpty()} "
-      //    + "select [k]"));
 
       Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Kitchen>)));
 
