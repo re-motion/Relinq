@@ -5,6 +5,14 @@
     <!-- The dependency list must only be updated based on the list in Core.nuspec.
     -->
     <DotNetCore_Dependencies>
+      <group targetFramework="net35" xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+      </group>
+      <group targetFramework="net40" xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+      </group>
+      <group targetFramework="net45" xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+      </group>
+      <group targetFramework="portable-net45+win+wpa81+wp80" xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+      </group>
       <group targetFramework=".NETStandard1.0" xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
         <dependency id="System.Collections" version="[4.0.11, )" />
         <dependency id="System.Diagnostics.Debug" version="[4.0.11, )" />
