@@ -48,6 +48,7 @@ namespace Remotion.Linq.Parsing.Structure.NodeTypeProviders
       registry.Register (AggregateFromSeedExpressionNode.GetSupportedMethods(), typeof (AggregateFromSeedExpressionNode));
       registry.Register (AllExpressionNode.GetSupportedMethods(), typeof (AllExpressionNode));
       registry.Register (AnyExpressionNode.GetSupportedMethods(), typeof (AnyExpressionNode));
+      registry.Register (AsQueryableExpressionNode.GetSupportedMethods(), typeof (AsQueryableExpressionNode));
       registry.Register (AverageExpressionNode.GetSupportedMethods(), typeof (AverageExpressionNode));
       registry.Register (CastExpressionNode.GetSupportedMethods(), typeof (CastExpressionNode));
       registry.Register (ConcatExpressionNode.GetSupportedMethods(), typeof (ConcatExpressionNode));
