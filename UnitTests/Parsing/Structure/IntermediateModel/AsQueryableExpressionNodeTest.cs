@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
+using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Remotion.Linq.Utilities;
@@ -79,7 +80,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
       var result = _node.Apply (QueryModel, ClauseGenerationContext);
       Assert.That (result, Is.SameAs (QueryModel));
 
-      Assert.That (QueryModel.ResultOperators, Is.Empty);
+      Assert.That (QueryModel.ResultOperators[0], Is.InstanceOf<AsQueryableResultOperator>());
       Assert.That (QueryModel.BodyClauses, Is.Empty);
     }
   }

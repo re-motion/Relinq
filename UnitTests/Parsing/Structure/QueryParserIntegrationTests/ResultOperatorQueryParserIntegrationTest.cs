@@ -872,5 +872,24 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       Assert.That (resultOperator.Seed.Type, Is.SameAs (typeof (string)));
       Assert.That (resultOperator.Func.Parameters[0].Type, Is.SameAs (typeof (IConvertible)));
     }
+
+    [Test]
+    public void AsQueryable ()
+    {
+      var query =
+          from s in QuerySource.Where (c => c.Assistants.AsQueryable().Any())
+          select s;
+
+      var queryModel = QueryParser.GetParsedQuery (query.Expression);
+      Assert.That (queryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Cook>)));
+
+      CheckConstantQuerySource (queryModel.MainFromClause.FromExpression, QuerySource);
+
+      var whereClause = (WhereClause) queryModel.BodyClauses[0];
+
+      var subQueryModel = ((SubQueryExpression) whereClause.Predicate).QueryModel;
+      Assert.That (subQueryModel.ResultOperators[0], Is.InstanceOf (typeof (AsQueryableResultOperator)));
+      Assert.That (subQueryModel.ResultOperators[1], Is.InstanceOf (typeof (AnyResultOperator)));
+    }
   }
 }

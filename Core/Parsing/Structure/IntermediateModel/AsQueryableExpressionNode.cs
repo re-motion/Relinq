@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Linq.Clauses;
+using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Utilities;
 using Remotion.Utilities;
 
@@ -14,7 +16,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
   /// When this node is used, it will not modify the <see cref="QueryModel"/>, i.e. the call to <see cref="Queryable.AsQueryable{TSource}"/> 
   /// will be removed given how it is transparent to the process of executing the query.
   /// </summary>
-  public sealed class AsQueryableExpressionNode : MethodCallExpressionNodeBase
+  public sealed class AsQueryableExpressionNode : ResultOperatorExpressionNodeBase
   {
     public static IEnumerable<MethodInfo> GetSupportedMethods ()
     {
@@ -22,7 +24,7 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
     }
 
     public AsQueryableExpressionNode (MethodCallExpressionParseInfo parseInfo)
-      : base (parseInfo)
+      : base (parseInfo, null, null)
     {
     }
 
@@ -35,9 +37,9 @@ namespace Remotion.Linq.Parsing.Structure.IntermediateModel
       return Source.Resolve (inputParameter, expressionToBeResolved, clauseGenerationContext);
     }
 
-    protected override void ApplyNodeSpecificSemantics (QueryModel queryModel, ClauseGenerationContext clauseGenerationContext)
+    protected override ResultOperatorBase CreateResultOperator (ClauseGenerationContext clauseGenerationContext)
     {
-      // don't change query model
+      return new AsQueryableResultOperator();
     }
   }
 }

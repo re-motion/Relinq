@@ -110,6 +110,7 @@
     <Compile Include="Clauses\Expressions\IVBSpecificExpressionVisitor.cs" />
     <Compile Include="Clauses\Expressions\VBStringComparisonExpression.cs" />
     <Compile Include="Clauses\IFromClause.cs" />
+    <Compile Include="Clauses\ResultOperators\AsQueryableResultOperator.cs" />
     <Compile Include="Parsing\ExpressionVisitors\TreeEvaluation\EvaluatableExpressionFilterBase.cs" />
     <Compile Include="Parsing\ExpressionVisitors\TreeEvaluation\IEvaluatableExpressionFilter.cs" />
     <Compile Include="Parsing\ExpressionVisitors\TreeEvaluation\NullEvaluatableExpressionFilter.cs" />
