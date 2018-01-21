@@ -36,6 +36,16 @@ namespace Remotion.Linq.Clauses.ResultOperators
   public sealed class AsQueryableResultOperator : SequenceTypePreservingResultOperatorBase
   {
     /// <summary>
+    /// A marker interface that must be implemented by the <see cref="IQueryModelVisitor "/> if the visitor supports the <see cref="AsQueryableResultOperator"/>.
+    /// </summary>
+    /// <remarks>
+    /// Note that the interface will become obsolete with v3.0.0. See also RMLNQ-117.
+    /// </remarks>
+    public interface ISupportedByIQueryModelVistor
+    {
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="AsQueryableResultOperator"/>.
     /// </summary>
     public AsQueryableResultOperator ()
