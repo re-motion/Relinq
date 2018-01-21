@@ -18,6 +18,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Development.UnitTesting;
 using Remotion.Linq.UnitTests.Clauses.ResultOperators;
@@ -48,6 +49,30 @@ namespace Remotion.Linq.UnitTests.Clauses
       _resultOperator.Accept (visitorMock, queryModel, 1);
 
       visitorMock.AssertWasCalled (mock => mock.VisitResultOperator (_resultOperator, queryModel, 1));
+    }
+
+    [Test]
+    public void Accept_AsQueryableResultOperatorSupportedByVisitor_RMLNQ_117 ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook> ();
+      var visitorMock = MockRepository.GenerateMock<IQueryModelVisitor, AsQueryableResultOperator.ISupportedByIQueryModelVistor> ();
+      var resultOperator = new AsQueryableResultOperator ();
+
+      resultOperator.Accept (visitorMock, queryModel, 1);
+
+      visitorMock.AssertWasCalled (mock => mock.VisitResultOperator (resultOperator, queryModel, 1));
+    }
+
+    [Test]
+    public void Accept_AsQueryableResultOperatorNotSupportedByVisitor_RMLNQ_117 ()
+    {
+      var queryModel = ExpressionHelper.CreateQueryModel<Cook> ();
+      var visitorMock = MockRepository.GenerateMock<IQueryModelVisitor> ();
+      var resultOperator = new AsQueryableResultOperator ();
+
+      resultOperator.Accept (visitorMock, queryModel, 1);
+
+      visitorMock.AssertWasNotCalled (mock => mock.VisitResultOperator (resultOperator, queryModel, 1));
     }
 
     [Test]

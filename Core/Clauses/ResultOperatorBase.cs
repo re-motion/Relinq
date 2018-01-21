@@ -17,6 +17,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 using Remotion.Linq.Utilities;
 using Remotion.Utilities;
@@ -64,6 +65,10 @@ namespace Remotion.Linq.Clauses
     {
       ArgumentUtility.CheckNotNull ("visitor", visitor);
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
+
+      // RMLNQ-117: This condition can be removed once the marker interface becomes obsolete. This will also invalidate the associated tests in ResultOperatorBaseTest.
+      if (this is AsQueryableResultOperator && !(visitor is AsQueryableResultOperator.ISupportedByIQueryModelVistor))
+        return;
 
       visitor.VisitResultOperator (this, queryModel, index);
     }
