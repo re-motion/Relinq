@@ -60,7 +60,7 @@
   <Target Name="DotNetCore_InstallCli" DependsOnTargets="DotNetCore_PreparePaths">
     <PropertyGroup>
       <_downloadBootstrapCommand>-Command "Invoke-WebRequest -Uri '$(DotNetCoreCliBootstrapScriptUrl)' -OutFile '$(DotNetCoreCliBootstrapScriptPath)'"</_downloadBootstrapCommand>
-      <_installCommand>-File "$(DotNetCoreCliBootstrapScriptPath)" -Channel preview -InstallDir "$(DotNetCoreCliInstallPath)" -NoPath</_installCommand>
+      <_installCommand>-File "$(DotNetCoreCliBootstrapScriptPath)" -Channel rel-1.0.0 -InstallDir "$(DotNetCoreCliInstallPath)" -NoPath -Version 1.0.0-preview2-003121</_installCommand>
       <_oldVersion></_oldVersion>
       <_oldVersion Condition="Exists('$(DotNetCoreCliVersionPath)')">$([System.IO.File]::ReadAllText($(DotNetCoreCliVersionPath)))</_oldVersion>
     </PropertyGroup>

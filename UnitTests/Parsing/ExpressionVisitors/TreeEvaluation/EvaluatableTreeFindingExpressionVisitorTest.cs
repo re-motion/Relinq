@@ -75,6 +75,22 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.TreeEvaluation
     }
 
     [Test]
+    public void ExpressionTypeEnum_HasNoHoles ()
+    {
+      // We made a perf-optimization in RMLNQ-107 by avoiding calling Enum.IsDefined.
+      // This test verifies our assumption that the ExpressionType enum does not have holes.
+
+      var expected = ExpressionType.Add;
+
+      foreach (ExpressionType value in Enum.GetValues (typeof (ExpressionType)))
+      {
+          Assert.That (value, Is.EqualTo (expected), "Unexpected hole found in ExpressionType enum!");
+
+          expected++;
+      }
+    }
+
+    [Test]
     public void NestedExpression_InnerAndOuterAreEvaluatable ()
     {
       var innerExpressionLeft = Expression.Constant (0);

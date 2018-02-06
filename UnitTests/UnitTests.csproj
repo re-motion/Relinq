@@ -173,6 +173,7 @@
     <Compile Include="Clauses\Expressions\SubQueryExpressionTest.cs" />
     <Compile Include="Clauses\Expressions\VBStringComparisonExpressionTest.cs" />
     <Compile Include="Clauses\ExpressionVisitors\IntegrationTests\AccessorFindingExpressionTreeVisitorIntegrationTest.cs" />
+    <Compile Include="Clauses\ResultOperators\AsQueryableResultOperatorTest.cs" />
     <Compile Include="Clauses\ResultOperators\ConcatResultOperatorTest.cs" />
     <Compile Include="Parsing\ExpressionVisitors\MultiReplacingExpressionVisitorTest.cs" />
     <Compile Include="Clauses\Expressions\PartialEvaluationExceptionExpressionTest.cs" />
@@ -195,6 +196,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Parsing\NewExpressionIntegrationTest.cs" />
+    <Compile Include="Parsing\Structure\IntermediateModel\AsQueryableExpressionNodeTest.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\TestDomain\ExpressionNodeWithOnePublicInstanceCtor.cs" />
     <Compile Include="Parsing\Structure\IntermediateModel\ConcatExpressionNodeTest.cs" />
     <Compile Include="Parsing\Structure\NodeTypeProviders\CompoundNodeTypeProviderTest.cs" />

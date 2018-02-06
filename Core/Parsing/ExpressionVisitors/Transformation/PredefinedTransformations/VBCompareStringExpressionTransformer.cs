@@ -32,6 +32,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.Transformation.PredefinedTran
   public class VBCompareStringExpressionTransformer : IExpressionTransformer<BinaryExpression>
   {
     private const string c_vbOperatorsClassName = "Microsoft.VisualBasic.CompilerServices.Operators";
+    private const string c_vbEmbeddedOperatorsClassName = "Microsoft.VisualBasic.CompilerServices.EmbeddedOperators";
     private const string c_vbCompareStringOperatorMethodName = "CompareString";
 
     private static readonly MethodInfo s_stringCompareToMethod = 
@@ -110,7 +111,9 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.Transformation.PredefinedTran
 
     private bool IsVBOperator (MethodInfo operatorMethod, string operatorName)
     {
-      return operatorMethod.DeclaringType.FullName == c_vbOperatorsClassName && operatorMethod.Name == operatorName;
+      var operatorTypeName = operatorMethod.DeclaringType.FullName;
+      return (operatorTypeName == c_vbOperatorsClassName || operatorTypeName == c_vbEmbeddedOperatorsClassName)
+             && operatorMethod.Name == operatorName;
     }
   }
 }
