@@ -9,6 +9,6 @@
                        ............ CI, nightly (will be suffixed by '-x.1.buildnumber')
                        ............ local (will be suffixed by '-x.9.yymmdd-hhMMss')
     -->
-    <Version Condition="'$(Version)' == ''">2.2.0</Version>
+    <Version Condition="'$(Version)' == ''">2.3.0</Version>
   </PropertyGroup>
 </Project>
