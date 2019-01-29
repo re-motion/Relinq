@@ -41,7 +41,7 @@ namespace Remotion.Linq
     /// calculated or aggregated from all the values in the collection result set. This applies to, for example, item counts, average calculations,
     /// checks for the existence of a specific item, and so on.
     /// </remarks>
-    T ExecuteScalar<T> (QueryModel queryModel);
+    T ExecuteScalar<T> (QueryModel queryModel) where T : class;
 
     /// <summary>
     /// Executes the given <paramref name="queryModel"/> as a single object query, i.e. as a query returning a single object of type 
@@ -61,7 +61,7 @@ namespace Remotion.Linq
     /// calculated or aggregated from all the values in the collection result set. This applies to, for example, item counts, average calculations,
     /// checks for the existence of a specific item, and so on.
     /// </remarks>
-    T ExecuteSingle<T> (QueryModel queryModel, bool returnDefaultWhenEmpty);
+    T ExecuteSingle<T> (QueryModel queryModel, bool returnDefaultWhenEmpty) where T : class;
 
     /// <summary>
     /// Executes the given <paramref name="queryModel"/> as a collection query, i.e. as a query returning objects of type <typeparamref name="T"/>. 
@@ -73,6 +73,6 @@ namespace Remotion.Linq
     /// <param name="queryModel">The <see cref="QueryModel"/> representing the query to be executed. Analyze this via an 
     /// <see cref="IQueryModelVisitor"/>.</param>
     /// <returns>A scalar value of type <typeparamref name="T"/> that represents the query's result.</returns>
-    IEnumerable<T> ExecuteCollection<T> (QueryModel queryModel);
+    IEnumerable<T> ExecuteCollection<T> (QueryModel queryModel) where T: class;
   }
 }

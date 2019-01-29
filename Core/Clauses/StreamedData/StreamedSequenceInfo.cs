@@ -134,8 +134,8 @@ namespace Remotion.Linq.Clauses.StreamedData
       return new StreamedSequence (result, new StreamedSequenceInfo (result.GetType(), ItemExpression));
     }
 
-    public IEnumerable ExecuteCollectionQueryModel<T> (QueryModel queryModel, IQueryExecutor executor)
-    {
+    public IEnumerable ExecuteCollectionQueryModel<T> (QueryModel queryModel, IQueryExecutor executor) where T : class
+        {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("executor", executor);
 

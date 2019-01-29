@@ -57,8 +57,8 @@ namespace Remotion.Linq.Clauses.StreamedData
       return new StreamedScalarValueInfo (dataType);
     }
 
-    public object ExecuteScalarQueryModel<T> (QueryModel queryModel, IQueryExecutor executor)
-    {
+    public object ExecuteScalarQueryModel<T> (QueryModel queryModel, IQueryExecutor executor) where T : class
+        {
       ArgumentUtility.CheckNotNull ("queryModel", queryModel);
       ArgumentUtility.CheckNotNull ("executor", executor);
 
