@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CustomizeVSWindowTitle>
+  <SettingsSet
+    AppendedString=" "
+    PatternIfRunningMode="Relinq - [gitBranchName] (Running)"
+    PatternIfBreakMode="Relinq - [gitBranchName] (Debugging)"
+    PatternIfDesignMode="Relinq - [gitBranchName]" />
+</CustomizeVSWindowTitle>
