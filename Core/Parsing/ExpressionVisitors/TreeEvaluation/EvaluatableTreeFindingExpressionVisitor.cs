@@ -47,7 +47,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
   /// In .NET 4.0, non-standard expressions can be evaluated if they can be reduced to an evaluatable expression.
   /// </para>
   /// </remarks>
-  public sealed class EvaluatableTreeFindingExpressionVisitor : RelinqExpressionVisitor, IPartialEvaluationExceptionExpressionVisitor
+  public class EvaluatableTreeFindingExpressionVisitor : RelinqExpressionVisitor, IPartialEvaluationExceptionExpressionVisitor
   {
     public static PartialEvaluationInfo Analyze (
         [NotNull] Expression expressionTree,
@@ -256,16 +256,8 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      // Method calls are only evaluatable if they do not involve IQueryable objects.
-
-      if (IsQueryableExpression (expression.Object))
+      if (!IsEvaluatableMethodCall(expression))
         _isCurrentSubtreeEvaluatable = false;
-
-      for (int i = 0; i < expression.Arguments.Count && _isCurrentSubtreeEvaluatable; i++)
-      {
-        if (IsQueryableExpression (expression.Arguments[i]))
-          _isCurrentSubtreeEvaluatable = false;
-      }
 
       var vistedExpression = base.VisitMethodCall (expression);
 
@@ -631,9 +623,9 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     }
 #endif
 
-    private bool IsQueryableExpression (Expression expression)
+    protected static bool IsQueryableExpression(Expression expression)
     {
-      return expression != null && typeof (IQueryable).GetTypeInfo().IsAssignableFrom (expression.Type.GetTypeInfo());
+      return expression != null && typeof(IQueryable).GetTypeInfo().IsAssignableFrom(expression.Type.GetTypeInfo());
     }
 
     public Expression VisitPartialEvaluationException (PartialEvaluationExceptionExpression partialEvaluationExceptionExpression)
@@ -643,6 +635,22 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
       // PartialEvaluationExceptionExpression is not evaluable, and its children aren't either (so we don't visit them).
       _isCurrentSubtreeEvaluatable = false;
       return partialEvaluationExceptionExpression;
+    }
+
+    /// <summary>
+    ///		Crude implementation, only direct checks of queryable instance and arguments.
+    /// </summary>
+    /// <returns>
+    ///		false if instance (on which method is invoked) or any of its arguments implements <see cref="IQueryable"/>.
+    /// </returns>
+    public static bool IsEvaluatableMethodCall(MethodCallExpression expression)
+    {
+      if (expression == null) throw new ArgumentNullException(nameof(expression));
+
+      // Method calls are only evaluatable if they do not involve IQueryable objects.
+
+      return !IsQueryableExpression(expression.Object)
+             && expression.Arguments.All(a => !IsQueryableExpression(a));
     }
   }
 }
