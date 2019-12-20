@@ -16,6 +16,7 @@
 // 
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -49,6 +50,19 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
   /// </remarks>
   public class EvaluatableTreeFindingExpressionVisitor : RelinqExpressionVisitor, IPartialEvaluationExceptionExpressionVisitor
   {
+    private class ParameterStatus
+    {
+      public ParameterExpression Expression { get; set; }
+
+      public bool IsEvaluatable { get; set; }
+
+      public LambdaExpression OwningExpression { get; set; }
+
+      public MethodCallExpression MethodCallInvokingLambda { get; set; }
+
+      public Expression MethodArgumentAcceptingLambda { get; set; }
+    }
+
     public static PartialEvaluationInfo Analyze (
         [NotNull] Expression expressionTree,
         [NotNull] IEvaluatableExpressionFilter evaluatableExpressionFilter)
@@ -70,6 +84,9 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     private readonly PartialEvaluationInfo _partialEvaluationInfo = new PartialEvaluationInfo();
     private bool _isCurrentSubtreeEvaluatable;
 
+    private readonly Stack<Expression> _ancestors = new Stack<Expression>(20);
+    private readonly Dictionary<string, ParameterStatus> _parameters = new Dictionary<string, ParameterStatus>();
+
     private EvaluatableTreeFindingExpressionVisitor (IEvaluatableExpressionFilter evaluatableExpressionFilter)
     {
       _evaluatableExpressionFilter = evaluatableExpressionFilter;
@@ -77,6 +94,8 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
 
     public override Expression Visit (Expression expression)
     {
+      _ancestors.Push(expression);
+
       if (expression == null)
         return base.Visit ((Expression) null);
 
@@ -103,6 +122,17 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
       //   - it was evaluatable before, and
       //   - the current subtree (i.e. the child of the parent node) is evaluatable.
       _isCurrentSubtreeEvaluatable &= isParentNodeEvaluatable; // the _isCurrentSubtreeEvaluatable flag now relates to the parent node again
+
+      _ancestors.Pop();
+
+      if (expression?.NodeType == ExpressionType.Lambda)
+      {
+        // defined parameters go out of scope; chained extension methods often use the same parameter names
+        var parameterNames = _parameters.Where(p => p.Value.OwningExpression == expression).Select(p => p.Key).ToArray();
+        foreach (var name in parameterNames)
+          _parameters.Remove(name);
+      }
+
       return visitedExpression;
     }
 
@@ -318,8 +348,14 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      // Parameters are not evaluatable.
-      _isCurrentSubtreeEvaluatable = false;
+      // Parameters are evaluatable if they are supplied by evaluatable expression.
+      // look up lambda defining the parameter, up the ancestor list and check if method call to which it is passed is on evaluatable instance of extension method accepting evaluatable arguments
+      // note that lambda body is visited prior to parameters
+      // since method call is visited in the order {instance, arguments} and extension methods get instance as first parameter
+      // the source of the parameter is already visited and its evaluatability established
+      if (_isCurrentSubtreeEvaluatable)
+        _isCurrentSubtreeEvaluatable = IsParameterEvaluatable(expression);
+
       return base.VisitParameter (expression);
     }
 
@@ -652,5 +688,106 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
       return !IsQueryableExpression(expression.Object)
              && expression.Arguments.All(a => !IsQueryableExpression(a));
     }
+
+    private bool IsParameterEvaluatable(ParameterExpression expression)
+    {
+      // nameless parameters are generated when updating through linq, no need to handle them yet
+      if (expression?.Name == null)
+        return false;
+
+      ParameterStatus status;
+      if (_parameters.TryGetValue(expression.Name, out status))
+        return status.IsEvaluatable;
+
+      status = CalcParameterStatus(expression);
+      _parameters.Add(expression.Name, status);
+
+      return status.IsEvaluatable;
+    }
+
+    /// <remarks>
+    ///		Parameters are evaluatable if they are supplied by evaluatable expression.
+    ///		Look up lambda defining the parameter, up the ancestor list and check if method call to which it is passed is on evaluatable
+    ///		instance or extension method accepting evaluatable arguments.
+    ///		Note that lambda body is visited prior to parameters.
+    ///		Since method call is visited in the order [instance, arguments] and extension methods get instance as first parameter
+    ///		the source of the parameter is already visited and its evaluatability established.
+    ///		Note that if parameter is evaluated method call must be evaluatad too eliminating lambda and all the parameters.
+    ///		If lambda is not eliminated, evaluated parameter produces an error complaining that evaluating lambda parameter
+    ///		must return non-null expression of the same type.
+    /// </remarks>
+    private ParameterStatus CalcParameterStatus(ParameterExpression expression)
+    {
+      if (expression == null) throw new ArgumentNullException(nameof(expression));
+
+      var result = new ParameterStatus { Expression = expression };
+
+      foreach (var ancestor in _ancestors.Where(x => x != null))
+      {
+        if (result.MethodArgumentAcceptingLambda == null && IsParameterOwner(ancestor, expression))
+        {
+          result.MethodArgumentAcceptingLambda = result.OwningExpression = (LambdaExpression)ancestor;
+        }
+        else if (result.MethodArgumentAcceptingLambda != null)
+        {
+          if (ancestor.NodeType == ExpressionType.Call)
+          {
+            result.MethodCallInvokingLambda = (MethodCallExpression)ancestor;
+
+            result.IsEvaluatable = IsMethodSupplyingEvaluatableParameterValues(result.MethodCallInvokingLambda, result.MethodArgumentAcceptingLambda);
+
+            return result;
+          }
+
+          result.MethodArgumentAcceptingLambda = ancestor;
+        }
+      }
+
+      return result;
+    }
+
+    /// <summary>
+    ///		Can be used to determine whether parameters defined by lambda expression are evaluatable by examining method which will
+    ///		supply parameters to it. Relies on the visiting sequence: lambda parameters are visited after its body. When parameter
+    ///		is visited, the status of the defining lambda and method call supplying parameters to it has not been established and
+    ///		<see cref="_partialEvaluationInfo"/> would not contain them. There's also a
+    ///		chicken-and-egg situation as parameter is visited as a child of lambda body (potentially deep in the tree), but its
+    ///		evaluatability is determined at the level above lambda. To solve this here we examine the method that accepts the
+    ///		lambda as one of its parameters and determine if all other arguments are evaluatable, expecting all of them to be
+    ///		already visited and present in <see cref="_partialEvaluationInfo"/>.
+    /// </summary>
+    ///  <param name="methodExpression">
+    ///		Method invoking lambda.
+    ///  </param>
+    ///  <param name="methodArgumentAcceptingLambda">
+    ///		Argument (quote) for the lambda expression to which the method passes parameter values.
+    /// </param>
+    ///  <remarks>
+    /// 		Member expressions on e.g. repository creating query instances must be evaluated into constants
+    /// 		and queryable constants must be evaluated (e.g. for subqueries to be expanded properly),
+    /// 		but parameters accepting values from them are not evaluatable.
+    ///  </remarks>
+    private bool IsMethodSupplyingEvaluatableParameterValues(MethodCallExpression methodExpression, Expression methodArgumentAcceptingLambda)
+    {
+      if (methodExpression == null) throw new ArgumentNullException(nameof(methodExpression));
+      if (methodArgumentAcceptingLambda == null) throw new ArgumentNullException(nameof(methodArgumentAcceptingLambda));
+
+      if (!IsEvaluatableMethodCall(methodExpression))
+        return false;
+
+      if (methodExpression.Object != null && !_partialEvaluationInfo.IsEvaluatableExpression(methodExpression.Object))
+        return false;
+
+      return methodExpression.Arguments.All(a => a == methodArgumentAcceptingLambda || _partialEvaluationInfo.IsEvaluatableExpression(a));
+    }
+
+    private bool IsParameterOwner(Expression expression, ParameterExpression parameterExpression)
+    {
+      if (expression == null) throw new ArgumentNullException(nameof(expression));
+      if (parameterExpression == null) throw new ArgumentNullException(nameof(parameterExpression));
+
+      return (expression as LambdaExpression)?.Parameters.Any(x => x.Name == parameterExpression.Name) == true;
+    }
+
   }
 }
