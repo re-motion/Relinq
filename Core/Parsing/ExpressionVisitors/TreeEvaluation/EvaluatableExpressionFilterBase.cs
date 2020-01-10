@@ -32,6 +32,11 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     {
     }
 
+    /// <summary>
+    ///   Historically all parameters were considered non-evaluatable, this property allows to change this behavior, default is false.
+    /// </summary>
+    protected bool AllowParameterEvaluation { get; set; }
+
     public virtual bool IsEvaluatableBinary (BinaryExpression node)
     {
       ArgumentUtility.CheckNotNull ("node", node);
@@ -149,6 +154,25 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
       ArgumentUtility.CheckNotNull ("node", node);
 
       return true;
+    }
+
+    /// <summary>
+    ///   Historically all parameters were considered non-evaluatable, the behavior remains default that can be overridden.
+    /// </summary>
+    /// <param name="node">
+    ///   Expression being tested.
+    /// </param>
+    /// <param name="definingLambdaExpression">
+    ///   Lambda expression defining parameter.
+    /// </param>
+    /// <returns>
+    ///   <see cref="AllowParameterEvaluation"/>
+    /// </returns>
+    public virtual bool IsEvaluatableParameter (ParameterExpression node, LambdaExpression definingLambdaExpression)
+    {
+      if (node == null) throw new ArgumentNullException (nameof(node));
+
+      return AllowParameterEvaluation;
     }
 
 #if !NET_3_5

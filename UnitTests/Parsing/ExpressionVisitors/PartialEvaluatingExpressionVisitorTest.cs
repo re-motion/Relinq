@@ -110,14 +110,14 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
     }
 
     [Test]
-    public void SelectOnConstantEvaluated()
+    public void EvaluateSelectOnConstant()
     {
         //var kitchens = new [] {new Kitchen {ID = 1, Name = "Mega Kitchen", RoomNumber = 11} };
         var restaurants = new[] { new Restaurant {ID = 1, SubKitchen = new Kitchen { ID = 2, Name = "R Kitchen", RoomNumber = 12 } }  };
 
         Expression<Func<Cook, bool>> selectPredicate = x => restaurants.Select(y => y.SubKitchen).Contains(x.Kitchen);
 
-        var result = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees(selectPredicate, new TestEvaluatableExpressionFilter());
+        var result = PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees(selectPredicate, new TestEvaluatableExpressionFilter(true));
         Assert.That(result, Is.Not.SameAs(selectPredicate));
         Assert.IsInstanceOf<LambdaExpression>(result);
         Assert.IsInstanceOf<MethodCallExpression>(((LambdaExpression)result).Body);
@@ -135,7 +135,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
         Assert.IsInstanceOf<IEnumerable<Kitchen>>(((ConstantExpression)firstArgument).Value);
     }
 
-        [Test]
+    [Test]
     public void EvaluateWholeQueryTree ()
     {
 // ReSharper disable ConvertToConstant.Local

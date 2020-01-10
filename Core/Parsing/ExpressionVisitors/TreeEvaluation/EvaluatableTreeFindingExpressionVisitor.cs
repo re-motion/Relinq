@@ -353,10 +353,17 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
       // note that lambda body is visited prior to parameters
       // since method call is visited in the order {instance, arguments} and extension methods get instance as first parameter
       // the source of the parameter is already visited and its evaluatability established
-      if (_isCurrentSubtreeEvaluatable)
-        _isCurrentSubtreeEvaluatable = IsParameterEvaluatable(expression);
+      var status = GetParameterStatus (expression);
+      if (!status.IsEvaluatable)
+        _isCurrentSubtreeEvaluatable = false;
 
-      return base.VisitParameter (expression);
+      var visitedExpression = base.VisitParameter(expression);
+
+      // default filter will prevent evaluation of expressions involving parameters for backward compatibility, but it can be overridden
+      if (_isCurrentSubtreeEvaluatable)
+        _isCurrentSubtreeEvaluatable = _evaluatableExpressionFilter.IsEvaluatableParameter(expression, status.OwningExpression);
+
+      return visitedExpression;
     }
 
     protected override Expression VisitNewArray (NewArrayExpression expression)
@@ -689,20 +696,19 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
              && expression.Arguments.All(a => !IsQueryableExpression(a));
     }
 
-    private bool IsParameterEvaluatable(ParameterExpression expression)
+    private ParameterStatus GetParameterStatus(ParameterExpression expression)
     {
-      // nameless parameters are generated when updating through linq, no need to handle them yet
+      // consider nameless parameters as non-evaluatable as their handling is unclear at the time of writing
       if (expression?.Name == null)
-        return false;
+        return new ParameterStatus() {Expression = expression, IsEvaluatable = false};
 
       ParameterStatus status;
-      if (_parameters.TryGetValue(expression.Name, out status))
-        return status.IsEvaluatable;
-
-      status = CalcParameterStatus(expression);
-      _parameters.Add(expression.Name, status);
-
-      return status.IsEvaluatable;
+      if (!_parameters.TryGetValue(expression.Name, out status))
+      {
+        status = CalcParameterStatus(expression);
+        _parameters.Add(expression.Name, status);
+      }
+      return status;
     }
 
     /// <remarks>
