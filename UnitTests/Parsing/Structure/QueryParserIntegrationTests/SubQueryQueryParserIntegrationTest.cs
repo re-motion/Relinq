@@ -68,15 +68,30 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
     [Test]
     public void SubQuery_InNewExpression_RetainsType ()
     {
-      var queryable = from s in QuerySource select new { Result = from s2 in QuerySource select s2 };
+      var queryable = from s in QuerySource select new { Result = from s2 in (IEnumerable<Cook>) QuerySource select s2 };
       var queryModel = QueryParser.GetParsedQuery (queryable.Expression);
 
       Assert.That (queryModel.SelectClause.Selector, Is.TypeOf (typeof (NewExpression)));
       Assert.That (((NewExpression) queryModel.SelectClause.Selector).Arguments[0], Is.TypeOf (typeof (SubQueryExpression)));
-      Assert.That (((NewExpression) queryModel.SelectClause.Selector).Arguments[0].Type, Is.SameAs (typeof (IQueryable<Cook>)));
+      Assert.That (((NewExpression) queryModel.SelectClause.Selector).Arguments[0].Type, Is.SameAs (typeof (IEnumerable<Cook>)));
 
       var subQueryModel = ((SubQueryExpression) ((NewExpression) queryModel.SelectClause.Selector).Arguments[0]).QueryModel;
-      Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IQueryable<Cook>)));
+      Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof(IEnumerable<Cook>)));
+    }
+
+    [Test]
+    public void SubQuery_InNewExpression_RetainsTypeWithEvaluatableParameterButQueryableConstant()
+    {
+      var queryable = from s in QuerySource select new { Result = from s2 in QuerySource select s2 };
+      var parser = QueryParser.CreateDefault(new TestEvaluatableExpressionFilter(true));
+      var queryModel = parser.GetParsedQuery(queryable.Expression);
+
+      Assert.That(queryModel.SelectClause.Selector, Is.TypeOf(typeof(NewExpression)));
+      Assert.That(((NewExpression)queryModel.SelectClause.Selector).Arguments[0], Is.TypeOf(typeof(SubQueryExpression)));
+      Assert.That(((NewExpression)queryModel.SelectClause.Selector).Arguments[0].Type, Is.SameAs(typeof(IQueryable<Cook>)));
+
+      var subQueryModel = ((SubQueryExpression)((NewExpression)queryModel.SelectClause.Selector).Arguments[0]).QueryModel;
+      Assert.That(subQueryModel.GetOutputDataInfo().DataType, Is.SameAs(typeof(IQueryable<Cook>)));
     }
 
     /// <remarks>
@@ -84,7 +99,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
     ///   In such cases evaluatable expression filter has to be instructed to allow evaluation of expressions involving parameters.
     /// </remarks>
     [Test]
-    public void SubQuery_InNewExpression_ConvertsToConstant()
+    public void SubQuery_InNewExpression_ConvertsToConstantWithEvaluatableParameter()
     {
       var queryable = from s in QuerySource select new { Result = from s2 in (IEnumerable<Cook>)QuerySource select s2 };
       var parser = QueryParser.CreateDefault (new TestEvaluatableExpressionFilter (true));
