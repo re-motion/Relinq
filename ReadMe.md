@@ -30,7 +30,7 @@ re-linq is part of the re-motion project. See the [project home page](http://www
 * [Whitepaper](http://www.re-motion.org/download/re-linq.pdf) about the ideas behind re-linq
 * [End-to-end sample and article](http://www.codeproject.com/KB/linq/relinqish_the_pain.aspx) at codeproject.com 
 * re-motion [discussion list](http://groups.google.com/group/re-motion-users)
-* re-motion [issue tracker](https://www.re-motion.org/jira/browse/RMLNQ)
+* re-motion [issue tracker](https://re-motion.atlassian.net/projects/RMLNQ)
 
 **Related Projects**
 * [https://github.com/re-motion/Relinq-SqlBackend](https://github.com/re-motion/Relinq-SqlBackend)
