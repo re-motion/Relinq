@@ -112,7 +112,6 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors
     [Test]
     public void EvaluateSelectOnConstant()
     {
-        //var kitchens = new [] {new Kitchen {ID = 1, Name = "Mega Kitchen", RoomNumber = 11} };
         var restaurants = new[] { new Restaurant {ID = 1, SubKitchen = new Kitchen { ID = 2, Name = "R Kitchen", RoomNumber = 12 } }  };
 
         Expression<Func<Cook, bool>> selectPredicate = x => restaurants.Select(y => y.SubKitchen).Contains(x.Kitchen);

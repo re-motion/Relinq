@@ -170,7 +170,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     /// </returns>
     public virtual bool IsEvaluatableParameter (ParameterExpression node, LambdaExpression definingLambdaExpression)
     {
-      if (node == null) throw new ArgumentNullException (nameof(node));
+      ArgumentUtility.CheckNotNull (nameof(node), node);
 
       return AllowParameterEvaluation;
     }

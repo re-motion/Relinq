@@ -688,7 +688,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     /// </returns>
     public static bool IsEvaluatableMethodCall(MethodCallExpression expression)
     {
-      if (expression == null) throw new ArgumentNullException(nameof(expression));
+      ArgumentUtility.CheckNotNull (nameof(expression), expression);
 
       // Method calls are only evaluatable if they do not involve IQueryable objects.
 
@@ -724,7 +724,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     /// </remarks>
     private ParameterStatus CalcParameterStatus(ParameterExpression expression)
     {
-      if (expression == null) throw new ArgumentNullException(nameof(expression));
+      ArgumentUtility.CheckNotNull (nameof(expression), expression);
 
       var result = new ParameterStatus { Expression = expression };
 
@@ -775,8 +775,8 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     ///  </remarks>
     private bool IsMethodSupplyingEvaluatableParameterValues(MethodCallExpression methodExpression, Expression methodArgumentAcceptingLambda)
     {
-      if (methodExpression == null) throw new ArgumentNullException(nameof(methodExpression));
-      if (methodArgumentAcceptingLambda == null) throw new ArgumentNullException(nameof(methodArgumentAcceptingLambda));
+      ArgumentUtility.CheckNotNull (nameof(methodExpression), methodExpression);
+      ArgumentUtility.CheckNotNull (nameof(methodArgumentAcceptingLambda), methodArgumentAcceptingLambda);
 
       if (!IsEvaluatableMethodCall(methodExpression))
         return false;
@@ -789,11 +789,10 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
 
     private bool IsParameterOwner(Expression expression, ParameterExpression parameterExpression)
     {
-      if (expression == null) throw new ArgumentNullException(nameof(expression));
-      if (parameterExpression == null) throw new ArgumentNullException(nameof(parameterExpression));
+      ArgumentUtility.CheckNotNull (nameof(expression), expression);
+      ArgumentUtility.CheckNotNull (nameof(parameterExpression), parameterExpression);
 
       return (expression as LambdaExpression)?.Parameters.Any(x => x.Name == parameterExpression.Name) == true;
     }
-
   }
 }
