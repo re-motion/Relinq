@@ -111,7 +111,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       var resultProperty = constantExpression.Type.GetProperty ("Result");
       Assert.That (resultProperty, Is.Not.Null);
 
-      var resultValue = resultProperty.GetValue (constantExpression.Value);
+      var resultValue = resultProperty.GetValue (constantExpression.Value, null);
       Assert.That(resultValue, Is.Not.Null);
 
       Assert.That(resultValue, Is.AssignableTo(typeof(IEnumerable<Cook>)));
