@@ -55,7 +55,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
     private readonly PartialEvaluationInfo _partialEvaluationInfo;
     private readonly IEvaluatableExpressionFilter _evaluatableExpressionFilter;
 
-    public PartialEvaluatingExpressionVisitor (
+    private PartialEvaluatingExpressionVisitor (
         PartialEvaluationInfo partialEvaluationInfo,
         IEvaluatableExpressionFilter evaluatableExpressionFilter)
     {

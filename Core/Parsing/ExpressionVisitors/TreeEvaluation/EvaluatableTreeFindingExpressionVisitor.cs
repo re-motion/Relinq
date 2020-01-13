@@ -48,7 +48,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
   /// In .NET 4.0, non-standard expressions can be evaluated if they can be reduced to an evaluatable expression.
   /// </para>
   /// </remarks>
-  public class EvaluatableTreeFindingExpressionVisitor : RelinqExpressionVisitor, IPartialEvaluationExceptionExpressionVisitor
+  public sealed class EvaluatableTreeFindingExpressionVisitor : RelinqExpressionVisitor, IPartialEvaluationExceptionExpressionVisitor
   {
     private class ParameterStatus
     {
@@ -666,7 +666,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     }
 #endif
 
-    protected static bool IsQueryableExpression(Expression expression)
+    private static bool IsQueryableExpression(Expression expression)
     {
       return expression != null && typeof(IQueryable).GetTypeInfo().IsAssignableFrom(expression.Type.GetTypeInfo());
     }
