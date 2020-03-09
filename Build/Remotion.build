@@ -30,7 +30,7 @@
     <NuGetToolPath Condition="'$(NuGetToolPath)' == ''">$(PackagesDirectory)NuGet.CommandLine.2.8.6\tools\</NuGetToolPath>
     <NuGetForMSBuildPath Condition="'$(NuGetForMSBuildPath)' == ''">$(PackagesDirectory)NuGet.for.MSBuild.1.4.3\build\</NuGetForMSBuildPath>
     <RemotionBuildTasksPath Condition="'$(RemotionBuildTasksPath)' == ''">$(PackagesDirectory)Remotion.BuildTools.MSBuildTasks.1.0.6180.28602\tools\</RemotionBuildTasksPath>
-    <RemotionBuildScriptPath Condition="'$(RemotionBuildScriptPath)' == ''">$(PackagesDirectory)Remotion.BuildScript.2.0.0-alpha017\BuildTargets\</RemotionBuildScriptPath>
+    <RemotionBuildScriptPath Condition="'$(RemotionBuildScriptPath)' == ''">$(PackagesDirectory)Remotion.BuildScript.2.0.0-alpha99\BuildTargets\</RemotionBuildScriptPath>
   </PropertyGroup>
 
   <Import Project="$(RemotionBuildScriptPath)*.targets" />
@@ -84,6 +84,8 @@
           Platforms=$(Platforms);
           DatabaseSystems=$(DatabaseSystems);
           Browsers=$(Browsers);
+          ExecutionRuntimes=$(ExecutionRuntimes);
+          TargetRuntimes=$(TargetRuntimes);
           TestCategoriesToExclude=$(TestCategoriesToExclude);
       </BuildProperties>
     </PropertyGroup>

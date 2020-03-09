@@ -1,5 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <DockerImageForNet472>docker.int.rubicon-it.com/rubicon-docker/dotnet/framework/aspnet/windowsskd:4.7.2-windowsservercore-ltsc2016</DockerImageForNet472>
+    <DockerImageForNet48>docker.int.rubicon-it.com/rubicon-docker/dotnet/framework/aspnet/windowsskd:4.8-windowsservercore-ltsc2016</DockerImageForNet48>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedBrowsers Include="Chrome;InternetExplorer;Firefox;Edge"/>
+    <SupportedPlatforms Include="x86;x64"/>
+    <SupportedDatabaseSystems Include="SqlServerDefault;SqlServer2012;SqlServer2014;SqlServer2016;SqlServer2017;SqlServer2019"/>
+    <SupportedExecutionRuntimes Include="Win_NET472=$(DockerImageForNet472);Win_NET48=$(DockerImageForNet48)"/>
+    <SupportedTargetRuntimes Include="NET48;NET472;"/>
+    <SupportedConfigurationIDs Include="Debug;Release"/>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>NET472</TargetFramework>
+    <NET35TestConfiguration>
+      Win_NET48  + NET35  + NoBrowser + NoDB + Debug   + x86;
+      Win_NET48  + NET35  + NoBrowser + NoDB + Release + x86;
+      Win_NET48  + NET35  + NoBrowser + NoDB + Debug   + x64;
+      Win_NET48  + NET35  + NoBrowser + NoDB + Release + x64;
+
+      <!-- Local-->
+      LocalMachine  + NET35  + NoBrowser + NoDB + Debug + x86;
+    </NET35TestConfiguration>
+    <NET40TestConfiguration>
+      Win_NET48  + NET40  + NoBrowser + NoDB + Debug   + x86;
+      Win_NET48  + NET40  + NoBrowser + NoDB + Release + x86;
+      Win_NET48  + NET40  + NoBrowser + NoDB + Debug   + x64;
+      Win_NET48  + NET40  + NoBrowser + NoDB + Release + x64;
+
+      <!-- Local-->
+      LocalMachine  + NET40  + NoBrowser + NoDB + Debug + x86;
+    </NET40TestConfiguration>
+    <NET45TestConfiguration>
+      Win_NET48  + NET45  + NoBrowser + NoDB + Debug   + x86;
+      Win_NET48  + NET45  + NoBrowser + NoDB + Release + x86;
+      Win_NET48  + NET45  + NoBrowser + NoDB + Debug   + x64;
+      Win_NET48  + NET45  + NoBrowser + NoDB + Release + x64;
+
+      <!-- Local-->
+      LocalMachine  + NET45  + NoBrowser + NoDB + Debug + x86;
+    </NET45TestConfiguration>
+    <NET472TestConfiguration>
+      Win_NET48  + NET472  + NoBrowser + NoDB + Debug   + x86;
+      Win_NET48  + NET472  + NoBrowser + NoDB + Release + x86;
+      Win_NET48  + NET472  + NoBrowser + NoDB + Debug   + x64;
+      Win_NET48  + NET472  + NoBrowser + NoDB + Release + x64;
+
+      <!-- Local-->
+      LocalMachine  + NET472  + NoBrowser + NoDB + Debug + x86;
+    </NET472TestConfiguration>
+  </PropertyGroup>
+
   <ItemGroup>
 
     <ReleaseProjectFiles Include="$(SolutionDirectory)Core.Net_3_5\Core.Net_3_5.csproj">
@@ -35,28 +90,32 @@
     </ReleaseProjectFiles>
 
     <UnitTestProjectFiles Include="$(SolutionDirectory)Development.Net_3_5.UnitTests\Development.Net_3_5.UnitTests.csproj">
-      <ExecutionRuntime>net-3.5</ExecutionRuntime>
+      <TestConfiguration>$(NET35TestConfiguration)</TestConfiguration>
     </UnitTestProjectFiles>
 
     <UnitTestProjectFiles Include="$(SolutionDirectory)Development.Net_4_0.UnitTests\Development.Net_4_0.UnitTests.csproj">
-      <ExecutionRuntime>net-4.0</ExecutionRuntime>
+      <TestConfiguration>$(NET40TestConfiguration)</TestConfiguration>
     </UnitTestProjectFiles>
 
-    <UnitTestProjectFiles Include="$(SolutionDirectory)Development.UnitTests\Development.UnitTests.csproj"/>
+    <UnitTestProjectFiles Include="$(SolutionDirectory)Development.UnitTests\Development.UnitTests.csproj">
+      <TestConfiguration>$(NET472TestConfiguration)</TestConfiguration>
+    </UnitTestProjectFiles>
 
     <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests.Net_3_5\UnitTests.Net_3_5.csproj">
-      <ExecutionRuntime>net-3.5</ExecutionRuntime>
+      <TestConfiguration>$(NET35TestConfiguration)</TestConfiguration>
     </UnitTestProjectFiles>
 
     <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests.Net_4_0\UnitTests.Net_4_0.csproj">
-      <ExecutionRuntime>net-4.0</ExecutionRuntime>
+      <TestConfiguration>$(NET40TestConfiguration)</TestConfiguration>
     </UnitTestProjectFiles>
 
     <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests.Net_4_5\UnitTests.Net_4_5.csproj">
-      <ExecutionRuntime>net-4.5</ExecutionRuntime>
+      <TestConfiguration>$(NET45TestConfiguration)</TestConfiguration>
     </UnitTestProjectFiles>
 
-    <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests\UnitTests.csproj"/>
+    <UnitTestProjectFiles Include="$(SolutionDirectory)UnitTests\UnitTests.csproj">
+      <TestConfiguration>$(NET472TestConfiguration)</TestConfiguration>
+    </UnitTestProjectFiles>
 
     <!--
     <IntegrationTestProjectFiles Include="$(SolutionDirectory)IntegrationTests\IntegrationTests.csproj">
