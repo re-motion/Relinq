@@ -23,7 +23,7 @@ using System.Reflection;
 
 namespace Remotion.Linq.Development.UnitTesting.Sandboxing
 {
-  public enum SandboxTestStatus { Succeeded, Ignored, Failed, FailedInSetUp, FailedInTearDown };
+  public enum SandboxTestStatus { Succeeded, Ignored, Failed, FailedInSetUp, FailedInTearDown }
 
   /// <summary>
   /// <see cref="TestResult"/> represents a single result for a test method.
