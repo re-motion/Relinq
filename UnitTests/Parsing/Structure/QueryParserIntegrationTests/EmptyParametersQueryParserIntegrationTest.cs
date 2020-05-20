@@ -1,4 +1,4 @@
-﻿// Copyright (c) rubicon IT GmbH, www.rubicon.eu
+// Copyright (c) rubicon IT GmbH, www.rubicon.eu
 //
 // See the NOTICE file distributed with this work for additional information
 // regarding copyright ownership.  rubicon licenses this file to you under 
@@ -47,7 +47,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       var selectClause = queryModel.SelectClause;
       CheckResolvedExpression<Cook, int> (selectClause.Selector, queryModel.MainFromClause, c => c.ID);
 
-      Assert.That (queryModel.MainFromClause.ItemName, Is.StringStarting ("<generated>_"));
+      Assert.That (queryModel.MainFromClause.ItemName, Does.StartWith ("<generated>_"));
     }
      
   }

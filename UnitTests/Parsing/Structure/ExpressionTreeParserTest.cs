@@ -195,7 +195,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
 
       var result = _expressionTreeParser.ParseTree (expression);
 
-      Assert.That (((SelectExpressionNode) result).AssociatedIdentifier, Is.StringStarting ("<generated>_"));
+      Assert.That (((SelectExpressionNode) result).AssociatedIdentifier, Does.StartWith ("<generated>_"));
     }
 
     [Test]
@@ -227,7 +227,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
 
       var source = ((SelectExpressionNode) result).Source;
       Assert.That (source, Is.InstanceOf (typeof (MainSourceExpressionNode)));
-      Assert.That (((MainSourceExpressionNode) source).AssociatedIdentifier, Is.StringStarting ("<generated>_"));
+      Assert.That (((MainSourceExpressionNode) source).AssociatedIdentifier, Does.StartWith ("<generated>_"));
     }
 
     [Test]
