@@ -76,15 +76,15 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-#else
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitUnknownNonExtension: [-1]")]
-#endif
     public void VisitUnknownNonExtension ()
     {
-      Assert.That (
-          () => Visit (_visitor, (ExpressionType) (-1)),
-          Throws.InstanceOf<NotSupportedException>()
-              .With.Message.EqualTo ("Test of VisitExtension: [-1]"));
+        Assert.Throws<NotSupportedException>(
+                () => {
+                    Assert.That (
+                            () => Visit (_visitor, (ExpressionType) (-1)),
+                            Throws.InstanceOf<NotSupportedException>()
+                                  .With.Message.EqualTo ("Test of VisitExtension: [-1]"));
+                }, "Test of VisitUnknownNonExtension: [-1]");
     }
 
     [Test]

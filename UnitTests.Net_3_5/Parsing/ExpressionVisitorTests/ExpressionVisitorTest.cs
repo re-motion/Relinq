@@ -233,7 +233,6 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
     }
 
     [Test]
-#endif
     public void VisitAndConvert_Single_ThrowsOnInvalidType ()
     {
       var expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
@@ -249,7 +248,6 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
     }
 
     [Test]
-#endif
     public void VisitAndConvert_Single_ThrowsOnNull ()
     {
       var expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
