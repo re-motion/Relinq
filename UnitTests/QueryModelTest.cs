@@ -501,7 +501,7 @@ namespace Remotion.Linq.UnitTests
     {
       Assert.That (
           () => _queryModel.SelectClause = null,
-          Throws.ArgumentNullException);
+          Throws.ArgumentNullException); //TODO ArgumentNullException not a valid constraint?
     }
 
     [Test]
