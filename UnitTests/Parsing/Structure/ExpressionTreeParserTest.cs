@@ -159,11 +159,14 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Cannot parse expression '0' as it has an unsupported type. "
-        + "Only query sources (that is, expressions that implement IEnumerable) and query operators can be parsed.")]
     public void ParseTree_InvalidNonQueryOperatorExpression ()
     {
-      _expressionTreeParser.ParseTree (Expression.Constant (0));
+      Assert.That (
+          () => _expressionTreeParser.ParseTree (Expression.Constant (0)),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.EqualTo (
+                  "Cannot parse expression '0' as it has an unsupported type. "
+                  + "Only query sources (that is, expressions that implement IEnumerable) and query operators can be parsed."));
     }
 
     [Test]
@@ -304,20 +307,25 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Expressions of type void ('WriteLine()') are not supported.")]
     public void ParseTree_VoidExpression ()
     {
       MethodCallExpression expression = Expression.Call (typeof (Console), "WriteLine", Type.EmptyTypes);
-      _expressionTreeParser.ParseTree (expression);
+      Assert.That (
+          () => _expressionTreeParser.ParseTree (expression),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.EqualTo (
+                  "Expressions of type void ('WriteLine()') are not supported."));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage =
-        "Could not parse expression 'System.Int32[].Sum()': This overload of the method 'System.Linq.Queryable.Sum' is currently not supported.")]
     public void ParseTree_InvalidMethodCall_UnknownMethod ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression (() => _intSource.Sum());
-      _expressionTreeParser.ParseTree (methodCallExpression);
+      Assert.That (
+          () => _expressionTreeParser.ParseTree (methodCallExpression),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.EqualTo (
+                  "Could not parse expression 'System.Int32[].Sum()': This overload of the method 'System.Linq.Queryable.Sum' is currently not supported."));
     }
 
     [Test]

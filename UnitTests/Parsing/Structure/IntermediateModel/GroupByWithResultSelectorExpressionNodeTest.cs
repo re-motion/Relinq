@@ -130,14 +130,13 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (
-        typeof (ArgumentException),
-        ExpectedMessage = "ResultSelector must have exactly two parameters.",
-        MatchType = MessageMatch.Contains)]
     public void Initialization_InvalidResultSelector_WrongNumberOfParameters ()
     {
       var resultSelector = ExpressionHelper.CreateLambdaExpression<int, string, double, bool> ((i, s, d) => true);
-      new GroupByWithResultSelectorExpressionNode (_parseInfoWithElementSelector, _keySelector, _elementSelector, resultSelector);
+      Assert.That (
+          () => new GroupByWithResultSelectorExpressionNode (_parseInfoWithElementSelector, _keySelector, _elementSelector, resultSelector),
+          Throws.ArgumentException
+              .With.Message.Contains ("ResultSelector must have exactly two parameters."));
     }
 
     [Test]

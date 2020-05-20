@@ -228,44 +228,48 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionVisitors
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The given expression 'new AnonymousType() {a = 3, b = 1}' does not contain the "
-        + "searched expression '0' in a nested NewExpression with member assignments or a MemberBindingExpression.\r\nParameter name: fullExpression")]
     public void SearchedExpressionNotFound ()
     {
       var fullExpression = Expression.MemberInit (
           Expression.New (_anonymousTypeCtorWithoutArgs),
           Expression.Bind (_anonymousTypeAProperty, Expression.Constant (3)),
           Expression.Bind (_anonymousTypeBProperty, Expression.Constant (1)));
-
-      AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
+      Assert.That (
+          () => AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The given expression 'new AnonymousType() {a = 3, b = 1}' does not contain the "
+                  + "searched expression '0' in a nested NewExpression with member assignments or a MemberBindingExpression.\r\nParameter name: fullExpression"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The given expression 'new AnonymousType() {a = (0 + 0), b = 1}' does not contain the "
-        + "searched expression '0' in a nested NewExpression with member assignments or a MemberBindingExpression.\r\nParameter name: fullExpression")]
     public void SearchedExpressionNotFound_AlthoughInOtherExpression ()
     {
       var fullExpression = Expression.MemberInit (
           Expression.New (_anonymousTypeCtorWithoutArgs),
           Expression.Bind (_anonymousTypeAProperty, Expression.MakeBinary (ExpressionType.Add, _searchedExpression, _searchedExpression)),
           Expression.Bind (_anonymousTypeBProperty, Expression.Constant (1)));
-
-      AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
+      Assert.That (
+          () => AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The given expression 'new AnonymousType() {a = (0 + 0), b = 1}' does not contain the "
+                  + "searched expression '0' in a nested NewExpression with member assignments or a MemberBindingExpression.\r\nParameter name: fullExpression"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The given expression 'new AnonymousType(0, 0)' does not contain the "
-        + "searched expression '0' in a nested NewExpression with member assignments or a MemberBindingExpression.\r\nParameter name: fullExpression")]
     public void SearchedExpressionNotFound_AlthoughInNewExpressionWithoutMember ()
     {
       var fullExpression = Expression.New (_anonymousTypeCtorWithArgs, _searchedExpression, _searchedExpression);
-
-      AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
+      Assert.That (
+          () => AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The given expression 'new AnonymousType(0, 0)' does not contain the "
+                  + "searched expression '0' in a nested NewExpression with member assignments or a MemberBindingExpression.\r\nParameter name: fullExpression"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The given expression 'new AnonymousType() {List = {Void Add(Int32)(0)}, b = 1}' does not contain the "
-        + "searched expression '0' in a nested NewExpression with member assignments or a MemberBindingExpression.\r\nParameter name: fullExpression")]
     public void SearchedExpressionNotFound_AlthoughInOtherMemberBinding ()
     {
       var anonymousTypeListProperty = typeof (AnonymousType).GetProperty ("List");
@@ -275,17 +279,24 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionVisitors
           Expression.New (_anonymousTypeCtorWithoutArgs),
           Expression.ListBind (anonymousTypeListProperty, Expression.ElementInit (listAddMethod, _searchedExpression)),
           Expression.Bind (_anonymousTypeBProperty, Expression.Constant (1)));
-
-      AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter);
+      Assert.That (
+          () => AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _simpleInputParameter),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The given expression 'new AnonymousType() {List = {Void Add(Int32)(0)}, b = 1}' does not contain the "
+                  + "searched expression '0' in a nested NewExpression with member assignments or a MemberBindingExpression.\r\nParameter name: fullExpression"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The given expression '+0' does not contain the searched expression '0' in a "
-        + "nested NewExpression with member assignments or a MemberBindingExpression.\r\nParameter name: fullExpression")]
     public void SearchedExpressionNotFound_AlthoughInUnaryPlusExpression ()
     {
       var fullExpression = Expression.UnaryPlus (_searchedExpression);
-      AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _intInputParameter);
+      Assert.That (
+          () => AccessorFindingExpressionVisitor.FindAccessorLambda (_searchedExpression, fullExpression, _intInputParameter),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The given expression '+0' does not contain the searched expression '0' in a "
+                  + "nested NewExpression with member assignments or a MemberBindingExpression.\r\nParameter name: fullExpression"));
     }
   }
 }

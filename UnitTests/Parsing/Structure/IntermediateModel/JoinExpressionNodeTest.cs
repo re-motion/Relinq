@@ -85,11 +85,14 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot retrieve an IQuerySource for the given JoinExpressionNode. "
-        + "Be sure to call Apply before calling methods that require IQuerySources, and pass in the same QuerySourceClauseMapping to both.")]
     public void GetResolvedInnerKeySelector_WithoutClause ()
     {
-      _node.GetResolvedInnerKeySelector (ClauseGenerationContext);
+      Assert.That (
+          () => _node.GetResolvedInnerKeySelector (ClauseGenerationContext),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo (
+                  "Cannot retrieve an IQuerySource for the given JoinExpressionNode. "
+                  + "Be sure to call Apply before calling methods that require IQuerySources, and pass in the same QuerySourceClauseMapping to both."));
     }
 
     [Test]
@@ -104,11 +107,14 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot retrieve an IQuerySource for the given JoinExpressionNode. "
-        + "Be sure to call Apply before calling methods that require IQuerySources, and pass in the same QuerySourceClauseMapping to both.")]
     public void GetResolvedResultSelector_WithoutClause ()
     {
-      _node.GetResolvedResultSelector (ClauseGenerationContext);
+      Assert.That (
+          () => _node.GetResolvedResultSelector (ClauseGenerationContext),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo (
+                  "Cannot retrieve an IQuerySource for the given JoinExpressionNode. "
+                  + "Be sure to call Apply before calling methods that require IQuerySources, and pass in the same QuerySourceClauseMapping to both."));
     }
 
     [Test]

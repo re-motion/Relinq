@@ -88,9 +88,6 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionVisitors
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot create a LambdaExpression that retrieves the value of '[s3]' "
-        + "from items with a structure of 'new AnonymousType`2(a = [s1], b = [s2])'. The item expression does not contain the value or it is too "
-        + "complex.")]
     public void ReverseResolve_NonAccessibleReferenceExpression_Throws ()
     {
       // itemExpression: new AnonymousType<Cook, Cook> ( a = [s1], b = [s2] )
@@ -99,8 +96,13 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionVisitors
 
       var fromClause3 = ExpressionHelper.CreateMainFromClause_Int ("s3", typeof (Cook), ExpressionHelper.CreateQueryable<Cook>());
       var resolvedExpression = new QuerySourceReferenceExpression (fromClause3);
-
-      ReverseResolvingExpressionVisitor.ReverseResolve (_itemExpression, resolvedExpression);
+      Assert.That (
+          () => ReverseResolvingExpressionVisitor.ReverseResolve (_itemExpression, resolvedExpression),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo (
+                  "Cannot create a LambdaExpression that retrieves the value of '[s3]' "
+                  + "from items with a structure of 'new AnonymousType`2(a = [s1], b = [s2])'. The item expression does not contain the value or it is too "
+                  + "complex."));
     }
 
     [Test]
@@ -136,7 +138,6 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionVisitors
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentOutOfRangeException))]
     public void ReverseResolveLambda_InvalidPosition_TooBig ()
     {
       // itemExpression: new AnonymousType<Cook, Cook> ( a = [s1], b = [s2] )
@@ -146,12 +147,12 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionVisitors
       var parameter1 = Expression.Parameter (typeof (int), "x");
       var parameter2 = Expression.Parameter (typeof (string), "y");
       var resolvedExpression = Expression.Lambda (Expression.Constant (0), parameter1, parameter2);
-
-      ReverseResolvingExpressionVisitor.ReverseResolveLambda (_itemExpression, resolvedExpression, 3);
+      Assert.That (
+          () => ReverseResolvingExpressionVisitor.ReverseResolveLambda (_itemExpression, resolvedExpression, 3),
+          Throws.InstanceOf<ArgumentOutOfRangeException>());
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentOutOfRangeException))]
     public void ReverseResolveLambda_InvalidPosition_TooSmall ()
     {
       // itemExpression: new AnonymousType<Cook, Cook> ( a = [s1], b = [s2] )
@@ -161,8 +162,9 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionVisitors
       var parameter1 = Expression.Parameter (typeof (int), "x");
       var parameter2 = Expression.Parameter (typeof (string), "y");
       var resolvedExpression = Expression.Lambda (Expression.Constant (0), parameter1, parameter2);
-
-      ReverseResolvingExpressionVisitor.ReverseResolveLambda (_itemExpression, resolvedExpression, -1);
+      Assert.That (
+          () => ReverseResolvingExpressionVisitor.ReverseResolveLambda (_itemExpression, resolvedExpression, -1),
+          Throws.InstanceOf<ArgumentOutOfRangeException>());
     }
   }
 }

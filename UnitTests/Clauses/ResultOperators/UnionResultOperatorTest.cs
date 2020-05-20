@@ -124,23 +124,27 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "Parameter 'inputInfo' has type 'Remotion.Linq.Clauses.StreamedData.StreamedScalarValueInfo' "
-        + "when type 'Remotion.Linq.Clauses.StreamedData.StreamedSequenceInfo' was expected."
-        + "\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInputType ()
     {
       var input = new StreamedScalarValueInfo (typeof (int));
-      _resultOperator.GetOutputDataInfo (input);
+      Assert.That (
+          () => _resultOperator.GetOutputDataInfo (input),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Parameter 'inputInfo' has type 'Remotion.Linq.Clauses.StreamedData.StreamedScalarValueInfo' "
+                  + "when type 'Remotion.Linq.Clauses.StreamedData.StreamedSequenceInfo' was expected."
+                  + "\r\nParameter name: inputInfo"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "The input sequence must have items of type 'System.Int32', but it has items of type 'System.String'.\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInputItemType ()
     {
       var input = new StreamedSequenceInfo (typeof (string[]), Expression.Constant (""));
-      _resultOperator.GetOutputDataInfo (input);
+      Assert.That (
+          () => _resultOperator.GetOutputDataInfo (input),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The input sequence must have items of type 'System.Int32', but it has items of type 'System.String'.\r\nParameter name: inputInfo"));
     }
 
     [Test]

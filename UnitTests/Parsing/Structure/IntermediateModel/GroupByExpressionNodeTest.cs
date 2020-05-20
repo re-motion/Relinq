@@ -60,19 +60,21 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException))]
     public void Initialization_InvalidKeySelector ()
     {
       var keySelector = ExpressionHelper.CreateLambdaExpression<int, string, bool> ((i, s) => true);
-      new GroupByExpressionNode (CreateParseInfo (), keySelector, _elementSelector);
+      Assert.That (
+          () => new GroupByExpressionNode (CreateParseInfo (), keySelector, _elementSelector),
+          Throws.ArgumentException);
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException))]
     public void Initialization_InvalidElementSelector ()
     {
       var elementSelector = ExpressionHelper.CreateLambdaExpression<int, string, bool> ((i, s) => true);
-      new GroupByExpressionNode (CreateParseInfo (), _keySelector, elementSelector);
+      Assert.That (
+          () => new GroupByExpressionNode (CreateParseInfo (), _keySelector, elementSelector),
+          Throws.ArgumentException);
     }
 
     [Test]

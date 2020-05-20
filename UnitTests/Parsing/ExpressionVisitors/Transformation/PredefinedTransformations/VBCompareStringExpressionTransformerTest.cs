@@ -183,16 +183,16 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.Transformation.Pred
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = 
-        "Binary expression with node type 'Add' is not supported in a VB string comparison.")]
     public void Transform_UnsupportedNodeType_LeftSideIsCompareStringExpression_ReturnsVBStringComparisonExpression ()
     {
       var left = Expression.Constant ("left");
       var right = Expression.Constant ("right");
       var expression = Expression.Add (
           Expression.Call (typeof (Operators).GetMethod ("CompareString"), left, right, Expression.Constant (true)), Expression.Constant (0));
-
-      _transformer.Transform (expression);
+      Assert.That (
+          () => _transformer.Transform (expression),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.EqualTo ("Binary expression with node type 'Add' is not supported in a VB string comparison."));
     }
 
     

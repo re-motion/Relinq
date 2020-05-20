@@ -254,20 +254,18 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.Transformation
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-      "Cannot register an IExpressionTransformer<BinaryExpression> as a generic transformer. Generic transformers must implement "
-      +"IExpressionTransformer<Expression>.\r\nParameter name: transformer")]
     public void Register_CheckGenericHandlerType ()
     {
       var transformerStub = CreateTransformerStub<BinaryExpression> (1, null);
-
-      _registry.Register (transformerStub);
+      Assert.That (
+          () => _registry.Register (transformerStub),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Cannot register an IExpressionTransformer<BinaryExpression> as a generic transformer. Generic transformers must implement "
+                  +"IExpressionTransformer<Expression>.\r\nParameter name: transformer"));
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
-        "A 'ConstantExpression' with node type 'Constant' cannot be handled by the IExpressionTransformer<BinaryExpression>. "
-        + "The transformer was probably registered for a wrong ExpressionType.")]
     public void Register_AddsExpressionTypeCheck ()
     {
       var expression = CreateSimpleExpression (0);
@@ -276,8 +274,12 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitors.Transformation
       _registry.Register (transformerStub);
 
       var result = _registry.GetTransformations (expression).ToArray ();
-
-      result[0] (expression);
+      Assert.That (
+          () => result[0] (expression),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo (
+                  "A 'ConstantExpression' with node type 'Constant' cannot be handled by the IExpressionTransformer<BinaryExpression>. "
+                  + "The transformer was probably registered for a wrong ExpressionType."));
     }
 
     private IExpressionTransformer<T> CreateTransformerStub<T> (int id, params ExpressionType[] expressionTypes) 

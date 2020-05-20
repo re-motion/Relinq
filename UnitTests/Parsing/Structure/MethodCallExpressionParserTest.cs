@@ -202,13 +202,14 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage =
-        "Could not parse expression 'q.First()': This overload of the method 'System.Linq.Queryable.First' is currently not supported.")]
     public void Parse_UnknownMethod_ThrowsNotSupportedException ()
     {
       var methodCallExpression = (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, int> (q => q.First());
-
-      ParseMethodCallExpression (methodCallExpression);
+      Assert.That (
+          () => ParseMethodCallExpression (methodCallExpression),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.EqualTo (
+                  "Could not parse expression 'q.First()': This overload of the method 'System.Linq.Queryable.First' is currently not supported."));
     }
 
     [Test]
@@ -222,14 +223,15 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage =
-        "Could not parse expression 'q.Select((i, j) => i)': This overload of the method 'System.Linq.Queryable.Select' is currently not supported.")]
     public void Parse_UnknownOverload_ThrowsNotSupportedException ()
     {
       var methodCallExpression =
           (MethodCallExpression) ExpressionHelper.MakeExpression<IQueryable<int>, IQueryable<int>> (q => q.Select ((i, j) => i));
-
-      ParseMethodCallExpression (methodCallExpression);
+      Assert.That (
+          () => ParseMethodCallExpression (methodCallExpression),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.EqualTo (
+                  "Could not parse expression 'q.Select((i, j) => i)': This overload of the method 'System.Linq.Queryable.Select' is currently not supported."));
     }
 
     [Test]
@@ -244,10 +246,6 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage =
-        "Could not parse expression 'q.Select(value(System.Func`2[System.Int32,System.Int32]))': "
-        + "Object of type 'System.Linq.Expressions.ConstantExpression' cannot be converted to type 'System.Linq.Expressions.LambdaExpression'. "
-        + "If you tried to pass a delegate instead of a LambdaExpression, this is not supported because delegates are not parsable expressions.")]
     public void Parse_InvalidParameters_ThrowsNotSupportedException ()
     {
       Func<int, int> func = i => i;
@@ -255,8 +253,13 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure
           PartialEvaluatingExpressionVisitor.EvaluateIndependentSubtrees (
               ExpressionHelper.MakeExpression<IQueryable<int>, IEnumerable<int>> (q => q.Select (func)),
               new TestEvaluatableExpressionFilter());
-
-      ParseMethodCallExpression (methodCallExpression);
+      Assert.That (
+          () => ParseMethodCallExpression (methodCallExpression),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.EqualTo (
+                  "Could not parse expression 'q.Select(value(System.Func`2[System.Int32,System.Int32]))': "
+                  + "Object of type 'System.Linq.Expressions.ConstantExpression' cannot be converted to type 'System.Linq.Expressions.LambdaExpression'. "
+                  + "If you tried to pass a delegate instead of a LambdaExpression, this is not supported because delegates are not parsable expressions."));
     }
 
     [Test]

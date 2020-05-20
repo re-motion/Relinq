@@ -62,11 +62,12 @@ namespace Remotion.Linq.UnitTests
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
     public void AddClause_SelectClause_Twice ()
     {
       _builder.AddClause (_selectClause);
-      _builder.AddClause (_selectClause);
+      Assert.That (
+          () => _builder.AddClause (_selectClause),
+          Throws.InvalidOperationException);
     }
 
     [Test]
@@ -78,11 +79,12 @@ namespace Remotion.Linq.UnitTests
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
     public void AddClause_MainFromClause_Twice ()
     {
       _builder.AddClause (_mainFromClause);
-      _builder.AddClause (_mainFromClause);
+      Assert.That (
+          () => _builder.AddClause (_mainFromClause),
+          Throws.InvalidOperationException);
     }
 
     [Test]
@@ -131,25 +133,25 @@ namespace Remotion.Linq.UnitTests
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
     public void Build_WithoutMainFromClause ()
     {
       _builder.AddClause (_whereClause1);
       _builder.AddClause (_whereClause2);
       _builder.AddClause (_selectClause);
-
-      _builder.Build ();
+      Assert.That (
+          () => _builder.Build (),
+          Throws.InvalidOperationException);
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
     public void Build_WithoutSelectOrGroupClause ()
     {
       _builder.AddClause (_whereClause1);
       _builder.AddClause (_whereClause2);
       _builder.AddClause (_mainFromClause);
-
-      _builder.Build ();
+      Assert.That (
+          () => _builder.Build (),
+          Throws.InvalidOperationException);
     }
   }
 }

@@ -81,12 +81,14 @@ namespace Remotion.Linq.UnitTests
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "Parameter 'expression' is a 'System.Int32[]', which cannot be assigned to type 'System.Collections.Generic.IEnumerable`1[System.String]'."
-        + "\r\nParameter name: expression")]
     public void ConstructorThrowsTypeException ()
     {
-      new TestQueryable<string> (_providerMock, _intArrayExpression);
+      Assert.That (
+          () => new TestQueryable<string> (_providerMock, _intArrayExpression),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Parameter 'expression' is a 'System.Int32[]', which cannot be assigned to type 'System.Collections.Generic.IEnumerable`1[System.String]'."
+                  + "\r\nParameter name: expression"));
     }
 
     [Test]

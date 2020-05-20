@@ -134,21 +134,21 @@ namespace Remotion.Linq.UnitTests.Transformations
     }
 
     [Test]
-    [ExpectedException (typeof(NotSupportedException), ExpectedMessage = "The subquery "
-        + "'TestQueryable<Cook>() => Distinct()' cannot be flattened and pulled out of the from clause because it "
-        + "contains result operators.")]
     public void VisitAdditionalFromClause_ThrowsOnResultOperator ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel<Cook> ();
       queryModel.ResultOperators.Add (new DistinctResultOperator ());
       var clause = new AdditionalFromClause ("x", typeof (Cook), new SubQueryExpression (queryModel));
-      _visitor.VisitAdditionalFromClause (clause, _queryModel, 0);
+      Assert.That (
+          () => _visitor.VisitAdditionalFromClause (clause, _queryModel, 0),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.EqualTo (
+                  "The subquery "
+                  + "'TestQueryable<Cook>() => Distinct()' cannot be flattened and pulled out of the from clause because it "
+                  + "contains result operators."));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "The subquery "
-        + "'from Cook s in TestQueryable<Cook>() orderby 0 asc select [s]' cannot be flattened and pulled out of the from clause because it "
-        + "contains an OrderByClause.")]
     public void VisitAdditionalFromClause_ThrowsOnOrderBy ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel<Cook> ();
@@ -156,7 +156,13 @@ namespace Remotion.Linq.UnitTests.Transformations
       orderByClause.Orderings.Add (new Ordering (Expression.Constant (0), OrderingDirection.Asc));
       queryModel.BodyClauses.Add (orderByClause);
       var clause = new AdditionalFromClause ("x", typeof (Cook), new SubQueryExpression (queryModel));
-      _visitor.VisitAdditionalFromClause (clause, _queryModel, 0);
+      Assert.That (
+          () => _visitor.VisitAdditionalFromClause (clause, _queryModel, 0),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.EqualTo (
+                  "The subquery "
+                  + "'from Cook s in TestQueryable<Cook>() orderby 0 asc select [s]' cannot be flattened and pulled out of the from clause because it "
+                  + "contains an OrderByClause."));
     }
 
     [Test]

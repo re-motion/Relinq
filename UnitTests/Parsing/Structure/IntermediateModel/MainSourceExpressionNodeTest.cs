@@ -41,12 +41,14 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "Parameter 'expression.Type' is a 'System.Int32', which cannot be assigned to type 'System.Collections.IEnumerable'."
-        + "\r\nParameter name: expression.Type")]
     public void Initialization_TypeNotEnumerable ()
     { 
-      new MainSourceExpressionNode ("x", Expression.Constant(5));
+      Assert.That (
+          () => new MainSourceExpressionNode ("x", Expression.Constant(5)),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Parameter 'expression.Type' is a 'System.Int32', which cannot be assigned to type 'System.Collections.IEnumerable'."
+                  + "\r\nParameter name: expression.Type"));
     }
     
     [Test]
@@ -63,12 +65,15 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot retrieve an IQuerySource for the given MainSourceExpressionNode. "
-        + "Be sure to call Apply before calling methods that require IQuerySources, and pass in the same QuerySourceClauseMapping to both.")]
     public void Resolve_WithoutClause ()
     {
       var expression = ExpressionHelper.CreateLambdaExpression<int, bool> (i => i > 5);
-      _node.Resolve (expression.Parameters[0], expression.Body, ClauseGenerationContext);
+      Assert.That (
+          () => _node.Resolve (expression.Parameters[0], expression.Body, ClauseGenerationContext),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo (
+                  "Cannot retrieve an IQuerySource for the given MainSourceExpressionNode. "
+                  + "Be sure to call Apply before calling methods that require IQuerySources, and pass in the same QuerySourceClauseMapping to both."));
     }
 
     [Test]
@@ -86,10 +91,11 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException(typeof(ArgumentException))]
     public void Apply_Throws ()
     {
-      _node.Apply (QueryModel, ClauseGenerationContext);
+      Assert.That (
+          () => _node.Apply (QueryModel, ClauseGenerationContext),
+          Throws.ArgumentException);
     }
   }
 }

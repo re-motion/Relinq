@@ -57,14 +57,16 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "Parameter 'inputInfo' has type 'Remotion.Linq.Clauses.StreamedData.StreamedScalarValueInfo' "
-        + "when type 'Remotion.Linq.Clauses.StreamedData.StreamedSequenceInfo' was expected."
-        + "\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInput ()
     {
       var input = new StreamedScalarValueInfo (typeof (Cook));
-      _resultOperatorNoDefaultWhenEmpty.GetOutputDataInfo (input);
+      Assert.That (
+          () => _resultOperatorNoDefaultWhenEmpty.GetOutputDataInfo (input),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Parameter 'inputInfo' has type 'Remotion.Linq.Clauses.StreamedData.StreamedScalarValueInfo' "
+                  + "when type 'Remotion.Linq.Clauses.StreamedData.StreamedSequenceInfo' was expected."
+                  + "\r\nParameter name: inputInfo"));
     }
   }
 }

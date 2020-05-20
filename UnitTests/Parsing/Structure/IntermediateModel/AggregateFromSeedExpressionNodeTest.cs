@@ -85,28 +85,34 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Func must have exactly two parameters.\r\nParameter name: func")]
     public void Initialization_WrongNumberOfParametersInFunc ()
     {
       var parseInfo = CreateParseInfo ();
-      new AggregateFromSeedExpressionNode (parseInfo, _seed, ExpressionHelper.CreateLambdaExpression<int, bool> (i => false), _resultSelector);
+      Assert.That (
+          () => new AggregateFromSeedExpressionNode (parseInfo, _seed, ExpressionHelper.CreateLambdaExpression<int, bool> (i => false), _resultSelector),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Func must have exactly two parameters.\r\nParameter name: func"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "Result selector must have exactly one parameter.\r\nParameter name: optionalResultSelector")]
     public void Initialization_WrongNumberOfParametersInResultSelector ()
     {
       var parseInfo = CreateParseInfo ();
-      new AggregateFromSeedExpressionNode (parseInfo, _seed, _func, ExpressionHelper.CreateLambdaExpression<int, int, bool> ((i, j) => false));
+      Assert.That (
+          () => new AggregateFromSeedExpressionNode (parseInfo, _seed, _func, ExpressionHelper.CreateLambdaExpression<int, int, bool> ((i, j) => false)),
+          Throws.ArgumentException
+              .With.Message.EqualTo ("Result selector must have exactly one parameter.\r\nParameter name: optionalResultSelector"));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = 
-        "AggregateFromSeedExpressionNode does not support resolving of expressions, because it does not stream any data to the following node.")]
     public void Resolve_ThrowsInvalidOperationException ()
     {
-      _nodeWithResultSelector.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext);
+      Assert.That (
+          () => _nodeWithResultSelector.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.EqualTo (
+                  "AggregateFromSeedExpressionNode does not support resolving of expressions, because it does not stream any data to the following node."));
     }
 
     [Test]

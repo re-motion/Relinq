@@ -73,24 +73,28 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "Parameter 'inputInfo' has type 'Remotion.Linq.Clauses.StreamedData.StreamedScalarValueInfo' "
-        + "when type 'Remotion.Linq.Clauses.StreamedData.StreamedSequenceInfo' was expected."
-        + "\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInput ()
     {
       var input = new StreamedScalarValueInfo (typeof (Cook));
-      _resultOperator.GetOutputDataInfo (input);
+      Assert.That (
+          () => _resultOperator.GetOutputDataInfo (input),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Parameter 'inputInfo' has type 'Remotion.Linq.Clauses.StreamedData.StreamedScalarValueInfo' "
+                  + "when type 'Remotion.Linq.Clauses.StreamedData.StreamedSequenceInfo' was expected."
+                  + "\r\nParameter name: inputInfo"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "The items of the input sequence of type 'Remotion.Linq.UnitTests.TestDomain.Cook' are not compatible with the item expression "
-        + "of type 'System.Int32'.\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInput_DoesntMatchItem ()
     {
       var input = new StreamedSequenceInfo (typeof (Cook[]), Expression.Constant (new Cook()));
-      _resultOperator.GetOutputDataInfo (input);
+      Assert.That (
+          () => _resultOperator.GetOutputDataInfo (input),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The items of the input sequence of type 'Remotion.Linq.UnitTests.TestDomain.Cook' are not compatible with the item expression "
+                  + "of type 'System.Int32'.\r\nParameter name: inputInfo"));
     }
 
     [Test]
@@ -100,20 +104,24 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "The item expression ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.\r\nParameter name: expression")]
     public void GetConstantItem_NoConstantExpression ()
     {
       var resultOperator = new ContainsResultOperator (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()));
-      resultOperator.GetConstantItem<object> ();
+      Assert.That (
+          () => resultOperator.GetConstantItem<object> (),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The item expression ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.\r\nParameter name: expression"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "The value stored by the item expression ('2') is not of type 'System.DateTime', it is of type 'System.Int32'.\r\nParameter name: expression")]
     public void GetConstantItem_NotExpectedType ()
     {
-      _resultOperator.GetConstantItem<DateTime> ();
+      Assert.That (
+          () => _resultOperator.GetConstantItem<DateTime> (),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The value stored by the item expression ('2') is not of type 'System.DateTime', it is of type 'System.Int32'.\r\nParameter name: expression"));
     }
 
     [Test]

@@ -80,12 +80,14 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Sequence contains no elements")]
     public void ExecuteInMemory_Empty_NoDefault ()
     {
       IEnumerable items = new int[0];
       var input = new StreamedSequence (items, new StreamedSequenceInfo (typeof (int[]), Expression.Constant (0)));
-      _resultOperatorNoDefault.ExecuteInMemory (input);
+      Assert.That (
+          () => _resultOperatorNoDefault.ExecuteInMemory (input),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo ("Sequence contains no elements"));
     }
   }
 }

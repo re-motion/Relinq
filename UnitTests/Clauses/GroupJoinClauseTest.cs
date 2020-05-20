@@ -52,11 +52,13 @@ namespace Remotion.Linq.UnitTests.Clauses
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "Expected a closed generic type implementing IEnumerable<T>, but found 'Remotion.Linq.UnitTests.TestDomain.Cook'.\r\nParameter name: value")]
     public void Intialize_WithNonEnumerableType_Throws ()
     {
-      new GroupJoinClause ("x", typeof (Cook), _joinClause);
+      Assert.That (
+          () => new GroupJoinClause ("x", typeof (Cook), _joinClause),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Expected a closed generic type implementing IEnumerable<T>, but found 'Remotion.Linq.UnitTests.TestDomain.Cook'.\r\nParameter name: value"));
     }
 
     [Test]

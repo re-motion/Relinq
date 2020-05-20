@@ -497,10 +497,11 @@ namespace Remotion.Linq.UnitTests
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
     public void SelectOrGroupClause_Set_Null ()
     {
-      _queryModel.SelectClause = null;
+      Assert.That (
+          () => _queryModel.SelectClause = null,
+          Throws.ArgumentNullException);
     }
 
     [Test]
@@ -606,34 +607,38 @@ namespace Remotion.Linq.UnitTests
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
     public void AddBodyClause_Null ()
     {
-      _queryModel.BodyClauses.Add (null);
+      Assert.That (
+          () => _queryModel.BodyClauses.Add (null),
+          Throws.ArgumentNullException);
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
     public void SetBodyClause_Null ()
     {
       _queryModel.BodyClauses.Add (ExpressionHelper.CreateWhereClause());
-      _queryModel.BodyClauses[0] = null;
+      Assert.That (
+          () => _queryModel.BodyClauses[0] = null,
+          Throws.ArgumentNullException);
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
     public void AddResultOperator_Null_ThrowsArgumentNullException ()
     {
-      _queryModel.ResultOperators.Add (null);
+      Assert.That (
+          () => _queryModel.ResultOperators.Add (null),
+          Throws.ArgumentNullException);
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
     public void SetResultOperator_Null_ThrowsArgumentNullException ()
     {
       var resultOperator = new DistinctResultOperator ();
       _queryModel.ResultOperators.Add (resultOperator);
-      _queryModel.ResultOperators[0] = null;
+      Assert.That (
+          () => _queryModel.ResultOperators[0] = null,
+          Throws.ArgumentNullException);
     }
 
     [Test]
@@ -717,14 +722,14 @@ namespace Remotion.Linq.UnitTests
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = 
-      "The query must return a sequence of items, but it selects a single object of type 'System.Int32'.")]
     public void ConvertToSubquery_NoStreamedSequenceInfo ()
     {
       var queryModel = new QueryModel (_mainFromClause, new SelectClause (new QuerySourceReferenceExpression (_mainFromClause)));
       queryModel.ResultOperators.Add (new CountResultOperator());
-
-      queryModel.ConvertToSubQuery ("test");
+      Assert.That (
+          () => queryModel.ConvertToSubQuery ("test"),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo ("The query must return a sequence of items, but it selects a single object of type 'System.Int32'."));
     }
   }
 }

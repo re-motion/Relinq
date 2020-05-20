@@ -105,20 +105,22 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = 
-        "ThenByDescending expressions must follow OrderBy, OrderByDescending, ThenBy, or ThenByDescending expressions.")]
     public void Apply_NoPreviousClause ()
     {
-      _node.Apply (QueryModel, ClauseGenerationContext);
+      Assert.That (
+          () => _node.Apply (QueryModel, ClauseGenerationContext),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.EqualTo ("ThenByDescending expressions must follow OrderBy, OrderByDescending, ThenBy, or ThenByDescending expressions."));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = 
-        "ThenByDescending expressions must follow OrderBy, OrderByDescending, ThenBy, or ThenByDescending expressions.")]
     public void Apply_InvalidPreviousClause ()
     {
       QueryModel.BodyClauses.Add (new WhereClause (ExpressionHelper.CreateExpression ()));
-      _node.Apply (QueryModel, ClauseGenerationContext);
+      Assert.That (
+          () => _node.Apply (QueryModel, ClauseGenerationContext),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.EqualTo ("ThenByDescending expressions must follow OrderBy, OrderByDescending, ThenBy, or ThenByDescending expressions."));
     }
   }
 }
