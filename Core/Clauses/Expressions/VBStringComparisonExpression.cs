@@ -36,7 +36,6 @@ namespace Remotion.Linq.Clauses.Expressions
   /// </para>
   /// <para>
   /// Subclasses of <see cref="RelinqExpressionVisitor"/> that do not implement <see cref="IVBSpecificExpressionVisitor"/> will, by default, 
-  /// ignore this expression and visit its child expressions via the <see cref="ExpressionVisitor.VisitExtension"/> and 
   /// <see cref="VisitChildren"/> methods.
   /// </para>
   /// </remarks>
