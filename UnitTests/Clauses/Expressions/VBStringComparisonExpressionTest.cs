@@ -139,7 +139,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
 #if !NET_3_5
       Assert.That (result, Is.EqualTo ("VBCompareString((\"string1\" == \"string2\"), True)"));
 #else
-      Assert.That (result, Is.EqualTo ("VBCompareString((\"string1\" == \"string2\"), True)"));
+      Assert.That (result, Is.EqualTo ("VBCompareString((\"string1\" = \"string2\"), True)"));
 #endif
     }
 
@@ -153,7 +153,7 @@ namespace Remotion.Linq.UnitTests.Clauses.Expressions
       Assert.That (result, Is.EqualTo ("Not(VBCompareString((\"string1\" == \"string2\"), True))"));
 #else
       var result = FormattingExpressionVisitor.Format (expression);
-      Assert.That (result, Is.EqualTo ("Not(VBCompareString((\"string1\" == \"string2\"), True))"));
+      Assert.That (result, Is.EqualTo ("Not(VBCompareString((\"string1\" = \"string2\"), True))"));
 #endif
     }
 

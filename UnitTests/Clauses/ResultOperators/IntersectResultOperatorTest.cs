@@ -56,7 +56,7 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
 #if !NET_3_5
                   "The source2 expression ('ss') is no ConstantExpression, it is a TypedParameterExpression.\r\nParameter name: expression"
 #else
-                  "The source2 expression ('ss') is no ConstantExpression, it is a TypedParameterExpression.\r\nParameter name: expression"
+                  "The source2 expression ('ss') is no ConstantExpression, it is a ParameterExpression.\r\nParameter name: expression"
 #endif
                   ));
     }

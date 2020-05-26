@@ -153,10 +153,10 @@ namespace Remotion.Linq.UnitTests.Clauses.StreamedData
               + "The number of generic arguments provided doesn't equal the arity of the generic type definition.\r\n"
               + "Parameter name: instantiation\r\n"
 #else
-              + "The number of generic arguments provided doesn't equal the arity of the generic type definition.\r\n"
-              + "Parameter name: instantiation\r\n"
+              + "The type or method has 2 generic parameter(s), but 1 generic argument(s) were provided. A generic argument must be provided for each generic parameter.\r\n"
 #endif
               + "Parameter name: dataType"));
+
     }
 
     [Test]
