@@ -232,8 +232,8 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
       Assert.That (result, Is.SameAs (newExpression));
     }
 
-    [Test]
-#endif
+    [Test] //TODO unfix the fix
+//#endif
     public void VisitAndConvert_Single_ThrowsOnInvalidType ()
     {
       var expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
@@ -249,7 +249,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
     }
 
     [Test]
-#endif
+//#endif
     public void VisitAndConvert_Single_ThrowsOnNull ()
     {
       var expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
