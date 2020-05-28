@@ -76,12 +76,18 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    public void VisitUnknownNonExtension () //REVIEW removed a part of the test
+    public void VisitUnknownNonExtension ()
     {
         Assert.That (
                 () => Visit (_visitor, (ExpressionType) (-1)),
                 Throws.InstanceOf<NotSupportedException>()
-                      .With.Message.EqualTo ("Test of VisitExtension: [-1]"));
+                      .With.Message.EqualTo (
+#if !NET_3_5
+                      "Test of VisitExtension: [-1]"
+#else
+                      "Test of VisitUnknownNonExtension: [-1]"
+#endif
+                               ));
     }
 
     [Test]
