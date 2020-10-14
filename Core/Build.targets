@@ -7,7 +7,7 @@
     <MSBuildExtensionPackPath Condition="'$(MSBuildExtensionPackPath)' == ''">$(PackagesDirectory)MSBuild.Extension.Pack.1.5.0\tools\net40\</MSBuildExtensionPackPath>
     <ExtensionTasksPath>$(MSBuildExtensionPackPath)</ExtensionTasksPath>
     <DotNetCorePublicKeyPath>obj\netstandard1.0\RemotionPublic.snk</DotNetCorePublicKeyPath>
-    <DotNetCoreCliBootstrapScriptUrl>https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1</DotNetCoreCliBootstrapScriptUrl>
+    <!--<DotNetCoreCliBootstrapScriptUrl>https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1</DotNetCoreCliBootstrapScriptUrl>-->
   </PropertyGroup>
 
   <Import Project="$(MSBuildExtensionPackPath)MSBuild.ExtensionPack.tasks" />
@@ -51,7 +51,9 @@
       <DotNetCoreAssemblyPath>$(DotNetCoreOutputPath)$(AssemblyName).dll</DotNetCoreAssemblyPath>
       <DotNetCoreCliBasePath>$(MSBuildProjectDirectory)\$(BaseIntermediateOutputPath)cli</DotNetCoreCliBasePath>
       <DotNetCoreCliVersionPath>$(DotNetCoreCliBasePath)\version.chk</DotNetCoreCliVersionPath>
-      <DotNetCoreCliBootstrapScriptPath>$(DotNetCoreCliBasePath)\dotnet-install.ps1</DotNetCoreCliBootstrapScriptPath>
+      <!--<DotNetCoreCliBootstrapScriptPath>$(DotNetCoreCliBasePath)\dotnet-install.ps1</DotNetCoreCliBootstrapScriptPath>-->
+      <!-- Local copy is required to support TLS 1.2 -->
+      <DotNetCoreCliBootstrapScriptPath>$(MSBuildProjectDirectory)\dotnet-install.ps1</DotNetCoreCliBootstrapScriptPath>
       <DotNetCoreCliInstallPath>$(DotNetCoreCliBasePath)\bin</DotNetCoreCliInstallPath>
       <DotNetCoreCliExe>$(DotNetCoreCliInstallPath)\dotnet.exe</DotNetCoreCliExe>
     </PropertyGroup>
@@ -59,7 +61,7 @@
 
   <Target Name="DotNetCore_InstallCli" DependsOnTargets="DotNetCore_PreparePaths">
     <PropertyGroup>
-      <_downloadBootstrapCommand>-Command "Invoke-WebRequest -Uri '$(DotNetCoreCliBootstrapScriptUrl)' -OutFile '$(DotNetCoreCliBootstrapScriptPath)'"</_downloadBootstrapCommand>
+      <!--<_downloadBootstrapCommand>-Command "Invoke-WebRequest -Uri '$(DotNetCoreCliBootstrapScriptUrl)' -OutFile '$(DotNetCoreCliBootstrapScriptPath)'"</_downloadBootstrapCommand>-->
       <_installCommand>-File "$(DotNetCoreCliBootstrapScriptPath)" -Channel rel-1.0.0 -InstallDir "$(DotNetCoreCliInstallPath)" -NoPath -Version 1.0.0-preview2-003121</_installCommand>
       <_oldVersion></_oldVersion>
       <_oldVersion Condition="Exists('$(DotNetCoreCliVersionPath)')">$([System.IO.File]::ReadAllText($(DotNetCoreCliVersionPath)))</_oldVersion>
