@@ -58,19 +58,21 @@ namespace Remotion.Linq.UnitTests.Clauses
     }
 
     [Test]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void AddOrderings_Null_ThrowsArgumentNullException ()
     {
-      _orderByClause.Orderings.Add (null);
+      Assert.That (
+          () => _orderByClause.Orderings.Add (null),
+          Throws.ArgumentNullException);
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
     public void ChangeOrdering_WithNull_ThrowsArgumentNullException ()
     {
       Ordering ordering1 = ExpressionHelper.CreateOrdering ();
       _orderByClause.Orderings.Add (ordering1);
-      _orderByClause.Orderings[0] = null;
+      Assert.That (
+          () => _orderByClause.Orderings[0] = null,
+          Throws.ArgumentNullException);
     }
 
     [Test]

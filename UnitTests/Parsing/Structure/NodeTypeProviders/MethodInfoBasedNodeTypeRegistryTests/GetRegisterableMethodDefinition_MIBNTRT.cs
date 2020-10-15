@@ -240,13 +240,13 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfo
 
       Assert.That (
           () => MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method1, throwOnAmbiguousMatch: true),
-          Throws.TypeOf<NotSupportedException>().With.Message.StringStarting (
+          Throws.TypeOf<NotSupportedException>().With.Message.StartsWith (
               "A generic method definition cannot be resolved for method 'Boolean NonGenericMethodOverloadedWithGenericParameterFromTypeAndSameParameterName(Int32, Double)' "
               + "on type 'Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfoBasedNodeTypeRegistryTests.TestDomain.GenericClass`2[T1,T2]' because a distinct match is not possible."));
 
       Assert.That (
           () => MethodInfoBasedNodeTypeRegistry.GetRegisterableMethodDefinition (method2, throwOnAmbiguousMatch: true),
-          Throws.TypeOf<NotSupportedException>().With.Message.StringStarting (
+          Throws.TypeOf<NotSupportedException>().With.Message.StartsWith (
               "A generic method definition cannot be resolved for method 'Boolean NonGenericMethodOverloadedWithGenericParameterFromTypeAndSameParameterName(System.String, Double)' "
               + "on type 'Remotion.Linq.UnitTests.Parsing.Structure.NodeTypeProviders.MethodInfoBasedNodeTypeRegistryTests.TestDomain.GenericClass`2[T1,T2]' because a distinct match is not possible."));
     }

@@ -447,8 +447,6 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
         "When called from 'VisitMemberInit', rewriting a node of type 'System.Linq.Expressions.NewExpression' must return a non-null value of the same type. "
         + "Alternatively, override 'VisitMemberInit' and change it to not visit children of this type.")]
 #else
-    [ExpectedException (typeof (NotSupportedException),
-        ExpectedMessage = "MemberInitExpressions only support non-null instances of type 'NewExpression' as their NewExpression member.")]
 #endif
     public void VisitMemberInit_InvalidNewExpression ()
     {
@@ -456,14 +454,18 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
       var binding = expression.Bindings.Single();
       Expect.Call (VisitorMock.Visit (expression.NewExpression)).Return (Expression.Constant (0));
       Expect.Call (InvokeVisitMethod ("VisitMemberBinding", binding)).Return (binding);
-      try
-      {
-        InvokeAndCheckVisit ("VisitMemberInit", expression);
-      }
-      catch (TargetInvocationException ex)
-      {
-        throw ex.InnerException;
-      }
+      Assert.Throws<NotSupportedException> (
+          () =>
+          {
+            try
+            {
+              InvokeAndCheckVisit ("VisitMemberInit", expression);
+            }
+            catch (TargetInvocationException ex)
+            {
+              throw ex.InnerException;
+            }
+          }, "MemberInitExpressions only support non-null instances of type 'NewExpression' as their NewExpression member.");
     }
 
     [Test]
@@ -515,8 +517,6 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
         "When called from 'VisitListInit', rewriting a node of type 'System.Linq.Expressions.NewExpression' must return a non-null value of the same type. "
         + "Alternatively, override 'VisitListInit' and change it to not visit children of this type.")]
 #else
-    [ExpectedException (typeof (NotSupportedException),
-        ExpectedMessage = "ListInitExpressions only support non-null instances of type 'NewExpression' as their NewExpression member.")]
 #endif
     public void VisitListInit_InvalidNewExpression ()
     {
@@ -524,14 +524,18 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
       var elementInit = expression.Initializers.Single();
       Expect.Call (VisitorMock.Visit (expression.NewExpression)).Return (Expression.Constant (0));
       Expect.Call (InvokeVisitMethod ("VisitElementInit", elementInit)).Return (elementInit);
-      try
-      {
-        InvokeAndCheckVisit ("VisitListInit", expression);
-      }
-      catch (TargetInvocationException ex)
-      {
-        throw ex.InnerException;
-      }
+      Assert.Throws<NotSupportedException> (
+          () =>
+          {
+            try
+            {
+              InvokeAndCheckVisit ("VisitListInit", expression);
+            }
+            catch (TargetInvocationException ex)
+            {
+              throw ex.InnerException;
+            }
+          }, "ListInitExpressions only support non-null instances of type 'NewExpression' as their NewExpression member.");
     }
 
     [Test]
@@ -722,21 +726,24 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
 
 #if NET_3_5
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Expression type 'SpecialExpressionNode' is not supported by this ExpressionVisitor.*\\.", MatchType = MessageMatch.Regex)]
     public void VisitUnknownNonExtension ()
     {
       var expressionNode = new SpecialExpressionNode ((ExpressionType) (-1), typeof (int));
       Expect.Call (InvokeVisitMethod ("VisitUnknownNonExtension", expressionNode)).CallOriginalMethod (OriginalCallOptions.CreateExpectation);
       MockRepository.ReplayAll();
 
-      try
-      {
-        InvokeVisitMethod ("VisitUnknownNonExtension", expressionNode);
-      }
-      catch (TargetInvocationException ex)
-      {
-        throw ex.InnerException;
-      }
+      Assert.Throws<NotSupportedException>(
+          () =>
+          {
+            try
+            {
+              InvokeVisitMethod ("VisitUnknownNonExtension", expressionNode);
+            }
+            catch (TargetInvocationException ex)
+            {
+              throw ex.InnerException;
+            }
+          },  "Expression type 'SpecialExpressionNode' is not supported by this ExpressionVisitor.*\\."); //TODO , MatchType = MessageMatch.Regex)
     }
 #endif
 

@@ -89,12 +89,13 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionVisitors
     }
     
     [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
     public void VisitSubQuery_PassesFlagToInner_Throw ()
     {
       var expression = new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ());
       expression.QueryModel.SelectClause.Selector = new QuerySourceReferenceExpression (expression.QueryModel.MainFromClause);
-      ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
+      Assert.That (
+          () => ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true),
+          Throws.InvalidOperationException);
     }
     
 
@@ -127,19 +128,21 @@ namespace Remotion.Linq.UnitTests.Clauses.ExpressionVisitors
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
     public void VisitUnmappedReference_Throws ()
     {
       var expression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
-      ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
+      Assert.That (
+          () => ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true),
+          Throws.InvalidOperationException);
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException))]
     public void VisitUnmappedReference_IgnoreFalse_Throws ()
     {
       var expression = new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ());
-      ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true);
+      Assert.That (
+          () => ReferenceReplacingExpressionVisitor.ReplaceClauseReferences (expression, _querySourceMapping, true),
+          Throws.InvalidOperationException);
     }
 
     [Test]

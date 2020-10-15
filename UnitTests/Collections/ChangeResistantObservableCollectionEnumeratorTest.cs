@@ -110,11 +110,12 @@ namespace Remotion.Linq.UnitTests.Collections
     }
 
     [Test]
-    [ExpectedException (typeof (ObjectDisposedException))]
     public void MoveNext_AfterDispose ()
     {
       _enumerator.Dispose();
-      _enumerator.MoveNext();
+      Assert.That (
+          () => _enumerator.MoveNext(),
+          Throws.InstanceOf<ObjectDisposedException>());
     }
 
     [Test]
@@ -131,11 +132,12 @@ namespace Remotion.Linq.UnitTests.Collections
     }
 
     [Test]
-    [ExpectedException (typeof (ObjectDisposedException))]
     public void Reset_AfterDispose ()
     {
       _enumerator.Dispose();
-      _enumerator.Reset();
+      Assert.That (
+          () => _enumerator.Reset(),
+          Throws.InstanceOf<ObjectDisposedException>());
     }
 
     [Test]

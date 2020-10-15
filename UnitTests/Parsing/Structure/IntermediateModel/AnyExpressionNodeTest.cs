@@ -71,11 +71,13 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = 
-        "AnyExpressionNode does not support resolving of expressions, because it does not stream any data to the following node.")]
     public void Resolve_ThrowsInvalidOperationException ()
     {
-      _node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext);
+      Assert.That (
+          () => _node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.EqualTo (
+                  "AnyExpressionNode does not support resolving of expressions, because it does not stream any data to the following node."));
     }
 
     [Test]

@@ -67,9 +67,6 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<T,T>', but it is "
-        + "'System.Reflection.MemberFilter'.\r\nParameter name: value")]
     public void Func_NonGeneric ()
     {
       var func = Expression.Lambda (
@@ -77,30 +74,36 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
           Expression.Constant (true),
           Expression.Parameter (typeof (MemberInfo), "m"),
           Expression.Parameter (typeof (object), "filterCriteria"));
-
-      _resultOperator.Func = func;
+      Assert.That (
+          () => _resultOperator.Func = func,
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<T,T>', but it is "
+                  + "'System.Reflection.MemberFilter'.\r\nParameter name: value"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<T,T>', but it is "
-        + "'System.Func`1[System.Boolean]'.\r\nParameter name: value")]
     public void Func_Generic_WrongDefinition ()
     {
       var func = Expression.Lambda (typeof (Func<bool>), Expression.Constant (true));
-
-      _resultOperator.Func = func;
+      Assert.That (
+          () => _resultOperator.Func = func,
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<T,T>', but it is "
+                  + "'System.Func`1[System.Boolean]'.\r\nParameter name: value"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<T,T>', but it is "
-        + "'System.Func`2[System.Int32,System.Boolean]'.\r\nParameter name: value")]
     public void Func_Generic_WrongReturnType ()
     {
       var func = Expression.Lambda (typeof (Func<int, bool>), Expression.Constant (true), Expression.Parameter (typeof (int), "i"));
-
-      _resultOperator.Func = func;
+      Assert.That (
+          () => _resultOperator.Func = func,
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<T,T>', but it is "
+                  + "'System.Func`2[System.Int32,System.Boolean]'.\r\nParameter name: value"));
     }
 
     [Test]
@@ -129,20 +132,24 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException))]
     public void GetOutputDataInfo_InvalidInput ()
     {
       var input = new StreamedScalarValueInfo (typeof (Cook));
-      _resultOperator.GetOutputDataInfo (input);
+      Assert.That (
+          () => _resultOperator.GetOutputDataInfo (input),
+          Throws.ArgumentException);
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "The input sequence must have items of type 'System.Int32', but it has "
-        + "items of type 'Remotion.Linq.UnitTests.TestDomain.Cook'.\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInput_DoesntMatchItem ()
     {
       var input = new StreamedSequenceInfo (typeof (Cook[]), Expression.Constant (new Cook ()));
-      _resultOperator.GetOutputDataInfo (input);
+      Assert.That (
+          () => _resultOperator.GetOutputDataInfo (input),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The input sequence must have items of type 'System.Int32', but it has "
+                  + "items of type 'Remotion.Linq.UnitTests.TestDomain.Cook'.\r\nParameter name: inputInfo"));
     }
 
     [Test]

@@ -61,19 +61,24 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = "Func must have exactly two parameters.\r\nParameter name: func")]
     public void Initialization_WrongNumberOfParameters ()
     {
       var parseInfo = CreateParseInfo ();
-      new AggregateExpressionNode (parseInfo, ExpressionHelper.CreateLambdaExpression<int, bool> (i => false));
+      Assert.That (
+          () => new AggregateExpressionNode (parseInfo, ExpressionHelper.CreateLambdaExpression<int, bool> (i => false)),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Func must have exactly two parameters.\r\nParameter name: func"));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = 
-        "AggregateExpressionNode does not support resolving of expressions, because it does not stream any data to the following node.")]
     public void Resolve_ThrowsInvalidOperationException ()
     {
-      _node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext);
+      Assert.That (
+          () => _node.Resolve (ExpressionHelper.CreateParameterExpression (), ExpressionHelper.CreateExpression (), ClauseGenerationContext),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.EqualTo (
+                  "AggregateExpressionNode does not support resolving of expressions, because it does not stream any data to the following node."));
     }
 
     [Test]

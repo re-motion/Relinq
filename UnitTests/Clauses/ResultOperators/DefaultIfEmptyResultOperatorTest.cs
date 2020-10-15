@@ -47,12 +47,14 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "The default value expression ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.\r\nParameter name: expression")]
     public void GetConstantOptionalDefaultValue_WithDefaultValue_NoConstantExpression ()
     {
       var resultOperator = new DefaultIfEmptyResultOperator (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()));
-      resultOperator.GetConstantOptionalDefaultValue ();
+      Assert.That (
+          () => resultOperator.GetConstantOptionalDefaultValue (),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The default value expression ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.\r\nParameter name: expression"));
     }
 
     [Test]

@@ -41,10 +41,11 @@ namespace Remotion.Linq.UnitTests.Utilities
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException))]
     public void GetMethod_InvalidExpression ()
     {
-      ReflectionUtility.GetMethod (() => "x");
+      Assert.That (
+          () => ReflectionUtility.GetMethod (() => "x"),
+          Throws.ArgumentException);
     }
 
     [Test]

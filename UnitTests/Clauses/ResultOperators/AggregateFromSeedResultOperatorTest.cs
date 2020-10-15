@@ -72,9 +72,6 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TAccumulate>', but it is "
-        + "'System.Reflection.MemberFilter'.\r\nParameter name: value")]
     public void Func_NonGeneric ()
     {
       var func = Expression.Lambda (
@@ -82,30 +79,36 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
           Expression.Constant (true),
           Expression.Parameter (typeof (MemberInfo), "m"),
           Expression.Parameter (typeof (object), "filterCriteria"));
-
-      _resultOperatorWithResultSelector.Func = func;
+      Assert.That (
+          () => _resultOperatorWithResultSelector.Func = func,
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TAccumulate>', but it is "
+                  + "'System.Reflection.MemberFilter'.\r\nParameter name: value"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TAccumulate>', but it is "
-        + "'System.Func`1[System.Boolean]'.\r\nParameter name: value")]
     public void Func_Generic_WrongDefinition ()
     {
       var func = Expression.Lambda (typeof (Func<bool>), Expression.Constant (true));
-
-      _resultOperatorWithResultSelector.Func = func;
+      Assert.That (
+          () => _resultOperatorWithResultSelector.Func = func,
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TAccumulate>', but it is "
+                  + "'System.Func`1[System.Boolean]'.\r\nParameter name: value"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TAccumulate>', but it is "
-        + "'System.Func`2[System.Int32,System.Boolean]'.\r\nParameter name: value")]
     public void Func_Generic_WrongReturnType ()
     {
       var func = Expression.Lambda (typeof (Func<int, bool>), Expression.Constant (true), Expression.Parameter (typeof (int), "i"));
-
-      _resultOperatorWithResultSelector.Func = func;
+      Assert.That (
+          () => _resultOperatorWithResultSelector.Func = func,
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The aggregating function must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TAccumulate>', but it is "
+                  + "'System.Func`2[System.Int32,System.Boolean]'.\r\nParameter name: value"));
     }
 
     [Test]
@@ -115,23 +118,27 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "The seed expression ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.\r\nParameter name: expression")]
     public void GetConstantSeed_NoConstantExpression ()
     {
       var resultOperator = new AggregateFromSeedResultOperator (
           new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()),
           _func,
           _resultSelector);
-      resultOperator.GetConstantSeed<object> ();
+      Assert.That (
+          () => resultOperator.GetConstantSeed<object> (),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The seed expression ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.\r\nParameter name: expression"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "The value stored by the seed expression ('12') is not of type 'System.DateTime', it is of type 'System.Int32'.\r\nParameter name: expression")]
     public void GetConstantSeed_NotExpectedType ()
     {
-      _resultOperatorWithResultSelector.GetConstantSeed<DateTime> ();
+      Assert.That (
+          () => _resultOperatorWithResultSelector.GetConstantSeed<DateTime> (),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The value stored by the seed expression ('12') is not of type 'System.DateTime', it is of type 'System.Int32'.\r\nParameter name: expression"));
     }
 
     [Test]
@@ -155,9 +162,6 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "The result selector must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TResult>', but it is "
-        + "'System.Reflection.MemberFilter'.\r\nParameter name: value")]
     public void ResultSelector_NonGeneric ()
     {
       var resultSelector = Expression.Lambda (
@@ -165,19 +169,24 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
           Expression.Constant (true),
           Expression.Parameter (typeof (MemberInfo), "m"),
           Expression.Parameter (typeof (object), "filterCriteria"));
-
-      _resultOperatorWithResultSelector.OptionalResultSelector = resultSelector;
+      Assert.That (
+          () => _resultOperatorWithResultSelector.OptionalResultSelector = resultSelector,
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The result selector must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TResult>', but it is "
+                  + "'System.Reflection.MemberFilter'.\r\nParameter name: value"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "The result selector must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TResult>', but it is "
-        + "'System.Func`1[System.Boolean]'.\r\nParameter name: value")]
     public void ResultSelector_Generic_WrongDefinition ()
     {
       var resultSelector = Expression.Lambda (typeof (Func<bool>), Expression.Constant (true));
-
-      _resultOperatorWithResultSelector.OptionalResultSelector = resultSelector;
+      Assert.That (
+          () => _resultOperatorWithResultSelector.OptionalResultSelector = resultSelector,
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The result selector must be a LambdaExpression that describes an instantiation of 'Func<TAccumulate,TResult>', but it is "
+                  + "'System.Func`1[System.Boolean]'.\r\nParameter name: value"));
     }
 
     [Test]
@@ -221,33 +230,34 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "Parameter 'inputInfo' has type 'Remotion.Linq.Clauses.StreamedData.StreamedScalarValueInfo' "
-        + "when type 'Remotion.Linq.Clauses.StreamedData.StreamedSequenceInfo' was expected."
-        + "\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInput ()
     {
       var input = new StreamedScalarValueInfo (typeof (Cook));
-      _resultOperatorWithResultSelector.GetOutputDataInfo (input);
+      Assert.That (
+          () => _resultOperatorWithResultSelector.GetOutputDataInfo (input),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Parameter 'inputInfo' has type 'Remotion.Linq.Clauses.StreamedData.StreamedScalarValueInfo' "
+                  + "when type 'Remotion.Linq.Clauses.StreamedData.StreamedSequenceInfo' was expected."
+                  + "\r\nParameter name: inputInfo"));
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
-        "The seed expression and the aggregating function don't have matching types. The seed is of type 'System.String', but the function aggregates "
-        + "'System.Int32'.")]
     public void GetOutputDataInfo_NonMatchingFunc ()
     {
       _resultOperatorWithResultSelector.Seed = Expression.Constant ("0");
 
       var itemExpression = Expression.Constant (0);
       var input = new StreamedSequenceInfo (typeof (int[]), itemExpression);
-      _resultOperatorWithResultSelector.GetOutputDataInfo (input);
+      Assert.That (
+          () => _resultOperatorWithResultSelector.GetOutputDataInfo (input),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo (
+                  "The seed expression and the aggregating function don't have matching types. The seed is of type 'System.String', but the function aggregates "
+                  + "'System.Int32'."));
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
-        "The aggregating function and the result selector don't have matching types. The function aggregates type 'System.Int32', but the "
-        + "result selector takes 'System.String'.")]
     public void GetOutputDataInfo_NonMatchingResultSelector ()
     {
       var resultSelector = Expression.Lambda (
@@ -258,7 +268,12 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
 
       var itemExpression = Expression.Constant (0);
       var input = new StreamedSequenceInfo (typeof (int[]), itemExpression);
-      _resultOperatorWithResultSelector.GetOutputDataInfo (input);
+      Assert.That (
+          () => _resultOperatorWithResultSelector.GetOutputDataInfo (input),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo (
+                  "The aggregating function and the result selector don't have matching types. The function aggregates type 'System.Int32', but the "
+                  + "result selector takes 'System.String'."));
     }
 
     [Test]

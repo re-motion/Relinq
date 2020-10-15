@@ -39,40 +39,48 @@ namespace Remotion.Linq.UnitTests
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "Parameter 'queryableType' is a 'System.Int32', which cannot be assigned to type 'System.Linq.IQueryable'.\r\nParameter name: queryableType")]
     public void Initialization_NonGeneric ()
     {
-      new DefaultQueryProvider (typeof (int), _parserStub, _executorStub);
+      Assert.That (
+          () => new DefaultQueryProvider (typeof (int), _parserStub, _executorStub),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Parameter 'queryableType' is a 'System.Int32', which cannot be assigned to type 'System.Linq.IQueryable'.\r\nParameter name: queryableType"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "Expected the generic type definition of an implementation of IQueryable<T>, "
-        + "but was 'Remotion.Linq.Development.UnitTesting.TestQueryable`1[System.Int32]'."
-        + "\r\nParameter name: queryableType")]
     public void Initialization_NonGenericTypeDefinition ()
     {
-      new DefaultQueryProvider (typeof (TestQueryable<int>), _parserStub, _executorStub);
+      Assert.That (
+          () => new DefaultQueryProvider (typeof (TestQueryable<int>), _parserStub, _executorStub),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Expected the generic type definition of an implementation of IQueryable<T>, "
+                  + "but was 'Remotion.Linq.Development.UnitTesting.TestQueryable`1[System.Int32]'."
+                  + "\r\nParameter name: queryableType"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "Expected the generic type definition of an implementation of IQueryable<T> with exactly one type argument, "
-        + "but found 2 arguments on 'Remotion.Linq.UnitTests.TestDomain.QueryableWithTooManyArguments`2[T1,T2]."
-        + "\r\nParameter name: queryableType")]
     public void Initialization_TooManyGenericArguments ()
     {
-      new DefaultQueryProvider (typeof (QueryableWithTooManyArguments<,>), _parserStub, _executorStub);
+      Assert.That (
+          () => new DefaultQueryProvider (typeof (QueryableWithTooManyArguments<,>), _parserStub, _executorStub),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Expected the generic type definition of an implementation of IQueryable<T> with exactly one type argument, "
+                  + "but found 2 arguments on 'Remotion.Linq.UnitTests.TestDomain.QueryableWithTooManyArguments`2[T1,T2]."
+                  + "\r\nParameter name: queryableType"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "Parameter 'queryableType' is a 'System.Collections.Generic.List`1[System.Int32]', which cannot be assigned to type 'System.Linq.IQueryable'."
-        + "\r\nParameter name: queryableType")]
     public void Initialization_NonQueryable ()
     {
-      new DefaultQueryProvider (typeof (List<int>), _parserStub, _executorStub);
+      Assert.That (
+          () => new DefaultQueryProvider (typeof (List<int>), _parserStub, _executorStub),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Parameter 'queryableType' is a 'System.Collections.Generic.List`1[System.Int32]', which cannot be assigned to type 'System.Linq.IQueryable'."
+                  + "\r\nParameter name: queryableType"));
     }
 
     [Test]

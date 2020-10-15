@@ -48,11 +48,14 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot retrieve an IQuerySource for the given MainSourceExpressionNode. " 
-        + "Be sure to call Apply before calling methods that require IQuerySources, and pass in the same QuerySourceClauseMapping to both.")]
     public void GetQuerySourceForNode_NoClauseRegistered ()
     {
-      QuerySourceExpressionNodeUtility.GetQuerySourceForNode (_node, _context);
+      Assert.That (
+          () => QuerySourceExpressionNodeUtility.GetQuerySourceForNode (_node, _context),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo (
+                  "Cannot retrieve an IQuerySource for the given MainSourceExpressionNode. " 
+                  + "Be sure to call Apply before calling methods that require IQuerySources, and pass in the same QuerySourceClauseMapping to both."));
     }
 
     [Test]
@@ -70,13 +73,16 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Cannot retrieve an IQuerySource for the given MainSourceExpressionNode. "
-        + "Be sure to call Apply before calling methods that require IQuerySources, and pass in the same QuerySourceClauseMapping to both.")]
     public void ReplaceParameterWithReference_NoClauseRegistered ()
     {
       var parameter = Expression.Parameter (typeof (int), "x");
       var expression = Expression.MakeBinary (ExpressionType.Add, Expression.Constant (1), parameter);
-      QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (_node, parameter, expression, _context);
+      Assert.That (
+          () => QuerySourceExpressionNodeUtility.ReplaceParameterWithReference (_node, parameter, expression, _context),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo (
+                  "Cannot retrieve an IQuerySource for the given MainSourceExpressionNode. "
+                  + "Be sure to call Apply before calling methods that require IQuerySources, and pass in the same QuerySourceClauseMapping to both."));
     }
   }
 }

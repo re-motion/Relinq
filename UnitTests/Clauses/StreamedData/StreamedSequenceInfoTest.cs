@@ -179,15 +179,16 @@ namespace Remotion.Linq.UnitTests.Clauses.StreamedData
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Test")]
     public void ExecuteQueryModel_WithException ()
     {
       var queryModel = ExpressionHelper.CreateQueryModel<Cook>();
 
       var executorMock = MockRepository.GenerateMock<IQueryExecutor>();
       executorMock.Expect (mock => mock.ExecuteCollection<string> (queryModel)).Throw (new InvalidOperationException ("Test"));
-
-      _infoWithStringSequence.ExecuteQueryModel (queryModel, executorMock);
+      Assert.That (
+          () => _infoWithStringSequence.ExecuteQueryModel (queryModel, executorMock),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo ("Test"));
     }
 
     [Test]

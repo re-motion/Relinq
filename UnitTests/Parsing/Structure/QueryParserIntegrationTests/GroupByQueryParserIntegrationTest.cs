@@ -245,7 +245,7 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       Assert.That (predicateLeftSide, Is.InstanceOf (typeof (SubQueryExpression)));
       var predicateSubQueryModel = ((SubQueryExpression) predicateLeftSide).QueryModel;
       Assert.That (predicateSubQueryModel.MainFromClause.ItemType, Is.SameAs (typeof (int)));
-      Assert.That (predicateSubQueryModel.MainFromClause.ItemName, Is.StringStarting ("<generated>"));
+      Assert.That (predicateSubQueryModel.MainFromClause.ItemName, Does.StartWith ("<generated>"));
       Assert.That (((QuerySourceReferenceExpression) predicateSubQueryModel.MainFromClause.FromExpression).ReferencedQuerySource, Is.SameAs (mainFromClause));
       Assert.That (((QuerySourceReferenceExpression) predicateSubQueryModel.SelectClause.Selector).ReferencedQuerySource, 
                    Is.SameAs (predicateSubQueryModel.MainFromClause));

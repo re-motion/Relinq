@@ -38,18 +38,21 @@ namespace Remotion.Linq.UnitTests.Clauses.StreamedData
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentNullException))]
     public void Initialization_CurrentSequence_WithoutItemExpression ()
     {
-      new StreamedSequence (_stringSequence, null);
+      Assert.That (
+          () => new StreamedSequence (_stringSequence, null),
+          Throws.ArgumentNullException);
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "Parameter 'sequence' has type 'System.String[]' when type 'System.Int32[]' was expected.\r\nParameter name: sequence")]
     public void Initialization_CurrentSequence_WrongItemExpression ()
     {
-      new StreamedSequence (new[] { "1", "2", "3" }, new StreamedSequenceInfo (typeof (int[]), _stringExpression));
+      Assert.That (
+          () => new StreamedSequence (new[] { "1", "2", "3" }, new StreamedSequenceInfo (typeof (int[]), _stringExpression)),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Parameter 'sequence' has type 'System.String[]' when type 'System.Int32[]' was expected.\r\nParameter name: sequence"));
     }
 
     [Test]
@@ -71,11 +74,13 @@ namespace Remotion.Linq.UnitTests.Clauses.StreamedData
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = 
-        "Cannot retrieve the current value as a sequence with item type 'System.Int32' because its items are of type 'System.Object'.")]
     public void GetTypedSequence_InvalidItemType ()
     {
-      _dataWithCovariantSequence.GetTypedSequence<int>();
+      Assert.That (
+          () => _dataWithCovariantSequence.GetTypedSequence<int>(),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo (
+                  "Cannot retrieve the current value as a sequence with item type 'System.Int32' because its items are of type 'System.Object'."));
     }
   }
 }

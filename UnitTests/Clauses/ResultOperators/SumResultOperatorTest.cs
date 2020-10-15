@@ -54,11 +54,14 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Cannot calculate the sum of objects of type 'System.String' in memory.")]
     public void ExecuteInMemory_UnsupportedType ()
     {
       var input = new StreamedSequence (new[] { "1", "2", "3" }, new StreamedSequenceInfo (typeof (string[]), Expression.Constant ("0")));
-      _resultOperator.ExecuteInMemory<string> (input);
+      Assert.That (
+          () => _resultOperator.ExecuteInMemory<string> (input),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.EqualTo (
+                  "Cannot calculate the sum of objects of type 'System.String' in memory."));
     }
 
     [Test]
@@ -84,14 +87,16 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "Parameter 'inputInfo' has type 'Remotion.Linq.Clauses.StreamedData.StreamedScalarValueInfo' "
-        + "when type 'Remotion.Linq.Clauses.StreamedData.StreamedSequenceInfo' was expected."
-        + "\r\nParameter name: inputInfo")]
     public void GetOutputDataInfo_InvalidInput ()
     {
       var input = new StreamedScalarValueInfo (typeof (float));
-      _resultOperator.GetOutputDataInfo (input);
+      Assert.That (
+          () => _resultOperator.GetOutputDataInfo (input),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Parameter 'inputInfo' has type 'Remotion.Linq.Clauses.StreamedData.StreamedScalarValueInfo' "
+                  + "when type 'Remotion.Linq.Clauses.StreamedData.StreamedSequenceInfo' was expected."
+                  + "\r\nParameter name: inputInfo"));
     }
   }
 }

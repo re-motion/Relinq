@@ -232,43 +232,35 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
       Assert.That (result, Is.SameAs (newExpression));
     }
 
-    [Test]
-#if !NET_3_5
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
-        "When called from 'VisitMethod', rewriting a node of type 'System.Linq.Expressions.BinaryExpression' must return a non-null value of the same type. "
-        + "Alternatively, override 'VisitMethod' and change it to not visit children of this type.")]
-#else
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
-        "When called from 'VisitMethod', expressions of type 'BinaryExpression' can only be replaced with other non-null expressions of type "
-        + "'BinaryExpression'.")]
-#endif
+    [Test] //TODO unfix the fix
+//#endif
     public void VisitAndConvert_Single_ThrowsOnInvalidType ()
     {
       var expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
       var newExpression = (NewExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.New);
 
       Expect.Call (VisitorMock.Visit (expression)).Return (newExpression);
-
-      InvokeVisitAndConvert (expression, "VisitMethod");
+      Assert.That (
+          () => InvokeVisitAndConvert (expression, "VisitMethod"),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo (
+                  "When called from 'VisitMethod', expressions of type 'BinaryExpression' can only be replaced with other non-null expressions of type "
+                  + "'BinaryExpression'."));
     }
 
     [Test]
-#if !NET_3_5
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
-        "When called from 'VisitMethod', rewriting a node of type 'System.Linq.Expressions.BinaryExpression' must return a non-null value of the same type. "
-        + "Alternatively, override 'VisitMethod' and change it to not visit children of this type.")]
-#else
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
-        "When called from 'VisitMethod', expressions of type 'BinaryExpression' can only be replaced with other non-null expressions of type "
-        + "'BinaryExpression'.")]
-#endif
+//#endif
     public void VisitAndConvert_Single_ThrowsOnNull ()
     {
       var expression = (BinaryExpression) ExpressionInstanceCreator.GetExpressionInstance (ExpressionType.Add);
 
       Expect.Call (VisitorMock.Visit (expression)).Return (null);
-
-      InvokeVisitAndConvert (expression, "VisitMethod");
+      Assert.That (
+          () => InvokeVisitAndConvert (expression, "VisitMethod"),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo (
+                  "When called from 'VisitMethod', expressions of type 'BinaryExpression' can only be replaced with other non-null expressions of type "
+                  + "'BinaryExpression'."));
     }
 
     [Test]

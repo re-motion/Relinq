@@ -56,12 +56,13 @@ namespace Remotion.Linq.UnitTests.Clauses
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
-        "Query source (from Int32 main in TestQueryable<Int32>()) has already been associated with an expression.")]
     public void AddMapping_Twice ()
     {
       _mapping.AddMapping (_clause1, _querySourceReferenceExpression1);
-      _mapping.AddMapping (_clause1, _querySourceReferenceExpression2);
+      Assert.That (
+          () => _mapping.AddMapping (_clause1, _querySourceReferenceExpression2),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo ("Query source (from Int32 main in TestQueryable<Int32>()) has already been associated with an expression."));
     }
 
     [Test]
@@ -74,11 +75,13 @@ namespace Remotion.Linq.UnitTests.Clauses
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
-        "Query source (from Int32 main in TestQueryable<Int32>()) has not been associated with an expression, cannot replace its mapping.")]
     public void ReplaceMapping_WithoutAdding ()
     {
-      _mapping.ReplaceMapping (_clause1, _querySourceReferenceExpression2);
+      Assert.That (
+          () => _mapping.ReplaceMapping (_clause1, _querySourceReferenceExpression2),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo (
+                  "Query source (from Int32 main in TestQueryable<Int32>()) has not been associated with an expression, cannot replace its mapping."));
     }
 
     [Test]
@@ -91,11 +94,13 @@ namespace Remotion.Linq.UnitTests.Clauses
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage =
-        "Query source (from Int32 main in TestQueryable<Int32>()) has not been associated with an expression, cannot remove its mapping.")]
     public void RemoveMapping_WithoutAdding ()
     {
-      _mapping.RemoveMapping (_clause1);
+      Assert.That (
+          () => _mapping.RemoveMapping (_clause1),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo (
+                  "Query source (from Int32 main in TestQueryable<Int32>()) has not been associated with an expression, cannot remove its mapping."));
     }
 
     [Test]
@@ -112,11 +117,12 @@ namespace Remotion.Linq.UnitTests.Clauses
     }
 
     [Test]
-    [ExpectedException (typeof (KeyNotFoundException), ExpectedMessage =
-        "Query source (from Int32 main in TestQueryable<Int32>()) has not been associated with an expression.")]
     public void GetExpression_WithoutAssociatedClause ()
     {
-      _mapping.GetExpression (_clause1);
+      Assert.That (
+          () => _mapping.GetExpression (_clause1),
+          Throws.InstanceOf<KeyNotFoundException>()
+              .With.Message.EqualTo ("Query source (from Int32 main in TestQueryable<Int32>()) has not been associated with an expression."));
     }
   }
 }

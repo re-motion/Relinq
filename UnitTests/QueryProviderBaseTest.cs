@@ -72,12 +72,14 @@ namespace Remotion.Linq.UnitTests
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "Expected a closed generic type implementing IEnumerable<T>, but found 'System.Func`1[System.Int32]'.\r\nParameter name: expression")]
     public void CreateQuery_NonEnumerableExpression ()
     {
       Expression expression = ExpressionHelper.CreateLambdaExpression ();
-      _queryProvider.CreateQuery (expression);
+      Assert.That (
+          () => _queryProvider.CreateQuery (expression),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Expected a closed generic type implementing IEnumerable<T>, but found 'System.Func`1[System.Int32]'.\r\nParameter name: expression"));
     }
 
     [Test]

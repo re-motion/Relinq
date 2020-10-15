@@ -56,11 +56,14 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = "Node already has associated context info.")]
     public void AddContextInfoTwice ()
     {
       _context.AddContextInfo (_node, _clause);
-      _context.AddContextInfo (_node, _clause);
+      Assert.That (
+          () => _context.AddContextInfo (_node, _clause),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo (
+                  "Node already has associated context info."));
     }
 
     [Test]
@@ -72,10 +75,12 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (KeyNotFoundException), ExpectedMessage = "Node has no associated context info.")]
     public void GetContextInfo_ThrowsException ()
     {
-      _context.GetContextInfo (_node);
+      Assert.That (
+          () => _context.GetContextInfo (_node),
+          Throws.InstanceOf<KeyNotFoundException>()
+              .With.Message.EqualTo ("Node has no associated context info."));
     }
     
   }

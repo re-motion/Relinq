@@ -59,19 +59,21 @@ namespace Remotion.Linq.UnitTests.Clauses.StreamedData
     }
 
     [Test]
-    [ExpectedException (typeof (InvalidOperationException), ExpectedMessage = 
-        "Cannot retrieve the current value as type 'System.String' because it is of type 'System.Int32'.")]
     public void GetCurrentSingleValue_InvalidType ()
     {
-      _dataWithIntValue.GetTypedValue<string> ();
+      Assert.That (
+          () => _dataWithIntValue.GetTypedValue<string> (),
+          Throws.InvalidOperationException
+              .With.Message.EqualTo ("Cannot retrieve the current value as type 'System.String' because it is of type 'System.Int32'."));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "Parameter 'value' has type 'System.Int32' when type 'System.String' was expected.\r\nParameter name: value")]
     public void Initialization_CurrentValue_WrongItemExpression ()
     {
-      new StreamedValue (0, new StreamedScalarValueInfo (typeof (string)));
+      Assert.That (
+          () => new StreamedValue (0, new StreamedScalarValueInfo (typeof (string))),
+          Throws.ArgumentException
+              .With.Message.EqualTo ("Parameter 'value' has type 'System.Int32' when type 'System.String' was expected.\r\nParameter name: value"));
     }
   }
 }

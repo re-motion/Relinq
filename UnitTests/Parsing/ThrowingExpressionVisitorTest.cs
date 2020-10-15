@@ -54,7 +54,6 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitExtension: Test")]
     public void VisitExtension_NonReducibleExpression ()
     {
       RelinqExpressionVisitor visitor = new TestThrowingConstantExpressionVisitor ();
@@ -70,19 +69,25 @@ namespace Remotion.Linq.UnitTests.Parsing
           .Return (nonReducibleExpression);
       nonReducibleExpression.Stub (stub => stub.CanReduce).Return (false);
       nonReducibleExpression.Stub (stub => stub.ToString ()).Return ("Test");
-      
-      visitor.Visit (nonReducibleExpression);
+      Assert.That (
+          () => visitor.Visit (nonReducibleExpression),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.EqualTo ("Test of VisitExtension: Test"));
     }
 
     [Test]
-#if !NET_3_5
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitExtension: [-1]")]
-#else
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitUnknownNonExtension: [-1]")]
-#endif
     public void VisitUnknownNonExtension ()
     {
-      Visit (_visitor, (ExpressionType) (-1));
+        Assert.That (
+                () => Visit (_visitor, (ExpressionType) (-1)),
+                Throws.InstanceOf<NotSupportedException>()
+                      .With.Message.EqualTo (
+#if !NET_3_5
+                      "Test of VisitExtension: [-1]"
+#else
+                      "Test of VisitUnknownNonExtension: [-1]"
+#endif
+                               ));
     }
 
     [Test]
@@ -93,45 +98,57 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitUnary", MatchType = MessageMatch.Contains)]
     public void VisitUnary ()
     {
-      Visit (_visitor, ExpressionType.UnaryPlus);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.UnaryPlus),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitUnary"));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitBinary: ", MatchType = MessageMatch.Contains)]
     public void VisitBinary ()
     {
-      Visit (_visitor, ExpressionType.And);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.And),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitBinary: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitTypeBinary: ", MatchType = MessageMatch.Contains)]
     public void VisitTypeBinary ()
     {
-      Visit (_visitor, ExpressionType.TypeIs);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.TypeIs),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitTypeBinary: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitConstant: ", MatchType = MessageMatch.Contains)]
     public void VisitConstant ()
     {
-      Visit (_visitor, ExpressionType.Constant);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.Constant),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitConstant: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitConditional: ", MatchType = MessageMatch.Contains)]
     public void VisitConditional ()
     {
-      Visit (_visitor, ExpressionType.Conditional);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.Conditional),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitConditional: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitParameter: ", MatchType = MessageMatch.Contains)]
     public void VisitParameter ()
     {
-      Visit (_visitor, ExpressionType.Parameter);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.Parameter),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitParameter: "));
     }
 
     [Test]
@@ -145,189 +162,241 @@ namespace Remotion.Linq.UnitTests.Parsing
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitMethodCall: ", MatchType = MessageMatch.Contains)]
     public void VisitMethodCall ()
     {
-      Visit (_visitor, ExpressionType.Call);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.Call),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitMethodCall: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitInvocation: ", MatchType = MessageMatch.Contains)]
     public void VisitInvocation ()
     {
-      Visit (_visitor, ExpressionType.Invoke);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.Invoke),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitInvocation: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitMember: ", MatchType = MessageMatch.Contains)]
     public void VisitMember ()
     {
-      Visit (_visitor, ExpressionType.MemberAccess);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.MemberAccess),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitMember: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitNew: ", MatchType = MessageMatch.Contains)]
     public void VisitNew ()
     {
-      Visit (_visitor, ExpressionType.New);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.New),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitNew: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitNewArray: ", MatchType = MessageMatch.Contains)]
     public void VisitNewArray ()
     {
-      Visit (_visitor, ExpressionType.NewArrayInit);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.NewArrayInit),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitNewArray: "));
     }
 
 #if !NET_3_5
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitBlock: ", MatchType = MessageMatch.Contains)]
     public void VisitBlock ()
     {
-      Visit (_visitor, ExpressionType.Block);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.Block),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitBlock: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitDebugInfo: ", MatchType = MessageMatch.Contains)]
     public void VisitDebugInfo ()
     {
-      Visit (_visitor, ExpressionType.DebugInfo);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.DebugInfo),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitDebugInfo: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitDefault: ", MatchType = MessageMatch.Contains)]
     public void VisitDefaultExpression ()
     {
-      _visitor.Visit (Expression.Default (typeof (int)));
+      Assert.That (
+          () => _visitor.Visit (Expression.Default (typeof (int))),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitDefault: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitGoto: ", MatchType = MessageMatch.Contains)]
     public void VisitGoto ()
     {
-      Visit (_visitor, ExpressionType.Goto);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.Goto),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitGoto: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitIndex: ", MatchType = MessageMatch.Contains)]
     public void VisitIndex ()
     {
-      Visit (_visitor, ExpressionType.Index);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.Index),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitIndex: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitLabel: ", MatchType = MessageMatch.Contains)]
     public void VisitLabel ()
     {
-      Visit (_visitor, ExpressionType.Label);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.Label),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitLabel: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitLoop: ", MatchType = MessageMatch.Contains)]
     public void VisitLoop ()
     {
-      Visit (_visitor, ExpressionType.Loop);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.Loop),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitLoop: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitRuntimeVariables: ", MatchType = MessageMatch.Contains)]
     public void VisitRuntimeVariables ()
     {
-      Visit (_visitor, ExpressionType.RuntimeVariables);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.RuntimeVariables),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitRuntimeVariables: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitSwitch: ", MatchType = MessageMatch.Contains)]
     public void VisitSwitch ()
     {
-      Visit (_visitor, ExpressionType.Switch);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.Switch),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitSwitch: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitTry: ", MatchType = MessageMatch.Contains)]
     public void VisitTry ()
     {
-      Visit (_visitor, ExpressionType.Try);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.Try),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitTry: "));
     }
 #endif
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitMemberInit: ", MatchType = MessageMatch.Contains)]
     public void VisitMemberInit ()
     {
-      Visit (_visitor, ExpressionType.MemberInit);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.MemberInit),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitMemberInit: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitListInit: ", MatchType = MessageMatch.Contains)]
     public void VisitListInit ()
     {
-      Visit (_visitor, ExpressionType.ListInit);
+      Assert.That (
+          () => Visit (_visitor, ExpressionType.ListInit),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitListInit: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitElementInit: ", MatchType = MessageMatch.Contains)]
     public void VisitElementInit ()
     {
-      _visitor.VisitElementInit (ExpressionInstanceCreator.CreateElementInit());
+      Assert.That (
+          () => _visitor.VisitElementInit (ExpressionInstanceCreator.CreateElementInit()),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitElementInit: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitMemberAssignment: ", MatchType = MessageMatch.Contains)]
     public void VisitMemberAssignment ()
     {
-      _visitor.VisitMemberBinding (ExpressionInstanceCreator.CreateMemberAssignment ());
+      Assert.That (
+          () => _visitor.VisitMemberBinding (ExpressionInstanceCreator.CreateMemberAssignment ()),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitMemberAssignment: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitMemberMemberBinding: ", MatchType = MessageMatch.Contains)]
     public void VisitMemberMemberBinding ()
     {
-      _visitor.VisitMemberBinding (ExpressionInstanceCreator.CreateMemberMemberBinding (new MemberBinding[0]));
+      Assert.That (
+          () => _visitor.VisitMemberBinding (ExpressionInstanceCreator.CreateMemberMemberBinding (new MemberBinding[0])),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitMemberMemberBinding: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitMemberListBinding: ", MatchType = MessageMatch.Contains)]
     public void VisitMemberListBinding ()
     {
-      _visitor.VisitMemberBinding (ExpressionInstanceCreator.CreateMemberListBinding (new ElementInit[0]));
+      Assert.That (
+          () => _visitor.VisitMemberBinding (ExpressionInstanceCreator.CreateMemberListBinding (new ElementInit[0])),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitMemberListBinding: "));
     }
 
 #if !NET_3_5
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitCatchBlock: ", MatchType = MessageMatch.Contains)]
     public void VisitCatchBlock ()
     {
-      _visitor.VisitCatchBlock (ExpressionInstanceCreator.CreateCatchBlock());
+      Assert.That (
+          () => _visitor.VisitCatchBlock (ExpressionInstanceCreator.CreateCatchBlock()),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitCatchBlock: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitLabelTarget: ", MatchType = MessageMatch.Contains)]
     public void VisitLabelTarget ()
     {
-      _visitor.VisitLabelTarget (ExpressionInstanceCreator.CreateLabelTarget());
+      Assert.That (
+          () => _visitor.VisitLabelTarget (ExpressionInstanceCreator.CreateLabelTarget()),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitLabelTarget: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitSwitchCase: ", MatchType = MessageMatch.Contains)]
     public void VisitSwitchCase ()
     {
-      _visitor.VisitSwitchCase (ExpressionInstanceCreator.CreateSwitchCase());
+      Assert.That (
+          () => _visitor.VisitSwitchCase (ExpressionInstanceCreator.CreateSwitchCase()),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitSwitchCase: "));
     }
 #endif
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitSubQuery: ", MatchType = MessageMatch.Contains)]
     public void VisitSubQuery ()
     {
-      _visitor.Visit (new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ()));
+      Assert.That (
+          () => _visitor.Visit (new SubQueryExpression (ExpressionHelper.CreateQueryModel<Cook> ())),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitSubQuery: "));
     }
 
     [Test]
-    [ExpectedException (typeof (NotSupportedException), ExpectedMessage = "Test of VisitQuerySourceReference: ", MatchType = MessageMatch.Contains)]
     public void VisitQuerySourceReference ()
     {
-      _visitor.Visit (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()));
+      Assert.That (
+          () => _visitor.Visit (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ())),
+          Throws.InstanceOf<NotSupportedException>()
+              .With.Message.Contains ("Test of VisitQuerySourceReference: "));
     }
 
     private void Visit (TestThrowingExpressionVisitor visitor, ExpressionType nodeType)

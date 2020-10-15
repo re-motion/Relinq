@@ -39,10 +39,11 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException))]
     public void Initialization_NoIntExpression ()
     {
-      new SkipResultOperator (Expression.Constant ("12"));
+      Assert.That (
+          () => new SkipResultOperator (Expression.Constant ("12")),
+          Throws.ArgumentException);
     }
 
     [Test]
@@ -73,12 +74,14 @@ namespace Remotion.Linq.UnitTests.Clauses.ResultOperators
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "The count expression ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.\r\nParameter name: expression")]
     public void GetConstantCount_NoConstantExpression ()
     {
       var resultOperator = new SkipResultOperator (new QuerySourceReferenceExpression (ExpressionHelper.CreateMainFromClause_Int ()));
-      resultOperator.GetConstantCount ();
+      Assert.That (
+          () => resultOperator.GetConstantCount (),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "The count expression ('[main]') is no ConstantExpression, it is a QuerySourceReferenceExpression.\r\nParameter name: expression"));
     }
 
     [Test]

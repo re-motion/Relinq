@@ -69,54 +69,64 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage =
-        "Parameter 'nodeType' is a 'Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel.MethodCallExpressionNodeFactoryTest', "
-        + "which cannot be assigned to type 'Remotion.Linq.Parsing.Structure.IntermediateModel.IExpressionNode'."
-        + "\r\nParameter name: nodeType")]
     public void CreateExpressionNode_InvalidType ()
     {
-      MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (MethodCallExpressionNodeFactoryTest), _parseInfo, new object[0]);
+      Assert.That (
+          () => MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (MethodCallExpressionNodeFactoryTest), _parseInfo, new object[0]),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Parameter 'nodeType' is a 'Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel.MethodCallExpressionNodeFactoryTest', "
+                  + "which cannot be assigned to type 'Remotion.Linq.Parsing.Structure.IntermediateModel.IExpressionNode'."
+                  + "\r\nParameter name: nodeType"));
     }
 
     [Test]
-    [ExpectedException (typeof (ArgumentException), ExpectedMessage = 
-        "Expression node type 'Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel.TestDomain.ExpressionNodeWithTooManyCtors' "
-        + "contains too many constructors. It must only contain a single constructor, allowing null to be passed for any optional arguments."
-        + "\r\nParameter name: nodeType")]
     public void CreateExpressionNode_MoreThanOneCtor ()
     {
-      MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (ExpressionNodeWithTooManyCtors), _parseInfo, new object[0]);
+      Assert.That (
+          () => MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (ExpressionNodeWithTooManyCtors), _parseInfo, new object[0]),
+          Throws.ArgumentException
+              .With.Message.EqualTo (
+                  "Expression node type 'Remotion.Linq.UnitTests.Parsing.Structure.IntermediateModel.TestDomain.ExpressionNodeWithTooManyCtors' "
+                  + "contains too many constructors. It must only contain a single constructor, allowing null to be passed for any optional arguments."
+                  + "\r\nParameter name: nodeType"));
     }
 
     [Test]
-    [ExpectedException (typeof (ExpressionNodeInstantiationException), ExpectedMessage = 
-        "The constructor of expression node type 'Remotion.Linq.Parsing.Structure.IntermediateModel.SelectExpressionNode' "
-        + "only takes 2 parameters, but you specified 3 (including the parse info parameter).")]
     public void CreateExpressionNode_TooManyParameters ()
     {
       var selector = ExpressionHelper.CreateLambdaExpression ();
-      MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), _parseInfo, new object[] { selector, selector });
+      Assert.That (
+          () => MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), _parseInfo, new object[] { selector, selector }),
+          Throws.InstanceOf<ExpressionNodeInstantiationException>()
+              .With.Message.EqualTo (
+                  "The constructor of expression node type 'Remotion.Linq.Parsing.Structure.IntermediateModel.SelectExpressionNode' "
+                  + "only takes 2 parameters, but you specified 3 (including the parse info parameter)."));
     }
 
     [Test]
-    [ExpectedException (typeof (ExpressionNodeInstantiationException), ExpectedMessage =
-        "The given arguments did not match the expected arguments: Object of type "
-        + "'Remotion.Linq.Development.UnitTesting.Clauses.Expressions.ReducibleExtensionExpression' cannot be converted to type "
-        + "'System.Linq.Expressions.LambdaExpression'.")]
     public void CreateExpressionNode_InvalidNodeParameterType ()
     {
       var selector = new ReducibleExtensionExpression (Expression.Constant (0));
-      MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), _parseInfo, new object[] { selector });
+      Assert.That (
+          () => MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), _parseInfo, new object[] { selector }),
+          Throws.InstanceOf<ExpressionNodeInstantiationException>()
+              .With.Message.EqualTo (
+                  "The given arguments did not match the expected arguments: Object of type "
+                  + "'Remotion.Linq.Development.UnitTesting.Clauses.Expressions.ReducibleExtensionExpression' cannot be converted to type "
+                  + "'System.Linq.Expressions.LambdaExpression'."));
     }
 
     [Test]
-    [ExpectedException (typeof (ExpressionNodeInstantiationException), ExpectedMessage = 
-        "Object of type 'System.Linq.Expressions.ConstantExpression' cannot be converted to type 'System.Linq.Expressions.LambdaExpression'. "
-        + "If you tried to pass a delegate instead of a LambdaExpression, this is not supported because delegates are not parsable expressions.")]
     public void CreateExpressionNode_InvalidNodeParameterType_ConstantDelegateInsteadOfLambda ()
     {
       var selector = Expression.Constant ((Func<int, int>) (i => i));
-      MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), _parseInfo, new object[] { selector });
+      Assert.That (
+          () => MethodCallExpressionNodeFactory.CreateExpressionNode (typeof (SelectExpressionNode), _parseInfo, new object[] { selector }),
+          Throws.InstanceOf<ExpressionNodeInstantiationException>()
+              .With.Message.EqualTo (
+                  "Object of type 'System.Linq.Expressions.ConstantExpression' cannot be converted to type 'System.Linq.Expressions.LambdaExpression'. "
+                  + "If you tried to pass a delegate instead of a LambdaExpression, this is not supported because delegates are not parsable expressions."));
     }
   }
 }
