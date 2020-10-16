@@ -23,6 +23,7 @@ using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.Expressions
 {
+#if !NET_3_5
   /// <summary>
   /// Wraps an exception whose partial evaluation caused an exception.
   /// </summary>
@@ -47,6 +48,32 @@ namespace Remotion.Linq.Clauses.Expressions
   /// <see cref="VisitChildren"/> methods.
   /// </para>
   /// </remarks>
+#else
+  /// <summary>
+  /// Wraps an exception whose partial evaluation caused an exception.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// When <see cref="PartialEvaluatingExpressionVisitor"/> encounters an exception while evaluating an independent expression subtree, it
+  /// will wrap the subtree within a <see cref="PartialEvaluationExceptionExpression"/>. The wrapper contains both the <see cref="Exception"/> 
+  /// instance and the <see cref="EvaluatedExpression"/> that caused the exception.
+  /// </para>
+  /// <para>
+  /// To explicitly support this expression type, implement  <see cref="IPartialEvaluationExceptionExpressionVisitor"/>.
+  /// To ignore this wrapper and only handle the inner <see cref="EvaluatedExpression"/>, call the <see cref="Reduce"/> method and visit the result.
+  /// </para>
+  /// <para>
+  /// Subclasses of <see cref="ThrowingExpressionVisitor"/> that do not implement <see cref="IPartialEvaluationExceptionExpressionVisitor"/> will, 
+  /// by default, automatically reduce this expression type to the <see cref="EvaluatedExpression"/> in the 
+  /// <see cref="ThrowingExpressionVisitor.VisitExtension"/> method.
+  /// </para>
+  /// <para>
+  /// Subclasses of <see cref="RelinqExpressionVisitor"/> that do not implement <see cref="IPartialEvaluationExceptionExpressionVisitor"/> will, 
+  /// by default, ignore this expression and visit its child expressions via the <see cref="Remotion.Linq.Parsing.ExpressionVisitor.VisitExtension"/> and 
+  /// <see cref="VisitChildren"/> methods.
+  /// </para>
+  /// </remarks>
+#endif
   public sealed class PartialEvaluationExceptionExpression
 #if !NET_3_5
     : Expression

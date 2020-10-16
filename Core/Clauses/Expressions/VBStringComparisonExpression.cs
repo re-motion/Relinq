@@ -22,6 +22,7 @@ using Remotion.Utilities;
 
 namespace Remotion.Linq.Clauses.Expressions
 {
+#if !NET_3_5
   /// <summary>
   /// Represents a VB-specific comparison expression.
   /// </summary>
@@ -40,6 +41,26 @@ namespace Remotion.Linq.Clauses.Expressions
   /// <see cref="VisitChildren"/> methods.
   /// </para>
   /// </remarks>
+#else
+  /// <summary>
+  /// Represents a VB-specific comparison expression.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// To explicitly support this expression type, implement <see cref="IVBSpecificExpressionVisitor"/>.
+  /// To treat this expression as if it were an ordinary <see cref="BinaryExpression"/>, call its <see cref="Reduce"/> method and visit the result.
+  /// </para>
+  /// <para>
+  /// Subclasses of <see cref="ThrowingExpressionVisitor"/> that do not implement <see cref="IVBSpecificExpressionVisitor"/> will, by default, 
+  /// automatically reduce this expression type to <see cref="BinaryExpression"/> in the <see cref="ThrowingExpressionVisitor.VisitExtension"/> method.
+  /// </para>
+  /// <para>
+  /// Subclasses of <see cref="RelinqExpressionVisitor"/> that do not implement <see cref="IVBSpecificExpressionVisitor"/> will, by default, 
+  /// ignore this expression and visit its child expressions via the <see cref="Remotion.Linq.Parsing.ExpressionVisitor.VisitExtension"/> and 
+  /// <see cref="VisitChildren"/> methods.
+  /// </para>
+  /// </remarks>
+#endif
   public sealed class VBStringComparisonExpression
 #if !NET_3_5
       : Expression
