@@ -115,7 +115,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
     [Test]
     public void VisitBinary_RespectsIsLiftedToNull ()
     {
-      MethodInfo method = ((Func<int, int, bool>) ((i1, i2) => i1 > i2)).Method;
+      MethodInfo method = ((Func<int, int, bool>) VisitBinary_RespectsIsLiftedToNull_Func).Method;
 
       Expression left = Expression.Constant (0, typeof (int?));
       Expression right = Expression.Constant (0, typeof (int?));
@@ -131,10 +131,12 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
       Assert.That (result.IsLiftedToNull, Is.True);
     }
 
+    private static bool VisitBinary_RespectsIsLiftedToNull_Func (int i1, int i2) => i1 > i2;
+
     [Test]
     public void VisitBinary_RespectsMethod ()
     {
-      MethodInfo method = ((Func<int, int, bool>) ((i1, i2) => i1 > i2)).Method;
+      MethodInfo method = ((Func<int, int, bool>) VisitBinary_RespectsMethod_Func).Method;
 
       Expression left = Expression.Constant (0, typeof (int?));
       Expression right = Expression.Constant (0, typeof (int?));
@@ -149,5 +151,7 @@ namespace Remotion.Linq.UnitTests.Parsing.ExpressionVisitorTests
       Assert.That (result, Is.Not.SameAs (expression));
       Assert.That (result.Method, Is.SameAs (method));
     }
+
+    private static bool VisitBinary_RespectsMethod_Func (int i1, int i2) => i1 > i2;
   }
 }
