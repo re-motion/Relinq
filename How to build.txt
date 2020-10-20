@@ -1,0 +1,64 @@
+Creating your own remotion.snk keyfile
+--------------------------------------
+
+We cannot provide the official remotion.snk keyfile, so you will need to 
+create your own.
+To do so, simply run the "Generate-Snk.cmd" script from a Visual Studio Command 
+Prompt. If you do not use a Visual Studio Command Prompt, you will need to make 
+sure the .NET SDK is on your PATH.
+
+cd c:\Relinq
+Generate-Snk.cmd
+
+Note that the newly generated key file will not match the original key used 
+by rubicon to sign re-motion assemblies.
+
+
+Building re-linq from Visual Studio
+-------------------------------------
+
+After getting the sources and a remotion.snk, just load Relinq.sln in 
+Visual Studio and build it. It should work.
+
+Running the tests you can use:
+* NUnit GUI (available on http://nunit.org/, free stand-alone application)
+* Visual Studio's integrated Test Explorer
+  To run the tests with Test Explorer, you must install the free "NUnit Test Adapter" extension. 
+  Use the "Extensions and Updates..." menu item under the "Tools" menu to do this.
+* JetBrains ReSharper Test Runner (https://www.jetbrains.com/resharper, commercial product)
+* Test Driven .NET (http://testdriven.net/, commercial product)
+
+Building re-linq with MSBuild
+-------------------------------
+
+After getting the sources and a remotion.snk, run Build.cmd from your working 
+directory and use option #2 (Full Build, includes NuGet packages):
+
+cd c:\Relinq
+Build.cmd
+
+To generate documentation files for re-linq, run Build.cmd 
+and use option #3 (Docs Build).
+This requires Sandcastle Help File Builder to be installed, see below. 
+
+Installing Sandcastle Help File Builder for the documentation build
+-------------------------------------------------------------------
+The installation package of the version of Sandcastle Help File Builder used by
+re-motion is located in the prereq folder, under the following path: 
+
+https://svn.re-motion.org/svn/Remotion/tags/1.16.0/prereq/Tools/SandcastleHelpFileBuilderInstall/v1.9.5.0/
+Note: v1.9.5.0 is no longer available on https://shfb.codeplex.com or https://github.com/EWSoftware/SHFB; 
+the closest official download (v1.9.7.0) is available at https://shfb.codeplex.com/releases/view/99462.
+
+Run Sandcastle Installer and click through the wizard.
+- When asked whether to proceed without the Microsoft Help 2 Compiler 
+  installed, click "Yes".
+- When asked to install the Sandcastle Tools, click "Install Sandcastle".
+- Also install the Sandcastle Patch by clicking "Apply Patch" from the
+  appropriate wizard page.
+- No additional language packs are required to build the re-motion
+  documentation.
+- The MAML guide, Web Project Custom Code Providers, HTML to MAML converter,
+  and MAML Schema Intellisense may be helpful for writing documentation, but
+  are NOT required for the re-motion build.
+- When asked to install the Sandcastle Help File Builder, click "Install SHFB".
