@@ -31,8 +31,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Remotion.BuildScript">
-      <HintPath>..\packages\Remotion.BuildScript.2.0.0-alpha007\lib\net45\Remotion.BuildScript.dll</HintPath>
+    <Reference Include="Remotion.BuildScript, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Remotion.BuildScript.2.0.0-alpha017\lib\net45\Remotion.BuildScript.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Remotion.ReleaseProcessScript, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Remotion.ReleaseProcessScript.2.0.0-alpha017\lib\net45\Remotion.ReleaseProcessScript.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,9 +51,13 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.BuildProject">
+      <Link>.BuildProject</Link>
+    </None>
     <None Include="Customizations\Local\Configuration.targets" />
     <None Include="Customizations\Projects.props" />
     <None Include="Customizations\Properties.props" />
+    <None Include="Customizations\releaseProcessScript.config" />
     <None Include="Customizations\Server\Configuration.targets" />
     <None Include="Customizations\Version.props">
       <SubType>Designer</SubType>
