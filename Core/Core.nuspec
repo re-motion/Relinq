@@ -7,7 +7,7 @@
     <authors>$author$</authors>
     <owners>$author$</owners>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
-    <projectUrl>http://relinq.codeplex.com</projectUrl>
+    <projectUrl>https://github.com/re-motion/Relinq</projectUrl>
     <description>$description$</description>
     <copyright>$copyright$</copyright>
     <tags>re-motion LINQ ExpressionTrees $extraTags$</tags>
