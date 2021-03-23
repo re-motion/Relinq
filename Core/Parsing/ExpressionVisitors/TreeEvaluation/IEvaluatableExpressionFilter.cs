@@ -55,6 +55,15 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation
     bool IsEvaluatableNewArray ([NotNull] NewArrayExpression node);
     bool IsEvaluatableTypeBinary ([NotNull] TypeBinaryExpression node);
     bool IsEvaluatableUnary ([NotNull] UnaryExpression node);
+
+    /// <param name="node">
+    ///   Expression being tested.
+    /// </param>
+    /// <param name="definingLambdaExpression">
+    ///   Lambda expression defining parameter. Null for nameless parameters.
+    /// </param>
+    bool IsEvaluatableParameter ([NotNull] ParameterExpression node, LambdaExpression definingLambdaExpression);
+
 #if !NET_3_5
     bool IsEvaluatableBlock ([NotNull] BlockExpression node);
     bool IsEvaluatableCatchBlock ([NotNull] CatchBlock node);

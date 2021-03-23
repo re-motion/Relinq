@@ -26,8 +26,9 @@ namespace Remotion.Linq.Development.UnitTesting.Parsing
   /// <threadsafety static="true" instance="true" />
   public sealed class TestEvaluatableExpressionFilter : EvaluatableExpressionFilterBase
   {
-    public TestEvaluatableExpressionFilter ()
+    public TestEvaluatableExpressionFilter (bool allowParameterEvaluation = false)
     {
+      base.AllowParameterEvaluation = allowParameterEvaluation;
     }
   }
 }

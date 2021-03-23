@@ -59,8 +59,8 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
         PartialEvaluationInfo partialEvaluationInfo,
         IEvaluatableExpressionFilter evaluatableExpressionFilter)
     {
-      ArgumentUtility.CheckNotNull ("partialEvaluationInfo", partialEvaluationInfo);
-      ArgumentUtility.CheckNotNull ("evaluatableExpressionFilter", evaluatableExpressionFilter);
+      ArgumentUtility.CheckNotNull("partialEvaluationInfo", partialEvaluationInfo);
+      ArgumentUtility.CheckNotNull("evaluatableExpressionFilter", evaluatableExpressionFilter);
 
       _partialEvaluationInfo = partialEvaluationInfo;
       _evaluatableExpressionFilter = evaluatableExpressionFilter;
@@ -73,7 +73,10 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
       if (expression == null)
         return null;
 
-      if (expression.NodeType == ExpressionType.Lambda || !_partialEvaluationInfo.IsEvaluatableExpression (expression))
+      if (expression.NodeType == ExpressionType.Lambda || !_partialEvaluationInfo.IsEvaluatableExpression (expression)
+          // inserted after allowing some parameters to be evaluatable; parameters should not be evaluated separately, but
+          // only as part of the method invoking lambda definining them
+          && expression.NodeType != ExpressionType.Parameter)
         return base.Visit (expression);
 
       Expression evaluatedExpression;
@@ -91,7 +94,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
 
       if (evaluatedExpression != expression)
         return EvaluateIndependentSubtrees (evaluatedExpression, _evaluatableExpressionFilter);
-      
+
       return evaluatedExpression;
     }
 
@@ -105,6 +108,11 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
     private Expression EvaluateSubtree (Expression subtree)
     {
       ArgumentUtility.CheckNotNull ("subtree", subtree);
+
+      // inserted after allowing some parameters to be evaluatable; parameters should not be evaluated separately, but
+      // only as part of the method invoking lambda definining them
+      if (subtree.NodeType == ExpressionType.Parameter)
+        return subtree;
 
       if (subtree.NodeType == ExpressionType.Constant)
       {
@@ -120,7 +128,7 @@ namespace Remotion.Linq.Parsing.ExpressionVisitors
         Expression<Func<object>> lambdaWithoutParameters = Expression.Lambda<Func<object>> (Expression.Convert (subtree, typeof (object)));
         var compiledLambda = lambdaWithoutParameters.Compile();
 
-        object value = compiledLambda ();
+        var value = compiledLambda ();
         return Expression.Constant (value, subtree.Type);
       }
     }
