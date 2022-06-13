@@ -25,9 +25,8 @@ There's one more potential advantage: The remaining effort is probably mostly in
 re-linq is part of the re-motion project. See the [project home page](http://www.re-motion.org) for more interesting libraries, such as [re-mix](https://github.com/re-motion/Remix/).
 
 **Ressources**
-* [re-motion team blog](http://www.re-motion.org/blogs/team) featuring [announcements and a general discussion of re-linq](http://www.re-motion.org/blogs/team/category/re-linq)
-* [Fabian's Mix](http://www.re-motion.org/blogs/mix) with [details about the implementation of re-linq](http://www.re-motion.org/blogs/mix/category/re-linq)
-* [Whitepaper](http://www.re-motion.org/download/re-linq.pdf) about the ideas behind re-linq
+* [re-linq wiki](https://github.com/re-motion/Relinq/wiki) featuring [technical articles on working with re-linq](https://github.com/re-motion/Relinq/wiki/Technical-Articles)
+* [Whitepaper](https://github.com/re-motion/Relinq/wiki/files/2009-09-22-re-linq-A-General-Purpose-LINQ-Foundation.pdf) about the ideas behind re-linq
 * [End-to-end sample and article](http://www.codeproject.com/KB/linq/relinqish_the_pain.aspx) at codeproject.com 
 * re-motion [discussion list](http://groups.google.com/group/re-motion-users)
 * re-motion [issue tracker](https://re-motion.atlassian.net/projects/RMLNQ)
@@ -45,7 +44,7 @@ The re-linq releases are distributed as NuGet packages:
 * [https://www.nuget.org/packages/Remotion.Linq/](https://www.nuget.org/packages/Remotion.Linq/)
 * [https://www.nuget.org/packages/Remotion.Linq.Development/](https://www.nuget.org/packages/Remotion.Linq.Development/)
 If you also want the documentation, you can grab the equivalent releases from
-[https://www.myget.org/gallery/re-motion-release](https://www.myget.org/gallery/re-motion-release).
+[https://nuget.re-motion.org/feeds/re-motion-release/Remotion.Linq](https://nuget.re-motion.org/feeds/re-motion-release/Remotion.Linq).
 
 **Versioning**
 Starting with version 2.0, the releases follow Semantic Versioning ([http://semver.org/](http://semver.org/))
