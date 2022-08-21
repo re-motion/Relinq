@@ -23,6 +23,8 @@ using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Development.UnitTesting;
+using Remotion.Linq.Development.UnitTesting.Parsing;
+using Remotion.Linq.Parsing.Structure;
 using Remotion.Linq.UnitTests.TestDomain;
 using Remotion.Linq.UnitTests.TestQueryGenerators;
 
@@ -74,7 +76,45 @@ namespace Remotion.Linq.UnitTests.Parsing.Structure.QueryParserIntegrationTests
       Assert.That (((NewExpression) queryModel.SelectClause.Selector).Arguments[0].Type, Is.SameAs (typeof (IEnumerable<Cook>)));
 
       var subQueryModel = ((SubQueryExpression) ((NewExpression) queryModel.SelectClause.Selector).Arguments[0]).QueryModel;
-      Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof (IEnumerable<Cook>)));
+      Assert.That (subQueryModel.GetOutputDataInfo ().DataType, Is.SameAs (typeof(IEnumerable<Cook>)));
+    }
+
+    [Test]
+    public void SubQuery_InNewExpression_RetainsTypeWithEvaluatableParameterButQueryableConstant()
+    {
+      var queryable = from s in QuerySource select new { Result = from s2 in QuerySource select s2 };
+      var parser = QueryParser.CreateDefault(new TestEvaluatableExpressionFilter(true));
+      var queryModel = parser.GetParsedQuery(queryable.Expression);
+
+      Assert.That(queryModel.SelectClause.Selector, Is.TypeOf(typeof(NewExpression)));
+      Assert.That(((NewExpression)queryModel.SelectClause.Selector).Arguments[0], Is.TypeOf(typeof(SubQueryExpression)));
+      Assert.That(((NewExpression)queryModel.SelectClause.Selector).Arguments[0].Type, Is.SameAs(typeof(IQueryable<Cook>)));
+
+      var subQueryModel = ((SubQueryExpression)((NewExpression)queryModel.SelectClause.Selector).Arguments[0]).QueryModel;
+      Assert.That(subQueryModel.GetOutputDataInfo().DataType, Is.SameAs(typeof(IQueryable<Cook>)));
+    }
+
+    /// <remarks>
+    ///   Casting queriable to IEnumerable executes the query and produces constant from the point of view of e.g. database LINQ provider.
+    ///   In such cases evaluatable expression filter has to be instructed to allow evaluation of expressions involving parameters.
+    /// </remarks>
+    [Test]
+    public void SubQuery_InNewExpression_ConvertsToConstantWithEvaluatableParameter()
+    {
+      var queryable = from s in QuerySource select new { Result = from s2 in (IEnumerable<Cook>)QuerySource select s2 };
+      var parser = QueryParser.CreateDefault (new TestEvaluatableExpressionFilter (true));
+      var queryModel = parser.GetParsedQuery(queryable.Expression);
+
+      Assert.That(queryModel.SelectClause.Selector, Is.TypeOf(typeof(ConstantExpression)));
+      var constantExpression = (ConstantExpression)queryModel.SelectClause.Selector;
+
+      var resultProperty = constantExpression.Type.GetProperty ("Result");
+      Assert.That (resultProperty, Is.Not.Null);
+
+      var resultValue = resultProperty.GetValue (constantExpression.Value, null);
+      Assert.That(resultValue, Is.Not.Null);
+
+      Assert.That(resultValue, Is.AssignableTo(typeof(IEnumerable<Cook>)));
     }
 
     [Test]

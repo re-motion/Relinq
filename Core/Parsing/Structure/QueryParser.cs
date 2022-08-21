@@ -41,13 +41,17 @@ namespace Remotion.Linq.Parsing.Structure
     /// <see cref="Structure.ExpressionTreeParser.CreateDefaultProcessor"/>, and <see cref="ExpressionTransformerRegistry.CreateDefault"/>
     /// for details.
     /// </summary>
-    public static QueryParser CreateDefault ()
+    /// <param name="evaluatableExpressionFilter">
+    ///   Filter allowing to disable evaluation of independent subtrees even if they can potentially be evaluated; optional,
+    ///   <see cref="NullEvaluatableExpressionFilter"/> is used by default.
+    /// </param>
+    public static QueryParser CreateDefault (IEvaluatableExpressionFilter evaluatableExpressionFilter = null)
     {
       var transformerRegistry = ExpressionTransformerRegistry.CreateDefault();
-      var evaluatableExpressionFilter = new NullEvaluatableExpressionFilter();
+      var ensuredFilter = evaluatableExpressionFilter ?? new NullEvaluatableExpressionFilter();
       var expressionTreeParser = new ExpressionTreeParser (
           ExpressionTreeParser.CreateDefaultNodeTypeProvider (), 
-          ExpressionTreeParser.CreateDefaultProcessor (transformerRegistry, evaluatableExpressionFilter));
+          ExpressionTreeParser.CreateDefaultProcessor (transformerRegistry, ensuredFilter));
       return new QueryParser(expressionTreeParser);
     }
 
