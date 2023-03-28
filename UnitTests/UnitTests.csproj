@@ -1,38 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{17484781-E537-4442-9915-CA47AC5F6858}</ProjectGuid>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>
-    </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>Remotion.Linq.UnitTests</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Remotion.Linq.UnitTests</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\remotion.snk</AssemblyOriginatorKeyFile>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -48,71 +33,47 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>773f98fc</NuGetPackageImportStamp>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>bin\Debug\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
-    <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
     <NoWarn>
     </NoWarn>
-    <Optimize>false</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
-    <DebugType>full</DebugType>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>bin\Release\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DefineConstants>TRACE;</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
-    <DebugSymbols>false</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
     <NoWarn>
     </NoWarn>
     <WarningsAsErrors>
     </WarningsAsErrors>
-    <Optimize>true</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
     <DebugType>none</DebugType>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Rhino.Mocks">
-      <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
-    </Reference>
-    <Reference Include="System">
+    <Reference Update="System">
       <Name>System</Name>
     </Reference>
-    <Reference Include="System.Core">
+    <Reference Update="System.Core">
       <RequiredTargetFramework>4.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
@@ -141,286 +102,12 @@
     <Compile Include="..\UnitTests.Net_4_0\Utilities\TypeInfoTest.cs">
       <Link>Utilities\TypeInfoTest.cs</Link>
     </Compile>
-    <Compile Include="App_Packages\Remotion.Development.UnitTesting.PrivateInvoke.Sources.1.15.23.0\PrivateInvoke.cs" />
-    <Compile Include="App_Packages\Remotion.Development.UnitTesting.Serializer.Sources.1.15.23.0\Serializer.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\AssertionConditionAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\AssertionConditionType.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\AssertionMethodAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\BaseTypeRequiredAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\CanBeNullAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\CannotApplyEqualityOperatorAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\ContractAnnotationAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\ImplicitUseKindFlags.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\ImplicitUseTargetFlags.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\InstantHandleAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\InvokerParameterNameAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\LinqTunnelAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\LocalizationRequiredAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\MeansImplicitUseAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\NoEnumerationAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\NotifyPropertyChangedInvocatorAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\NotNullAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\PathReferenceAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\PublicAPIAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\PureAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\StringFormatMethodAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\TerminatesProgramAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.JetBrains.Annotations.Sources.1.15.23.0\UsedImplicitlyAttribute.cs" />
-    <Compile Include="App_Packages\Remotion.Utilities.ArgumentUtility.Sources.1.15.23.0\ArgumentUtility.cs" />
-    <Compile Include="App_Packages\Remotion.Utilities.Assertion.Sources.1.15.23.0\Assertion.cs" />
-    <Compile Include="App_Packages\Remotion.Utilities.ExceptionUtility.Sources.1.15.23.0\ExceptionUtility.cs" />
-    <Compile Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\NullableTypeUtility.cs" />
-    <Compile Include="Clauses\Expressions\SubQueryExpressionTest.cs" />
-    <Compile Include="Clauses\Expressions\VBStringComparisonExpressionTest.cs" />
-    <Compile Include="Clauses\ExpressionVisitors\IntegrationTests\AccessorFindingExpressionTreeVisitorIntegrationTest.cs" />
-    <Compile Include="Clauses\ResultOperators\AsQueryableResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\ConcatResultOperatorTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\MultiReplacingExpressionVisitorTest.cs" />
-    <Compile Include="Clauses\Expressions\PartialEvaluationExceptionExpressionTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\Transformation\ExpressionTransformerRegistryTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\AttributeEvaluatingExpressionTransformerTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\MethodCallExpressionTransformerAttributeTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\TupleNewExpressionTransformerTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\DictionaryEntryNewExpressionTransformerTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\InvocationOfLambdaExpressionTransformerTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\KeyValuePairNewExpressionTransformerTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\NullableValueTransformerTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\VBCompareStringExpressionTransformerTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\Transformation\PredefinedTransformations\VBInformationIsNothingExpressionTransformerTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\TransformingExpressionVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\TreeEvaluation\EvaluatableExpressionFilterBaseTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitorTests\RelinqExpressionVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitorTests\RelinqExpressionVisitorTestBase.cs" />
-    <Compile Include="Parsing\ExpressionVisitorTests\RelinqExpressionVisitor_NewExpressionsTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitorTests\TypeForNewExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Parsing\NewExpressionIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\AsQueryableExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\TestDomain\ExpressionNodeWithOnePublicInstanceCtor.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\ConcatExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\NodeTypeProviders\CompoundNodeTypeProviderTest.cs" />
-    <Compile Include="Parsing\Structure\ExpressionTreeProcessors\CompoundExpressionTreeProcessorTest.cs" />
-    <Compile Include="Parsing\Structure\ExpressionTreeProcessors\NullExpressionTreeProcessorTest.cs" />
-    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\GetRegisterableMethodDefinition_MIBNTRT.cs" />
-    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\GetNodeType_MIBNTRT.cs" />
-    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\Register_MIBNTRT.cs" />
-    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\IsRegistered_MIBNTRT.cs" />
-    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodNameBasedNodeTypeRegistryTest.cs" />
-    <Compile Include="Parsing\Structure\ExpressionTreeProcessors\TransformingExpressionProcessorTest.cs" />
-    <Compile Include="Parsing\Structure\ExpressionTreeProcessors\PartialEvaluatingExpressionTreeProcessorTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\GroupByWithResultSelectorExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\AttributeTransformationIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\CovariantQueryParserIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\DelegateInvocationQueryParserIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\EmptyParametersQueryParserIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\NullableQueryParserIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\PartialEvaluationQueryParserIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\TestDomain\NonEvaluated.cs" />
-    <Compile Include="Parsing\Structure\TestDomain\QueryParserIntegrationTestsEvaluatableExpressionFilter.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\VBSpecificQueryParserIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\NewWithAddedMembersQueryParserIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\SubQueryQueryParserIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\MediumTrustQueryParserIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\TestDomain\GenericClass2.cs" />
-    <Compile Include="Parsing\TestThrowingConstantExpressionVisitor.cs" />
-    <Compile Include="Parsing\TestThrowingExpressionVisitorForLambda.cs" />
-    <Compile Include="Parsing\TupleExpressionBuilderTest.cs" />
-    <Compile Include="TestDomain\BaseValue.cs" />
-    <Compile Include="TestDomain\Course.cs" />
-    <Compile Include="TestDomain\DerivedValue.cs" />
-    <Compile Include="TestDomain\Knife.cs" />
-    <Compile Include="TestDomain\ISpecificCook.cs" />
-    <Compile Include="TestDomain\MetaID.cs" />
-    <Compile Include="TestDomain\Result.cs" />
-    <Compile Include="TestUtilities\NonTransformedTuple.cs" />
-    <Compile Include="Clauses\AdditionalFromClauseTest.cs" />
-    <Compile Include="Clauses\Expressions\QuerySourceReferenceExpressionTest.cs" />
-    <Compile Include="Clauses\Expressions\TestDomain\ReducibleExtensionExpressionNotOverridingReduce.cs" />
-    <Compile Include="Clauses\Expressions\TestDomain\ISpecificVisitor.cs" />
-    <Compile Include="Clauses\Expressions\TestDomain\ReducibleExtensionExpression.cs" />
-    <Compile Include="Clauses\Expressions\TestDomain\SpecificVisitor.cs" />
-    <Compile Include="Clauses\Expressions\TestDomain\TestableExtensionExpression.cs" />
-    <Compile Include="Clauses\Expressions\TestDomain\TestableExtensionExpressionWithSpecificVisitor.cs" />
-    <Compile Include="Clauses\ExpressionVisitors\AccessorFindingExpressionVisitorTest.cs" />
-    <Compile Include="Clauses\ExpressionVisitors\ReferenceReplacingExpressionVisitorTest.cs" />
-    <Compile Include="Clauses\ExpressionVisitors\ReverseResolvingExpressionVisitorTest.cs" />
-    <Compile Include="Clauses\FromClauseBaseTest.cs" />
-    <Compile Include="Clauses\GroupJoinClauseTest.cs" />
-    <Compile Include="Clauses\JoinClauseTest.cs" />
-    <Compile Include="Clauses\MainFromClauseTest.cs" />
-    <Compile Include="Clauses\OrderByClauseTest.cs" />
-    <Compile Include="Clauses\OrderingTest.cs" />
-    <Compile Include="Clauses\QuerySourceMappingTest.cs" />
-    <Compile Include="Clauses\ResultOperatorBaseTest.cs" />
-    <Compile Include="Clauses\ResultOperators\AllResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\AnyResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\AverageResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\CastResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\ChoiceResultOperatorBaseTest.cs" />
-    <Compile Include="Clauses\ResultOperators\ContainsResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\AggregateResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\AggregateFromSeedResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\CountResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\DefaultIfEmptyResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\DistinctResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\ExceptResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\FirstResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\GroupResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\IntersectResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\LastResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\LongCountResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\MaxResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\MinResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\OfTypeResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\ReverseResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\SequenceFromSequenceResultOperatorBaseTest.cs" />
-    <Compile Include="Clauses\ResultOperators\SequenceTypePreservingResultOperatorBaseTest.cs" />
-    <Compile Include="Clauses\ResultOperators\SingleResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\SkipResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\SumResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\TakeResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\TestChoiceResultOperator.cs" />
-    <Compile Include="Clauses\ResultOperators\TestResultOperator.cs" />
-    <Compile Include="Clauses\ResultOperators\TestSequenceFromSequenceResultOperator.cs" />
-    <Compile Include="Clauses\ResultOperators\TestSequenceTypePreservingResultOperator.cs" />
-    <Compile Include="Clauses\ResultOperators\TestValueFromSequenceResultOperator.cs" />
-    <Compile Include="Clauses\ResultOperators\UnionResultOperatorTest.cs" />
-    <Compile Include="Clauses\ResultOperators\ValueFromSequenceResultOperatorBaseTest.cs" />
-    <Compile Include="Clauses\SelectClauseTest.cs" />
-    <Compile Include="Clauses\StreamedData\StreamedScalarValueInfoTest.cs" />
-    <Compile Include="Clauses\StreamedData\StreamedSequenceInfoTest.cs" />
-    <Compile Include="Clauses\StreamedData\StreamedSequenceTest.cs" />
-    <Compile Include="Clauses\StreamedData\StreamedSingleValueInfoTest.cs" />
-    <Compile Include="Clauses\StreamedData\StreamedValueTest.cs" />
-    <Compile Include="Clauses\WhereClauseTest.cs" />
-    <Compile Include="Collections\ChangeResistantObservableCollectionEnumeratorTest.cs" />
-    <Compile Include="Collections\MultiDictionaryExtensionsTest.cs" />
-    <Compile Include="Collections\ObservableCollectionExtensionsTest.cs" />
-    <Compile Include="DefaultQueryProviderTest.cs" />
-    <Compile Include="ExpressionTreeNavigator.cs" />
-    <Compile Include="Parsing\AnonymousType.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\MemberBindings\FieldInfoBindingTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\MemberBindings\MemberBindingTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\MemberBindings\MemberBindingTestBase.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\MemberBindings\MethodInfoBindingTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\MemberBindings\PropertyInfoBindingTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\PartialEvaluatingExpressionVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\ReplacingExpressionVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\SubQueryFindingExpressionVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\TransparentIdentifierRemovingExpressionVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\TreeEvaluation\EvaluatableTreeFindingExpressionVisitorTest.cs" />
-    <Compile Include="Parsing\ExpressionVisitors\UnknownExpression.cs" />
-    <Compile Include="Parsing\ExpressionVisitorTests\ExpressionInstanceCreator.cs" />
-    <Compile Include="Parsing\ExpressionVisitorTests\SimpleClass.cs" />
-    <Compile Include="Parsing\ExpressionVisitorTests\SpecialExpressionNode.cs" />
-    <Compile Include="Parsing\Structure\ExpressionTreeParserTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\AverageExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\CastExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\ClauseGenerationContextTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\ContainsExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\AnyExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\AllExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\AggregateExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\AggregateFromSeedExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\CountExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\DefaultIfEmptyExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\DistinctExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\ExceptExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\ExpressionNodeObjectMother.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\ExpressionNodeTestBase.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\ExpressionResolverTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\FirstExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\GroupByExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\GroupJoinExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\IntersectExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\JoinExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\LastExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\LongCountExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\MainSourceExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\MaxExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\MethodCallExpressionNodeBaseTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\MethodCallExpressionNodeFactoryTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\MinExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\OfTypeExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\OrderByDescendingExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\OrderByExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\QuerySourceExpressionNodeUtilityTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\ResolvedExpressionCacheTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\ResultOperatorExpressionNodeBaseTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\ReverseExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\SelectExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\SelectManyExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\SingleExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\SkipExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\SumExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\TakeExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\TestDomain\ExpressionNodeWithTooManyCtors.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\TestDomain\TestMethodCallExpressionNode.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\TestResultOperatorExpressionNode.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\ThenByDescendingExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\ThenByExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\UnionExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\IntermediateModel\WhereExpressionNodeTest.cs" />
-    <Compile Include="Parsing\Structure\MethodCallExpressionParserTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\GroupByQueryParserIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\GroupJoinQueryParserIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\JoinQueryParserIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\OrderByQueryParserIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\QueryParserIntegrationTestBase.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\ResultOperatorQueryParserIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\SelectManyQueryParserIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\SelectQueryParserIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserIntegrationTests\WhereQueryParserIntegrationTest.cs" />
-    <Compile Include="Parsing\Structure\QueryParserTest.cs" />
-    <Compile Include="Parsing\Structure\NodeTypeProviders\MethodInfoBasedNodeTypeRegistryTests\TestDomain\GenericClass.cs" />
-    <Compile Include="Parsing\Structure\TestDomain\NonGenericFakeCollection.cs" />
-    <Compile Include="Parsing\Structure\TestDomain\QueryableFakeWithCount.cs" />
-    <Compile Include="Parsing\TestThrowingExpressionVisitor.cs" />
-    <Compile Include="Parsing\ThrowingExpressionVisitorTest.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="QueryableBaseTest.cs" />
-    <Compile Include="QueryModelBuilderTest.cs" />
-    <Compile Include="QueryModelTest.cs" />
-    <Compile Include="QueryModelVisitorBaseTest.cs" />
-    <Compile Include="QueryProviderBaseTest.cs" />
-    <Compile Include="Utilities\ItemTypeReflectionUtilityTest.cs" />
-    <Compile Include="Utilities\ReflectionUtilityTest.cs" />
-    <Compile Include="Clauses\Expressions\ExtensionExpressionTestHelper.cs" />
-    <Compile Include="TestDomain\Chef.cs" />
-    <Compile Include="TestDomain\Restaurant.cs" />
-    <Compile Include="TestDomain\QueryableWithTooManyArguments.cs" />
-    <Compile Include="TestDomain\Cook.cs" />
-    <Compile Include="TestDomain\Kitchen.cs" />
-    <Compile Include="TestDomain\Company.cs" />
-    <Compile Include="TestQueryGenerators\CastTestQueryGenerator.cs" />
-    <Compile Include="TestQueryGenerators\DistinctTestQueryGenerator.cs" />
-    <Compile Include="TestQueryGenerators\FromTestQueryGenerator.cs" />
-    <Compile Include="TestQueryGenerators\JoinTestQueryGenerator.cs" />
-    <Compile Include="TestQueryGenerators\LetTestQueryGenerator.cs" />
-    <Compile Include="TestQueryGenerators\MethodCallTestQueryGenerator.cs" />
-    <Compile Include="TestQueryGenerators\MixedTestQueryGenerator.cs" />
-    <Compile Include="TestQueryGenerators\OrderByTestQueryGenerator.cs" />
-    <Compile Include="TestQueryGenerators\SelectTestQueryGenerator.cs" />
-    <Compile Include="TestQueryGenerators\SubQueryTestQueryGenerator.cs" />
-    <Compile Include="TestQueryGenerators\WhereTestQueryGenerator.cs" />
-    <Compile Include="Transformations\SubQueryFromClauseFlattenerTest.cs" />
-    <Compile Include="UniqueIdentifierGeneratorTest.cs" />
     <None Include="..\remotion.snk">
       <Link>remotion.snk</Link>
     </None>
     <None Include="..\Apache-2.0.licenseheader">
       <Link>Apache-2.0.licenseheader</Link>
     </None>
-    <None Include="App_Packages\Remotion.Development.UnitTesting.PrivateInvoke.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
-    <None Include="App_Packages\Remotion.Development.UnitTesting.Serializer.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
-    <None Include="App_Packages\Remotion.Utilities.Assertion.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
-    <None Include="App_Packages\Remotion.Utilities.ExceptionUtility.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
-    <None Include="App_Packages\Remotion.Utilities.NullableTypeUtility.Sources.1.15.23.0\SharedSource Apache-2.0.licenseheader" />
-    <None Include="packages.config" />
-    <None Include="Parsing\ExpressionTrees\ExpressionTree_Grammar.docx" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
@@ -448,27 +135,25 @@
     <Content Include="Parsing\ExpressionTrees\whereFromWhereQuery.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{028e7899-0d5f-49c8-9eb6-8b051e02f1e0}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Development\Development.csproj">
-      <Project>{31a1ae30-079f-489e-9757-4efb4c457e43}</Project>
-      <Name>Development</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Development\Development.csproj" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
+    <PackageReference Include="MSBuild.Extension.Pack" Version="1.5.0" />
+    <PackageReference Include="NUnit" Version="2.6.3" />
+    <PackageReference Include="Remotion.Development.UnitTesting.PrivateInvoke.Sources" Version="1.15.23.0" />
+    <PackageReference Include="Remotion.Development.UnitTesting.Serializer.Sources" Version="1.15.23.0" />
+    <PackageReference Include="Remotion.Utilities.ArgumentUtility.Sources" Version="1.15.23.0" />
+    <PackageReference Include="Remotion.Utilities.Assertion.Sources" Version="1.15.23.0" />
+    <PackageReference Include="Remotion.Utilities.ExceptionUtility.Sources" Version="1.15.23.0" />
+    <PackageReference Include="RhinoMocks" Version="3.6.1" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.410601">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <PropertyGroup />
   <Target Name="AfterBuild">
     <Delete Files="@(TestDomain->'$(MSBuildProjectDirectory)\$(OutputPath)\%(Directory)')" />
     <Copy SourceFiles="@(TestDomain->'%(Fullpath)')" DestinationFiles="@(TestDomain->'$(MSBuildProjectDirectory)\$(OutputPath)\%(Identity)')" />
