@@ -17,11 +17,11 @@
     <NoWarn>1591;419</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\remotion.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
+<!--  <PropertyGroup>-->
+<!--    <AssemblyOriginatorKeyFile>..\remotion.snk</AssemblyOriginatorKeyFile>-->
+<!--  </PropertyGroup>-->
   <ItemGroup>
     <Reference Include="System.Data.Linq" />
   </ItemGroup>
@@ -38,21 +38,22 @@
     <Compile Include="..\Core\Utilities\ExpressionExtensions.cs">
       <Link>Utilities\ExpressionExtensions.cs</Link>
     </Compile>
-    <None Include="..\remotion.snk">
-      <Link>remotion.snk</Link>
-    </None>
+<!--    <None Include="..\remotion.snk">-->
+<!--      <Link>remotion.snk</Link>-->
+<!--    </None>-->
     <None Include="..\Apache-2.0.licenseheader">
       <Link>Apache-2.0.licenseheader</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core.Net_4_5\Core.Net_4_5.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Remotion.Utilities.ArgumentUtility.Sources" Version="1.15.23.0" />
-    <PackageReference Include="Remotion.Utilities.Assertion.Sources" Version="1.15.23.0" />
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.410601">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+    <PackageReference Include="System.Security.Permissions" Version="7.0.0" />
   </ItemGroup>
 </Project>

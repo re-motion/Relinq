@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard1.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>Remotion.Linq</RootNamespace>
     <AssemblyName>Remotion.Linq</AssemblyName>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\remotion.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>false</SignAssembly>
+<!--    <AssemblyOriginatorKeyFile>..\remotion.snk</AssemblyOriginatorKeyFile>-->
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -56,9 +56,9 @@
     <None Include="..\Apache-2.0.licenseheader">
       <Link>Apache-2.0.licenseheader</Link>
     </None>
-    <None Include="..\remotion.snk">
-      <Link>remotion.snk</Link>
-    </None>
+<!--    <None Include="..\remotion.snk">-->
+<!--      <Link>remotion.snk</Link>-->
+<!--    </None>-->
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Remotion.Utilities.ArgumentUtility.Sources" Version="1.15.23.0" />

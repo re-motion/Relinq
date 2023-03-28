@@ -142,16 +142,15 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
     <PackageReference Include="MSBuild.Extension.Pack" Version="1.5.0" />
-    <PackageReference Include="NUnit" Version="2.6.3" />
     <PackageReference Include="Remotion.Development.UnitTesting.PrivateInvoke.Sources" Version="1.15.23.0" />
     <PackageReference Include="Remotion.Development.UnitTesting.Serializer.Sources" Version="1.15.23.0" />
     <PackageReference Include="Remotion.Utilities.ArgumentUtility.Sources" Version="1.15.23.0" />
     <PackageReference Include="Remotion.Utilities.Assertion.Sources" Version="1.15.23.0" />
     <PackageReference Include="Remotion.Utilities.ExceptionUtility.Sources" Version="1.15.23.0" />
-    <PackageReference Include="RhinoMocks" Version="3.6.1" />
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.410601">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="RhinoMocks" Version="3.6.1" />
   </ItemGroup>
   <PropertyGroup />
   <Target Name="AfterBuild">
